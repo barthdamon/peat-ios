@@ -13,6 +13,8 @@
 		027E310F1BA2780D001FCF70 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 027E310E1BA2780D001FCF70 /* Images.xcassets */; };
 		027E31121BA2780D001FCF70 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 027E31101BA2780D001FCF70 /* LaunchScreen.xib */; };
 		027E311E1BA2780D001FCF70 /* PeatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E311D1BA2780D001FCF70 /* PeatTests.swift */; };
+		027E31281BA27875001FCF70 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E31271BA27875001FCF70 /* APIService.swift */; };
+		02B323191BA7B1C40063C205 /* KeychainAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B323181BA7B1C40063C205 /* KeychainAccess.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +38,8 @@
 		027E31171BA2780D001FCF70 /* PeatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PeatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		027E311C1BA2780D001FCF70 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		027E311D1BA2780D001FCF70 /* PeatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeatTests.swift; sourceTree = "<group>"; };
+		027E31271BA27875001FCF70 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		02B323181BA7B1C40063C205 /* KeychainAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainAccess.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +83,8 @@
 			children = (
 				027E31071BA2780C001FCF70 /* AppDelegate.swift */,
 				027E31091BA2780C001FCF70 /* ViewController.swift */,
+				027E31271BA27875001FCF70 /* APIService.swift */,
+				02B323181BA7B1C40063C205 /* KeychainAccess.swift */,
 				027E310B1BA2780D001FCF70 /* Main.storyboard */,
 				027E310E1BA2780D001FCF70 /* Images.xcassets */,
 				027E31101BA2780D001FCF70 /* LaunchScreen.xib */,
@@ -156,7 +162,9 @@
 		027E30FA1BA2780C001FCF70 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0640;
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Matthew Barth";
 				TargetAttributes = {
 					027E31011BA2780C001FCF70 = {
@@ -213,6 +221,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				027E310A1BA2780D001FCF70 /* ViewController.swift in Sources */,
+				02B323191BA7B1C40063C205 /* KeychainAccess.swift in Sources */,
+				027E31281BA27875001FCF70 /* APIService.swift in Sources */,
 				027E31081BA2780C001FCF70 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,6 +286,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -342,6 +353,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Peat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dawnofindustry.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -352,6 +364,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Peat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dawnofindustry.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -370,6 +383,7 @@
 				);
 				INFOPLIST_FILE = PeatTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dawnofindustry.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Peat.app/Peat";
 			};
@@ -385,6 +399,7 @@
 				);
 				INFOPLIST_FILE = PeatTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dawnofindustry.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Peat.app/Peat";
 			};
@@ -409,6 +424,7 @@
 				027E31231BA2780D001FCF70 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		027E31241BA2780D001FCF70 /* Build configuration list for PBXNativeTarget "PeatTests" */ = {
 			isa = XCConfigurationList;
@@ -417,6 +433,7 @@
 				027E31261BA2780D001FCF70 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
