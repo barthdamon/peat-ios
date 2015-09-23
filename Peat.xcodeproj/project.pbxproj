@@ -14,6 +14,7 @@
 		027E31121BA2780D001FCF70 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 027E31101BA2780D001FCF70 /* LaunchScreen.xib */; };
 		027E311E1BA2780D001FCF70 /* PeatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E311D1BA2780D001FCF70 /* PeatTests.swift */; };
 		027E31281BA27875001FCF70 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E31271BA27875001FCF70 /* APIService.swift */; };
+		02F60DEA1BB330F800F189F0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02F60DE91BB330F800F189F0 /* AVFoundation.framework */; };
 		DA8FE7BD7B07D58B9007610C /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB87F9D425CD4D0A7CBEB8A0 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -39,6 +40,8 @@
 		027E311C1BA2780D001FCF70 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		027E311D1BA2780D001FCF70 /* PeatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeatTests.swift; sourceTree = "<group>"; };
 		027E31271BA27875001FCF70 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		02F60DE81BB32CD100F189F0 /* Peat-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Peat-Bridging-Header.h"; sourceTree = "<group>"; };
+		02F60DE91BB330F800F189F0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		275CE9AE943487EC5C73621C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		F24416312EBB65AABDA22E62 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		FB87F9D425CD4D0A7CBEB8A0 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -49,6 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02F60DEA1BB330F800F189F0 /* AVFoundation.framework in Frameworks */,
 				DA8FE7BD7B07D58B9007610C /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -88,7 +92,8 @@
 			children = (
 				027E31071BA2780C001FCF70 /* AppDelegate.swift */,
 				027E31271BA27875001FCF70 /* APIService.swift */,
-				026AC2B51BB0ECF1005F8E81 /* ViewController.swift */,
+				02F60DE71BB32CA200F189F0 /* Controllers */,
+				02F60DE61BB32C8F00F189F0 /* Helpers */,
 				027E310B1BA2780D001FCF70 /* Main.storyboard */,
 				027E310E1BA2780D001FCF70 /* Images.xcassets */,
 				027E31101BA2780D001FCF70 /* LaunchScreen.xib */,
@@ -122,9 +127,26 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		02F60DE61BB32C8F00F189F0 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				02F60DE81BB32CD100F189F0 /* Peat-Bridging-Header.h */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
+		02F60DE71BB32CA200F189F0 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				026AC2B51BB0ECF1005F8E81 /* ViewController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
 		5D83DCC398A503166A0A5ED4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				02F60DE91BB330F800F189F0 /* AVFoundation.framework */,
 				FB87F9D425CD4D0A7CBEB8A0 /* Pods.framework */,
 			);
 			name = Frameworks;
@@ -427,6 +449,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dawnofindustry.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Peat/Peat-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -439,6 +462,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dawnofindustry.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Peat/Peat-Bridging-Header.h";
 			};
 			name = Release;
 		};

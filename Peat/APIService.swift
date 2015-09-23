@@ -8,8 +8,14 @@
 
 import Foundation
 import UIKit
+import KeychainSwift
 
 typealias APICallback = ((AnyObject?, NSError?) -> ())
+
+enum HTTPRequestAuthType {
+  case Basic
+  case Token
+}
 
 //// our singleton
 private let _sharedService = APIService()
@@ -26,30 +32,31 @@ class APIService: NSObject {
   #endif
   
     var apiURL: String { return "\(baseURL)/" }
-//  let authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJkZXZpY2VJRCI6ImMxMDMwZjNiLTMxOTctNDA4ZS04ODY4LTliM2Q2MDE4MDkyNyIsInNjb3BlIjpbImRldmljZSJdLCJpYXQiOjE0Mzk5Mjg3MjF9.Hx_st7FnU_jJJQ5YJLCbtzWBNhHR53a4s1KIWvEmhio"
+    let keychain = KeychainSwift()
+    private let api_pw = "fartpoop"
   
     class var sharedService: APIService {
       return _sharedService
     }
   
-  func get(params: [ String : String ]?, url: String, callback: APICallback) {
-    request("GET", params: params, url: url, callback: callback)
+  func get(params: [ String : String ]?, authType: HTTPRequestAuthType = .Token, url: String, callback: APICallback) {
+    request("GET", params: params, authType: authType, url: url, callback: callback)
   }
   
-  func post(params: [ String : AnyObject ]?, headers: [ String : String]?, url: String, callback: APICallback) {
-    request("POST", params: params, url: url, callback: callback)
+  func post(params: [ String : AnyObject ]?, authType: HTTPRequestAuthType, url: String, callback: APICallback) {
+    request("POST", params: params, authType: authType, url: url, callback: callback)
   }
   
-  func put(params: [ String : String ]?, url: String, callback: APICallback) {
-    request("PUT", params: params, url: url, callback: callback)
+  func put(params: [ String : String ]?, authType: HTTPRequestAuthType = .Token, url: String, callback: APICallback) {
+    request("PUT", params: params, authType: authType, url: url, callback: callback)
   }
   
-  func delete(params: [ String : String ]?, url: String, callback: APICallback) {
-    request("DELETE", params: params, url: url, callback: callback)
+  func delete(params: [ String : String ]?, authType: HTTPRequestAuthType = .Token, url: String, callback: APICallback) {
+    request("DELETE", params: params, authType: authType, url: url, callback: callback)
   }
   
   //MARK: Private Methods
-  private func request(type: String, params: [ String : AnyObject ]?, url: String, callback: APICallback) {
+  private func request(type: String, params: [ String : AnyObject ]?, authType: HTTPRequestAuthType, url: String, callback: APICallback) {
     let request = NSMutableURLRequest(URL: NSURL(string: apiURL + url)!)
     let session = NSURLSession.sharedSession()
     request.HTTPMethod = type
@@ -66,14 +73,23 @@ class APIService: NSObject {
       }
     }
     
+    //MARK: Standard Headers:
     request.addValue("application/json", forHTTPHeaderField: "Content-Type")
     request.addValue("application/json", forHTTPHeaderField: "Accept")
-    
     request.addValue(NSLocale.currentLocale().localeIdentifier, forHTTPHeaderField: "Accept-Language")
+    request.addValue(api_pw, forHTTPHeaderField: "api_auth_password")
     
-    request.addValue("matt", forHTTPHeaderField: "api_authtoken")
-    request.addValue("fartpoop", forHTTPHeaderField: "api_auth_password")
-//    request.addValue(authToken, forHTTPHeaderField: "x-access-token")
+    //MARK: Auth Specific Headers:
+    switch authType {
+    case .Basic:
+      request.addValue("Basic", forHTTPHeaderField: "auth_type")
+      //add username and password params to body
+    case .Token:
+      if let authToken = keychain.get("api_authtoken") {
+        request.addValue("Token", forHTTPHeaderField: "auth_type")
+        request.addValue(authToken, forHTTPHeaderField: "token")
+      }
+    }
     
     let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
       
@@ -86,10 +102,11 @@ class APIService: NSObject {
       //
       
       if let res = response as! NSHTTPURLResponse! {
-        //        if res.statusCode == 401 { // unauthorized
-        //          println("Error server responded with 401: Unauthorized")
-        //          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "errorUnauthorizedNotification", object: nil))
-        //        }
+        //Use this notification for when user makes any request but gets unauthorized, means token is expired, send them back to login
+//        if res.statusCode == 401 { // unauthorized
+//          print("Error server responded with 401: Unauthorized")
+//          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "errorUnauthorizedNotification", object: nil))
+//        }
         if res.statusCode != 200 {
           print("Error, server responded with: \(res.statusCode)" )
           let errorMessage = self.parseError(data!)
@@ -111,8 +128,6 @@ class APIService: NSObject {
   private func parseError(data: NSData) -> String {
     
     var serializationError: NSError?
-    //    var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &serializationError) as? [ String:AnyObject ]
-    
     var json: AnyObject?
     do {
       json = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers)
@@ -141,30 +156,21 @@ class APIService: NSObject {
   
   private func parseData(data: NSData, callback: APICallback) {
     var serializationError: NSError?
-    //    var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &serializationError) as? [ String:AnyObject ]
     
-  var json: AnyObject?
-    do {
-      json = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers)
-    } catch let error as NSError {
-      serializationError = error
-      json = nil
-    }
-    
-    //    if let response: AnyObject = json {
-    //      if response.isKindOfClass(NSArray) {
-    //        println("***** JSON ARRAY *****")
-    //      } else {
-    //        println("***** JSON DICTIONARY *****")
-    //      }
-    //    }
+    var json: AnyObject?
+      do {
+        json = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers)
+      } catch let error as NSError {
+        serializationError = error
+        json = nil
+      }
     
     if(serializationError != nil) {
       callback(nil, serializationError)
     }
     else {
       if let parsedJSON: AnyObject = json {
-        //        println("RESPONSE: \(parsedJSON)")
+        print("RESPONSE: \(parsedJSON)")
         callback(parsedJSON, nil)
       }
       else {

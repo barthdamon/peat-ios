@@ -7,15 +7,26 @@
 //
 
 import UIKit
+import AWSCore
+import AWSDynamoDB
+import AWSCognito
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
 
-
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    
     // Override point for customization after application launch.
+    let credentialsProvider = AWSCognitoCredentialsProvider(
+      regionType: AWSRegionType.USEast1, identityPoolId: "Peat")
+    
+    let defaultServiceConfiguration = AWSServiceConfiguration(
+      region: AWSRegionType.USEast1, credentialsProvider: credentialsProvider)
+    
+    AWSServiceManager.defaultServiceManager().defaultServiceConfiguration = defaultServiceConfiguration
+    
     return true
   }
 
