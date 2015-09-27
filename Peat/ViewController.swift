@@ -8,12 +8,15 @@
 
 import UIKit
 import KeychainSwift
+import AWSCore
+import AWSS3
 
 class ViewController: UIViewController {
   var authToken :Dictionary<String, AnyObject>?
   
   let keychain = KeychainSwift()
 
+  @IBOutlet weak var imageView: UIImageView!
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -47,7 +50,8 @@ class ViewController: UIViewController {
     
   }
   
-  @IBAction func sendToken(sender: AnyObject) {
+  
+  func sendToken(sender: AnyObject) {
     print("something")
       APIService.sharedService.get(nil, url: "") { (res, err) -> () in
         if let e = err {
@@ -59,5 +63,7 @@ class ViewController: UIViewController {
         }
       }
   }
+  @IBAction func downloadBtnPressed(sender: AnyObject) {
+//    downloadPhoto()
+  }
 }
-

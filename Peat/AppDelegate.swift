@@ -8,8 +8,11 @@
 
 import UIKit
 import AWSCore
+import AWSS3
 import AWSDynamoDB
 import AWSCognito
+import Bolts
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,18 +20,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
 
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    AWSLogger.defaultLogger().logLevel = .Verbose
     
-    // Override point for customization after application launch.
-    let credentialsProvider = AWSCognitoCredentialsProvider(
-      regionType: AWSRegionType.USEast1, identityPoolId: "Peat")
-    
-    let defaultServiceConfiguration = AWSServiceConfiguration(
-      region: AWSRegionType.USEast1, credentialsProvider: credentialsProvider)
-    
-    AWSServiceManager.defaultServiceManager().defaultServiceConfiguration = defaultServiceConfiguration
-    
+    let credentialsProvider: AWSCognitoCredentialsProvider = AWSCognitoCredentialsProvider(regionType: AWSRegionType.USEast1, identityPoolId: "us-east-1:ac398fbc-98de-4deb-a0de-b76cb8f08f41")
+    let configuration: AWSServiceConfiguration = AWSServiceConfiguration(region: AWSRegionType.USEast1, credentialsProvider: credentialsProvider)
+    AWSServiceManager.defaultServiceManager().defaultServiceConfiguration = configuration
     return true
   }
+  
+  @objc func application(application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
+    AWSS3TransferUtility.interceptApplication(application, handleEventsForBackgroundURLSession: identifier, completionHandler: completionHandler)
+  }
+
 
   func applicationWillResignActive(application: UIApplication) {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -51,7 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func applicationWillTerminate(application: UIApplication) {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
   }
-
+  
 
 }
 

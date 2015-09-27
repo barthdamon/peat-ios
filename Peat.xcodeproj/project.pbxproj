@@ -14,7 +14,10 @@
 		027E31121BA2780D001FCF70 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 027E31101BA2780D001FCF70 /* LaunchScreen.xib */; };
 		027E311E1BA2780D001FCF70 /* PeatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E311D1BA2780D001FCF70 /* PeatTests.swift */; };
 		027E31281BA27875001FCF70 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E31271BA27875001FCF70 /* APIService.swift */; };
+		0288692B1BB4AF7E004B71FB /* PracticeUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0288692A1BB4AF7E004B71FB /* PracticeUploadViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		02A11C971BB899AE0064AE95 /* PhotosCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11C961BB899AE0064AE95 /* PhotosCollectionViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		02F60DEA1BB330F800F189F0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02F60DE91BB330F800F189F0 /* AVFoundation.framework */; };
+		02FD6C931BB38C69003A3DDD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FD6C921BB38C69003A3DDD /* CameraViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		DA8FE7BD7B07D58B9007610C /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB87F9D425CD4D0A7CBEB8A0 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -40,8 +43,11 @@
 		027E311C1BA2780D001FCF70 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		027E311D1BA2780D001FCF70 /* PeatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeatTests.swift; sourceTree = "<group>"; };
 		027E31271BA27875001FCF70 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		0288692A1BB4AF7E004B71FB /* PracticeUploadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PracticeUploadViewController.swift; sourceTree = "<group>"; };
+		02A11C961BB899AE0064AE95 /* PhotosCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewController.swift; sourceTree = "<group>"; };
 		02F60DE81BB32CD100F189F0 /* Peat-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Peat-Bridging-Header.h"; sourceTree = "<group>"; };
 		02F60DE91BB330F800F189F0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		02FD6C921BB38C69003A3DDD /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		275CE9AE943487EC5C73621C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		F24416312EBB65AABDA22E62 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		FB87F9D425CD4D0A7CBEB8A0 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				027E31071BA2780C001FCF70 /* AppDelegate.swift */,
+				0288692A1BB4AF7E004B71FB /* PracticeUploadViewController.swift */,
 				027E31271BA27875001FCF70 /* APIService.swift */,
 				02F60DE71BB32CA200F189F0 /* Controllers */,
 				02F60DE61BB32C8F00F189F0 /* Helpers */,
@@ -139,6 +146,8 @@
 			isa = PBXGroup;
 			children = (
 				026AC2B51BB0ECF1005F8E81 /* ViewController.swift */,
+				02A11C961BB899AE0064AE95 /* PhotosCollectionViewController.swift */,
+				02FD6C921BB38C69003A3DDD /* CameraViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -315,6 +324,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				027E31281BA27875001FCF70 /* APIService.swift in Sources */,
+				02FD6C931BB38C69003A3DDD /* CameraViewController.swift in Sources */,
+				0288692B1BB4AF7E004B71FB /* PracticeUploadViewController.swift in Sources */,
+				02A11C971BB899AE0064AE95 /* PhotosCollectionViewController.swift in Sources */,
 				026AC2B61BB0ECF1005F8E81 /* ViewController.swift in Sources */,
 				027E31081BA2780C001FCF70 /* AppDelegate.swift in Sources */,
 			);

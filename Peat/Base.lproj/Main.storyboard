@@ -5,6 +5,36 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
+        <!--Practice Upload View Controller-->
+        <scene sceneID="emN-q7-qMB">
+            <objects>
+                <viewController id="rgk-Tz-46K" customClass="PracticeUploadViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="KMX-ob-HTd"/>
+                        <viewControllerLayoutGuide type="bottom" id="Sgi-Xg-GgV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="2ga-6j-a3g">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hej-cu-HON">
+                                <rect key="frame" x="180" y="236" width="240" height="128"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Hej-cu-HON" firstAttribute="centerX" secondItem="2ga-6j-a3g" secondAttribute="centerX" id="0R2-Ox-ewl"/>
+                            <constraint firstItem="Hej-cu-HON" firstAttribute="centerY" secondItem="2ga-6j-a3g" secondAttribute="centerY" id="bEx-tz-GCC"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="Hej-cu-HON" id="nKY-MW-xQd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HUX-SZ-b8S" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1194" y="-525"/>
+        </scene>
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
@@ -33,6 +63,23 @@
                                     <segue destination="ij2-ag-d7A" kind="show" id="lvl-0d-rrk"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rIE-wy-Mk7">
+                                <rect key="frame" x="268" y="213" width="64" height="30"/>
+                                <state key="normal" title="Practice1"/>
+                                <connections>
+                                    <segue destination="rgk-Tz-46K" kind="show" id="nNd-WX-Pr3"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dP9-QX-kns">
+                                <rect key="frame" x="247" y="406" width="107" height="30"/>
+                                <state key="normal" title="downloadPhoto"/>
+                                <connections>
+                                    <action selector="downloadBtnPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Zit-Cf-s57"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xft-Ge-LLN">
+                                <rect key="frame" x="180" y="452" width="240" height="128"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -41,15 +88,18 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="vqn-Yc-YbC"/>
+                    <connections>
+                        <outlet property="imageView" destination="Xft-Ge-LLN" id="Pqa-my-u69"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1188" y="158"/>
+            <point key="canvasLocation" x="1182" y="158"/>
         </scene>
-        <!--View Controller-->
+        <!--Camera View Controller-->
         <scene sceneID="Bbt-4x-aiX">
             <objects>
-                <viewController id="ij2-ag-d7A" sceneMemberID="viewController">
+                <viewController id="ij2-ag-d7A" customClass="CameraViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Hj8-7t-4oG"/>
                         <viewControllerLayoutGuide type="bottom" id="BpY-KO-gDW"/>
@@ -57,8 +107,20 @@
                     <view key="view" contentMode="scaleToFill" id="z64-Xt-2TB">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z7a-tW-0Zn">
+                                <rect key="frame" x="180" y="236" width="240" height="128"/>
+                            </imageView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="z7a-tW-0Zn" firstAttribute="centerY" secondItem="z64-Xt-2TB" secondAttribute="centerY" id="f9V-cb-ygT"/>
+                            <constraint firstItem="z7a-tW-0Zn" firstAttribute="centerX" secondItem="z64-Xt-2TB" secondAttribute="centerX" id="orF-zw-2lZ"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="imageView" destination="z7a-tW-0Zn" id="MQo-MC-gkW"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ebc-Dj-idv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
