@@ -85,15 +85,6 @@ extension CameraViewController : UINavigationControllerDelegate, UIImagePickerCo
     // dismiss the image picker controller window
     self.dismissViewControllerAnimated(true, completion: nil)
     
-//    let imageURL = info[UIImagePickerControllerReferenceURL] as! NSURL
-//    let imageData = NSData(contentsOfURL: imageURL)
-//    let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
-//    let documentsDirectory: AnyObject = paths[0]
-//    let dataPath = documentsDirectory.stringByAppendingPathComponent("/img1.mp4")
-//    
-//    imageData?.writeToFile(dataPath, atomically: false)
-
-    
     var image: UIImage?
     // fetch the selected image
     if picker.allowsEditing {
@@ -129,7 +120,7 @@ extension CameraViewController : UINavigationControllerDelegate, UIImagePickerCo
     
     
     //    make a timestamp variable to use in the key of the video I'm about to upload
-        let transferManager:AWSS3TransferManager = AWSS3TransferManager.defaultS3TransferManager()
+    let transferManager:AWSS3TransferManager = AWSS3TransferManager.defaultS3TransferManager()
     transferManager.upload(uploadRequest).continueWithBlock { (task :AWSTask!) -> AnyObject! in
           print("I'm inside the completion block")
           if((task.result) != nil){
@@ -142,9 +133,6 @@ extension CameraViewController : UINavigationControllerDelegate, UIImagePickerCo
           }
           return nil
         }
-    
-    self.dismissViewControllerAnimated(true, completion: nil)
-
   }
   
   func sendToServer(mediaID: String, mediaType: MediaType){

@@ -15,7 +15,7 @@ private let reuseIdentifier = "Cell"
 
 class PhotosCollectionViewController: UICollectionViewController {
   
-  var imageArray: Array<UIImage>?
+  var imageArray: Array<UIImage> = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,22 +27,49 @@ class PhotosCollectionViewController: UICollectionViewController {
         self.collectionView!.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
         // Do any additional setup after loading the view.
+        queryForMediaData()
     }
+  
+  override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(true)
+    queryForMediaData()
+  }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
   
-  func downloadPhoto() {
+  func queryForMediaData() {
+    APIService.sharedService.get(nil, url: "media") { (res, err) -> () in
+      if let e = err {
+        print("Error:\(e)")
+      } else {
+        if let json = res as? Dictionary<String, AnyObject> {
+          print("media query: \(json)")
+          for var i = 0; i < json["media"]!.count; i++ {
+            if let test = json["media"]![i] {
+              print("test var\(i): \(test)")
+              if let mediaID = test["mediaID"] as? String {
+                self.downloadPhoto(mediaID)
+              }
+            }
+          }
+          self.collectionView?.reloadData()
+        }
+      }
+    }
+  }
+  
+  func downloadPhoto(mediaID :String) {
     
     let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-    let filePath = "\(paths)/SaveFile2.png"
+    let filePath = "\(paths)/\(mediaID).png"
     let filePathToWrite = NSURL(fileURLWithPath: filePath)
     
     let downloadRequest = AWSS3TransferManagerDownloadRequest()
     downloadRequest.bucket = "peat-assets"
-    downloadRequest.key  = "MYFILE" //fileName on s3
+    downloadRequest.key  = "\(mediaID)" //fileName on s3
     downloadRequest.downloadingFileURL = filePathToWrite
     
     let transferManager = AWSS3TransferManager.defaultS3TransferManager()
@@ -59,7 +86,7 @@ class PhotosCollectionViewController: UICollectionViewController {
         if let imageData = NSData(contentsOfURL: filePathToWrite) {
           let currentImage = UIImage(data: imageData)
           dispatch_async(dispatch_get_main_queue(), { () -> Void in
-//            self.imageArray.append(currentImage)
+            self.imageArray.append(currentImage!)
           })
         }
         return "HI"
@@ -83,18 +110,18 @@ class PhotosCollectionViewController: UICollectionViewController {
 
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
 
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return 0
+        return self.imageArray.count
     }
 
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath)
-    
+    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> CustomCollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! CustomCollectionViewCell
+        cell.imageView.image = imageArray[indexPath.row]
         // Configure the cell
     
         return cell
