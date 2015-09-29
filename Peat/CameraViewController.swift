@@ -13,20 +13,6 @@ import AWSS3
 import AWSDynamoDB
 import AWSCognito
 
-enum MediaType {
-  case Photo
-  case Video
-  
-  func toString() -> String {
-    switch self {
-    case .Photo:
-      return "Photo"
-    case .Video:
-      return "Video"
-    }
-  }
-}
-
 class CameraViewController: UIViewController {
 
     override func viewDidLoad() {

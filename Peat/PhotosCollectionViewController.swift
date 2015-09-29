@@ -55,7 +55,7 @@ class PhotosCollectionViewController: UICollectionViewController {
               }
             }
           }
-          self.collectionView?.reloadData()
+            self.collectionView?.reloadData()
         }
       }
     }

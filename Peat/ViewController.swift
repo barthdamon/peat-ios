@@ -21,16 +21,7 @@ class ViewController: UIViewController {
     super.viewDidLoad()
 
     // Do any additional setup after loading the view, typically from a nib.
-//    APIService.sharedService.post(["params":["auth_type":"Basic","user":["email":"mbmattbarth@gmail.com","password":"tittyfarts"]]], authType: HTTPRequestAuthType.Basic, url: "login") { (res, err) -> () in
-//      if let e = err {
-//        print("Error:\(e)")
-//      } else {
-//        if let json = res as? Dictionary<String, AnyObject> {
-//          print(json)
-//          self.saveTokenToKeychain(json)
-//        }
-//      }
-//    }
+
   }
 
   override func didReceiveMemoryWarning() {
@@ -52,18 +43,15 @@ class ViewController: UIViewController {
   
   
   func sendToken(sender: AnyObject) {
-    print("something")
-      APIService.sharedService.get(nil, url: "") { (res, err) -> () in
-        if let e = err {
-          print("Error:\(e)")
-        } else {
-          if let json = res as? Dictionary<String, AnyObject> {
-            print(json)
-          }
+    APIService.sharedService.post(["params":["auth_type":"Basic","user":["email":"mbmattbarth@gmail.com","password":"tittyfarts"]]], authType: HTTPRequestAuthType.Basic, url: "login") { (res, err) -> () in
+      if let e = err {
+        print("Error:\(e)")
+      } else {
+        if let json = res as? Dictionary<String, AnyObject> {
+          print(json)
+          self.saveTokenToKeychain(json)
         }
       }
-  }
-  @IBAction func downloadBtnPressed(sender: AnyObject) {
-//    downloadPhoto()
+    }
   }
 }
