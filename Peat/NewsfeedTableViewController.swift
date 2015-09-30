@@ -11,12 +11,15 @@ import AWSCore
 import AWSS3
 
 class NewsfeedTableViewController: UITableViewController {
-
+  
+    var mediaObjects: Array<MediaObject>?
     var imageArray: Array<UIImage> = []
     var userArray: Array<String> = []
   
     override func viewDidLoad() {
         super.viewDidLoad()
+      
+      NSNotificationCenter.defaultCenter().addObserver(self, selector: "configureMedia", name: "mediaObjectsPopulated", object: nil)
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -33,10 +36,21 @@ class NewsfeedTableViewController: UITableViewController {
   
   func queryForMediaData() {
     PeatContentStore.sharedStore.initializeNewsfeed() { (res, err) -> () in
-      //Take the response data and set it to the local variables, then reload the data?
-      //OR have the response data in the shared store and just query that for the info..... Not sure yet
+      if err != nil {
+        print("error fetching the store")
+      } else {
+        print("Store fetched Successfuly: \(res)")
+        PeatContentStore.sharedStore.generateMediaThumbnails()
+      }
     }
-    
+  }
+  
+  func configureMedia() {
+    self.mediaObjects  = PeatContentStore.sharedStore.mediaObjects
+    mediaObjects?.forEach({ (object: MediaObject) in
+      self.imageArray.append(object.thumbnail!)
+      self.userArray.append(object.user!)
+    })
   }
 
     // MARK: - Table view data source

@@ -25,8 +25,16 @@ class MediaObject: NSObject {
     }
   }
   
-  func generateImageForMedia() {
-    
-  }
+//  func generateImageForMedia() {
+//    AWSContentHelper.sharedHelper.ge(mediaID!) { (res, err) in
+//      if err != nil {
+//        print("Error downloading Image")
+//      } else {
+//        if let image = res as? UIImage {
+//          self.thumbnail = image
+//        }
+//      }
+//    }
+//  }
   
 }

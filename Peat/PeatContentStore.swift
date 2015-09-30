@@ -64,9 +64,11 @@ class PeatContentStore: NSObject {
         print("Error:\(e)")
       } else {
         if let json = res as? Dictionary<String, AnyObject> {
-          self.createMediaObjects(json) { (res, err) -> () in
-            self.populateMediaObjects() { (res, err) -> () in
-              callback(res, err)
+          self.createMediaObjects(json) { (res) -> () in
+            if res == "error" {
+              print("error fetching")
+            } else {
+            callback(json, nil)
             }
           }
         }
@@ -74,7 +76,7 @@ class PeatContentStore: NSObject {
     }
   }
   
-  func createMediaObjects(json :Dictionary<String, AnyObject>, callback: APICallback) {
+  func createMediaObjects(json :Dictionary<String, AnyObject>,  callback: (String?) -> () ) {
     print("media query: \(json)")
     if let media = json["media"] {
       for var i = 0; i < media.count; i++ {
@@ -82,19 +84,20 @@ class PeatContentStore: NSObject {
           let mediaObject = MediaObject()
           mediaObject.initWithJson(selectedMedia as! jsonObject)
           self.mediaObjects.append(mediaObject)
+          callback("no error")
         }
       }
     }
   }
-  
-  func populateMediaObjects(callback :APICallback) {
-    for var i = 0; i < mediaObjects.count; i++ {
-      AWSContentHelper.sharedHelper.downloadPhoto(mediaObjects[i].mediaID!) { (res, err) -> () in
-        if err != nil {
-          callback(nil, err)
-        } else {
-          callback(true, err)
-        }
+
+  func generateMediaThumbnails() {
+    AWSContentHelper.sharedHelper.generateThumbnails(mediaObjects) { (objects) in
+      if objects == nil {
+        print("Error downloading Image")
+        NSNotificationCenter.defaultCenter().postNotificationName("mediaObjectsFailedToPopulate", object: self, userInfo: nil)
+      } else {
+        self.mediaObjects = objects!
+        NSNotificationCenter.defaultCenter().postNotificationName("mediaObjectsPopulated", object: self, userInfo: nil)
       }
     }
   }
