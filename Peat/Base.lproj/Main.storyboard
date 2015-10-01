@@ -48,7 +48,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="imageView" destination="ByU-Om-i9p" id="y2d-5Z-QCK"/>
+                                    <outlet property="mediaView" destination="ByU-Om-i9p" id="QZP-dC-uVa"/>
                                     <outlet property="userLabel" destination="SG8-Yg-JWX" id="dbV-z5-hSI"/>
                                 </connections>
                             </tableViewCell>
@@ -105,6 +105,13 @@
                                     <segue destination="ij2-ag-d7A" kind="show" id="lvl-0d-rrk"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="d4a-OE-xEP">
+                                <rect key="frame" x="180" y="427" width="240" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="Jmr-du-RQ5"/>
+                                    <constraint firstAttribute="width" constant="240" id="kZj-7l-fl7"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -112,13 +119,18 @@
                             <constraint firstAttribute="centerX" secondItem="wbP-hL-o1J" secondAttribute="centerX" id="Dth-fm-TtD"/>
                             <constraint firstItem="0mn-Qq-8WL" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Irq-4W-qH0"/>
                             <constraint firstItem="vVn-ci-6kc" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="QlS-LA-OXX"/>
+                            <constraint firstItem="d4a-OE-xEP" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Qx6-Cw-5al"/>
                             <constraint firstItem="0mn-Qq-8WL" firstAttribute="top" secondItem="wbP-hL-o1J" secondAttribute="bottom" constant="34" id="TBQ-v0-Qgc"/>
                             <constraint firstAttribute="centerY" secondItem="wbP-hL-o1J" secondAttribute="centerY" id="YZ3-xP-N21"/>
                             <constraint firstItem="L8k-AY-BCj" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="apK-ri-1iE"/>
+                            <constraint firstItem="d4a-OE-xEP" firstAttribute="top" secondItem="0mn-Qq-8WL" secondAttribute="bottom" constant="48" id="leT-be-hjZ"/>
                             <constraint firstItem="L8k-AY-BCj" firstAttribute="top" secondItem="vVn-ci-6kc" secondAttribute="bottom" constant="28" id="rO9-41-hWj"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="vqn-Yc-YbC"/>
+                    <connections>
+                        <outlet property="imageView" destination="d4a-OE-xEP" id="Gb0-RS-emR"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

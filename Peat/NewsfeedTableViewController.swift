@@ -51,6 +51,9 @@ class NewsfeedTableViewController: UITableViewController {
       self.imageArray.append(object.thumbnail!)
       self.userArray.append(object.user!)
     })
+    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+      self.tableView.reloadData()
+    })
   }
 
     // MARK: - Table view data source

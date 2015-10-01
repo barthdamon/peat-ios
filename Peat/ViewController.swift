@@ -23,6 +23,17 @@ class ViewController: UIViewController {
     // Do any additional setup after loading the view, typically from a nib.
 
   }
+  
+  override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(true)
+    if PeatContentStore.sharedStore.mediaObjects.count > 0 {
+      if let image = PeatContentStore.sharedStore.mediaObjects[0].thumbnail {
+        self.imageView.image = image
+      } else {
+        print("Image fed up")
+      }
+    }
+  }
 
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
@@ -43,13 +54,15 @@ class ViewController: UIViewController {
   
   
   func sendToken(sender: AnyObject) {
-    APIService.sharedService.post(["params":["auth_type":"Basic","user":["email":"mbmattbarth@gmail.com","password":"tittyfarts"]]], authType: HTTPRequestAuthType.Basic, url: "login") { (res, err) -> () in
+    APIService.sharedService.post(["params":["auth_type":"Basic","user":["email":"mbmattbarth@gmail.com","password":"mattdamon7"]]], authType: HTTPRequestAuthType.Basic, url: "login") { (res, err) -> () in
       if let e = err {
         print("Error:\(e)")
       } else {
         if let json = res as? Dictionary<String, AnyObject> {
           print(json)
-          self.saveTokenToKeychain(json)
+          if let token = json["api_authtoken"] as? String {
+            APIService.sharedService.authToken = token
+          }
         }
       }
     }

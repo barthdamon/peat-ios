@@ -31,6 +31,7 @@ class APIService: NSObject {
   let baseURL = "https://device.oddworks.io"
   #endif
   
+    var authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1NjBjNmVkZDdjZDYzMjNhZjYyMzhiODgiLCJleHAiOjE0NDQyNjUyMDQ1MTJ9.IA7Ck2fdAdBBOsjzndGdOTh_UQvY498DnMyvZBRo0rk"
     var apiURL: String { return "\(baseURL)/" }
     let keychain = KeychainSwift()
     private let api_pw = "fartpoop"
@@ -85,10 +86,8 @@ class APIService: NSObject {
       request.addValue("Basic", forHTTPHeaderField: "auth_type")
       //add username and password params to body
     case .Token:
-      if let authToken = keychain.get("api_authtoken") {
         request.addValue("Token", forHTTPHeaderField: "auth_type")
         request.addValue(authToken, forHTTPHeaderField: "token")
-      }
     }
     
     let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
@@ -114,9 +113,10 @@ class APIService: NSObject {
           callback(nil, e)
           return
         }
+        self.parseData(data!, callback: callback)
+      } else {
+        print("Server Not Responding")
       }
-      
-      self.parseData(data!, callback: callback)
     })
     
     task.resume()

@@ -26,11 +26,11 @@ class AWSContentHelper: NSObject {
   
   func generateThumbnails(mediaObjects :Array<MediaObject>,  callback: (Array<MediaObject>?) -> () ) {
 //    var imageFromMedia: UIImage?
-      var count = 0
+    var count = 0
     
     func makeRequest() {
       let currentObject = mediaObjects[count]
-      let mediaID = currentObject.mediaID
+      let mediaID = currentObject.mediaID!
       
       let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
       let filePath = "\(paths)/\(mediaID).png"
@@ -65,8 +65,9 @@ class AWSContentHelper: NSObject {
           }
         }
       }
-    }
+    } // END MAKEREQUEST()
+    
+      makeRequest()
   }
-  
   
 }

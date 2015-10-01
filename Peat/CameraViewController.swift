@@ -122,7 +122,7 @@ extension CameraViewController : UINavigationControllerDelegate, UIImagePickerCo
   }
   
   func sendToServer(mediaID: String, mediaType: MediaType){
-    APIService.sharedService.post(["params":["mediaInfo": ["mediaID": mediaID, "mediaType": mediaType.toString()]]], authType: HTTPRequestAuthType.Token, url: "media")
+    APIService.sharedService.post(["params":["mediaInfo": ["mediaID": mediaID, "mediaType": "Photo"]]], authType: HTTPRequestAuthType.Token, url: "media")
         { (res, err) -> () in
             if let e = err {
               print("Error:\(e)")
