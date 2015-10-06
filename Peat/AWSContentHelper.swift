@@ -25,12 +25,12 @@ class AWSContentHelper: NSObject {
     return _sharedHelper
   }
   
-  func generateThumbnails(mediaObjects :Array<MediaObject>,  callback: (Array<MediaObject>?) -> () ) {
+  func generateThumbnails(mediaObjects :Array<PhotoObject>,  callback: (Array<PhotoObject>?) -> () ) {
 //    var imageFromMedia: UIImage?
     var count = 0
     
     func makeRequest() {
-      let currentObject = photoObjects[count]
+      let currentObject = mediaObjects[count]
       let mediaID = currentObject.mediaID!
       
       let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
@@ -54,10 +54,10 @@ class AWSContentHelper: NSObject {
           if let imageData = NSData(contentsOfURL: filePathToWrite), image = UIImage(data: imageData) {
             currentObject.thumbnail = image
             ++count
-            if count < self.photoObjects.count {
+            if count < mediaObjects.count {
               makeRequest()
             } else {
-              callback(self.photoObjects)
+              callback(mediaObjects)
             }
             return nil
           } else {

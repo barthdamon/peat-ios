@@ -49,6 +49,7 @@ class PeatContentStore: NSObject {
   
   var API = APIService.sharedService
   var mediaObjects: Array<MediaObject> = []
+  var photoObjects: Array<PhotoObject> = []
   
   class var sharedStore: PeatContentStore {
     return _sharedStore
@@ -87,6 +88,7 @@ class PeatContentStore: NSObject {
               mediaObject = VideoObject().videoWithJson(selectedMedia)
             } else {
               mediaObject = PhotoObject().photoWithJson(selectedMedia)
+              self.photoObjects.append(mediaObject as! PhotoObject)
             }
             self.mediaObjects.append(mediaObject)
             callback("no error")
@@ -97,12 +99,12 @@ class PeatContentStore: NSObject {
   }
 
   func generateMediaThumbnails() {
-    AWSContentHelper.sharedHelper.generateThumbnails(mediaObjects) { (objects) in
+    AWSContentHelper.sharedHelper.generateThumbnails(photoObjects) { (objects) in
       if objects == nil {
         print("Error downloading Image")
         NSNotificationCenter.defaultCenter().postNotificationName("mediaObjectsFailedToPopulate", object: self, userInfo: nil)
       } else {
-        self.mediaObjects = objects!
+        self.photoObjects = objects!
         NSNotificationCenter.defaultCenter().postNotificationName("mediaObjectsPopulated", object: self, userInfo: nil)
       }
     }
