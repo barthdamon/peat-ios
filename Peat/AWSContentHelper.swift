@@ -18,7 +18,8 @@ private let _sharedHelper = AWSContentHelper()
 class AWSContentHelper: NSObject {
   
   var API = APIService.sharedService
-  var mediaObjects = Array<MediaObject>?()
+  
+  var photoObjects: Array<PhotoObject> = []
   
   class var sharedHelper: AWSContentHelper {
     return _sharedHelper
@@ -29,7 +30,7 @@ class AWSContentHelper: NSObject {
     var count = 0
     
     func makeRequest() {
-      let currentObject = mediaObjects[count]
+      let currentObject = photoObjects[count]
       let mediaID = currentObject.mediaID!
       
       let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
@@ -53,10 +54,10 @@ class AWSContentHelper: NSObject {
           if let imageData = NSData(contentsOfURL: filePathToWrite), image = UIImage(data: imageData) {
             currentObject.thumbnail = image
             ++count
-            if count < mediaObjects.count {
+            if count < self.photoObjects.count {
               makeRequest()
             } else {
-              callback(mediaObjects)
+              callback(self.photoObjects)
             }
             return nil
           } else {
@@ -68,6 +69,38 @@ class AWSContentHelper: NSObject {
     } // END MAKEREQUEST()
     
       makeRequest()
+  }
+  
+  
+  func postMediaFromFactory(mediaURL :NSURL, mediaID :String, callback: APICallback) {
+    //make a timestamp variable to use in the key of the video I'm about to upload
+    let date:NSDate = NSDate()
+    let unixTimeStamp:NSTimeInterval = date.timeIntervalSince1970
+    let unixTimeStampString:String = String(format:"%f", unixTimeStamp)
+    print("this is my unix timestamp as a string: \(unixTimeStampString)")
+    
+    //upload to aws
+    let uploadRequest: AWSS3TransferManagerUploadRequest = AWSS3TransferManagerUploadRequest()
+    uploadRequest.bucket = "peat-assets"
+    uploadRequest.key = "\(mediaID)"
+    uploadRequest.contentType = "image"
+    uploadRequest.body = mediaURL
+    
+    //    make a timestamp variable to use in the key of the video I'm about to upload
+    let transferManager:AWSS3TransferManager = AWSS3TransferManager.defaultS3TransferManager()
+    transferManager.upload(uploadRequest).continueWithBlock { (task :AWSTask!) -> AnyObject! in
+      print("I'm inside the completion block")
+      if ((task.result) != nil) {
+        print("upload was successful?")
+        callback(nil,nil)
+      } else {
+        print("upload didn't seem to go through..")
+        let myError = task.error
+        print("error: \(myError)")
+        callback(nil, myError)
+      }
+      return nil
+    }
   }
   
 }

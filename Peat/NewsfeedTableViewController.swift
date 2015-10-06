@@ -48,7 +48,8 @@ class NewsfeedTableViewController: UITableViewController {
   func configureMedia() {
     self.mediaObjects  = PeatContentStore.sharedStore.mediaObjects
     mediaObjects?.forEach({ (object: MediaObject) in
-      self.imageArray.append(object.thumbnail!)
+      // TODO: if it is an image, get the thumbnail, ect
+//      self.imageArray.append(object.thumbnail!)
       self.userArray.append(object.user!)
     })
     dispatch_async(dispatch_get_main_queue(), { () -> Void in

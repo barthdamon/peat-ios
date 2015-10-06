@@ -68,7 +68,7 @@ class PeatContentStore: NSObject {
             if res == "error" {
               print("error fetching")
             } else {
-            callback(json, nil)
+              callback(json, nil)
             }
           }
         }
@@ -80,11 +80,17 @@ class PeatContentStore: NSObject {
     print("media query: \(json)")
     if let media = json["media"] {
       for var i = 0; i < media.count; i++ {
-        if let selectedMedia = media[i] {
-          let mediaObject = MediaObject()
-          mediaObject.initWithJson(selectedMedia as! jsonObject)
-          self.mediaObjects.append(mediaObject)
-          callback("no error")
+        if let selectedMedia = media[i] as? jsonObject {
+          if let type = selectedMedia["mediaType"] as? String {
+            var mediaObject = MediaObject()
+            if type == "Video" {
+              mediaObject = VideoObject().videoWithJson(selectedMedia)
+            } else {
+              mediaObject = PhotoObject().photoWithJson(selectedMedia)
+            }
+            self.mediaObjects.append(mediaObject)
+            callback("no error")
+          }
         }
       }
     }

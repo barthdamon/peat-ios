@@ -27,11 +27,18 @@ class ViewController: UIViewController {
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(true)
     if PeatContentStore.sharedStore.mediaObjects.count > 0 {
-      if let image = PeatContentStore.sharedStore.mediaObjects[0].thumbnail {
-        self.imageView.image = image
+      let media = PeatContentStore.sharedStore.mediaObjects[0]
+      if media is PhotoObject {
+        if let photoObject = media as? PhotoObject {
+          if let image = photoObject.thumbnail {
+            self.imageView.image = image
+          }
+        }
       } else {
-        print("Image fed up")
+        //deal with the video
       }
+    } else {
+        print("Image fed up")
     }
   }
 
