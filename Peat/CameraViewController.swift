@@ -60,6 +60,11 @@ extension CameraViewController : UINavigationControllerDelegate, UIImagePickerCo
       imagePickerController.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
     }
     
+    //Allows for video and images:
+    if let availableMediaTypes = UIImagePickerController.availableMediaTypesForSourceType(imagePickerController.sourceType) {
+        imagePickerController.mediaTypes = availableMediaTypes
+    }
+    
     self.presentViewController(imagePickerController, animated: true, completion: nil)
   }
   
@@ -67,15 +72,26 @@ extension CameraViewController : UINavigationControllerDelegate, UIImagePickerCo
     // dismiss the image picker controller window
     self.dismissViewControllerAnimated(true, completion: nil)
     
-    var image: UIImage?
-    // fetch the selected image
-    if picker.allowsEditing {
-      image = info[UIImagePickerControllerEditedImage] as? UIImage
+    //Determine if Video or Image Data
+    if (info[UIImagePickerControllerEditedImage] == nil && info[UIImagePickerControllerOriginalImage] == nil) {
+      //VIDEO
+      let videoPath = info[UIImagePickerControllerMediaURL] as! NSURL
+      PeatContentFactory.mainFactory.bundleVideoFile(videoPath)
+      
     } else {
-      image = info[UIImagePickerControllerOriginalImage] as? UIImage
+      //IMAGE
+      var image: UIImage?
+      // fetch the selected image
+      if picker.allowsEditing {
+        image = info[UIImagePickerControllerEditedImage] as? UIImage
+      } else {
+        image = info[UIImagePickerControllerOriginalImage] as? UIImage
+      }
+      self.imageView.image = image
+      PeatContentFactory.mainFactory.bundleImageFile(image!)
     }
-    self.imageView.image = image
-    PeatContentFactory.mainFactory.bundleImageFile(image!)
+    
+
   }
 
 

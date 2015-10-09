@@ -11,7 +11,6 @@ import AWSCore
 import AWSS3
 import AWSDynamoDB
 import AWSCognito
-import Bolts
 
 
 @UIApplicationMain

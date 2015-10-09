@@ -18,9 +18,15 @@ class PeatContentFactory: NSObject {
     return _mainFactory
   }
   
+  func bundleVideoFile(videoPath :NSURL) {
+    let pathString = videoPath.relativePath
+    //Might have to do this for stored images too if user takes with a camera
+    UISaveVideoAtPathToSavedPhotosAlbum(pathString!, self, nil, nil)
+    sendToAWS(videoPath, mediaType: .Movie)
+  }
+  
   
   func bundleImageFile(image :UIImage) {
-    
     //write the image data somewhere you can upload from (documents directory)
     let fileManager = NSFileManager.defaultManager()
     let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
@@ -28,16 +34,19 @@ class PeatContentFactory: NSObject {
     let imageData: NSData = UIImagePNGRepresentation(image)!
     fileManager.createFileAtPath(filePathToWrite, contents: imageData, attributes: nil)
     
-    
-    //get url of where image recently saved
+    //get url of where image was just saved
     let urlPaths = NSURL(fileURLWithPath: paths)
     let getImagePath = urlPaths.URLByAppendingPathComponent("SaveFile.png")
+    sendToAWS(getImagePath, mediaType: .Image)
+  }
+  
+  func sendToAWS(filePath: NSURL, mediaType: MediaType) {
     let mediaID = generateID(30)
-    AWSContentHelper.sharedHelper.postMediaFromFactory(getImagePath, mediaID: mediaID) { (res, err) in
+    AWSContentHelper.sharedHelper.postMediaFromFactory(filePath, mediaID: mediaID, mediaType: mediaType) { (res, err) in
       if err != nil {
         print(err)
       } else {
-        self.sendToServer(mediaID, mediaType: .Photo)
+        self.sendToServer(mediaID, mediaType: mediaType)
       }
     }
   }

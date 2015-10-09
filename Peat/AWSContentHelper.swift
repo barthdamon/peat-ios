@@ -55,7 +55,7 @@ class AWSContentHelper: NSObject {
             currentObject.thumbnail = image
             ++count
             if count < mediaObjects.count {
-              makeRequest()
+              makeRequest()   
             } else {
               callback(mediaObjects)
             }
@@ -72,7 +72,7 @@ class AWSContentHelper: NSObject {
   }
   
   
-  func postMediaFromFactory(mediaURL :NSURL, mediaID :String, callback: APICallback) {
+  func postMediaFromFactory(mediaURL :NSURL, mediaID :String, mediaType: MediaType, callback: APICallback) {
     //make a timestamp variable to use in the key of the video I'm about to upload
     let date:NSDate = NSDate()
     let unixTimeStamp:NSTimeInterval = date.timeIntervalSince1970
@@ -83,7 +83,7 @@ class AWSContentHelper: NSObject {
     let uploadRequest: AWSS3TransferManagerUploadRequest = AWSS3TransferManagerUploadRequest()
     uploadRequest.bucket = "peat-assets"
     uploadRequest.key = "\(mediaID)"
-    uploadRequest.contentType = "image"
+//    uploadRequest.contentType = mediaType.toString()
     uploadRequest.body = mediaURL
     
     //    make a timestamp variable to use in the key of the video I'm about to upload

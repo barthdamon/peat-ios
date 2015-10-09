@@ -12,28 +12,28 @@ import UIKit
 
 //MARK: General Typealiases
 enum MediaType {
-  case Photo
-  case Video
+  case Image
+  case Movie
   case Other
   
   func toString() -> String {
     switch self {
-    case .Photo:
-      return "Photo"
-    case .Video:
-      return "Video"
+    case .Image:
+      return "image"
+    case .Movie:
+      return "movie"
     default:
-      return "Other"
+      return "other"
     }
   }
 }
 
 func convertToType(type :String) -> MediaType {
   switch type {
-  case "Photo":
-    return MediaType.Photo
-  case "Video":
-    return MediaType.Video
+  case "image":
+    return MediaType.Image
+  case "movie":
+    return MediaType.Movie
   default:
     return MediaType.Other
   }
