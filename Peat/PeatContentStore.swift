@@ -13,15 +13,15 @@ import UIKit
 //MARK: General Typealiases
 enum MediaType {
   case Image
-  case Movie
+  case Video
   case Other
   
   func toString() -> String {
     switch self {
     case .Image:
       return "image"
-    case .Movie:
-      return "movie"
+    case .Video:
+      return "video"
     default:
       return "other"
     }
@@ -32,8 +32,8 @@ func convertToType(type :String) -> MediaType {
   switch type {
   case "image":
     return MediaType.Image
-  case "movie":
-    return MediaType.Movie
+  case "video":
+    return MediaType.Video
   default:
     return MediaType.Other
   }
@@ -50,6 +50,7 @@ class PeatContentStore: NSObject {
   var API = APIService.sharedService
   var mediaObjects: Array<MediaObject> = []
   var photoObjects: Array<PhotoObject> = []
+  var videoObjects: Array<VideoObject> = []
   
   class var sharedStore: PeatContentStore {
     return _sharedStore
@@ -84,8 +85,9 @@ class PeatContentStore: NSObject {
         if let selectedMedia = media[i] as? jsonObject {
           if let type = selectedMedia["mediaType"] as? String {
             var mediaObject = MediaObject()
-            if type == "Video" {
+            if type == "video" {
               mediaObject = VideoObject().videoWithJson(selectedMedia)
+              self.videoObjects.append(mediaObject as! VideoObject)
             } else {
               mediaObject = PhotoObject().photoWithJson(selectedMedia)
               self.photoObjects.append(mediaObject as! PhotoObject)
@@ -94,6 +96,18 @@ class PeatContentStore: NSObject {
             callback("no error")
           }
         }
+      }
+    }
+  }
+  
+  func downloadVideoContent() {
+    AWSContentHelper.sharedHelper.downloadVideos(videoObjects) { (objects) in
+      if let objects = objects {
+        self.videoObjects = objects
+        NSNotificationCenter.defaultCenter().postNotificationName("videoObjectsPopulated", object: self, userInfo: nil)
+      } else {
+        print("Error fetching video objects")
+        NSNotificationCenter.defaultCenter().postNotificationName("videoObjectsFailedToPopulate", object: self, userInfo: nil)
       }
     }
   }

@@ -76,19 +76,12 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wbP-hL-o1J">
-                                <rect key="frame" x="264" y="285" width="73" height="30"/>
+                                <rect key="frame" x="264" y="161" width="73" height="30"/>
                                 <state key="normal" title="Basic Auth">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="sendToken:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="WZr-yN-yJW"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0mn-Qq-8WL">
-                                <rect key="frame" x="229" y="349" width="143" height="30"/>
-                                <state key="normal" title="See Photo Collection"/>
-                                <connections>
-                                    <segue destination="aZH-Mz-EQt" kind="show" id="CRi-Cz-eOS"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vVn-ci-6kc">
@@ -99,14 +92,22 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L8k-AY-BCj">
-                                <rect key="frame" x="266" y="143" width="69" height="30"/>
+                                <rect key="frame" x="266" y="123" width="69" height="30"/>
                                 <state key="normal" title="Get Photo"/>
                                 <connections>
                                     <segue destination="ij2-ag-d7A" kind="show" id="lvl-0d-rrk"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7AU-PC-sez">
+                                <rect key="frame" x="143" y="216" width="314" height="167"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="167" id="5Ui-fl-RLO"/>
+                                    <constraint firstAttribute="width" constant="314" id="VMX-K1-fxq"/>
+                                </constraints>
+                            </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="d4a-OE-xEP">
-                                <rect key="frame" x="180" y="427" width="240" height="128"/>
+                                <rect key="frame" x="180" y="391" width="240" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="128" id="Jmr-du-RQ5"/>
                                     <constraint firstAttribute="width" constant="240" id="kZj-7l-fl7"/>
@@ -115,68 +116,27 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="wbP-hL-o1J" firstAttribute="top" secondItem="L8k-AY-BCj" secondAttribute="bottom" constant="112" id="BhS-Lo-r9J"/>
-                            <constraint firstAttribute="centerX" secondItem="wbP-hL-o1J" secondAttribute="centerX" id="Dth-fm-TtD"/>
-                            <constraint firstItem="0mn-Qq-8WL" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Irq-4W-qH0"/>
-                            <constraint firstItem="vVn-ci-6kc" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="QlS-LA-OXX"/>
-                            <constraint firstItem="d4a-OE-xEP" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Qx6-Cw-5al"/>
-                            <constraint firstItem="0mn-Qq-8WL" firstAttribute="top" secondItem="wbP-hL-o1J" secondAttribute="bottom" constant="34" id="TBQ-v0-Qgc"/>
-                            <constraint firstAttribute="centerY" secondItem="wbP-hL-o1J" secondAttribute="centerY" id="YZ3-xP-N21"/>
-                            <constraint firstItem="L8k-AY-BCj" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="apK-ri-1iE"/>
-                            <constraint firstItem="d4a-OE-xEP" firstAttribute="top" secondItem="0mn-Qq-8WL" secondAttribute="bottom" constant="48" id="leT-be-hjZ"/>
-                            <constraint firstItem="L8k-AY-BCj" firstAttribute="top" secondItem="vVn-ci-6kc" secondAttribute="bottom" constant="28" id="rO9-41-hWj"/>
+                            <constraint firstItem="d4a-OE-xEP" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="9DC-cc-THN"/>
+                            <constraint firstItem="L8k-AY-BCj" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="BGc-Gm-3Qj"/>
+                            <constraint firstItem="wbP-hL-o1J" firstAttribute="top" secondItem="L8k-AY-BCj" secondAttribute="bottom" constant="8" id="C7h-YL-94e"/>
+                            <constraint firstItem="vVn-ci-6kc" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="F5x-ci-4Xo"/>
+                            <constraint firstItem="7AU-PC-sez" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Ic5-5L-czD"/>
+                            <constraint firstItem="wbP-hL-o1J" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="K01-i4-FXm"/>
+                            <constraint firstItem="vVn-ci-6kc" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="21" id="bi3-QH-CQt"/>
+                            <constraint firstItem="L8k-AY-BCj" firstAttribute="top" secondItem="vVn-ci-6kc" secondAttribute="bottom" constant="8" id="kFM-zH-yWa"/>
+                            <constraint firstItem="7AU-PC-sez" firstAttribute="top" secondItem="wbP-hL-o1J" secondAttribute="bottom" constant="25" id="p6e-gt-uX3"/>
+                            <constraint firstItem="d4a-OE-xEP" firstAttribute="top" secondItem="7AU-PC-sez" secondAttribute="bottom" constant="8" id="zc5-HB-NEi"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="vqn-Yc-YbC"/>
                     <connections>
                         <outlet property="imageView" destination="d4a-OE-xEP" id="Gb0-RS-emR"/>
+                        <outlet property="playerView" destination="7AU-PC-sez" id="rK7-WJ-LB7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1182" y="158"/>
-        </scene>
-        <!--Photos Collection View Controller-->
-        <scene sceneID="iwY-VA-GxI">
-            <objects>
-                <collectionViewController id="aZH-Mz-EQt" customClass="PhotosCollectionViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="OUY-M3-CeI">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="6t7-rv-EdF">
-                            <size key="itemSize" width="222" height="222"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        </collectionViewFlowLayout>
-                        <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="yQX-AC-4b6" customClass="CustomCollectionViewCell" customModule="Peat" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="64" width="222" height="222"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="222" height="222"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lLq-g7-LbZ">
-                                            <rect key="frame" x="0.0" y="0.0" width="222" height="222"/>
-                                        </imageView>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
-                                <connections>
-                                    <outlet property="imageView" destination="lLq-g7-LbZ" id="RTq-0F-LIA"/>
-                                </connections>
-                            </collectionViewCell>
-                        </cells>
-                        <connections>
-                            <outlet property="dataSource" destination="aZH-Mz-EQt" id="eeX-oa-fJP"/>
-                            <outlet property="delegate" destination="aZH-Mz-EQt" id="xp7-fQ-pOW"/>
-                        </connections>
-                    </collectionView>
-                </collectionViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ATW-kp-G8B" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1182" y="878"/>
         </scene>
         <!--Camera View Controller-->
         <scene sceneID="Bbt-4x-aiX">

@@ -71,6 +71,54 @@ class AWSContentHelper: NSObject {
       makeRequest()
   }
   
+  func downloadVideos(mediaObjects :Array<VideoObject>,  callback: (Array<VideoObject>?) -> () ) {
+    var count = 0
+    
+    func makeRequest() {
+      let currentObject = mediaObjects[count]
+      let mediaID = currentObject.mediaID!
+      
+      let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+      let filePath = "\(paths)/\(mediaID).mov"
+      let filePathToWrite = NSURL(fileURLWithPath: filePath)
+      
+      let downloadRequest = AWSS3TransferManagerDownloadRequest()
+      downloadRequest.bucket = "peat-assets"
+      downloadRequest.key  = "\(mediaID)" //fileName on s3
+      downloadRequest.downloadingFileURL = filePathToWrite
+      
+      let transferManager = AWSS3TransferManager.defaultS3TransferManager()
+      transferManager.download(downloadRequest).continueWithBlock {
+        (task: AWSTask!) -> AnyObject! in
+        if task.error != nil {
+          print("Error downloading")
+          return nil
+        }
+        else {
+          print(filePathToWrite)
+          currentObject.videoFilePath = filePathToWrite
+          callback(mediaObjects)
+          return nil
+//          if let imageData = NSData(contentsOfURL: filePathToWrite) {
+//            currentObject.thumbnail = image
+//            ++count
+//            if count < mediaObjects.count {
+//              makeRequest()
+//            } else {
+//              callback(mediaObjects)
+//            }
+//            return nil
+//          } else {
+//            callback(nil)
+//            return nil
+//          }
+        }
+      }
+    } // END MAKEREQUEST()
+    
+    makeRequest()
+  }
+  
   
   func postMediaFromFactory(mediaURL :NSURL, mediaID :String, mediaType: MediaType, callback: APICallback) {
     //make a timestamp variable to use in the key of the video I'm about to upload
@@ -83,7 +131,7 @@ class AWSContentHelper: NSObject {
     let uploadRequest: AWSS3TransferManagerUploadRequest = AWSS3TransferManagerUploadRequest()
     uploadRequest.bucket = "peat-assets"
     uploadRequest.key = "\(mediaID)"
-//    uploadRequest.contentType = mediaType.toString()
+    uploadRequest.contentType = mediaType == .Video ? "video/quicktime" : mediaType.toString()
     uploadRequest.body = mediaURL
     
     //    make a timestamp variable to use in the key of the video I'm about to upload

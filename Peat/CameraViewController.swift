@@ -93,18 +93,5 @@ extension CameraViewController : UINavigationControllerDelegate, UIImagePickerCo
     
 
   }
-
-
-  //FOR VIDEO:
-//  let videoURL = info[UIImagePickerControllerMediaURL] as! NSURL
-//  let videoData = NSData(contentsOfURL: videoURL)
-//  let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
-//  let documentsDirectory: AnyObject = paths[0]
-//  let dataPath = documentsDirectory.stringByAppendingPathComponent("/vid1.mp4")
-//  
-//  videoData?.writeToFile(dataPath, atomically: false)
-//  self.dismissViewControllerAnimated(true, completion: nil)
-//
-//
   
 }

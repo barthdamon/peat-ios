@@ -22,7 +22,7 @@ class PeatContentFactory: NSObject {
     let pathString = videoPath.relativePath
     //Might have to do this for stored images too if user takes with a camera
     UISaveVideoAtPathToSavedPhotosAlbum(pathString!, self, nil, nil)
-    sendToAWS(videoPath, mediaType: .Movie)
+    sendToAWS(videoPath, mediaType: .Video)
   }
   
   
