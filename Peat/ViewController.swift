@@ -26,15 +26,15 @@ class ViewController: UIViewController {
   @IBOutlet weak var imageView: UIImageView!
   override func viewDidLoad() {
     super.viewDidLoad()
+    
 
-    queryForMediaData()
     // Do any additional setup after loading the view, typically from a nib.
     NSNotificationCenter.defaultCenter().addObserver(self, selector: "showMedia", name: "videoObjectsPopulated", object: nil)
   }
   
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(true)
-
+    queryForMediaData()
   }
   
   func queryForMediaData() {
@@ -43,38 +43,28 @@ class ViewController: UIViewController {
         print("error fetching the store")
       } else {
         print("Store fetched Successfuly: \(res)")
-        PeatContentStore.sharedStore.downloadVideoContent()
+        
       }
     }
   }
   
   func showMedia() {
     if PeatContentStore.sharedStore.mediaObjects.count > 0 {
-      let media = PeatContentStore.sharedStore.mediaObjects[0]
-//      if media is PhotoObject {
-//        if let photoObject = media as? PhotoObject {
-//          if let image = photoObject.thumbnail {
-//            self.imageView.image = image
-//          }
-//        }
-//      } else
-        if media is VideoObject {
-          print("video object recieved")
-          if let videoObject = media as? VideoObject {
-//            if let image = videoObject.thumbnail {
-              if let url = videoObject.videoFilePath {
-//                self.imageView.image = image
-                self.videoPath = url
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                  self.playVideo()
-                })
-              }
-//            }
+      let media = PeatContentStore.sharedStore.mediaObjects[1]
+      if let url = media.url {
+        if media is PhotoObject {
+          if let data = NSData(contentsOfURL: url), image = UIImage(data: data) {
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+              self.imageView.image = image
+            })
           }
+        } else if media is VideoObject {
+          self.videoPath = url
+          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.playVideo()
+          })
         }
-        //deal with the video
-    } else {
-      print("Image fed up")
+      }
     }
   }
 
@@ -85,7 +75,6 @@ class ViewController: UIViewController {
   
   func playVideo() {
     configureMediaPlayer()
-      
     if let url = self.videoPath {
       if let player = self.moviePlayer {
         player.prepareToPlay()

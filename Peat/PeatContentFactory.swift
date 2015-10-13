@@ -22,7 +22,7 @@ class PeatContentFactory: NSObject {
     let pathString = videoPath.relativePath
     //Might have to do this for stored images too if user takes with a camera
     UISaveVideoAtPathToSavedPhotosAlbum(pathString!, self, nil, nil)
-    sendToAWS(videoPath, mediaType: .Video)
+    postMedia(videoPath, mediaType: .Video)
   }
   
   
@@ -37,11 +37,14 @@ class PeatContentFactory: NSObject {
     //get url of where image was just saved
     let urlPaths = NSURL(fileURLWithPath: paths)
     let getImagePath = urlPaths.URLByAppendingPathComponent("SaveFile.png")
-    sendToAWS(getImagePath, mediaType: .Image)
+    postMedia(getImagePath, mediaType: .Image)
   }
   
-  func sendToAWS(filePath: NSURL, mediaType: MediaType) {
-    let mediaID = generateID(30)
+  func postMedia(filePath: NSURL, mediaType: MediaType) {
+    let typeExtension = mediaType == .Video ? ".mov" : ".img"
+    let id = generateID(30)
+    let mediaID = "\(id)\(typeExtension)"
+    
     AWSContentHelper.sharedHelper.postMediaFromFactory(filePath, mediaID: mediaID, mediaType: mediaType) { (res, err) in
       if err != nil {
         print(err)
@@ -52,7 +55,8 @@ class PeatContentFactory: NSObject {
   }
 
   func sendToServer(mediaID: String, mediaType: MediaType) {
-    APIService.sharedService.post(["params":["mediaInfo": ["mediaID": mediaID, "mediaType": mediaType.toString()]]], authType: HTTPRequestAuthType.Token, url: "media")
+    let url = "https://s3.amazonaws.com/peat-assets/\(mediaID)"
+    APIService.sharedService.post(["params":["mediaInfo": ["mediaID": mediaID, "url" : url, "mediaType": mediaType.toString()]]], authType: HTTPRequestAuthType.Token, url: "media")
       { (res, err) -> () in
         if let e = err {
           print("Error:\(e)")

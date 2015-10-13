@@ -80,7 +80,7 @@ class PeatContentStore: NSObject {
   
   func createMediaObjects(json :Dictionary<String, AnyObject>,  callback: (String?) -> () ) {
     print("media query: \(json)")
-    if let media = json["media"] {
+    if let media = json["media"] as? Array<jsonObject> {
       for var i = 0; i < media.count; i++ {
         if let selectedMedia = media[i] as? jsonObject {
           if let type = selectedMedia["mediaType"] as? String {
@@ -88,7 +88,7 @@ class PeatContentStore: NSObject {
             if type == "video" {
               mediaObject = VideoObject().videoWithJson(selectedMedia)
               self.videoObjects.append(mediaObject as! VideoObject)
-            } else {
+            } else if type == "image" {
               mediaObject = PhotoObject().photoWithJson(selectedMedia)
               self.photoObjects.append(mediaObject as! PhotoObject)
             }
@@ -97,36 +97,9 @@ class PeatContentStore: NSObject {
           }
         }
       }
+      NSNotificationCenter.defaultCenter().postNotificationName("videoObjectsPopulated", object: self, userInfo: nil)
     }
   }
-  
-  func downloadVideoContent() {
-    AWSContentHelper.sharedHelper.downloadVideos(videoObjects) { (objects) in
-      if let objects = objects {
-        self.videoObjects = objects
-        NSNotificationCenter.defaultCenter().postNotificationName("videoObjectsPopulated", object: self, userInfo: nil)
-      } else {
-        print("Error fetching video objects")
-        NSNotificationCenter.defaultCenter().postNotificationName("videoObjectsFailedToPopulate", object: self, userInfo: nil)
-      }
-    }
-  }
-
-  func generateMediaThumbnails() {
-    AWSContentHelper.sharedHelper.generateThumbnails(photoObjects) { (objects) in
-      if objects == nil {
-        print("Error downloading Image")
-        NSNotificationCenter.defaultCenter().postNotificationName("mediaObjectsFailedToPopulate", object: self, userInfo: nil)
-      } else {
-        self.photoObjects = objects!
-        NSNotificationCenter.defaultCenter().postNotificationName("mediaObjectsPopulated", object: self, userInfo: nil)
-      }
-    }
-  }
-
-
-  
-  
   
 }
 

@@ -40,7 +40,7 @@ class NewsfeedTableViewController: UITableViewController {
         print("error fetching the store")
       } else {
         print("Store fetched Successfuly: \(res)")
-        PeatContentStore.sharedStore.generateMediaThumbnails()
+//        PeatContentStore.sharedStore.generateMediaThumbnails()
       }
     }
   }
