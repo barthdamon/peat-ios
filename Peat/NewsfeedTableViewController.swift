@@ -12,21 +12,12 @@ import AWSS3
 
 class NewsfeedTableViewController: UITableViewController {
   
-    var mediaObjects: Array<PhotoObject>?
-    var imageArray: Array<UIImage> = []
-    var userArray: Array<String> = []
+    var mediaObjects: Array<MediaObject>?
   
     override func viewDidLoad() {
         super.viewDidLoad()
-      
+      self.tableView.allowsSelection = false
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "configureMedia", name: "mediaObjectsPopulated", object: nil)
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-      queryForMediaData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -34,24 +25,24 @@ class NewsfeedTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
   
+  override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(true)
+    queryForMediaData()
+  }
+  
   func queryForMediaData() {
     PeatContentStore.sharedStore.initializeNewsfeed() { (res, err) -> () in
       if err != nil {
         print("error fetching the store")
       } else {
         print("Store fetched Successfuly: \(res)")
-//        PeatContentStore.sharedStore.generateMediaThumbnails()
+        self.configureMedia()
       }
     }
   }
   
   func configureMedia() {
-    self.mediaObjects  = PeatContentStore.sharedStore.photoObjects
-    mediaObjects?.forEach({ (object: PhotoObject) in
-      // TODO: if it is an image, get the thumbnail, ect
-      self.imageArray.append(object.thumbnail!)
-      self.userArray.append(object.user!)
-    })
+    self.mediaObjects  = PeatContentStore.sharedStore.mediaObjects
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
       self.tableView.reloadData()
     })
@@ -66,15 +57,15 @@ class NewsfeedTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return imageArray.count
+      return self.mediaObjects != nil ? self.mediaObjects!.count : 0
     }
-
   
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> MediaTableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as! MediaTableViewCell
-        cell.mediaView.image = imageArray[indexPath.row]
-        cell.userLabel.text = userArray[indexPath.row]
-      
+        if let mediaObjects = self.mediaObjects {
+          let object = mediaObjects[indexPath.row]
+          cell.configureCell(object)
+        }
         return cell
     }
 

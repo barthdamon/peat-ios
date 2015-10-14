@@ -29,12 +29,12 @@ class ViewController: UIViewController {
     
 
     // Do any additional setup after loading the view, typically from a nib.
-    NSNotificationCenter.defaultCenter().addObserver(self, selector: "showMedia", name: "videoObjectsPopulated", object: nil)
+//    NSNotificationCenter.defaultCenter().addObserver(self, selector: "showMedia", name: "videoObjectsPopulated", object: nil)
   }
   
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(true)
-    queryForMediaData()
+//    queryForMediaData()
   }
   
   func queryForMediaData() {

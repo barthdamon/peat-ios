@@ -22,13 +22,6 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="272"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ByU-Om-i9p">
-                                            <rect key="frame" x="180" y="37" width="240" height="235"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="240" id="NUf-ZA-Yf6"/>
-                                                <constraint firstAttribute="height" constant="235" id="yP5-Mh-6aL"/>
-                                            </constraints>
-                                        </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SG8-Yg-JWX">
                                             <rect key="frame" x="180" y="8" width="240" height="21"/>
                                             <constraints>
@@ -39,16 +32,27 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OPt-GO-tMf">
+                                            <rect key="frame" x="180" y="42" width="240" height="222"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="222" id="g6S-4o-9nq"/>
+                                                <constraint firstAttribute="width" constant="240" id="woQ-wl-u2D"/>
+                                            </constraints>
+                                        </view>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="SG8-Yg-JWX" firstAttribute="centerX" secondItem="B3L-PO-Wwo" secondAttribute="centerX" id="41D-QQ-R5b"/>
                                         <constraint firstAttribute="topMargin" secondItem="SG8-Yg-JWX" secondAttribute="top" id="7hP-q5-zlY"/>
-                                        <constraint firstItem="ByU-Om-i9p" firstAttribute="top" secondItem="SG8-Yg-JWX" secondAttribute="bottom" constant="8" id="Pgm-zl-k65"/>
-                                        <constraint firstItem="ByU-Om-i9p" firstAttribute="centerX" secondItem="B3L-PO-Wwo" secondAttribute="centerX" id="s3g-IK-2rF"/>
+                                        <constraint firstItem="OPt-GO-tMf" firstAttribute="centerX" secondItem="B3L-PO-Wwo" secondAttribute="centerX" id="GDy-WZ-V9E"/>
+                                        <constraint firstItem="OPt-GO-tMf" firstAttribute="top" secondItem="SG8-Yg-JWX" secondAttribute="bottom" constant="13" id="h8L-s6-rhV"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="OPt-GO-tMf" secondAttribute="bottom" constant="9" id="Fka-K7-2an"/>
+                                </constraints>
                                 <connections>
-                                    <outlet property="mediaView" destination="ByU-Om-i9p" id="QZP-dC-uVa"/>
+                                    <outlet property="mediaView" destination="OPt-GO-tMf" id="zhc-oe-XlW"/>
                                     <outlet property="userLabel" destination="SG8-Yg-JWX" id="dbV-z5-hSI"/>
                                 </connections>
                             </tableViewCell>

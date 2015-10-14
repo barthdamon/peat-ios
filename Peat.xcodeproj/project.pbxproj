@@ -14,8 +14,6 @@
 		027E31121BA2780D001FCF70 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 027E31101BA2780D001FCF70 /* LaunchScreen.xib */; };
 		027E311E1BA2780D001FCF70 /* PeatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E311D1BA2780D001FCF70 /* PeatTests.swift */; };
 		027E31281BA27875001FCF70 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E31271BA27875001FCF70 /* APIService.swift */; };
-		02A11C971BB899AE0064AE95 /* PhotosCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11C961BB899AE0064AE95 /* PhotosCollectionViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		02A11C991BB9A8FA0064AE95 /* CustomCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11C981BB9A8FA0064AE95 /* CustomCollectionViewCell.swift */; settings = {ASSET_TAGS = (); }; };
 		02A11C9E1BB9D48E0064AE95 /* MediaTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11C9D1BB9D48E0064AE95 /* MediaTableViewCell.swift */; settings = {ASSET_TAGS = (); }; };
 		02A11CA01BB9D4CA0064AE95 /* NewsfeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11C9F1BB9D4CA0064AE95 /* NewsfeedTableViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		02A11CA51BB9EDAB0064AE95 /* PeatContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11CA41BB9EDAB0064AE95 /* PeatContentStore.swift */; settings = {ASSET_TAGS = (); }; };
@@ -51,8 +49,6 @@
 		027E311C1BA2780D001FCF70 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		027E311D1BA2780D001FCF70 /* PeatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeatTests.swift; sourceTree = "<group>"; };
 		027E31271BA27875001FCF70 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
-		02A11C961BB899AE0064AE95 /* PhotosCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewController.swift; sourceTree = "<group>"; };
-		02A11C981BB9A8FA0064AE95 /* CustomCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewCell.swift; sourceTree = "<group>"; };
 		02A11C9D1BB9D48E0064AE95 /* MediaTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaTableViewCell.swift; sourceTree = "<group>"; };
 		02A11C9F1BB9D4CA0064AE95 /* NewsfeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsfeedTableViewController.swift; sourceTree = "<group>"; };
 		02A11CA41BB9EDAB0064AE95 /* PeatContentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatContentStore.swift; sourceTree = "<group>"; };
@@ -162,7 +158,6 @@
 			isa = PBXGroup;
 			children = (
 				02A11C9D1BB9D48E0064AE95 /* MediaTableViewCell.swift */,
-				02A11C981BB9A8FA0064AE95 /* CustomCollectionViewCell.swift */,
 			);
 			name = TableCells;
 			sourceTree = "<group>";
@@ -194,7 +189,6 @@
 			children = (
 				02A11C9F1BB9D4CA0064AE95 /* NewsfeedTableViewController.swift */,
 				026AC2B51BB0ECF1005F8E81 /* ViewController.swift */,
-				02A11C961BB899AE0064AE95 /* PhotosCollectionViewController.swift */,
 				02FD6C921BB38C69003A3DDD /* CameraViewController.swift */,
 			);
 			name = Controllers;
@@ -372,7 +366,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				027E31281BA27875001FCF70 /* APIService.swift in Sources */,
-				02A11C991BB9A8FA0064AE95 /* CustomCollectionViewCell.swift in Sources */,
 				02FD6C931BB38C69003A3DDD /* CameraViewController.swift in Sources */,
 				02A11CA51BB9EDAB0064AE95 /* PeatContentStore.swift in Sources */,
 				02D0A91C1BC35ACE0018596F /* PeatContentFactory.swift in Sources */,
@@ -382,7 +375,6 @@
 				02D0A91A1BC349C10018596F /* PhotoObject.swift in Sources */,
 				02A11C9E1BB9D48E0064AE95 /* MediaTableViewCell.swift in Sources */,
 				02A11CA91BB9F1670064AE95 /* AWSContentHelper.swift in Sources */,
-				02A11C971BB899AE0064AE95 /* PhotosCollectionViewController.swift in Sources */,
 				026AC2B61BB0ECF1005F8E81 /* ViewController.swift in Sources */,
 				027E31081BA2780C001FCF70 /* AppDelegate.swift in Sources */,
 			);

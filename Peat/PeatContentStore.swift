@@ -97,7 +97,7 @@ class PeatContentStore: NSObject {
           }
         }
       }
-      NSNotificationCenter.defaultCenter().postNotificationName("videoObjectsPopulated", object: self, userInfo: nil)
+      NSNotificationCenter.defaultCenter().postNotificationName("mediaObjectsPopulated", object: self, userInfo: nil)
     }
   }
   
