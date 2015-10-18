@@ -31,7 +31,7 @@ class AWSContentHelper: NSObject {
     let uploadRequest: AWSS3TransferManagerUploadRequest = AWSS3TransferManagerUploadRequest()
     uploadRequest.bucket = "peat-assets"
     uploadRequest.key = "\(mediaID)"
-    uploadRequest.contentType = mediaType == .Video ? "video/quicktime" : mediaType.toString()
+    uploadRequest.contentType = mediaType == .Video ? "video/quicktime" : mediaType.description
     uploadRequest.body = mediaURL
     
     //    make a timestamp variable to use in the key of the video I'm about to upload

@@ -56,7 +56,7 @@ class PeatContentFactory: NSObject {
 
   func sendToServer(mediaID: String, mediaType: MediaType) {
     let url = "https://s3.amazonaws.com/peat-assets/\(mediaID)"
-    APIService.sharedService.post(["params":["mediaInfo": ["mediaID": mediaID, "url" : url, "mediaType": mediaType.toString()]]], authType: HTTPRequestAuthType.Token, url: "media")
+    APIService.sharedService.post(["params":["mediaInfo": ["mediaID": mediaID, "url" : url, "mediaType": mediaType.description]]], authType: HTTPRequestAuthType.Token, url: "media")
       { (res, err) -> () in
         if let e = err {
           print("Error:\(e)")

@@ -79,24 +79,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wbP-hL-o1J">
-                                <rect key="frame" x="264" y="161" width="73" height="30"/>
-                                <state key="normal" title="Basic Auth">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="sendToken:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="WZr-yN-yJW"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vVn-ci-6kc">
-                                <rect key="frame" x="266" y="85" width="69" height="30"/>
+                                <rect key="frame" x="266" y="64" width="69" height="30"/>
                                 <state key="normal" title="Newsfeed"/>
                                 <connections>
                                     <segue destination="dPu-tV-yC0" kind="show" id="zVJ-xa-6Ia"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L8k-AY-BCj">
-                                <rect key="frame" x="266" y="123" width="69" height="30"/>
+                                <rect key="frame" x="266" y="102" width="69" height="30"/>
                                 <state key="normal" title="Get Photo"/>
                                 <connections>
                                     <segue destination="ij2-ag-d7A" kind="show" id="lvl-0d-rrk"/>
@@ -104,9 +95,20 @@
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7AU-PC-sez">
                                 <rect key="frame" x="143" y="216" width="314" height="167"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="53S-7D-MxO">
+                                        <rect key="frame" x="0.0" y="0.0" width="314" height="167"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="167" id="2YH-Qe-wBb"/>
+                                            <constraint firstAttribute="width" constant="314" id="3SA-OF-Qam"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="167" id="5Ui-fl-RLO"/>
+                                    <constraint firstItem="53S-7D-MxO" firstAttribute="leading" secondItem="7AU-PC-sez" secondAttribute="leading" id="9SV-dJ-YPG"/>
                                     <constraint firstAttribute="width" constant="314" id="VMX-K1-fxq"/>
                                 </constraints>
                             </view>
@@ -117,20 +119,48 @@
                                     <constraint firstAttribute="width" constant="240" id="kZj-7l-fl7"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kQF-XF-xuK">
+                                <rect key="frame" x="264" y="178" width="73" height="30"/>
+                                <state key="normal" title="Friends">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="sendToken:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="0ZX-do-on4"/>
+                                    <segue destination="28a-KL-O3r" kind="show" identifier="showFriends" id="QT6-8z-k5q"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wbP-hL-o1J">
+                                <rect key="frame" x="264" y="140" width="73" height="30"/>
+                                <state key="normal" title="Basic Auth">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="sendToken:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="WZr-yN-yJW"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="53S-7D-MxO" firstAttribute="top" secondItem="kQF-XF-xuK" secondAttribute="bottom" constant="8" id="5ES-zf-YyK"/>
                             <constraint firstItem="d4a-OE-xEP" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="9DC-cc-THN"/>
+                            <constraint firstItem="7AU-PC-sez" firstAttribute="top" secondItem="kQF-XF-xuK" secondAttribute="bottom" constant="8" symbolic="YES" id="9XQ-JX-ChW"/>
                             <constraint firstItem="L8k-AY-BCj" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="BGc-Gm-3Qj"/>
                             <constraint firstItem="wbP-hL-o1J" firstAttribute="top" secondItem="L8k-AY-BCj" secondAttribute="bottom" constant="8" id="C7h-YL-94e"/>
                             <constraint firstItem="vVn-ci-6kc" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="F5x-ci-4Xo"/>
                             <constraint firstItem="7AU-PC-sez" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Ic5-5L-czD"/>
                             <constraint firstItem="wbP-hL-o1J" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="K01-i4-FXm"/>
+                            <constraint firstItem="kQF-XF-xuK" firstAttribute="top" secondItem="wbP-hL-o1J" secondAttribute="bottom" constant="8" id="Sx3-gE-D1c"/>
                             <constraint firstItem="vVn-ci-6kc" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="21" id="bi3-QH-CQt"/>
+                            <constraint firstItem="vVn-ci-6kc" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="fHy-B6-Khf"/>
+                            <constraint firstItem="kQF-XF-xuK" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="hbZ-33-3xV"/>
                             <constraint firstItem="L8k-AY-BCj" firstAttribute="top" secondItem="vVn-ci-6kc" secondAttribute="bottom" constant="8" id="kFM-zH-yWa"/>
-                            <constraint firstItem="7AU-PC-sez" firstAttribute="top" secondItem="wbP-hL-o1J" secondAttribute="bottom" constant="25" id="p6e-gt-uX3"/>
                             <constraint firstItem="d4a-OE-xEP" firstAttribute="top" secondItem="7AU-PC-sez" secondAttribute="bottom" constant="8" id="zc5-HB-NEi"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="bi3-QH-CQt"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="vqn-Yc-YbC"/>
                     <connections>
@@ -140,7 +170,35 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1182" y="158"/>
+            <point key="canvasLocation" x="1154" y="158"/>
+        </scene>
+        <!--Table View Controller-->
+        <scene sceneID="PTK-Gs-UzS">
+            <objects>
+                <tableViewController id="28a-KL-O3r" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="2Ww-Yw-NVE">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="jNa-1N-fF0">
+                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jNa-1N-fF0" id="cip-27-Idz">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="28a-KL-O3r" id="dDs-nS-eyk"/>
+                            <outlet property="delegate" destination="28a-KL-O3r" id="dDz-1v-zbM"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ExM-vm-3dM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1154" y="908"/>
         </scene>
         <!--Camera View Controller-->
         <scene sceneID="Bbt-4x-aiX">

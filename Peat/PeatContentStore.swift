@@ -11,20 +11,14 @@ import UIKit
 
 
 //MARK: General Typealiases
-enum MediaType {
-  case Image
-  case Video
-  case Other
+enum MediaType: String, CustomStringConvertible {
+  case Image = "image"
+  case Video = "video"
+  case Other = "other"
   
-  func toString() -> String {
-    switch self {
-    case .Image:
-      return "image"
-    case .Video:
-      return "video"
-    default:
-      return "other"
-    }
+  
+  var description: String{
+    return self.rawValue
   }
 }
 
@@ -51,6 +45,8 @@ class PeatContentStore: NSObject {
   var mediaObjects: Array<MediaObject> = []
   var photoObjects: Array<PhotoObject> = []
   var videoObjects: Array<VideoObject> = []
+  var users: Array<User> = []
+  var friends: Array<User> = []
   
   class var sharedStore: PeatContentStore {
     return _sharedStore
@@ -66,11 +62,11 @@ class PeatContentStore: NSObject {
         print("Error:\(e)")
       } else {
         if let json = res as? Dictionary<String, AnyObject> {
-          self.createMediaObjects(json) { (res) -> () in
-            if res == "error" {
-              print("error fetching")
-            } else {
+          self.createMediaObjects(json) { (res, err) -> () in
+            if res != nil  {
               callback(json, nil)
+            } else {
+              print("error fetching")
             }
           }
         }
@@ -78,28 +74,52 @@ class PeatContentStore: NSObject {
     }
   }
   
-  func createMediaObjects(json :Dictionary<String, AnyObject>,  callback: (String?) -> () ) {
+  func createMediaObjects(json :Dictionary<String, AnyObject>,  callback: APICallback) {
     print("media query: \(json)")
     if let media = json["media"] as? Array<jsonObject> {
-      for var i = 0; i < media.count; i++ {
-        if let selectedMedia = media[i] as? jsonObject {
-          if let type = selectedMedia["mediaType"] as? String {
-            var mediaObject = MediaObject()
-            if type == "video" {
-              mediaObject = VideoObject().videoWithJson(selectedMedia)
-              self.videoObjects.append(mediaObject as! VideoObject)
-            } else if type == "image" {
-              mediaObject = PhotoObject().photoWithJson(selectedMedia)
-              self.photoObjects.append(mediaObject as! PhotoObject)
-            }
-            self.mediaObjects.append(mediaObject)
-            callback("no error")
+      media.forEach({ (selectedMedia: jsonObject) -> () in
+        if let type = selectedMedia["mediaType"] as? String {
+          var mediaObject = MediaObject()
+          if type == "video" {
+            mediaObject = VideoObject().videoWithJson(selectedMedia)
+            self.videoObjects.append(mediaObject as! VideoObject)
+          } else if type == "image" {
+            mediaObject = PhotoObject().photoWithJson(selectedMedia)
+            self.photoObjects.append(mediaObject as! PhotoObject)
           }
+          self.mediaObjects.append(mediaObject)
+          callback("no error", nil)
         }
-      }
+      })
       NSNotificationCenter.defaultCenter().postNotificationName("mediaObjectsPopulated", object: self, userInfo: nil)
     }
   }
+  
+  //MARK: Social/User Data
+  func initializeFriendsList() {
+    API.get(nil, url: "friends") { (res, err) -> () in
+      if let e = err {
+        print("Error fetching friends: \(e)")
+        NSNotificationCenter.defaultCenter().postNotificationName("errorLoadingFriends", object: self, userInfo: nil)
+      } else {
+        if let json = res as? Dictionary<String, AnyObject> {
+          self.saveFriendData(json)
+        }
+      }
+    }
+  }
+  
+  func saveFriendData(json: Dictionary<String, AnyObject>) {
+    if let friends = json["friends"] as? Array<jsonObject> {
+      friends.forEach({ (friend: jsonObject) -> () in
+        let newFriend = User()
+        newFriend.initWithJson(friend)
+        self.friends.append(newFriend)
+      })
+      NSNotificationCenter.defaultCenter().postNotificationName("doneLoadingFriendsComplete", object: self, userInfo: nil)
+    }
+  }
+  
   
 }
 
