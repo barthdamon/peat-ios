@@ -8,7 +8,11 @@
 
 import UIKit
 
-class FriendsTableViewController: UITableViewController {
+class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
+  
+  var users: Array<User>?
+  var friends: Array<User>?
+  var searchField: UITextField?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,12 +22,60 @@ class FriendsTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+      configureNavBar()
+      PeatSocialMediator.sharedMediator.initializeFriendsList()
+      
+      NSNotificationCenter.defaultCenter().addObserver(self, selector: "prepareFriendsList", name: "friendsListLoadingComplete", object: nil)
+      
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+  
+  func prepareFriendsList() {
+  }
+  
+  func configureNavBar() {
+    let width = self.view.frame.width  * 1
+    searchField = UITextField(frame: CGRectMake(0, 0, width, 30))
+    if let searchField = searchField {
+      searchField.backgroundColor = UIColor.whiteColor()
+      searchField.placeholder = "Search"
+      searchField.returnKeyType = .Search
+      searchField.delegate = self
+      
+      configureTextFieldElements(searchField)
+      
+      let searchItem = UIBarButtonItem(customView: searchField)
+      self.navigationItem.leftBarButtonItem = searchItem
+    }
+    
+//    let cancelButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "exitSearch")
+//    self.navigationItem.rightBarButtonItem = cancelButton
+  }
+  
+  func configureTextFieldElements(textField: UITextField) {
+    
+    let iconSize: CGFloat = 18
+    
+    let container = UIView(frame: CGRectMake(4, 0, 28, 18))
+    let magnifyView = UIImageView(frame: CGRectMake(0, 0, iconSize, iconSize))
+    magnifyView.image = UIImage(named: "magnify")
+    magnifyView.image = magnifyView.image!.imageWithRenderingMode(.AlwaysTemplate)
+    magnifyView.tintColor = .lightGrayColor()
+    
+    container.addSubview(magnifyView)
+    magnifyView.center.x += 4
+    //    magnifyView.center.y -= 4
+    
+    textField.leftView = container
+    
+    textField.leftViewMode = .Always
+  }
+
+
 
     // MARK: - Table view data source
 
@@ -37,7 +89,7 @@ class FriendsTableViewController: UITableViewController {
         return 0
     }
 
-    /*
+
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
 
@@ -45,7 +97,6 @@ class FriendsTableViewController: UITableViewController {
 
         return cell
     }
-    */
 
     /*
     // Override to support conditional editing of the table view.

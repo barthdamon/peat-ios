@@ -45,8 +45,6 @@ class PeatContentStore: NSObject {
   var mediaObjects: Array<MediaObject> = []
   var photoObjects: Array<PhotoObject> = []
   var videoObjects: Array<VideoObject> = []
-  var users: Array<User> = []
-  var friends: Array<User> = []
   
   class var sharedStore: PeatContentStore {
     return _sharedStore
@@ -92,31 +90,6 @@ class PeatContentStore: NSObject {
         }
       })
       NSNotificationCenter.defaultCenter().postNotificationName("mediaObjectsPopulated", object: self, userInfo: nil)
-    }
-  }
-  
-  //MARK: Social/User Data
-  func initializeFriendsList() {
-    API.get(nil, url: "friends") { (res, err) -> () in
-      if let e = err {
-        print("Error fetching friends: \(e)")
-        NSNotificationCenter.defaultCenter().postNotificationName("errorLoadingFriends", object: self, userInfo: nil)
-      } else {
-        if let json = res as? Dictionary<String, AnyObject> {
-          self.saveFriendData(json)
-        }
-      }
-    }
-  }
-  
-  func saveFriendData(json: Dictionary<String, AnyObject>) {
-    if let friends = json["friends"] as? Array<jsonObject> {
-      friends.forEach({ (friend: jsonObject) -> () in
-        let newFriend = User()
-        newFriend.initWithJson(friend)
-        self.friends.append(newFriend)
-      })
-      NSNotificationCenter.defaultCenter().postNotificationName("doneLoadingFriendsComplete", object: self, userInfo: nil)
     }
   }
   

@@ -12,14 +12,19 @@ class User: NSObject {
   
   var name: String?
   var email: String?
-  var friends: Array<String>?
+  var friendsIds: Array<String>?
+  var friends: Array<User>?
   
   func initWithJson(json: jsonObject) {
     if let name = json["name"] as? String, email = json["email"] as? String, friends = json["friends"] as? Array<String> {
       self.name = name
       self.email = email
-      self.friends = friends
+      self.friendsIds = friends
     }
+  }
+  
+  func initializeFriendsList() {
+    
   }
   
 }
