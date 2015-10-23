@@ -16,7 +16,6 @@ enum MediaType: String, CustomStringConvertible {
   case Video = "video"
   case Other = "other"
   
-  
   var description: String{
     return self.rawValue
   }
@@ -59,7 +58,7 @@ class PeatContentStore: NSObject {
       if let e = err {
         print("Error:\(e)")
       } else {
-        if let json = res as? Dictionary<String, AnyObject> {
+        if let json = res as? jsonObject {
           self.createMediaObjects(json) { (res, err) -> () in
             if res != nil  {
               callback(json, nil)
@@ -72,7 +71,7 @@ class PeatContentStore: NSObject {
     }
   }
   
-  func createMediaObjects(json :Dictionary<String, AnyObject>,  callback: APICallback) {
+  func createMediaObjects(json :jsonObject,  callback: APICallback) {
     print("media query: \(json)")
     if let media = json["media"] as? Array<jsonObject> {
       media.forEach({ (selectedMedia: jsonObject) -> () in

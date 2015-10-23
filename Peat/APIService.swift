@@ -31,7 +31,7 @@ class APIService: NSObject {
   let baseURL = "https://device.oddworks.io"
   #endif
   
-    var authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1NjBjNmVkZDdjZDYzMjNhZjYyMzhiODgiLCJleHAiOjE0NDQyNjUyMDQ1MTJ9.IA7Ck2fdAdBBOsjzndGdOTh_UQvY498DnMyvZBRo0rk"
+    var authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1NjIyOWZhOTI4NmMyMDZkNzRmZWFiYzciLCJleHAiOjE0NDU5OTgyMzk5ODl9.Riw9k0ffHu6gx1nMcdC8opviKPuIX7y1Xjv-3t-VBaA"
     var apiURL: String { return "\(baseURL)/" }
     let keychain = KeychainSwift()
     private let api_pw = "fartpoop"

@@ -11,13 +11,15 @@ import Foundation
 class User: NSObject {
   
   var name: String?
+  var username: String?
   var email: String?
   var friendsIds: Array<String>?
   var friends: Array<User>?
   
   func initWithJson(json: jsonObject) {
-    if let name = json["name"] as? String, email = json["email"] as? String, friends = json["friends"] as? Array<String> {
+    if let name = json["name"] as? String, user = json["username"] as? String, email = json["email"] as? String, friends = json["friends"] as? Array<String> {
       self.name = name
+      self.username = user
       self.email = email
       self.friendsIds = friends
     }
