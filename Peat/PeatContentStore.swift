@@ -41,7 +41,7 @@ private let _sharedStore = PeatContentStore()
 class PeatContentStore: NSObject {
   
   var API = APIService.sharedService
-  var mediaObjects: Array<MediaObject> = []
+  var mediaObjects: Array<MediaObject>?
   var photoObjects: Array<PhotoObject> = []
   var videoObjects: Array<VideoObject> = []
   
@@ -57,14 +57,16 @@ class PeatContentStore: NSObject {
     APIService.sharedService.get(nil, url: "media") { (res, err) -> () in
       if let e = err {
         print("Error:\(e)")
+        callback(nil, e)
       } else {
         if let json = res as? jsonObject {
           self.createMediaObjects(json) { (res, err) -> () in
             if err != nil {
               print("error creating objects")
+              callback(nil, err)
             } else {
               if let mediaObjects = res as? Array<MediaObject> {
-                self.mediaObjects += mediaObjects
+                self.mediaObjects = mediaObjects
                 callback(self.mediaObjects, nil)
               }
             }
@@ -76,23 +78,28 @@ class PeatContentStore: NSObject {
   
   func updateNewsfeed(callback: APICallback) {
     print("UPDATING NEWSFEED")
+    //TODO: need to add a check for if the update limit exceeds 5 and doesn't match up against the most recent otherwise you will miss data basically
     //send down a timestamp along with media object, thats what you send up here. Media objects need timestamps so that we can sort through for any new stuff
-    if let mostRecent = self.mediaObjects[0].timeStamp {
+    if let mostRecent = self.mediaObjects?[0].timeStamp {
       APIService.sharedService.post(["mostRecent" : mostRecent], authType: .Token, url: "media/update") { (res, err) -> () in
         if let e = err {
           print("error: \(e)")
+          callback(nil, e)
         } else {
           if let json = res as? jsonObject {
             self.createMediaObjects(json) { (res, err) -> () in
               if err != nil {
                 print("Error creating objects")
+                callback(nil, err)
               } else {
-                if let mediaObjects = res as? Array<MediaObject> {
+                if var updatedObjects = res as? Array<MediaObject> {
                   //prepend the new objects to mediaObjects array
-                  var updatedObjects = mediaObjects
-                  updatedObjects += self.mediaObjects
-                  self.mediaObjects = updatedObjects
-                  callback(self.mediaObjects, nil)
+                  if let _ = self.mediaObjects {
+                    updatedObjects += self.mediaObjects!
+                    self.mediaObjects?.removeAll()
+                    self.mediaObjects = updatedObjects
+                    callback(self.mediaObjects, nil)
+                  }
                 }
               }
             }
@@ -102,8 +109,31 @@ class PeatContentStore: NSObject {
     }
   }
   
-  func extendNewsfeed() {
-    
+  func extendNewsfeed(callback: APICallback) {
+    if let lastRecieved = self.mediaObjects?.last?.timeStamp {
+      APIService.sharedService.post(["lastRecieved" : lastRecieved], authType: .Token, url: "media/extend") { (res, err) -> () in
+        if let e = err {
+          print("error: \(e)")
+          callback(nil, e)
+        } else {
+          if let json = res as? jsonObject {
+            self.createMediaObjects(json) { (res, err) -> () in
+              if err != nil {
+                print("Error creating objects")
+                callback(nil, err)
+              } else {
+                if let extendedObjects = res as? Array<MediaObject> {
+                  if let _ = self.mediaObjects {
+                    self.mediaObjects! += extendedObjects
+                    callback(self.mediaObjects!, nil)
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
   
   //MARK NEWSFEED CONTENT CREATION
@@ -127,6 +157,10 @@ class PeatContentStore: NSObject {
           newMediaObjects.append(mediaObject)
         }
       }
+      //Done on server:
+//      newMediaObjects.sortInPlace({ (a, b) -> Bool in
+//        return a.timeStamp > b.timeStamp
+//      })
       callback(newMediaObjects, nil)
     }
   }

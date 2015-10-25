@@ -17,18 +17,17 @@ class NewsfeedTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
       self.tableView.allowsSelection = false
-      NSNotificationCenter.defaultCenter().addObserver(self, selector: "configureMedia", name: "mediaObjectsPopulated", object: nil)
-      queryForMediaData()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+//      NSNotificationCenter.defaultCenter().addObserver(self, selector: "configureMedia", name: "mediaObjectsPopulated", object: nil)
     }
   
-  override func viewDidAppear(animated: Bool) {
-    super.viewDidAppear(true)
-    checkForNewsfeedUpdates()
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(true)
+    if let mediaObjects = PeatContentStore.sharedStore.mediaObjects {
+      self.mediaObjects = mediaObjects
+      checkForNewsfeedUpdates()
+    } else {
+      queryForMediaData()
+    }
   }
   
   func checkForNewsfeedUpdates() {
@@ -37,7 +36,10 @@ class NewsfeedTableViewController: UITableViewController {
         print("error updating newsfeed")
       } else {
         print("Newsfeed update complete")
-        self.configureMedia()
+        if let mediaObjects = res as? Array<MediaObject> {
+          self.mediaObjects?.removeAll()
+          self.configureMedia(mediaObjects)
+        }
       }
     }
   }
@@ -48,13 +50,15 @@ class NewsfeedTableViewController: UITableViewController {
         print("error initializing newsfeed")
       } else {
         print("Store fetched Successfuly: \(res)")
-        self.configureMedia()
+        if let mediaObjects = res as? Array<MediaObject> {
+          self.configureMedia(mediaObjects)
+        }
       }
     }
   }
   
-  func configureMedia() {
-    self.mediaObjects  = PeatContentStore.sharedStore.mediaObjects
+  func configureMedia(mediaObjects: Array<MediaObject>) {
+    self.mediaObjects  = mediaObjects
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
       self.tableView.reloadData()
     })

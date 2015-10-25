@@ -49,8 +49,7 @@ class ViewController: UIViewController {
   }
   
   func showMedia() {
-    if PeatContentStore.sharedStore.mediaObjects.count > 0 {
-      let media = PeatContentStore.sharedStore.mediaObjects[1]
+    if let media = PeatContentStore.sharedStore.mediaObjects?[1] {
       if let url = media.url {
         if media is PhotoObject {
           if let data = NSData(contentsOfURL: url), image = UIImage(data: data) {

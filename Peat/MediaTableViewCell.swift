@@ -34,12 +34,16 @@ class MediaTableViewCell: UITableViewCell {
   }
   
   func configureMediaViewWithImage(image: UIImage) {
-    self.imageDisplay = UIImageView()
-    if let display = self.imageDisplay {
-      display.frame = self.mediaView.bounds
-      display.contentMode = .ScaleAspectFit
-      display.image = image
-      self.mediaView.addSubview(display)
+    if let imageView = self.imageDisplay {
+      imageView.image = image
+    } else {
+      self.imageDisplay = UIImageView()
+      if let display = self.imageDisplay {
+        display.frame = self.mediaView.bounds
+        display.contentMode = .ScaleAspectFit
+        display.image = image
+        self.mediaView.addSubview(display)
+      }
     }
   }
   
@@ -120,7 +124,7 @@ class MediaTableViewCell: UITableViewCell {
   
   func configureCell(object: MediaObject) {
     if let url = object.url {
-      
+
       if object is PhotoObject {
         if self.mediaImage == nil {
           if let object = object as? PhotoObject {
