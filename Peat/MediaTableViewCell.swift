@@ -120,15 +120,27 @@ class MediaTableViewCell: UITableViewCell {
   
   func configureCell(object: MediaObject) {
     if let url = object.url {
+      
       if object is PhotoObject {
-        if let data = NSData(contentsOfURL: url), image = UIImage(data: data) {
-          self.mediaImage = image
-          configureMediaViewWithImage(image)
+        if self.mediaImage == nil {
+          if let object = object as? PhotoObject {
+            if let thumbnail = object.thumbnail {
+              configureMediaViewWithImage(thumbnail)
+            } else {
+              if let data = NSData(contentsOfURL: url), image = UIImage(data: data) {
+                self.mediaImage = image
+                object.thumbnail = image
+                configureMediaViewWithImage(image)
+              }
+            }
+          }
         }
+        
       } else if object is VideoObject {
         self.videoPath = url
         configureMediaViewWithVideo(url)
       }
+      
     }
   }
 

@@ -50,7 +50,7 @@ class PeatContentStore: NSObject {
   }
 
   
-  //MARK: NEWSFEED CONTENT
+  //MARK: NEWSFEED INITIALIZERS
   func initializeNewsfeed(callback: APICallback) {
     print("INITIALIZING NEWSFEED")
     
@@ -60,10 +60,13 @@ class PeatContentStore: NSObject {
       } else {
         if let json = res as? jsonObject {
           self.createMediaObjects(json) { (res, err) -> () in
-            if res != nil  {
-              callback(json, nil)
+            if err != nil {
+              print("error creating objects")
             } else {
-              print("error fetching")
+              if let mediaObjects = res as? Array<MediaObject> {
+                self.mediaObjects += mediaObjects
+                callback(self.mediaObjects, nil)
+              }
             }
           }
         }
@@ -71,24 +74,60 @@ class PeatContentStore: NSObject {
     }
   }
   
-  func createMediaObjects(json :jsonObject,  callback: APICallback) {
+  func updateNewsfeed(callback: APICallback) {
+    print("UPDATING NEWSFEED")
+    //send down a timestamp along with media object, thats what you send up here. Media objects need timestamps so that we can sort through for any new stuff
+    if let mostRecent = self.mediaObjects[0].timeStamp {
+      APIService.sharedService.post(["mostRecent" : mostRecent], authType: .Token, url: "media/update") { (res, err) -> () in
+        if let e = err {
+          print("error: \(e)")
+        } else {
+          if let json = res as? jsonObject {
+            self.createMediaObjects(json) { (res, err) -> () in
+              if err != nil {
+                print("Error creating objects")
+              } else {
+                if let mediaObjects = res as? Array<MediaObject> {
+                  //prepend the new objects to mediaObjects array
+                  var updatedObjects = mediaObjects
+                  updatedObjects += self.mediaObjects
+                  self.mediaObjects = updatedObjects
+                  callback(self.mediaObjects, nil)
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  func extendNewsfeed() {
+    
+  }
+  
+  //MARK NEWSFEED CONTENT CREATION
+  
+  func createMediaObjects(json :jsonObject, callback: APICallback) {
     print("media query: \(json)")
+    //append to new media objects, then send callback to functions. Have this function be unbiased for extend, initialize, and update
+    var newMediaObjects: Array<MediaObject> = []
+    
     if let media = json["media"] as? Array<jsonObject> {
-      media.forEach({ (selectedMedia: jsonObject) -> () in
+      for selectedMedia: jsonObject in media {
         if let type = selectedMedia["mediaType"] as? String {
           var mediaObject = MediaObject()
           if type == "video" {
             mediaObject = VideoObject().videoWithJson(selectedMedia)
-            self.videoObjects.append(mediaObject as! VideoObject)
+//            self.videoObjects.append(mediaObject as! VideoObject)
           } else if type == "image" {
             mediaObject = PhotoObject().photoWithJson(selectedMedia)
-            self.photoObjects.append(mediaObject as! PhotoObject)
+//            self.photoObjects.append(mediaObject as! PhotoObject)
           }
-          self.mediaObjects.append(mediaObject)
-          callback("no error", nil)
+          newMediaObjects.append(mediaObject)
         }
-      })
-      NSNotificationCenter.defaultCenter().postNotificationName("mediaObjectsPopulated", object: self, userInfo: nil)
+      }
+      callback(newMediaObjects, nil)
     }
   }
   

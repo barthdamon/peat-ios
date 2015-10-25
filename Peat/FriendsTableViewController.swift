@@ -50,7 +50,13 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-      return friends != nil ? friends!.count : 1
+      switch mode {
+      case .List:
+        return friends != nil ? friends!.count : 1
+      case .Search:
+        return foundUsers != nil ? foundUsers!.count : 1
+      }
+
     }
 
 
@@ -67,9 +73,14 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
         return cell
       case .Search:
         let cell = tableView.dequeueReusableCellWithIdentifier("searchResultCell", forIndexPath: indexPath) as! UserSearchResultTableViewCell
-        if let user = self.foundUsers?[indexPath.row] {
-          cell.usernameLabel.text = user.username
-          cell.nameLabel.text = user.name
+        if self.foundUsers?.count > 0 {
+          if let user = self.foundUsers?[indexPath.row] {
+            cell.usernameLabel.text = user.username
+            cell.nameLabel.text = user.name
+          }
+        } else {
+          cell.usernameLabel.text = "No Users Found"
+          cell.nameLabel.text = ""
         }
         return cell
       }
@@ -168,15 +179,21 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
   func textFieldDidChange(textField: UITextField) {
     print("NEW SEARCH LETTER ENTERED")
     if let text = textField.text {
-      PeatSocialMediator.sharedMediator.searchUsers(text)
+      if text != "" {
+        PeatSocialMediator.sharedMediator.searchUsers(text)
+      } else {
+        exitSearch()
+      }
     }
   }
   
   func showSearchResults() {
-    mode = .Search
-    foundUsers = nil
-    foundUsers = PeatSocialMediator.sharedMediator.userSearchResults
-    tableView.reloadData()
+    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+      self.mode = .Search
+      self.foundUsers = nil
+      self.foundUsers = PeatSocialMediator.sharedMediator.userSearchResults
+      self.tableView.reloadData()
+    })
   }
   
   func exitSearch() {

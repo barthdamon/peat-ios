@@ -18,6 +18,7 @@ class NewsfeedTableViewController: UITableViewController {
         super.viewDidLoad()
       self.tableView.allowsSelection = false
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "configureMedia", name: "mediaObjectsPopulated", object: nil)
+      queryForMediaData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -27,13 +28,24 @@ class NewsfeedTableViewController: UITableViewController {
   
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(true)
-    queryForMediaData()
+    checkForNewsfeedUpdates()
+  }
+  
+  func checkForNewsfeedUpdates() {
+    PeatContentStore.sharedStore.updateNewsfeed() { (res, err) -> () in
+      if err != nil {
+        print("error updating newsfeed")
+      } else {
+        print("Newsfeed update complete")
+        self.configureMedia()
+      }
+    }
   }
   
   func queryForMediaData() {
     PeatContentStore.sharedStore.initializeNewsfeed() { (res, err) -> () in
       if err != nil {
-        print("error fetching the store")
+        print("error initializing newsfeed")
       } else {
         print("Store fetched Successfuly: \(res)")
         self.configureMedia()
