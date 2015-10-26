@@ -1,19 +1,22 @@
 //
-//  ProfileViewController.swift
+//  TreeViewController.swift
 //  Peat
 //
-//  Created by Matthew Barth on 10/24/15.
+//  Created by Matthew Barth on 10/25/15.
 //  Copyright © 2015 Matthew Barth. All rights reserved.
 //
 
 import UIKit
 
-class ProfileViewController: UIViewController {
+class TreeViewController: UIViewController {
 
+  @IBOutlet weak var scrollView: UIScrollView!
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+      scrollView.contentSize.height = 1000
+      scrollView.contentSize.width = 1000
     }
 
     override func didReceiveMemoryWarning() {
