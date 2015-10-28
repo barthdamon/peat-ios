@@ -10,6 +10,7 @@ import UIKit
 
 class TreeViewController: UIViewController {
   
+  // Tree Standards
   let standardWidth: CGFloat = 200
   let standardHeight: CGFloat = 100
   var centerX: CGFloat {
@@ -18,9 +19,12 @@ class TreeViewController: UIViewController {
   var centerY: CGFloat {
     return standardHeight / 2
   }
-  
   var frameView: UIView?
-
+  
+  // Dynamic Data
+  var centerPoints = [CGPoint]()
+  
+  
 
   @IBOutlet weak var scrollView: UIScrollView!
     override func viewDidLoad() {
@@ -31,17 +35,19 @@ class TreeViewController: UIViewController {
       scrollView.contentSize.width = 1000
       frameView = UIView(frame: CGRectMake(0, 0, scrollView.contentSize.width, scrollView.contentSize.height))
       
-      let x1: CGFloat = 10
-      let y1: CGFloat = 10
-      let firstCenter = CGPoint(x: centerX + x1, y: centerY + y1)
-      createFrame(x1, y1)
+      let coordinateArray: [(x: CGFloat, y: CGFloat)] = [(x: 10 , y: 10), (x: 200, y: 300), (x: 400, y: 600), (x: 700, y: 600), (x: 600, y: 800)]
       
-      let x2: CGFloat = 200
-      let y2: CGFloat = 300
-      let secondCenter = CGPoint(x: centerX + x2, y: centerY + y2)
-      createFrame(x2, y2)
+      for pair in coordinateArray {
+        let center = CGPoint(x: centerX + pair.x, y: centerY + pair.y)
+        centerPoints.append(center)
+        createFrame(pair.x, pair.y)
+      }
       
-      connectAbilities(from: firstCenter, to: secondCenter)
+      var previous = 0
+      for var i = 1; i < centerPoints.count; i++  {
+        connectAbilities(from: centerPoints[previous], to: centerPoints[i])
+        previous = i
+      }
     }
 
     override func didReceiveMemoryWarning() {
