@@ -8,21 +8,10 @@
 
 import UIKit
 
-class TreeViewController: UIViewController {
-  
-  // Tree Standards
-  let standardWidth: CGFloat = 200
-  let standardHeight: CGFloat = 100
-  var centerX: CGFloat {
-    return standardWidth / 2
-  }
-  var centerY: CGFloat {
-    return standardHeight / 2
-  }
-  var frameView: UIView?
+class TreeViewController: UIViewController, TreeDelegate {
   
   // Dynamic Data
-  var centerPoints = [CGPoint]()
+  var leaves = [LeafNode]()
   
   
 
@@ -33,19 +22,17 @@ class TreeViewController: UIViewController {
       // Do any additional setup after loading the view.
       scrollView.contentSize.height = 1000
       scrollView.contentSize.width = 1000
-      frameView = UIView(frame: CGRectMake(0, 0, scrollView.contentSize.width, scrollView.contentSize.height))
       
-      let coordinateArray: [(x: CGFloat, y: CGFloat)] = [(x: 10 , y: 10), (x: 200, y: 300), (x: 400, y: 600), (x: 700, y: 600), (x: 600, y: 800)]
+      let coordinateArray: [(x: CGFloat, y: CGFloat)] = [(x: 100 , y: 100), (x: 150, y: 200), (x: 200, y: 300), (x: 100, y: 500), (x: 300, y: 500)]
       
       for pair in coordinateArray {
-        let center = CGPoint(x: centerX + pair.x, y: centerY + pair.y)
-        centerPoints.append(center)
-        createFrame(pair.x, pair.y)
+        let leaf = LeafNode(coords: pair, delegate: self)
+        leaves.append(leaf)
       }
       
       var previous = 0
-      for var i = 1; i < centerPoints.count; i++  {
-        connectAbilities(from: centerPoints[previous], to: centerPoints[i])
+      for var i = 1; i < leaves.count; i++  {
+        connectAbilities(from: leaves[previous], to: leaves[i])
         previous = i
       }
     }
@@ -55,28 +42,27 @@ class TreeViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
   
-  func createFrame(x: CGFloat, _ y: CGFloat) {
-    let frame = CGRectMake(x, y, standardWidth, standardHeight)
-    let viewToAdd = UIView(frame: frame)
-    viewToAdd.backgroundColor = .yellowColor()
-    scrollView.addSubview(viewToAdd)
-  }
-  
-  func connectAbilities(from highPoint: CGPoint, to lowPoint: CGPoint) {
+  func connectAbilities(from leafA: LeafNode, to leafB: LeafNode) {
+    if let centerA = leafA.center, centerB = leafB.center {
       let path = UIBezierPath()
-      path.moveToPoint(highPoint)
-      path.addLineToPoint(lowPoint)
+      path.moveToPoint(centerA)
+      path.addLineToPoint(centerB)
       
       let shapeLayer = CAShapeLayer()
       shapeLayer.path = path.CGPath
-      shapeLayer.strokeColor = UIColor.redColor().CGColor
+      shapeLayer.strokeColor = UIColor.greenColor().CGColor
       shapeLayer.lineWidth = 3.0
       shapeLayer.fillColor = UIColor.blackColor().CGColor
       //LOL @SETH
-      shapeLayer.zPosition = -1000
+      shapeLayer.zPosition = -1
       
       scrollView.layer.addSublayer(shapeLayer)
     }
+  }
+  
+  func addLeafToScrollView(leafView: UIView) {
+    self.scrollView.addSubview(leafView)
+  }
 
 
     /*
