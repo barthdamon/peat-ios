@@ -11,6 +11,26 @@ import UIKit
 
 
 //MARK: General Typealiases
+enum Activity: String, CustomStringConvertible {
+  case Trampoline = "trampoline"
+  case Snowboarding = "snowboarding"
+  
+  var description: String {
+    return self.rawValue
+  }
+}
+
+func parseActivity(activity: String) -> Activity {
+  switch activity {
+  case "trampoline":
+    return .Trampoline
+  case "snowboarding":
+    return .Snowboarding
+  default:
+    return .Trampoline
+  }
+}
+
 enum MediaType: String, CustomStringConvertible {
   case Image = "image"
   case Video = "video"
@@ -50,7 +70,7 @@ class PeatContentStore: NSObject {
   }
 
   
-  //MARK: NEWSFEED INITIALIZERS
+//MARK: MEDIA & NEWSFEED
   func initializeNewsfeed(callback: APICallback) {
     print("INITIALIZING NEWSFEED")
     
@@ -136,8 +156,6 @@ class PeatContentStore: NSObject {
     }
   }
   
-  //MARK NEWSFEED CONTENT CREATION
-  
   func createMediaObjects(json :jsonObject, callback: APICallback) {
     print("media query: \(json)")
     //append to new media objects, then send callback to functions. Have this function be unbiased for extend, initialize, and update
@@ -165,7 +183,27 @@ class PeatContentStore: NSObject {
     }
   }
   
+//MARK: LEAVES
+  func generateActivityTree(activity: Activity, callback: APICallback) {
+    API.post(["activity" : "trampoline"], authType: .Token, url: "leaves/get") { (res, err) in
+      if let e = err {
+        print(e)
+        callback(nil, e)
+      } else {
+        if let json = res as? Dictionary<String, AnyObject> {
+          
+        }
+      }
+    }
+  }
   
+  func generateLeaves(json: jsonObject, callback: APICallback) {
+    if let leaves = json["leaves"] as? Array<jsonObject> {
+      for leaf in leaves {
+        
+      }
+    }
+  }
 }
 
 

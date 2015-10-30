@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+
 protocol TreeDelegate {
   func addLeafToScrollView(leafView: UIView)
 }
@@ -21,7 +22,7 @@ class LeafNode: NSObject {
   static let standardWidth: CGFloat = 100
   static let standardHeight: CGFloat = 50
   
-  // Reference Variables for Drawing
+  // Reference Variables
   var referenceFrame: CoordinatePair?
   class var xOffset: CGFloat {
     return standardWidth / 2
@@ -29,14 +30,20 @@ class LeafNode: NSObject {
   class var yOffset: CGFloat {
     return standardHeight / 2
   }
+  // Unique Drawing Variables
+  var centerCoords: CoordinatePair?
+  var center: CGPoint?
+  var connections: Array<CGPoint>?
+  
+  // Media Specific
+  var activity: Activity?
   
   // Other
   var treeDelegate: TreeDelegate?
-  var center: CGPoint?
   var view: UIView?
   
   
-  // MARK: <<< Functions >>>
+// MARK: INITIALIZATION
   init(coords: CoordinatePair, delegate: TreeDelegate) {
     super.init()
     self.treeDelegate = delegate
@@ -44,6 +51,28 @@ class LeafNode: NSObject {
     generateBounds()
   }
   
+  func initWithJson(json: jsonObject) {
+    if let activity = json["activity"] as? String, coordinates = json["coordinates"] as? jsonObject {
+      self.activity = parseActivity(activity)
+      if let x = coordinates["x"] as? CGFloat, y = coordinates["y"] as? CGFloat {
+        self.centerCoords = (x: x, y: y)
+      }
+      
+      if let connections = json["connections"] as? Array<jsonObject> {
+        parseConnections(connections)
+      }
+      
+    }
+  }
+  
+  func parseConnections(connections: Array<jsonObject>) {
+    for connection in connections {
+      
+    }
+  }
+  
+  
+// MARK: USAGE
   func generateBounds() {
     if let center = center {
       referenceFrame = (x: center.x - LeafNode.xOffset, y: center.y - LeafNode.yOffset)
