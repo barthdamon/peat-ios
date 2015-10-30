@@ -33,7 +33,7 @@ class LeafNode: NSObject {
   // Unique Drawing Variables
   var centerCoords: CoordinatePair?
   var center: CGPoint?
-  var connections: Array<CGPoint>?
+  var connections: Array<CGPoint> = []
   
   // Media Specific
   var activity: Activity?
@@ -66,8 +66,11 @@ class LeafNode: NSObject {
   }
   
   func parseConnections(connections: Array<jsonObject>) {
+    //Note: need to add more data in connections
     for connection in connections {
-      
+      if let coordinates = connection["coordinates"] as? jsonObject, x = coordinates["x"] as? CGFloat, y = coordinates["y"] as? CGFloat {
+        self.connections.append(CGPoint(x: x, y: y))
+      }
     }
   }
   
