@@ -62,8 +62,7 @@ class PeatContentStore: NSObject {
   
   var API = APIService.sharedService
   var mediaObjects: Array<MediaObject>?
-  var photoObjects: Array<PhotoObject> = []
-  var videoObjects: Array<VideoObject> = []
+  var leaves: Array<LeafNode>?
   
   class var sharedStore: PeatContentStore {
     return _sharedStore
@@ -183,25 +182,31 @@ class PeatContentStore: NSObject {
     }
   }
   
+  
+  
 //MARK: LEAVES
-  func generateActivityTree(activity: Activity, callback: APICallback) {
+  func generateActivityTree(activity: Activity, delegate: TreeDelegate) {
     API.post(["activity" : "trampoline"], authType: .Token, url: "leaves/get") { (res, err) in
       if let e = err {
         print(e)
-        callback(nil, e)
+        NSNotificationCenter.defaultCenter().postNotificationName("errorfetchingTreeData", object: self, userInfo: nil)
       } else {
         if let json = res as? Dictionary<String, AnyObject> {
-          
+          self.populateLeaves(json, delegate: delegate)
         }
       }
     }
   }
   
-  func generateLeaves(json: jsonObject, callback: APICallback) {
+  func populateLeaves(json: jsonObject, delegate: TreeDelegate) {
     if let leaves = json["leaves"] as? Array<jsonObject> {
+      self.leaves = []
       for leaf in leaves {
-        
+        let newleaf = LeafNode()
+        newleaf.initWithJson(leaf, delegate: delegate)
+        self.leaves?.append(newleaf)
       }
+    NSNotificationCenter.defaultCenter().postNotificationName("leavesPopulated", object: self, userInfo: nil)
     }
   }
 }

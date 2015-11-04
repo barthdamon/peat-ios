@@ -11,6 +11,8 @@ import UIKit
 
 
 protocol TreeDelegate {
+  func drawConnectionLayer(connection: CAShapeLayer)
+  func initializeLeaves() -> Bool
   func addLeafToScrollView(leafView: UIView)
 }
 
@@ -44,25 +46,30 @@ class LeafNode: NSObject {
   
   
 // MARK: INITIALIZATION
-  init(coords: CoordinatePair, delegate: TreeDelegate) {
-    super.init()
-    self.treeDelegate = delegate
-    center = CGPoint(x: coords.x, y: coords.y)
-    generateBounds()
-  }
+//  init(coords: CoordinatePair, delegate: TreeDelegate) {
+//    super.init()
+//    self.treeDelegate = delegate
+//    center = CGPoint(x: coords.x, y: coords.y)
+//    generateBounds()
+//  }
   
-  func initWithJson(json: jsonObject) {
+  func initWithJson(json: jsonObject, delegate: TreeDelegate) {
     if let activity = json["activity"] as? String, coordinates = json["coordinates"] as? jsonObject {
+      self.treeDelegate = delegate
       self.activity = parseActivity(activity)
       if let x = coordinates["x"] as? CGFloat, y = coordinates["y"] as? CGFloat {
         self.centerCoords = (x: x, y: y)
+        self.center = CGPoint(x: x, y: y)
       }
       
       if let connections = json["connections"] as? Array<jsonObject> {
         parseConnections(connections)
       }
-      
     }
+  }
+  
+  func setDelegate(delegate: TreeDelegate) {
+    self.treeDelegate = delegate
   }
   
   func parseConnections(connections: Array<jsonObject>) {
@@ -75,7 +82,7 @@ class LeafNode: NSObject {
   }
   
   
-// MARK: USAGE
+// MARK: DRAWING
   func generateBounds() {
     if let center = center {
       referenceFrame = (x: center.x - LeafNode.xOffset, y: center.y - LeafNode.yOffset)
@@ -90,6 +97,25 @@ class LeafNode: NSObject {
       if let view = self.view {
         view.backgroundColor = .yellowColor()
         treeDelegate?.addLeafToScrollView(view)
+      }
+    }
+  }
+  
+  func drawConnections() {
+    if let center = center {
+      for connection in self.connections {
+        let path = UIBezierPath()
+        path.moveToPoint(center)
+        path.addLineToPoint(connection)
+        
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = path.CGPath
+        shapeLayer.strokeColor = UIColor.greenColor().CGColor
+        shapeLayer.lineWidth = 3.0
+        shapeLayer.fillColor = UIColor.blackColor().CGColor
+        //LOL @SETH
+        shapeLayer.zPosition = -1
+        treeDelegate?.drawConnectionLayer(shapeLayer)
       }
     }
   }
