@@ -9,11 +9,11 @@
 import Foundation
 import UIKit
 
-
 protocol TreeDelegate {
   func drawConnectionLayer(connection: CAShapeLayer)
   func initializeLeaves() -> Bool
   func addLeafToScrollView(leafView: UIView)
+  func drillIntoLeaf(leaf: LeafNode)
 }
 
 typealias CoordinatePair = (x: CGFloat, y: CGFloat)
@@ -39,6 +39,8 @@ class LeafNode: NSObject {
   
   // Media Specific
   var activity: Activity?
+  var completionStatus: Bool = false
+  var abilityTitle: String?
   
   // Other
   var treeDelegate: TreeDelegate?
@@ -46,17 +48,13 @@ class LeafNode: NSObject {
   
   
 // MARK: INITIALIZATION
-//  init(coords: CoordinatePair, delegate: TreeDelegate) {
-//    super.init()
-//    self.treeDelegate = delegate
-//    center = CGPoint(x: coords.x, y: coords.y)
-//    generateBounds()
-//  }
   
   func initWithJson(json: jsonObject, delegate: TreeDelegate) {
-    if let activity = json["activity"] as? String, coordinates = json["coordinates"] as? jsonObject {
+    if let activity = json["activity"] as? String, coordinates = json["coordinates"] as? jsonObject, title = json["abilityTitle"] as? String, status = json["completionStatus"] as? Bool {
       self.treeDelegate = delegate
       self.activity = parseActivity(activity)
+      self.completionStatus = status
+      self.abilityTitle = title
       if let x = coordinates["x"] as? CGFloat, y = coordinates["y"] as? CGFloat {
         self.centerCoords = (x: x, y: y)
         self.center = CGPoint(x: x, y: y)
@@ -66,6 +64,9 @@ class LeafNode: NSObject {
         parseConnections(connections)
       }
     }
+    
+    //locally set variables:
+//    self.abilityTitle = "360, Bitch"
   }
   
   func setDelegate(delegate: TreeDelegate) {
@@ -81,7 +82,6 @@ class LeafNode: NSObject {
     }
   }
   
-  
 // MARK: DRAWING
   func generateBounds() {
     if let center = center {
@@ -95,7 +95,13 @@ class LeafNode: NSObject {
       let frame = CGRectMake(frame.x, frame.y, LeafNode.standardWidth, LeafNode.standardHeight)
       view = UIView(frame: frame)
       if let view = self.view {
-        view.backgroundColor = .yellowColor()
+        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: "leafDrilldownInitiated")
+        tapRecognizer.numberOfTapsRequired = 1
+        tapRecognizer.numberOfTouchesRequired = 1
+        view.addGestureRecognizer(tapRecognizer)
+        
         treeDelegate?.addLeafToScrollView(view)
       }
     }
@@ -110,7 +116,7 @@ class LeafNode: NSObject {
         
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = path.CGPath
-        shapeLayer.strokeColor = UIColor.greenColor().CGColor
+        shapeLayer.strokeColor = self.completionStatus ? UIColor.greenColor().CGColor : UIColor.grayColor().CGColor
         shapeLayer.lineWidth = 3.0
         shapeLayer.fillColor = UIColor.blackColor().CGColor
         //LOL @SETH
@@ -118,6 +124,10 @@ class LeafNode: NSObject {
         treeDelegate?.drawConnectionLayer(shapeLayer)
       }
     }
+  }
+  
+  func leafDrilldownInitiated() {
+    treeDelegate?.drillIntoLeaf(self)
   }
 
   

@@ -12,8 +12,7 @@ class TreeViewController: UIViewController, TreeDelegate {
   
   // Dynamic Data
   var leaves = [LeafNode]()
-  
-  
+  var selectedLeaf: LeafNode?
 
   @IBOutlet weak var scrollView: UIScrollView!
     override func viewDidLoad() {
@@ -23,19 +22,6 @@ class TreeViewController: UIViewController, TreeDelegate {
       // Do any additional setup after loading the view.
       scrollView.contentSize.height = 1000
       scrollView.contentSize.width = 1000
-      
-//      let coordinateArray: [(x: CGFloat, y: CGFloat)] = [(x: 100 , y: 100), (x: 150, y: 200), (x: 200, y: 300), (x: 100, y: 500), (x: 300, y: 500)]
-//      
-//      for pair in coordinateArray {
-//        let leaf = LeafNode()
-//        leaves.append(leaf)
-//      }
-      
-//      var previous = 0
-//      for var i = 1; i < leaves.count; i++  {
-//        connectAbilities(from: leaves[previous], to: leaves[i])
-//        previous = i
-//      }
     }
   
   override func viewWillAppear(animated: Bool) {
@@ -59,10 +45,13 @@ class TreeViewController: UIViewController, TreeDelegate {
   }
   
   func displayLeaves() {
-    for leaf in self.leaves {
-      leaf.generateBounds()
-      leaf.drawConnections()
-    }
+    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+      for leaf in self.leaves {
+        leaf.treeDelegate = self
+        leaf.generateBounds()
+        leaf.drawConnections()
+      }
+    })
   }
 
   func initializeLeaves() -> Bool {
@@ -78,16 +67,27 @@ class TreeViewController: UIViewController, TreeDelegate {
   func drawConnectionLayer(connection: CAShapeLayer) {
     scrollView.layer.addSublayer(connection)
   }
+  
+  func drillIntoLeaf(leaf: LeafNode) {
+    selectedLeaf = leaf
+    performSegueWithIdentifier("leafDrilldown", sender: self)
+  }
 
 
-    /*
+
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+      // Get the new view controller using segue.destinationViewController.
+      // Pass the selected object to the new view controller.
+      if segue.identifier == "leafDrilldown" {
+        if let vc = segue.destinationViewController as? LeafDetailViewController {
+          vc.leaf = self.selectedLeaf
+        }
+      }
+      
     }
-    */
+
 
 }
