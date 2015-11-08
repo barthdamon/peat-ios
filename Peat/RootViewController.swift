@@ -10,6 +10,10 @@ import UIKit
 
 class RootViewController: UIViewController {
 
+  @IBOutlet weak var homeViewContainer: UIView!
+  @IBOutlet weak var menuWidthConstraint: NSLayoutConstraint!
+  var homeViewController: HomeViewController?
+  
     override func viewDidLoad() {
         super.viewDidLoad()
       
@@ -22,7 +26,24 @@ class RootViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+  
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+      if segue.identifier == "homeViewEmbed" {
+        print("homeViewEmbed")
+        if let navCon = segue.destinationViewController as? UINavigationController,
+          vc = navCon.topViewController as? HomeViewController {
+            vc.ourContainerView = homeViewContainer
+            self.homeViewController = vc
+        }
+      } else if segue.identifier == "menuEmbed" {
+        print("homeMenuEmbed")
+        if let navCon = segue.destinationViewController as? UINavigationController,
+          vc = navCon.topViewController as? MenuTableViewController {
+            vc.rootController = self
+        }
+      }
+    }
+  
 
     /*
     // MARK: - Navigation
