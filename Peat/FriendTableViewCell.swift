@@ -10,6 +10,8 @@ import UIKit
 
 class FriendTableViewCell: UITableViewCell {
   
+  var friend: User?
+  
   @IBOutlet weak var usernameLabel: UILabel!
   @IBOutlet weak var nameLabel: UILabel!
   

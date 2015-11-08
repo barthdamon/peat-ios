@@ -35,7 +35,8 @@ class LeafNode: NSObject {
   // Unique Drawing Variables
   var centerCoords: CoordinatePair?
   var center: CGPoint?
-  var connections: Array<CGPoint> = []
+  var connections: Array<String> = []
+  var connectedLeaves: Array<LeafNode> = []
   
   // Media Specific
   var activity: Activity?
@@ -45,12 +46,14 @@ class LeafNode: NSObject {
   // Other
   var treeDelegate: TreeDelegate?
   var view: UIView?
+  var id: String?
   
   
 // MARK: INITIALIZATION
   
   func initWithJson(json: jsonObject, delegate: TreeDelegate) {
-    if let activity = json["activity"] as? String, coordinates = json["coordinates"] as? jsonObject, title = json["abilityTitle"] as? String, status = json["completionStatus"] as? Bool {
+    if let id = json["_id"] as? String, activity = json["activity"] as? String, coordinates = json["coordinates"] as? jsonObject, title = json["abilityTitle"] as? String, status = json["completionStatus"] as? Bool {
+      self.id = id
       self.treeDelegate = delegate
       self.activity = parseActivity(activity)
       self.completionStatus = status
@@ -60,8 +63,8 @@ class LeafNode: NSObject {
         self.center = CGPoint(x: x, y: y)
       }
       
-      if let connections = json["connections"] as? Array<jsonObject> {
-        parseConnections(connections)
+      if let connections = json["connections"] as? Array<String> {
+        self.connections = connections
       }
     }
     
@@ -73,14 +76,6 @@ class LeafNode: NSObject {
     self.treeDelegate = delegate
   }
   
-  func parseConnections(connections: Array<jsonObject>) {
-    //Note: need to add more data in connections
-    for connection in connections {
-      if let coordinates = connection["connectCoords"] as? jsonObject, x = coordinates["x"] as? CGFloat, y = coordinates["y"] as? CGFloat {
-        self.connections.append(CGPoint(x: x, y: y))
-      }
-    }
-  }
   
 // MARK: DRAWING
   func generateBounds() {
@@ -107,21 +102,36 @@ class LeafNode: NSObject {
     }
   }
   
+  func parseConnections() {
+    //Note: need to add more data in connections
+    for connection in connections {
+      if let leaf = PeatContentStore.sharedStore.findLeafWithId(connection) {
+        self.connectedLeaves.append(leaf)
+      }
+    }
+  }
+  
   func drawConnections() {
-    if let center = center {
-      for connection in self.connections {
-        let path = UIBezierPath()
-        path.moveToPoint(center)
-        path.addLineToPoint(connection)
-        
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.path = path.CGPath
-        shapeLayer.strokeColor = self.completionStatus ? UIColor.greenColor().CGColor : UIColor.grayColor().CGColor
-        shapeLayer.lineWidth = 3.0
-        shapeLayer.fillColor = UIColor.blackColor().CGColor
-        //LOL @SETH
-        shapeLayer.zPosition = -1
-        treeDelegate?.drawConnectionLayer(shapeLayer)
+    parseConnections()
+    for connection in self.connectedLeaves {
+      if let center = center, connectedCenter = connection.center {
+      
+      let path = UIBezierPath()
+      path.moveToPoint(center)
+      path.addLineToPoint(connectedCenter)
+      
+      let shapeLayer = CAShapeLayer()
+      shapeLayer.path = path.CGPath
+      if self.completionStatus {
+        shapeLayer.strokeColor = connection.completionStatus ? UIColor.greenColor().CGColor : UIColor.grayColor().CGColor
+      } else {
+        shapeLayer.strokeColor = UIColor.grayColor().CGColor
+      }
+      shapeLayer.lineWidth = 3.0
+      shapeLayer.fillColor = UIColor.blackColor().CGColor
+      //LOL @SETH
+      shapeLayer.zPosition = -1
+      treeDelegate?.drawConnectionLayer(shapeLayer)
       }
     }
   }

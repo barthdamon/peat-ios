@@ -209,6 +209,18 @@ class PeatContentStore: NSObject {
     NSNotificationCenter.defaultCenter().postNotificationName("leavesPopulated", object: self, userInfo: nil)
     }
   }
+  
+  func findLeafWithId(id: String) -> LeafNode? {
+    if let leaves = self.leaves {
+      for leaf in leaves {
+        if leaf.id == id {
+          return leaf
+        }
+      }
+    }
+    return nil
+  }
+  
 }
 
 

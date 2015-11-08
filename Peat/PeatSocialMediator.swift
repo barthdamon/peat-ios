@@ -42,6 +42,7 @@ class PeatSocialMediator: NSObject {
       for friend in friends {
         let newFriend = User()
         newFriend.initWithJson(friend)
+        newFriend.isFriend = true
         self.friends.append(newFriend)
       }
       NSNotificationCenter.defaultCenter().postNotificationName("loadingFriendsComplete", object: self, userInfo: nil)
@@ -50,12 +51,14 @@ class PeatSocialMediator: NSObject {
   
   //MARK: Changing Friend Relation
   
-  func putFriendRelation(friendID: String) {
+  func putFriendRelation(friendID: String, callback: APICallback) {
     API.put(["friend" : friendID], url: "friends") { (res, err) -> () in
       if let e = err {
         print("Error adding friend: \(e)")
+        callback(nil, e)
       } else {
         print("RESPONSE \(res)")
+        callback(res, nil)
       }
     }
   }
@@ -68,17 +71,22 @@ class PeatSocialMediator: NSObject {
         print("Error fetching users: \(e)")
       } else {
         if let json = res as? jsonObject {
-          self.generateSearchedFriends(json)
+          self.generateSearchedUsers(json)
         }
       }
     }
   }
   
-  func generateSearchedFriends(json: jsonObject) {
+  func generateSearchedUsers(json: jsonObject) {
     if let users = json["users"] as? Array<jsonObject> {
       for user in users {
         let newUser = User()
         newUser.initWithJson(user)
+        for friend in self.friends {
+          if friend.id == newUser.id {
+            newUser.isFriend = true
+          }
+        }
         self.userSearchResults.append(newUser)
       }
       NSNotificationCenter.defaultCenter().postNotificationName("recievedSearchResults", object: self, userInfo: nil)

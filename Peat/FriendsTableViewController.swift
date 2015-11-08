@@ -33,7 +33,6 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
       
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "prepareFriendsList", name: "loadingFriendsComplete", object: nil)
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "showSearchResults", name: "recievedSearchResults", object: nil)
-      
     }
 
     override func didReceiveMemoryWarning() {
@@ -67,6 +66,7 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
         if let friend = self.friends?[indexPath.row] {
           cell.usernameLabel.text = friend.username
           cell.nameLabel.text = friend.name
+          cell.friend = friend
         } else {
           cell.usernameLabel.text = "No Friends Found"
         }
@@ -77,6 +77,12 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
           if let user = self.foundUsers?[indexPath.row] {
             cell.usernameLabel.text = user.username
             cell.nameLabel.text = user.name
+            cell.foundUser = user
+            if user.isFriend {
+              cell.addButton.hidden = true
+              cell.usernameLabel.textColor = UIColor.grayColor()
+              cell.nameLabel.textColor = UIColor.grayColor()
+            }
           }
         } else {
           cell.usernameLabel.text = "No Users Found"
@@ -86,6 +92,19 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
       }
 
     }
+  
+  override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    switch mode {
+    case .List:
+      if let friend = self.friends {
+        //Perform the profile view segue with the friend
+        break
+      }
+    case .Search:
+      //Perform the profile view segue with the foundUser
+      break
+    }
+  }
 
     /*
     // Override to support conditional editing of the table view.
@@ -199,6 +218,8 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
   func exitSearch() {
     //reload table view with only current friends
     mode = .List
+    self.searchField?.text = ""
+    self.searchField?.resignFirstResponder()
     tableView.reloadData()
   }
 
