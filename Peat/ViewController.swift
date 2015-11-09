@@ -14,9 +14,6 @@ import AVFoundation
 class ViewController: UIViewController, ViewControllerWithMenu {
   
   var moviePlayer : MPMoviePlayerController?
-  
-  
-  
   var authToken :Dictionary<String, AnyObject>?
   
   let keychain = KeychainSwift()

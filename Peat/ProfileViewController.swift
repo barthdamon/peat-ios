@@ -8,10 +8,16 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController {
+class ProfileViewController: UIViewController, ViewControllerWithMenu {
 
+    var sidebarClient: SideMenuClient?
+  
     override func viewDidLoad() {
         super.viewDidLoad()
+      
+      initializeSidebar()
+      configureMenuSwipes()
+      configureNavBar()
 
         // Do any additional setup after loading the view.
     }
@@ -31,5 +37,18 @@ class ProfileViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+  
+  //MARK: Sidebar
+  func initializeSidebar() {
+    self.sidebarClient = SideMenuClient(clientController: self)
+  }
+  
+  func configureNavBar() {
+    sidebarClient?.configureNavBar()
+  }
+  
+  func configureMenuSwipes() {
+    sidebarClient?.configureMenuSwipes()
+  }
 
 }

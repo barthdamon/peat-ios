@@ -19,10 +19,7 @@ class RootViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
       
-      let windowWidth = self.view.frame.width
-      menuWidthConstraint.constant = windowWidth * 0.8
-      
-      globalMainContainer = mainViewContainer
+      configureContainers()
       
         // Do any additional setup after loading the view.
     }
@@ -47,6 +44,19 @@ class RootViewController: UIViewController {
         }
       }
     }
+  
+  func configureContainers() {
+    let windowWidth = self.view.frame.width
+    menuWidthConstraint.constant = windowWidth * 0.7
+    
+    mainViewContainer.layer.masksToBounds = false
+    mainViewContainer.layer.shadowColor = UIColor.blackColor().CGColor
+    mainViewContainer.layer.shadowOffset = CGSizeMake(0.0, 0.0)
+    mainViewContainer.layer.shadowOpacity = 0.6
+    mainViewContainer.layer.shadowRadius = 5.0
+    
+    globalMainContainer = mainViewContainer
+  }
   
 
     /*

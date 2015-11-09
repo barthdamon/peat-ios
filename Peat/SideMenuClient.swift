@@ -70,7 +70,7 @@ class SideMenuClient {
       if sender.direction == .Left && !offscreen { return }
     }
 
-    let offset = clientController.view.frame.width * 0.8
+    let offset = clientController.view.frame.width * 0.7
     
     UIView.animateWithDuration(0.2, animations: { () -> Void in
       if offscreen {
