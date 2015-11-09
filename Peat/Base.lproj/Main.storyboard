@@ -491,7 +491,7 @@
                                     <segue destination="T3P-41-mdN" kind="embed" identifier="menuEmbed" id="edA-se-cgT"/>
                                 </connections>
                             </containerView>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NjF-X6-C8n" userLabel="Home Container">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NjF-X6-C8n" userLabel="Main Container">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <connections>
                                     <segue destination="jzn-ag-gK2" kind="embed" identifier="homeViewEmbed" id="NvW-Yn-0C9"/>
@@ -512,7 +512,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="homeViewContainer" destination="NjF-X6-C8n" id="amf-0u-o7i"/>
+                        <outlet property="mainViewContainer" destination="NjF-X6-C8n" id="J4X-Y8-yfv"/>
                         <outlet property="menuWidthConstraint" destination="OBc-3b-wLB" id="Okr-st-cSj"/>
                     </connections>
                 </viewController>

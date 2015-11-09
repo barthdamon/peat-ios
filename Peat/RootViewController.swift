@@ -8,9 +8,11 @@
 
 import UIKit
 
+public var globalMainContainer: UIView?
+
 class RootViewController: UIViewController {
 
-  @IBOutlet weak var homeViewContainer: UIView!
+  @IBOutlet weak var mainViewContainer: UIView!
   @IBOutlet weak var menuWidthConstraint: NSLayoutConstraint!
   var homeViewController: HomeViewController?
   
@@ -19,6 +21,9 @@ class RootViewController: UIViewController {
       
       let windowWidth = self.view.frame.width
       menuWidthConstraint.constant = windowWidth * 0.8
+      
+      globalMainContainer = mainViewContainer
+      
         // Do any additional setup after loading the view.
     }
 
@@ -32,7 +37,6 @@ class RootViewController: UIViewController {
         print("homeViewEmbed")
         if let navCon = segue.destinationViewController as? UINavigationController,
           vc = navCon.topViewController as? HomeViewController {
-            vc.ourContainerView = homeViewContainer
             self.homeViewController = vc
         }
       } else if segue.identifier == "menuEmbed" {

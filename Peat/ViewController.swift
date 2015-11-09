@@ -11,7 +11,7 @@ import KeychainSwift
 import MediaPlayer
 import AVFoundation
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, ViewControllerWithMenu {
   
   var moviePlayer : MPMoviePlayerController?
   
@@ -21,25 +21,22 @@ class ViewController: UIViewController {
   
   let keychain = KeychainSwift()
   var videoPath: NSURL?
+  var sidebarClient: SideMenuClient?
 
   @IBOutlet weak var playerView: UIView!
   @IBOutlet weak var imageView: UIImageView!
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let infoImage = UIImage(named: "menuIcon.png")
-//    let imgWidth = infoImage?.size.width
-//    let imgHeight = infoImage?.size.height
-    let button:UIButton = UIButton(frame: CGRect(x: 0,y: 0,width: 40, height: 40))
-    button.setBackgroundImage(infoImage, forState: .Normal)
-    button.layer.cornerRadius = 10.0
-    button.clipsToBounds = true
-    button.addTarget(self, action: Selector("showMenu"), forControlEvents: UIControlEvents.TouchUpInside)
-    self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
-    self.navigationController?.navigationBar.barTintColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
-
+    initializeSidebar()
+    configureMenuSwipes()
+    configureNavBar()
     // Do any additional setup after loading the view, typically from a nib.
 //    NSNotificationCenter.defaultCenter().addObserver(self, selector: "showMedia", name: "videoObjectsPopulated", object: nil)
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    
   }
   
   override func viewDidAppear(animated: Bool) {
@@ -123,6 +120,18 @@ class ViewController: UIViewController {
     
   }
   
+  //MARK: Sidebar
+  func initializeSidebar() {
+    self.sidebarClient = SideMenuClient(clientController: self)
+  }
+  
+  func configureNavBar() {
+    sidebarClient?.configureNavBar()
+  }
+  
+  func configureMenuSwipes() {
+    sidebarClient?.configureMenuSwipes()
+  }
   
   func sendToken(sender: AnyObject) {
     APIService.sharedService.post(["params":["auth_type":"Basic","user":["email":"mbmattbarth@gmail.com","password":"mattdamon7"]]], authType: HTTPRequestAuthType.Basic, url: "login") { (res, err) -> () in
