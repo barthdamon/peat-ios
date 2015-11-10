@@ -28,16 +28,26 @@ class SideMenuClient {
   }
   
   func configureNavBar() {
-    let infoImage = UIImage(named: "menuIcon.png")
+    let mainLogoImage = UIImage(named: "menuIcon.png")
+    let cameraImage = UIImage(named: "camera.png")
     //    let imgWidth = infoImage?.size.width
     //    let imgHeight = infoImage?.size.height
-    let button:UIButton = UIButton(frame: CGRect(x: 0,y: 0,width: 40, height: 40))
-    button.setBackgroundImage(infoImage, forState: .Normal)
-    button.layer.cornerRadius = 10.0
-    button.clipsToBounds = true
-    button.addTarget(self, action: Selector("toggleMenu:"), forControlEvents: UIControlEvents.TouchUpInside)
-    clientController?.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
-    clientController?.navigationController?.navigationBar.barTintColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
+    let logoButton: UIButton = UIButton(frame: CGRect(x: 0,y: 0,width: 40, height: 40))
+    logoButton.setBackgroundImage(mainLogoImage, forState: .Normal)
+    logoButton.layer.cornerRadius = 10.0
+    logoButton.clipsToBounds = true
+    logoButton.addTarget(self, action: Selector("toggleMenu:"), forControlEvents: UIControlEvents.TouchUpInside)
+    clientController?.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: logoButton)
+    
+    let cameraButton: UIButton = UIButton(frame: CGRect(x: 0,y: 0,width: 40, height: 40))
+    cameraButton.setBackgroundImage(cameraImage, forState: .Normal)
+    cameraButton.layer.cornerRadius = 10.0
+    cameraButton.clipsToBounds = true
+    cameraButton.addTarget(self, action: Selector("showCameraView:"), forControlEvents: UIControlEvents.TouchUpInside)
+    clientController?.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cameraButton)
+    
+    clientController?.navigationController?.navigationBar.barTintColor = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)
+    clientController?.view.backgroundColor = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1)
   }
   
   func configureMenuSwipes() {
@@ -62,6 +72,10 @@ class SideMenuClient {
     menuCloseTapGesture!.enabled = false
   }
   
+  @IBAction func showCameraView(sender: AnyObject) {
+    print("Camera Selected")
+  }
+  
   @IBAction func toggleMenu(sender: AnyObject) {
     let offscreen = self.mainContainer.frame.origin.x > 0
     
@@ -70,7 +84,7 @@ class SideMenuClient {
       if sender.direction == .Left && !offscreen { return }
     }
 
-    let offset = clientController.view.frame.width * 0.7
+    let offset = clientController.view.frame.width * 0.8
     
     UIView.animateWithDuration(0.2, animations: { () -> Void in
       if offscreen {
@@ -88,4 +102,5 @@ class SideMenuClient {
     //    promoViewSwipeGesture?.enabled = offscreen
     //    menuCloseTapGesture?.enabled = !offscreen
   }
+  
 }

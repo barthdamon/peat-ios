@@ -21,7 +21,6 @@ class HomeViewController: UIViewController, ViewControllerWithMenu {
       initializeSidebar()
       configureNavBar()
       configureMenuSwipes()
-
     }
 
     override func didReceiveMemoryWarning() {

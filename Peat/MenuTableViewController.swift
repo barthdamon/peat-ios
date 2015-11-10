@@ -20,6 +20,7 @@ class MenuTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+      configureNavBar()
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,6 +39,55 @@ class MenuTableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of rows
         return 0
     }
+  
+  func configureNavBar() {
+    let navOptionView = UIView(frame: CGRectMake(-200,0,300,40))
+    
+    let newsfeedImage = UIImage(named:"newsfeed.png")
+    let treeImage = UIImage(named:"tree.png")
+    let friendsImage = UIImage(named:"friends.png")
+    
+    let newsfeedButton:UIButton = UIButton(frame: CGRect(x: 0,y: 0,width: 40, height: 40))
+    newsfeedButton.setBackgroundImage(newsfeedImage, forState: .Normal)
+    newsfeedButton.addTarget(self, action: Selector("showNewsfeed:"), forControlEvents: UIControlEvents.TouchUpInside)
+    
+    let treeButton:UIButton = UIButton(frame: CGRect(x: 50,y: 0,width: 40, height: 40))
+    treeButton.setBackgroundImage(treeImage, forState: .Normal)
+    treeButton.addTarget(self, action: Selector("showTree:"), forControlEvents: UIControlEvents.TouchUpInside)
+    
+    let friendsButton:UIButton = UIButton(frame: CGRect(x: 100,y: 0,width: 40, height: 40))
+    friendsButton.setBackgroundImage(friendsImage, forState: .Normal)
+    friendsButton.addTarget(self, action: Selector("showFriends:"), forControlEvents: UIControlEvents.TouchUpInside)
+    
+    navOptionView.addSubview(newsfeedButton)
+    navOptionView.addSubview(treeButton)
+    navOptionView.addSubview(friendsButton)
+    
+    navOptionView.backgroundColor = UIColor.clearColor()
+    self.navigationItem.titleView = navOptionView
+    self.navigationController?.navigationBar.barTintColor = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)
+  }
+  
+  @IBAction func showNewsfeed(sender: AnyObject) {
+    print("Newsfeed Selected")
+    if let homeController = self.rootController?.homeViewController {
+      homeController.performSegueWithIdentifier("showNewsfeed", sender: homeController)
+    }
+  }
+  
+  @IBAction func showTree(sender: AnyObject) {
+    print("Tree Selected")
+    if let homeController = self.rootController?.homeViewController {
+      homeController.performSegueWithIdentifier("showTree", sender: homeController)
+    }
+  }
+  
+  @IBAction func showFriends(sender: AnyObject) {
+    print("Friends Selected")
+    if let homeController = self.rootController?.homeViewController {
+      homeController.performSegueWithIdentifier("showFriends", sender: homeController)
+    }
+  }
 
     /*
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

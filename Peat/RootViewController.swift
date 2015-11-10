@@ -47,7 +47,7 @@ class RootViewController: UIViewController {
   
   func configureContainers() {
     let windowWidth = self.view.frame.width
-    menuWidthConstraint.constant = windowWidth * 0.7
+    menuWidthConstraint.constant = windowWidth * 0.8
     
     mainViewContainer.layer.masksToBounds = false
     mainViewContainer.layer.shadowColor = UIColor.blackColor().CGColor

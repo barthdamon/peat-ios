@@ -10,14 +10,19 @@ import UIKit
 import AWSCore
 import AWSS3
 
-class NewsfeedTableViewController: UITableViewController {
+class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu {
   
     var mediaObjects: Array<MediaObject>?
+    var sidebarClient: SideMenuClient?
   
     override func viewDidLoad() {
         super.viewDidLoad()
       self.tableView.allowsSelection = false
 //      NSNotificationCenter.defaultCenter().addObserver(self, selector: "configureMedia", name: "mediaObjectsPopulated", object: nil)
+      
+      initializeSidebar()
+      configureNavBar()
+      configureMenuSwipes()
     }
   
   override func viewWillAppear(animated: Bool) {
@@ -83,6 +88,19 @@ class NewsfeedTableViewController: UITableViewController {
           cell.configureCell(object)
         }
         return cell
+    }
+  
+    //MARK: Sidebar
+    func initializeSidebar() {
+      self.sidebarClient = SideMenuClient(clientController: self)
+    }
+    
+    func configureNavBar() {
+      sidebarClient?.configureNavBar()
+    }
+    
+    func configureMenuSwipes() {
+      sidebarClient?.configureMenuSwipes()
     }
 
 

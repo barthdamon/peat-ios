@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
+class FriendsTableViewController: UITableViewController, UITextFieldDelegate, ViewControllerWithMenu {
   
   enum FriendMode {
     case Search
@@ -19,6 +19,7 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
   var friends: Array<User>?
   var searchField: UITextField?
   var mode: FriendMode = .List
+  var sidebarClient: SideMenuClient?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +29,10 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+      initializeSidebar()
       configureNavBar()
+      configureMenuSwipes()
+      configureSearchBar()
       PeatSocialMediator.sharedMediator.initializeFriendsList()
       
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "prepareFriendsList", name: "loadingFriendsComplete", object: nil)
@@ -105,6 +109,19 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
       break
     }
   }
+  
+  //MARK: Sidebar
+  func initializeSidebar() {
+    self.sidebarClient = SideMenuClient(clientController: self)
+  }
+  
+  func configureNavBar() {
+    sidebarClient?.configureNavBar()
+  }
+  
+  func configureMenuSwipes() {
+    sidebarClient?.configureMenuSwipes()
+  }
 
     /*
     // Override to support conditional editing of the table view.
@@ -156,8 +173,8 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
     self.tableView.reloadData()
   }
   
-  func configureNavBar() {
-    let width = self.view.frame.width  * 0.7
+  func configureSearchBar() {
+    let width = self.view.frame.width  * 0.6
     searchField = UITextField(frame: CGRectMake(0, 0, width, 30))
     if let searchField = searchField {
       searchField.backgroundColor = UIColor.whiteColor()
@@ -168,31 +185,45 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate {
       
       configureTextFieldElements(searchField)
       
-      let searchItem = UIBarButtonItem(customView: searchField)
-      self.navigationItem.leftBarButtonItem = searchItem
+      let searchItem = UIView(frame: CGRectMake(0,0, self.view.frame.width * 0.6, 40))
+      searchItem.backgroundColor = .clearColor()
+      searchItem.addSubview(searchField)
+      self.navigationItem.titleView = searchItem
     }
     
     let cancelButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "exitSearch")
     self.navigationItem.rightBarButtonItem = cancelButton
   }
   
+  
+  
   func configureTextFieldElements(textField: UITextField) {
     
     let iconSize: CGFloat = 18
-    
-    let container = UIView(frame: CGRectMake(4, 0, 28, 18))
+    //magnifyContainer
+    let magnifyContainer = UIView(frame: CGRectMake(4, 0, 28, 18))
     let magnifyView = UIImageView(frame: CGRectMake(0, 0, iconSize, iconSize))
     magnifyView.image = UIImage(named: "magnify")
     magnifyView.image = magnifyView.image!.imageWithRenderingMode(.AlwaysTemplate)
     magnifyView.tintColor = .lightGrayColor()
     
-    container.addSubview(magnifyView)
+    magnifyContainer.addSubview(magnifyView)
     magnifyView.center.x += 4
-    //    magnifyView.center.y -= 4
+    textField.leftView = magnifyContainer
     
-    textField.leftView = container
+    //cancelContainer
+//    let cancelContainer = UIView(frame: CGRectMake(-4, 0, 28, 18))
+//    let cancelView = UIImageView(frame: CGRectMake(0, 0, iconSize, iconSize))
+//    magnifyView.image = UIImage(named: "cancel.png")
+//    magnifyView.image = magnifyView.image!.imageWithRenderingMode(.AlwaysTemplate)
+//    magnifyView.tintColor = .lightGrayColor()
+//    
+//    cancelContainer.addSubview(cancelView)
+//    magnifyView.center.x -= 4
+//    textField.rightView = cancelContainer
     
     textField.leftViewMode = .Always
+//    textField.rightViewMode = .Always
   }
   
   func textFieldDidChange(textField: UITextField) {
