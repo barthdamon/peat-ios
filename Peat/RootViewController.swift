@@ -14,7 +14,8 @@ class RootViewController: UIViewController {
 
   @IBOutlet weak var mainViewContainer: UIView!
   @IBOutlet weak var menuWidthConstraint: NSLayoutConstraint!
-  var homeViewController: HomeViewController?
+  var mainTabBarController: UITabBarController?
+  var homeViewController: UIViewController?
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,12 +30,20 @@ class RootViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
   
+  override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(true)
+//    if let tabBar = self.mainTabBarController {
+//      tabBar.selectedIndex = 0
+//    }
+  }
+  
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
       if segue.identifier == "homeViewEmbed" {
         print("homeViewEmbed")
-        if let navCon = segue.destinationViewController as? UINavigationController,
-          vc = navCon.topViewController as? HomeViewController {
-            self.homeViewController = vc
+        print(segue.destinationViewController)
+        if let tabBarController = segue.destinationViewController as? UITabBarController {
+          tabBarController.tabBar.hidden = true
+          self.mainTabBarController = tabBarController
         }
       } else if segue.identifier == "menuEmbed" {
         print("homeMenuEmbed")

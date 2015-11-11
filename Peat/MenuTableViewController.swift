@@ -70,22 +70,22 @@ class MenuTableViewController: UITableViewController {
   
   @IBAction func showNewsfeed(sender: AnyObject) {
     print("Newsfeed Selected")
-    if let homeController = self.rootController?.homeViewController {
-      homeController.performSegueWithIdentifier("showNewsfeed", sender: homeController)
+    if let tabBar = self.rootController?.mainTabBarController {
+      tabBar.selectedIndex = 0
     }
   }
   
   @IBAction func showTree(sender: AnyObject) {
     print("Tree Selected")
-    if let homeController = self.rootController?.homeViewController {
-      homeController.performSegueWithIdentifier("showTree", sender: homeController)
+    if let tabBar = self.rootController?.mainTabBarController {
+      tabBar.selectedIndex = 2
     }
   }
   
   @IBAction func showFriends(sender: AnyObject) {
     print("Friends Selected")
-    if let homeController = self.rootController?.homeViewController {
-      homeController.performSegueWithIdentifier("showFriends", sender: homeController)
+    if let tabBar = self.rootController?.mainTabBarController {
+      tabBar.selectedIndex = 1
     }
   }
 

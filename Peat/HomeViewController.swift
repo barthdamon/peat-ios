@@ -32,7 +32,7 @@ class HomeViewController: UIViewController, ViewControllerWithMenu {
   
     //MARK: Sidebar
     func initializeSidebar() {
-      self.sidebarClient = SideMenuClient(clientController: self)
+      self.sidebarClient = SideMenuClient(clientController: self, tabBar: self.tabBarController)
     }
   
     func configureNavBar() {

@@ -8,10 +8,10 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Item-->
+        <!--Camera Navigation Controller-->
         <scene sceneID="iHO-u0-XhX">
             <objects>
-                <navigationController id="hGE-iW-05c" sceneMemberID="viewController">
+                <navigationController title="Camera Navigation Controller" id="hGE-iW-05c" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="mNf-15-egk"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="3Gn-uW-BOa">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -25,10 +25,10 @@
             </objects>
             <point key="canvasLocation" x="1008" y="-688"/>
         </scene>
-        <!--Item-->
+        <!--Friends Navigation Controller-->
         <scene sceneID="CcB-Jw-sJR">
             <objects>
-                <navigationController id="b9L-JY-Id9" sceneMemberID="viewController">
+                <navigationController title="Friends Navigation Controller" id="b9L-JY-Id9" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="VG0-os-B03"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Knm-q0-6DS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -42,10 +42,10 @@
             </objects>
             <point key="canvasLocation" x="1003" y="37"/>
         </scene>
-        <!--Item-->
+        <!--Profile Navigation Controller-->
         <scene sceneID="KoD-Gz-hEa">
             <objects>
-                <navigationController id="RZZ-TF-ezG" sceneMemberID="viewController">
+                <navigationController title="Profile Navigation Controller" id="RZZ-TF-ezG" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="CoR-x4-VKF"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="JET-n0-Zzi">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -59,10 +59,10 @@
             </objects>
             <point key="canvasLocation" x="1003" y="773"/>
         </scene>
-        <!--Item-->
+        <!--Newsfeed Navigation Controller-->
         <scene sceneID="tu3-cn-ixd">
             <objects>
-                <navigationController id="t9h-xH-1sD" sceneMemberID="viewController">
+                <navigationController title="Newsfeed Navigation Controller" id="t9h-xH-1sD" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="ACA-HO-xH1"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="QZs-T6-jE5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -76,10 +76,10 @@
             </objects>
             <point key="canvasLocation" x="1003" y="1483"/>
         </scene>
-        <!--Item-->
+        <!--Newsfeed-->
         <scene sceneID="dG6-2V-JQH">
             <objects>
-                <tableViewController id="dPu-tV-yC0" customClass="NewsfeedTableViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Newsfeed" id="dPu-tV-yC0" customClass="NewsfeedTableViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="273" sectionHeaderHeight="28" sectionFooterHeight="28" id="iPJ-4d-wXt">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -139,10 +139,10 @@
             </objects>
             <point key="canvasLocation" x="1717" y="1483"/>
         </scene>
-        <!--Item-->
+        <!--Friends-->
         <scene sceneID="PTK-Gs-UzS">
             <objects>
-                <tableViewController id="28a-KL-O3r" customClass="FriendsTableViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Friends" id="28a-KL-O3r" customClass="FriendsTableViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="78" sectionHeaderHeight="28" sectionFooterHeight="28" id="2Ww-Yw-NVE">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -238,10 +238,10 @@
             </objects>
             <point key="canvasLocation" x="1717" y="37"/>
         </scene>
-        <!--Item-->
+        <!--Camera-->
         <scene sceneID="Bbt-4x-aiX">
             <objects>
-                <viewController id="ij2-ag-d7A" customClass="CameraViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Camera" id="ij2-ag-d7A" customClass="CameraViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Hj8-7t-4oG"/>
                         <viewControllerLayoutGuide type="bottom" id="BpY-KO-gDW"/>
@@ -286,10 +286,10 @@
             </objects>
             <point key="canvasLocation" x="1717" y="-688"/>
         </scene>
-        <!--Item-->
+        <!--Profile-->
         <scene sceneID="Nxn-rB-ji3">
             <objects>
-                <viewController id="u9J-yl-I1T" customClass="ProfileViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Profile" id="u9J-yl-I1T" customClass="ProfileViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="JXg-dd-tH6"/>
                         <viewControllerLayoutGuide type="bottom" id="btH-gG-Au2"/>
@@ -451,7 +451,7 @@
         <scene sceneID="gZe-Hg-52X">
             <objects>
                 <tabBarController id="e0O-XX-UU8" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="vmY-0z-RbP">
+                    <tabBar key="tabBar" hidden="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="vmY-0z-RbP">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>

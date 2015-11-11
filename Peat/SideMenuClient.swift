@@ -17,13 +17,17 @@ protocol ViewControllerWithMenu {
 class SideMenuClient {
   
   var clientController: UIViewController!
+  var tabBar: UITabBarController?
   var menuCloseTapGesture: UITapGestureRecognizer?
   var mainContainer: UIView!
   
-  init(clientController: UIViewController) {
+  init(clientController: UIViewController, tabBar: UITabBarController?) {
     self.clientController = clientController
     if let mainContainer = globalMainContainer {
       self.mainContainer = mainContainer
+    }
+    if let tabBar = tabBar {
+      self.tabBar = tabBar
     }
   }
   
@@ -74,6 +78,9 @@ class SideMenuClient {
   
   @IBAction func showCameraView(sender: AnyObject) {
     print("Camera Selected")
+    if let tabBar = self.tabBar {
+      tabBar.selectedIndex = 3
+    }
   }
   
   @IBAction func toggleMenu(sender: AnyObject) {
