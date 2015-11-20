@@ -21,6 +21,7 @@ class RootViewController: UIViewController {
         super.viewDidLoad()
       
       configureContainers()
+      SocketService.sharedService.configureSocket()
       
         // Do any additional setup after loading the view.
     }

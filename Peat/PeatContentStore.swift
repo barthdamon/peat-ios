@@ -156,7 +156,7 @@ class PeatContentStore: NSObject {
   }
   
   func createMediaObjects(json :jsonObject, callback: APICallback) {
-    print("media query: \(json)")
+//    print("media query: \(json)")
     //append to new media objects, then send callback to functions. Have this function be unbiased for extend, initialize, and update
     var newMediaObjects: Array<MediaObject> = []
     

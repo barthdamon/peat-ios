@@ -102,6 +102,7 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate, Vi
     case .List:
       if let friend = self.friends {
         //Perform the profile view segue with the friend
+        print(friend)
         break
       }
     case .Search:

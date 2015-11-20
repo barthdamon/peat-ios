@@ -69,6 +69,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Pods/AWSSQS.framework'
   install_framework 'Pods/AWSSimpleDB.framework'
   install_framework 'Pods/KeychainSwift.framework'
+  install_framework 'Pods/Socket_IO_Client_Swift.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods/AWSAutoScaling.framework'
@@ -88,4 +89,5 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods/AWSSQS.framework'
   install_framework 'Pods/AWSSimpleDB.framework'
   install_framework 'Pods/KeychainSwift.framework'
+  install_framework 'Pods/Socket_IO_Client_Swift.framework'
 fi
