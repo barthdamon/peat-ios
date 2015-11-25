@@ -31,25 +31,30 @@ func parseActivity(activity: String) -> Activity {
   }
 }
 
-enum MediaType: String, CustomStringConvertible {
+enum MediaType: String {
   case Image = "image"
   case Video = "video"
   case Other = "other"
-  
-  var description: String{
-    return self.rawValue
-  }
 }
 
-func convertToType(type :String) -> MediaType {
-  switch type {
-  case "image":
-    return MediaType.Image
-  case "video":
-    return MediaType.Video
-  default:
-    return MediaType.Other
+struct AbilityStore {
+//  var storedActivities: Array<Activity>?
+  var leaves: Array<LeafNode> = []
+  
+  func findLeavesForActivity(activity: Activity) -> Array<LeafNode>? {
+    var returnLeaves: Array<LeafNode> = []
+    for leaf in leaves {
+      if leaf.activity == activity {
+        returnLeaves.append(leaf)
+      }
+    }
+    if returnLeaves.count > 0 {
+      return returnLeaves
+    } else {
+      return nil
+    }
   }
+  
 }
 
 typealias jsonObject = Dictionary<String, AnyObject>
@@ -62,7 +67,7 @@ class PeatContentStore: NSObject {
   
   var API = APIService.sharedService
   var mediaObjects: Array<MediaObject>?
-  var leaves: Array<LeafNode>?
+  var abilityStore = AbilityStore()
   
   class var sharedStore: PeatContentStore {
     return _sharedStore
@@ -185,7 +190,16 @@ class PeatContentStore: NSObject {
   
   
 //MARK: LEAVES
-  func generateActivityTree(activity: Activity, delegate: TreeDelegate) {
+  func getLeaves(activity: Activity) -> Array<LeafNode>? {
+    if let leaves = self.abilityStore.findLeavesForActivity(activity) {
+      return leaves
+    } else {
+      generateActivityTree(activity, delegate: nil)
+      return nil
+    }
+  }
+  
+  func generateActivityTree(activity: Activity, delegate: TreeDelegate?) {
     API.post(["activity" : "trampoline"], authType: .Token, url: "leaves/get") { (res, err) in
       if let e = err {
         print(e)
@@ -198,24 +212,22 @@ class PeatContentStore: NSObject {
     }
   }
   
-  func populateLeaves(json: jsonObject, delegate: TreeDelegate) {
+  func populateLeaves(json: jsonObject, delegate: TreeDelegate?) {
     if let leaves = json["leaves"] as? Array<jsonObject> {
-      self.leaves = []
       for leaf in leaves {
         let newleaf = LeafNode()
+        //TODO: MAKE SURE WHEN LEAVES ARE INITIALIZED FROM TREE THE DELEGATE IS SET
         newleaf.initWithJson(leaf, delegate: delegate)
-        self.leaves?.append(newleaf)
+        self.abilityStore.leaves.append(newleaf)
       }
     NSNotificationCenter.defaultCenter().postNotificationName("leavesPopulated", object: self, userInfo: nil)
     }
   }
   
   func findLeafWithId(id: String) -> LeafNode? {
-    if let leaves = self.leaves {
-      for leaf in leaves {
-        if leaf.id == id {
-          return leaf
-        }
+    for leaf in self.abilityStore.leaves {
+      if leaf.id == id {
+        return leaf
       }
     }
     return nil

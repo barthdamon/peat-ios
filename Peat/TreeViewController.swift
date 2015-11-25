@@ -41,7 +41,7 @@ class TreeViewController: UIViewController, TreeDelegate {
   
   func fetchTreeData() {
     if !initializeLeaves() {
-      PeatContentStore.sharedStore.generateActivityTree(.Trampoline, delegate: self)
+      //show loading view or something
     }
   }
   
@@ -56,7 +56,8 @@ class TreeViewController: UIViewController, TreeDelegate {
   }
 
   func initializeLeaves() -> Bool {
-    if let leaves = PeatContentStore.sharedStore.leaves {
+    //right now it redraws every time... no harm in that
+    if let leaves = PeatContentStore.sharedStore.getLeaves(.Trampoline) {
       self.leaves = leaves
       displayLeaves()
       return true

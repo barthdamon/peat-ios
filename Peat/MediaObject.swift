@@ -24,7 +24,7 @@ class MediaObject: NSObject {
       self.timeStamp = timestamp
       self.datePosted = NSDate(timeIntervalSince1970: timestamp)
       self.url = NSURL(string: url)
-      self.mediaType = convertToType(type)
+      self.mediaType = MediaType(rawValue: type)
     }
   }
   

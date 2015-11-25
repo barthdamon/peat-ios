@@ -51,10 +51,12 @@ class LeafNode: NSObject {
   
 // MARK: INITIALIZATION
   
-  func initWithJson(json: jsonObject, delegate: TreeDelegate) {
+  func initWithJson(json: jsonObject, delegate: TreeDelegate?) {
     if let id = json["_id"] as? String, activity = json["activity"] as? String, coordinates = json["coordinates"] as? jsonObject, title = json["abilityTitle"] as? String, status = json["completionStatus"] as? Bool {
       self.id = id
-      self.treeDelegate = delegate
+      if let delegate = delegate {
+        self.treeDelegate = delegate
+      }
       self.activity = parseActivity(activity)
       self.completionStatus = status
       self.abilityTitle = title
