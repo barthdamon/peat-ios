@@ -39,6 +39,7 @@ class CameraViewController: UIViewController, ViewControllerWithMenu, UIPickerVi
     
     fetchLeaves()
       // Do any additional setup after loading the view.
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "initializeLeaves", name: "leavesPopulated", object: nil)
   }
 
   override func didReceiveMemoryWarning() {
@@ -46,7 +47,7 @@ class CameraViewController: UIViewController, ViewControllerWithMenu, UIPickerVi
       // Dispose of any resources that can be recreated.
   }
   
-  func featchLeaves() {
+  func fetchLeaves() {
     if !initializeLeaves() {
       //show loading view or something
     }
@@ -56,17 +57,12 @@ class CameraViewController: UIViewController, ViewControllerWithMenu, UIPickerVi
     //right now it redraws every time... no harm in that
     if let leaves = PeatContentStore.sharedStore.getLeaves(.Trampoline) {
       self.leaves = leaves
-      populatePickerView()
+      self.imagePickerView.reloadAllComponents()
       return true
     } else {
       return false
     }
   }
-  
-  func populatePickerView() {
-    
-  }
-  
   
   //MARK: Sidebar
   func initializeSidebar() {
@@ -115,57 +111,29 @@ class CameraViewController: UIViewController, ViewControllerWithMenu, UIPickerVi
     return 1
   }
   
+  //number of views in the picker
   func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    return 1
+    return self.leaves != nil ? self.leaves!.count : 1
   }
   
-//  func configureThumbnailOverlay() {
-//    let asset = AVURLAsset(URL: self.videoPath!)
-//    let imageGenerator = AVAssetImageGenerator(asset: asset)
-//    imageGenerator.appliesPreferredTrackTransform=true
-//    //    let durationSeconds = CMTimeGetSeconds(asset.duration)
-//    let midPoint = CMTimeMakeWithSeconds(1, 1)
-//    imageGenerator.generateCGImagesAsynchronouslyForTimes( [ NSValue(CMTime:midPoint) ], completionHandler: {
-//      (requestTime, thumbnail, actualTime, result, error) -> Void in
-//      
-//      if let thumbnail = thumbnail {
-//        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-//          self.videoOverlayView = UIView(frame: self.mediaView.bounds)
-//          
-//          if let overlay = self.videoOverlayView {
-//            let thumbnailView = UIImageView(frame: self.mediaView.bounds)
-//            thumbnailView.contentMode = .ScaleAspectFit
-//            thumbnailView.image = UIImage(CGImage: thumbnail)
-//            
-//            overlay.addSubview(thumbnailView)
-//            
-//            let playButtonContainerSize: CGFloat = 70
-//            
-//            let playButtonContainer = UIView(frame: CGRectMake(0, 0, playButtonContainerSize, playButtonContainerSize))
-//            playButtonContainer.layer.cornerRadius = playButtonContainerSize/2;
-//            playButtonContainer.layer.masksToBounds = true
-//            playButtonContainer.backgroundColor = UIColor.whiteColor()
-//            playButtonContainer.alpha = 0.3
-//            playButtonContainer.center = overlay.center
-//            
-//            let playButton = UIImageView(image: self.playButtonIcon)
-//            playButton.center = playButtonContainer.center
-//            playButton.alpha = 0.6
-//            
-//            overlay.addSubview(playButtonContainer)
-//            overlay.addSubview(playButton)
-//            
-//            let tap = UITapGestureRecognizer(target: self, action: "togglePlaystate")
-//            tap.numberOfTapsRequired = 1
-//            tap.numberOfTouchesRequired = 1
-//            overlay.addGestureRecognizer(tap)
-//            
-//            self.mediaView.addSubview(overlay)
-//          }
-//        })
-//      }
-//    })
-//  }
+  //returns the title for each row
+  func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    if let leaves = self.leaves {
+      let leaf = leaves[row]
+      return leaf.abilityTitle
+    } else {
+      return nil
+    }
+  }
+  
+  func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    if let leaves = self.leaves {
+      self.selectedLeaf = leaves[row]
+      if let leafSelected = self.selectedLeaf {
+        self.leafPathLabel.text = leafSelected.abilityTitle
+      }
+    }
+  }
 
 
   @IBAction func publishButtonPressed(sender: AnyObject) {

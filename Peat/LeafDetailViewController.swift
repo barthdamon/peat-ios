@@ -12,6 +12,8 @@ class LeafDetailViewController: UIViewController {
   
   var leaf: LeafNode?
 
+  @IBOutlet weak var descriptionLabel: UILabel!
+  @IBOutlet weak var playerView: UIView!
   @IBOutlet weak var abilityTitle: UILabel!
   @IBOutlet weak var completionStatusLabel: UILabel!
   
