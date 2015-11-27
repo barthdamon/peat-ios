@@ -83,8 +83,8 @@ class PeatContentStore: NSObject {
         print("Error:\(e)")
         callback(nil, e)
       } else {
-        if let json = res as? jsonObject {
-          self.createMediaObjects(json) { (res, err) -> () in
+        if let json = res as? jsonObject, mediaJson = json["media"] as? Array<jsonObject> {
+          self.createMediaObjects(mediaJson) { (res, err) -> () in
             if err != nil {
               print("error creating objects")
               callback(nil, err)
@@ -110,14 +110,14 @@ class PeatContentStore: NSObject {
           print("error: \(e)")
           callback(nil, e)
         } else {
-          if let json = res as? jsonObject {
-            self.createMediaObjects(json) { (res, err) -> () in
+          if let json = res as? jsonObject, mediaJson = json["media"] as? Array<jsonObject> {
+            self.createMediaObjects(mediaJson) { (res, err) -> () in
               if err != nil {
                 print("Error creating objects")
                 callback(nil, err)
               } else {
                 if var updatedObjects = res as? Array<MediaObject> {
-                  //prepend the new objects to mediaObjects array
+                  //prepend the new objects to mediaObjects array, one friend silver other gold, not throwing away media here
                   if let _ = self.mediaObjects {
                     updatedObjects += self.mediaObjects!
                     self.mediaObjects?.removeAll()
@@ -140,15 +140,15 @@ class PeatContentStore: NSObject {
           print("error: \(e)")
           callback(nil, e)
         } else {
-          if let json = res as? jsonObject {
-            self.createMediaObjects(json) { (res, err) -> () in
+          if let json = res as? jsonObject, mediaJson = json["media"] as? Array<jsonObject> {
+            self.createMediaObjects(mediaJson) { (res, err) -> () in
               if err != nil {
                 print("Error creating objects")
                 callback(nil, err)
               } else {
                 if let extendedObjects = res as? Array<MediaObject> {
                   if let _ = self.mediaObjects {
-                    self.mediaObjects! += extendedObjects
+                    self.addObjectsToStore(extendedObjects)
                     callback(self.mediaObjects!, nil)
                   }
                 }
@@ -160,13 +160,12 @@ class PeatContentStore: NSObject {
     }
   }
   
-  func createMediaObjects(json :jsonObject, callback: APICallback) {
+  func createMediaObjects(mediaJson :Array<jsonObject>, callback: APICallback) {
 //    print("media query: \(json)")
     //append to new media objects, then send callback to functions. Have this function be unbiased for extend, initialize, and update
     var newMediaObjects: Array<MediaObject> = []
     
-    if let media = json["media"] as? Array<jsonObject> {
-      for selectedMedia: jsonObject in media {
+      for selectedMedia: jsonObject in mediaJson {
         if let type = selectedMedia["mediaType"] as? String {
           var mediaObject = MediaObject()
           if type == "video" {
@@ -178,12 +177,17 @@ class PeatContentStore: NSObject {
           }
           newMediaObjects.append(mediaObject)
         }
-      }
       //Done on server:
 //      newMediaObjects.sortInPlace({ (a, b) -> Bool in
 //        return a.timeStamp > b.timeStamp
 //      })
       callback(newMediaObjects, nil)
+    }
+  }
+  
+  func addObjectsToStore(objects: Array<MediaObject>) {
+    if let _ = self.mediaObjects {
+     self.mediaObjects! += objects
     }
   }
   
@@ -205,16 +209,16 @@ class PeatContentStore: NSObject {
         print(e)
         NSNotificationCenter.defaultCenter().postNotificationName("errorfetchingTreeData", object: self, userInfo: nil)
       } else {
-        if let json = res as? Dictionary<String, AnyObject> {
-          self.populateLeaves(json, delegate: delegate)
+        if let json = res as? Dictionary<String, AnyObject>, jsonLeaves = json["leaves"] as? Array<jsonObject>, included = json["included"] as? Array<jsonObject> {
+          self.populateLeaves(jsonLeaves, included: included, delegate: delegate)
         }
       }
     }
   }
   
-  func populateLeaves(json: jsonObject, delegate: TreeDelegate?) {
-    if let leaves = json["leaves"] as? Array<jsonObject> {
-      for leaf in leaves {
+  func populateLeaves(jsonLeaves: Array<jsonObject>, included: Array<jsonObject>, delegate: TreeDelegate?) {
+    createMediaObjects(included) { (res, err) in
+      for leaf in jsonLeaves {
         let newleaf = LeafNode()
         //TODO: MAKE SURE WHEN LEAVES ARE INITIALIZED FROM TREE THE DELEGATE IS SET
         newleaf.initWithJson(leaf, delegate: delegate)
