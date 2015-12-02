@@ -182,13 +182,30 @@ class PeatContentStore: NSObject {
 //        return a.timeStamp > b.timeStamp
 //      })
       callback(newMediaObjects, nil)
+      addObjectsToStore(newMediaObjects)
     }
   }
   
   func addObjectsToStore(objects: Array<MediaObject>) {
     if let _ = self.mediaObjects {
      self.mediaObjects! += objects
+    } else {
+      self.mediaObjects = objects
     }
+  }
+  
+  func findMediaWithIds(ids: Array<String>) -> Array<MediaObject>? {
+    var foundObjects: Array<MediaObject> = []
+    if let mediaObjects = self.mediaObjects {
+      for id in ids {
+        for object in mediaObjects {
+          if object.id == id {
+            foundObjects.append(object)
+          }
+        }
+      }
+    }
+    return foundObjects
   }
   
   
@@ -218,13 +235,21 @@ class PeatContentStore: NSObject {
   
   func populateLeaves(jsonLeaves: Array<jsonObject>, included: Array<jsonObject>, delegate: TreeDelegate?) {
     createMediaObjects(included) { (res, err) in
-      for leaf in jsonLeaves {
-        let newleaf = LeafNode()
-        //TODO: MAKE SURE WHEN LEAVES ARE INITIALIZED FROM TREE THE DELEGATE IS SET
-        newleaf.initWithJson(leaf, delegate: delegate)
-        self.abilityStore.leaves.append(newleaf)
+      if err != nil {
+        print("Error creating objects")
+      } else {
+        if let extendedObjects = res as? Array<MediaObject> {
+          self.addObjectsToStore(extendedObjects)
+      
+          for leaf in jsonLeaves {
+            let newleaf = LeafNode()
+            //TODO: MAKE SURE WHEN LEAVES ARE INITIALIZED FROM TREE THE DELEGATE IS SET
+            newleaf.initWithJson(leaf, delegate: delegate)
+            self.abilityStore.leaves.append(newleaf)
+          }
+          NSNotificationCenter.defaultCenter().postNotificationName("leavesPopulated", object: self, userInfo: nil)
+        }
       }
-    NSNotificationCenter.defaultCenter().postNotificationName("leavesPopulated", object: self, userInfo: nil)
     }
   }
   

@@ -42,6 +42,7 @@ class LeafNode: NSObject {
   var activity: Activity?
   var completionStatus: Bool = false
   var abilityTitle: String?
+  var mediaIds: Array<String>?
   
   // Other
   var treeDelegate: TreeDelegate?
@@ -67,6 +68,10 @@ class LeafNode: NSObject {
       
       if let connections = json["connections"] as? Array<String> {
         self.connections = connections
+      }
+      
+      if let media = json["media"] as? Array<String> {
+        self.mediaIds = media
       }
     }
     

@@ -66,6 +66,9 @@ class SideMenuClient {
     leftSwipe.numberOfTouchesRequired = 1
     
     clientController?.view.addGestureRecognizer(leftSwipe)
+    
+    let panGesture = UIPanGestureRecognizer(target: self, action: "handlePan:")
+    clientController?.view.addGestureRecognizer(panGesture)
   }
   
   func configureMenuCloseTap() {
@@ -84,30 +87,47 @@ class SideMenuClient {
   }
   
   @IBAction func toggleMenu(sender: AnyObject) {
-    let offscreen = self.mainContainer.frame.origin.x > 0
-    
-    if sender.isKindOfClass(UISwipeGestureRecognizer) {
-      if sender.direction == .Right && offscreen { return }
-      if sender.direction == .Left && !offscreen { return }
-    }
-
-    let offset = clientController.view.frame.width * 0.8
-    
-    UIView.animateWithDuration(0.2, animations: { () -> Void in
-      if offscreen {
-        self.mainContainer.center.x -= offset
+      let offset = clientController.view.frame.width * 0.8
+      var offscreen = false
+      if sender is UIPanGestureRecognizer {
+        offscreen = mainContainer.frame.origin.x < offset / 2
       } else {
-        self.mainContainer.center.x += offset
+        offscreen = mainContainer.frame.origin.x > 0
       }
-      }, completion: { (complete) -> Void in
+    
+      if sender.isKindOfClass(UISwipeGestureRecognizer) {
+        if sender.direction == .Right && offscreen { return }
+        if sender.direction == .Left && !offscreen { return }
+      }
+    
+    
+      UIView.animateWithDuration(0.2, animations: { () -> Void in
+        if offscreen {
+          self.mainContainer.frame.origin.x = 0
+        } else {
+          self.mainContainer.frame.origin.x = 0 + offset
+        }
+        }, completion: { (complete) -> Void in
         if !offscreen {
           NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "menuAnimationComplete", object: self))
         }
-    })
-    //    mediaPlayerContainerView.userInteractionEnabled = offscreen
-    //    featuredCollectionsContainerView.userInteractionEnabled = offscreen
-    //    promoViewSwipeGesture?.enabled = offscreen
-    //    menuCloseTapGesture?.enabled = !offscreen
+      })
+  }
+  
+  
+  @IBAction func handlePan(gestureRecognizer: UIPanGestureRecognizer) {
+    let offset = mainContainer.frame.width * 0.8
+    if let container = mainContainer {
+      if gestureRecognizer.state == UIGestureRecognizerState.Began || gestureRecognizer.state == UIGestureRecognizerState.Changed {
+        let translation = gestureRecognizer.translationInView(container)
+        if mainContainer.frame.origin.x + translation.x > offset  {return}
+        if mainContainer.frame.origin.x + translation.x < 0 {return}
+        mainContainer.center = CGPointMake(mainContainer.center.x + translation.x, mainContainer.center.y)
+        gestureRecognizer.setTranslation(CGPointMake(0,0), inView: mainContainer)
+      } else if gestureRecognizer.state == UIGestureRecognizerState.Ended {
+        toggleMenu(gestureRecognizer)
+      }
+    }
   }
   
 }
