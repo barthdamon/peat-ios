@@ -53,6 +53,8 @@ class LeafDetailViewController: UIViewController {
                 configureMediaViewWithImage(image)
               }
             }
+          } else {
+            
           }
         }
       }

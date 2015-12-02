@@ -24,7 +24,7 @@ class MediaObject: NSObject {
   func initWithJson(json: jsonObject) {
     
     //mediaInfo
-    if let mediaInfo = json["mediaInfo"] as? jsonObject, mediaId = mediaInfo["mediaId"] as? String, url = mediaInfo["url"] as? String, type = mediaInfo["mediaType"] as? String {
+    if let mediaInfo = json["mediaInfo"] as? jsonObject, mediaId = mediaInfo["mediaID"] as? String, url = mediaInfo["url"] as? String, type = mediaInfo["mediaType"] as? String {
       self.url = NSURL(string: url)
       self.mediaType = MediaType(rawValue: type)
       self.mediaID = mediaId
