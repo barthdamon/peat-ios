@@ -166,7 +166,7 @@ class PeatContentStore: NSObject {
     var newMediaObjects: Array<MediaObject> = []
     
       for selectedMedia: jsonObject in mediaJson {
-        if let type = selectedMedia["mediaType"] as? String {
+        if let info = selectedMedia["mediaInfo"] as? jsonObject, type = info["mediaType"] as? String {
           var mediaObject = MediaObject()
           if type == "video" {
             mediaObject = VideoObject().videoWithJson(selectedMedia)
@@ -181,8 +181,8 @@ class PeatContentStore: NSObject {
 //      newMediaObjects.sortInPlace({ (a, b) -> Bool in
 //        return a.timeStamp > b.timeStamp
 //      })
-      callback(newMediaObjects, nil)
       addObjectsToStore(newMediaObjects)
+      callback(newMediaObjects, nil)
     }
   }
   
