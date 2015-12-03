@@ -72,6 +72,7 @@ class MenuTableViewController: UITableViewController {
     print("Newsfeed Selected")
     if let tabBar = self.rootController?.mainTabBarController {
       tabBar.selectedIndex = 0
+      NSNotificationCenter.defaultCenter().postNotificationName("navItemSelected", object: nil, userInfo: nil)
     }
   }
   
@@ -79,6 +80,7 @@ class MenuTableViewController: UITableViewController {
     print("Tree Selected")
     if let tabBar = self.rootController?.mainTabBarController {
       tabBar.selectedIndex = 2
+      NSNotificationCenter.defaultCenter().postNotificationName("navItemSelected", object: nil, userInfo: nil)
     }
   }
   
@@ -86,6 +88,7 @@ class MenuTableViewController: UITableViewController {
     print("Friends Selected")
     if let tabBar = self.rootController?.mainTabBarController {
       tabBar.selectedIndex = 1
+      NSNotificationCenter.defaultCenter().postNotificationName("navItemSelected", object: nil, userInfo: nil)
     }
   }
 

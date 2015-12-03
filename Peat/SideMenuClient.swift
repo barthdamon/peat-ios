@@ -32,6 +32,7 @@ class SideMenuClient {
   }
   
   func configureNavBar() {
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "toggleMenu:", name: "navItemSelected", object: nil)
     let mainLogoImage = UIImage(named: "menuIcon.png")
     let cameraImage = UIImage(named: "camera.png")
     //    let imgWidth = infoImage?.size.width
@@ -59,16 +60,16 @@ class SideMenuClient {
     rightSwipe.direction = .Right
     rightSwipe.numberOfTouchesRequired = 1
     
-    clientController?.view.addGestureRecognizer(rightSwipe)
+    mainContainer.addGestureRecognizer(rightSwipe)
     
     let leftSwipe = UISwipeGestureRecognizer(target: self, action: "toggleMenu:")
     leftSwipe.direction = .Left
     leftSwipe.numberOfTouchesRequired = 1
     
-    clientController?.view.addGestureRecognizer(leftSwipe)
+    mainContainer.addGestureRecognizer(leftSwipe)
     
     let panGesture = UIPanGestureRecognizer(target: self, action: "handlePan:")
-    clientController?.view.addGestureRecognizer(panGesture)
+    mainContainer.addGestureRecognizer(panGesture)
   }
   
   func configureMenuCloseTap() {
