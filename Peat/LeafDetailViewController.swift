@@ -16,6 +16,8 @@ class LeafDetailViewController: UIViewController {
   var mediaImage: UIImage?
   var imageDisplay: UIImageView?
 
+  @IBOutlet weak var commentView: UIView!
+  @IBOutlet weak var commentTableView: UITableView!
   @IBOutlet weak var descriptionLabel: UILabel!
   @IBOutlet weak var playerView: UIView!
   @IBOutlet weak var abilityTitle: UILabel!
@@ -23,6 +25,7 @@ class LeafDetailViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.navigationController?.navigationBarHidden = true
     configureAbilityLayout()
   }
 
@@ -42,7 +45,7 @@ class LeafDetailViewController: UIViewController {
       if media.count > 0 {
         currentMedia = media[0]
         if let selectedMedia = currentMedia, url = selectedMedia.url, description = selectedMedia.mediaDescription {
-          self.descriptionLabel.text = description
+//          self.descriptionLabel.text = description
           if let object = selectedMedia as? PhotoObject {
             if let thumbnail = object.thumbnail {
               configureMediaViewWithImage(thumbnail)
@@ -62,7 +65,7 @@ class LeafDetailViewController: UIViewController {
   }
   
   func configureMediaViewWithImage(image: UIImage) {
-    self.descriptionLabel.text = self.currentMedia?.description
+//    self.descriptionLabel.text = self.currentMedia?.description
     self.imageDisplay = UIImageView()
     if let display = self.imageDisplay {
       display.frame = self.playerView.bounds
@@ -75,6 +78,10 @@ class LeafDetailViewController: UIViewController {
   @IBAction func completionButtonPressed(sender: AnyObject) {
     self.completionStatusLabel.text = "Completed"
     leaf?.completionStatus = true
+  }
+  
+  @IBAction func backButtonPressed(sender: AnyObject) {
+    self.navigationController?.popViewControllerAnimated(true)
   }
 
 }

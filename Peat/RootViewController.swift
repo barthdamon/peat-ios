@@ -43,7 +43,7 @@ class RootViewController: UIViewController {
         print("homeViewEmbed")
         print(segue.destinationViewController)
         if let tabBarController = segue.destinationViewController as? UITabBarController {
-          tabBarController.tabBar.hidden = true
+//          tabBarController.tabBar.hidden = true
           self.mainTabBarController = tabBarController
         }
       } else if segue.identifier == "menuEmbed" {
