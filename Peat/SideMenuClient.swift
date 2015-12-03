@@ -56,6 +56,10 @@ class SideMenuClient {
   }
   
   func configureMenuSwipes() {
+    let mainControllerTap = UITapGestureRecognizer(target: self, action: "closeMenu:")
+    mainControllerTap.numberOfTapsRequired = 1
+    mainContainer.addGestureRecognizer(mainControllerTap)
+    
     let rightSwipe = UISwipeGestureRecognizer(target: self, action: "toggleMenu:")
     rightSwipe.direction = .Right
     rightSwipe.numberOfTouchesRequired = 1
@@ -84,6 +88,12 @@ class SideMenuClient {
     print("Camera Selected")
     if let tabBar = self.tabBar {
       tabBar.selectedIndex = 3
+    }
+  }
+  
+  @IBAction func closeMenu(sender: AnyObject) {
+    if mainContainer.frame.origin.x > 0 {
+      toggleMenu(sender)
     }
   }
   
