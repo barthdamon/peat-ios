@@ -20,6 +20,7 @@ class MediaObject: NSObject {
   var mediaDescription: String?
   var leafPath: String?
   var leafId: String?
+  var thumbnail: UIImage?
   
   func initWithJson(json: jsonObject) {
     
@@ -45,6 +46,19 @@ class MediaObject: NSObject {
       self.leafPath = leafPath
     }
     
+  }
+  
+  func generateThumbnail(media: MediaObject, callback: (UIImage?, NSError?) -> () ) {
+    if let url = media.url {
+      if let thumbnail = media.thumbnail {
+        callback(thumbnail, nil)
+      } else {
+        if let data = NSData(contentsOfURL: url), image = UIImage(data: data) {
+          media.thumbnail = image
+          callback(image, nil)
+        }
+      }
+    }
   }
   
 //  func generateImageForMedia() {

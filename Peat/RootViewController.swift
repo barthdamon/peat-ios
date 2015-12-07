@@ -33,9 +33,9 @@ class RootViewController: UIViewController {
   
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(true)
-//    if let tabBar = self.mainTabBarController {
-//      tabBar.selectedIndex = 0
-//    }
+    if let tabBar = self.mainTabBarController {
+      tabBar.selectedIndex = 2
+    }
   }
   
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

@@ -10,7 +10,6 @@ import Foundation
 
 class PhotoObject: MediaObject {
   
-  var thumbnail: UIImage?
   var photoData: NSData?
   
   func photoWithJson(json: jsonObject) -> PhotoObject {

@@ -12,7 +12,6 @@ class VideoObject: MediaObject {
   
   var videoFile: NSData?
   var videoFilePath: NSURL?
-  var thumbnail: UIImage?
   
   func videoWithJson(json: jsonObject) -> VideoObject {
     let newVideo = VideoObject()
