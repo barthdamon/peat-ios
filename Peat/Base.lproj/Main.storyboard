@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="SDN-dl-hu6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="SDN-dl-hu6">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -12,7 +12,7 @@
         <scene sceneID="iHO-u0-XhX">
             <objects>
                 <navigationController title="Camera Navigation Controller" id="hGE-iW-05c" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" image="camera" id="mNf-15-egk"/>
+                    <tabBarItem key="tabBarItem" title="Camera" image="camera" id="mNf-15-egk"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="3Gn-uW-BOa">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -29,7 +29,7 @@
         <scene sceneID="CcB-Jw-sJR">
             <objects>
                 <navigationController title="Friends Navigation Controller" id="b9L-JY-Id9" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" image="friends" id="VG0-os-B03"/>
+                    <tabBarItem key="tabBarItem" title="Friends" image="friends" id="VG0-os-B03"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Knm-q0-6DS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -46,7 +46,7 @@
         <scene sceneID="KoD-Gz-hEa">
             <objects>
                 <navigationController title="Profile Navigation Controller" id="RZZ-TF-ezG" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" image="tree" id="CoR-x4-VKF"/>
+                    <tabBarItem key="tabBarItem" title="Progress" image="tree" id="CoR-x4-VKF"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="JET-n0-Zzi">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -63,7 +63,7 @@
         <scene sceneID="tu3-cn-ixd">
             <objects>
                 <navigationController title="Newsfeed Navigation Controller" id="t9h-xH-1sD" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" image="newsfeed" id="ACA-HO-xH1"/>
+                    <tabBarItem key="tabBarItem" title="News" image="newsfeed" id="ACA-HO-xH1"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="QZs-T6-jE5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -252,9 +252,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z7a-tW-0Zn">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="z7a-tW-0Zn">
                                 <rect key="frame" x="120" y="52" width="360" height="205"/>
                                 <constraints>
+                                    <constraint firstAttribute="height" constant="205" id="9cI-Y7-AM2"/>
                                     <constraint firstAttribute="width" constant="435" id="OQu-aT-aiw"/>
                                     <constraint firstAttribute="width" constant="360" id="S4B-RD-BHu"/>
                                     <constraint firstAttribute="height" constant="396" id="xd0-Ho-YHx"/>
@@ -529,10 +530,21 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M95-SX-nQZ">
                                 <rect key="frame" x="0.0" y="113" width="600" height="225"/>
-                                <color key="backgroundColor" red="0.76678145559999999" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="5xd-wl-zff">
+                                        <rect key="frame" x="282" y="94" width="37" height="37"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="37" id="H9T-4m-0kk"/>
+                                            <constraint firstAttribute="height" constant="37" id="lTf-tO-MHg"/>
+                                        </constraints>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="5xd-wl-zff" firstAttribute="centerX" secondItem="M95-SX-nQZ" secondAttribute="centerX" id="0FE-D5-5sK"/>
                                     <constraint firstAttribute="height" constant="193" id="S6V-O9-lSl"/>
                                     <constraint firstAttribute="height" constant="225" id="YWO-Gi-ir5"/>
+                                    <constraint firstItem="5xd-wl-zff" firstAttribute="centerY" secondItem="M95-SX-nQZ" secondAttribute="centerY" id="nH6-o8-gWc"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -761,12 +773,12 @@
                             <constraint firstItem="fDe-Xs-isi" firstAttribute="top" secondItem="ZfU-jY-nQC" secondAttribute="top" constant="338" id="3KF-PS-2k7"/>
                             <constraint firstItem="M95-SX-nQZ" firstAttribute="top" secondItem="RBt-Cm-MMd" secondAttribute="bottom" constant="8" id="8L9-Om-Yom"/>
                             <constraint firstItem="zAm-RR-dba" firstAttribute="top" secondItem="fDe-Xs-isi" secondAttribute="bottom" id="9q6-aJ-9vC"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="M95-SX-nQZ" secondAttribute="trailing" constant="-20" id="AH1-NX-q8X"/>
+                            <constraint firstAttribute="trailing" secondItem="M95-SX-nQZ" secondAttribute="trailing" id="AH1-NX-q8X"/>
                             <constraint firstItem="M95-SX-nQZ" firstAttribute="leading" secondItem="ZfU-jY-nQC" secondAttribute="leadingMargin" constant="-20" id="C3P-bW-uWR"/>
                             <constraint firstItem="M95-SX-nQZ" firstAttribute="top" secondItem="WqC-NZ-am0" secondAttribute="bottom" constant="-2" id="C6o-EK-CWd"/>
                             <constraint firstItem="fDe-Xs-isi" firstAttribute="top" secondItem="M95-SX-nQZ" secondAttribute="bottom" id="FL3-dq-eul"/>
                             <constraint firstItem="fDe-Xs-isi" firstAttribute="leading" secondItem="ZfU-jY-nQC" secondAttribute="leadingMargin" constant="-20" id="Gk2-2b-QPf"/>
-                            <constraint firstItem="M95-SX-nQZ" firstAttribute="leading" secondItem="ZfU-jY-nQC" secondAttribute="leadingMargin" constant="-20" id="H9x-Ug-7CY"/>
+                            <constraint firstItem="M95-SX-nQZ" firstAttribute="leading" secondItem="ZfU-jY-nQC" secondAttribute="leading" id="H9x-Ug-7CY"/>
                             <constraint firstItem="RBt-Cm-MMd" firstAttribute="leading" secondItem="ZfU-jY-nQC" secondAttribute="leadingMargin" constant="-20" id="Heh-9H-MvP"/>
                             <constraint firstItem="Z1B-yZ-Jes" firstAttribute="leading" secondItem="ZfU-jY-nQC" secondAttribute="leadingMargin" constant="-20" id="Jwa-F4-qA1"/>
                             <constraint firstItem="WqC-NZ-am0" firstAttribute="leading" secondItem="ZfU-jY-nQC" secondAttribute="leadingMargin" constant="-20" id="KZc-5E-gEs"/>
@@ -819,6 +831,7 @@
                     </view>
                     <connections>
                         <outlet property="abilityTitle" destination="pZV-aL-fvB" id="WDt-19-54K"/>
+                        <outlet property="activityIndicator" destination="5xd-wl-zff" id="H8L-ry-c60"/>
                         <outlet property="commentTableView" destination="VrP-d6-UfU" id="LSD-TV-E3R"/>
                         <outlet property="commentView" destination="fDe-Xs-isi" id="EFa-eU-YE0"/>
                         <outlet property="completionStatusLabel" destination="iqL-yp-uSC" id="bYk-jf-nN7"/>
@@ -949,7 +962,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="add" width="607" height="680"/>
+        <image name="add" width="32" height="32"/>
         <image name="camera" width="32" height="32"/>
         <image name="friends" width="32" height="32"/>
         <image name="newsfeed" width="32" height="32"/>

@@ -17,7 +17,7 @@
 		023355C81BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023355C71BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift */; };
 		0239E5811BDBEF5C00D85C3C /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0239E5801BDBEF5C00D85C3C /* ProfileViewController.swift */; };
 		0239E5BD1BDDA41B00D85C3C /* TreeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0239E5BC1BDDA41B00D85C3C /* TreeViewController.swift */; };
-		023B03811C150853003497FB /* VideoOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023B03801C150853003497FB /* VideoOverlayView.swift */; };
+		023B03811C150853003497FB /* MediaOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023B03801C150853003497FB /* MediaOverlayView.swift */; };
 		023B03841C1515FC003497FB /* PeatAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023B03831C1515FC003497FB /* PeatAVPlayer.swift */; };
 		025D0DB31BD5CACB00462783 /* PeatSocialMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */; };
 		025D0DB71BD72F6C00462783 /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */; };
@@ -41,6 +41,7 @@
 		02D72E8B1BD0926900EC115E /* FriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D72E8A1BD0926900EC115E /* FriendsTableViewController.swift */; };
 		02D72E8D1BD0929B00EC115E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D72E8C1BD0929B00EC115E /* User.swift */; };
 		02EE26961BE181D6006DAE81 /* LeafNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EE26951BE181D6006DAE81 /* LeafNode.swift */; };
+		02F2DA691C16875C00CA1328 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F2DA681C16875C00CA1328 /* UIImageExtension.swift */; };
 		02F60DEA1BB330F800F189F0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02F60DE91BB330F800F189F0 /* AVFoundation.framework */; };
 		02FD6C931BB38C69003A3DDD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FD6C921BB38C69003A3DDD /* CameraViewController.swift */; };
 		DA8FE7BD7B07D58B9007610C /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB87F9D425CD4D0A7CBEB8A0 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -67,7 +68,7 @@
 		023355C71BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSearchResultTableViewCell.swift; sourceTree = "<group>"; };
 		0239E5801BDBEF5C00D85C3C /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		0239E5BC1BDDA41B00D85C3C /* TreeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TreeViewController.swift; sourceTree = "<group>"; };
-		023B03801C150853003497FB /* VideoOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoOverlayView.swift; sourceTree = "<group>"; };
+		023B03801C150853003497FB /* MediaOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaOverlayView.swift; sourceTree = "<group>"; };
 		023B03831C1515FC003497FB /* PeatAVPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatAVPlayer.swift; sourceTree = "<group>"; };
 		025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatSocialMediator.swift; sourceTree = "<group>"; };
 		025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
@@ -95,6 +96,7 @@
 		02D72E8A1BD0926900EC115E /* FriendsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendsTableViewController.swift; sourceTree = "<group>"; };
 		02D72E8C1BD0929B00EC115E /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		02EE26951BE181D6006DAE81 /* LeafNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeafNode.swift; sourceTree = "<group>"; };
+		02F2DA681C16875C00CA1328 /* UIImageExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		02F60DE81BB32CD100F189F0 /* Peat-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Peat-Bridging-Header.h"; sourceTree = "<group>"; };
 		02F60DE91BB330F800F189F0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		02FD6C921BB38C69003A3DDD /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
@@ -236,7 +238,7 @@
 				023B03821C15085A003497FB /* DataObjects */,
 				021C900F1BF0135B00C79538 /* SideMenuClient.swift */,
 				02EE26951BE181D6006DAE81 /* LeafNode.swift */,
-				023B03801C150853003497FB /* VideoOverlayView.swift */,
+				023B03801C150853003497FB /* MediaOverlayView.swift */,
 				023B03831C1515FC003497FB /* PeatAVPlayer.swift */,
 			);
 			name = Models;
@@ -245,6 +247,7 @@
 		02B469B01BFE9BA500704269 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				02F2DA681C16875C00CA1328 /* UIImageExtension.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -469,6 +472,7 @@
 				02069E081C114E68007E18EB /* CommentsTableViewCell.swift in Sources */,
 				023355C81BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift in Sources */,
 				02EE26961BE181D6006DAE81 /* LeafNode.swift in Sources */,
+				02F2DA691C16875C00CA1328 /* UIImageExtension.swift in Sources */,
 				02A11CA01BB9D4CA0064AE95 /* NewsfeedTableViewController.swift in Sources */,
 				02D0A9181BC349B30018596F /* VideoObject.swift in Sources */,
 				021C900A1BEFF5DD00C79538 /* RootViewController.swift in Sources */,
@@ -479,7 +483,7 @@
 				02A11CA91BB9F1670064AE95 /* AWSContentHelper.swift in Sources */,
 				021C900E1BF0012C00C79538 /* MenuTableViewController.swift in Sources */,
 				026AC2B61BB0ECF1005F8E81 /* ViewController.swift in Sources */,
-				023B03811C150853003497FB /* VideoOverlayView.swift in Sources */,
+				023B03811C150853003497FB /* MediaOverlayView.swift in Sources */,
 				02069E061C114E5C007E18EB /* MediaDescriptionTableViewCell.swift in Sources */,
 				027E31081BA2780C001FCF70 /* AppDelegate.swift in Sources */,
 				02B469B31BFE9BF100704269 /* SocketService.swift in Sources */,

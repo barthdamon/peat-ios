@@ -15,10 +15,11 @@ class LeafDetailViewController: UIViewController, UITableViewDelegate, UITableVi
   var currentMedia: MediaObject?
   var mediaDescription: String?
   var player: PeatAVPlayer?
-  var mediaImage: UIImage?
-  var imageDisplay: UIImageView?
+  var mediaOverlayView: MediaOverlayView?
+
 
   //Views
+  @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
   @IBOutlet weak var navBarView: UIView!
   @IBOutlet weak var tabBarView: UIView!
   @IBOutlet weak var titleView: UIView!
@@ -33,10 +34,19 @@ class LeafDetailViewController: UIViewController, UITableViewDelegate, UITableVi
   override func viewDidLoad() {
     super.viewDidLoad()
     self.navigationController?.navigationBarHidden = true
+    configureLoadingView()
   }
   
-  override func viewDidLayoutSubviews() {
+  override func viewDidAppear(animated: Bool) {
     configureAbilityLayout()
+  }
+  
+  func configureLoadingView() {
+    //configureForDefaultImage
+    self.playerView.backgroundColor = UIColor.lightGrayColor()
+    //Starting:
+    activityIndicator.hidesWhenStopped = true
+    activityIndicator.startAnimating()
   }
 
   func configureAbilityLayout() {
@@ -54,33 +64,15 @@ class LeafDetailViewController: UIViewController, UITableViewDelegate, UITableVi
     if let media = self.media {
       if media.count > 0 {
         currentMedia = media[0]
-        if let selectedMedia = currentMedia, description = selectedMedia.mediaDescription {
+        //Media Configuration
+        if let selectedMedia = currentMedia, url = selectedMedia.url {
           print("Media description: \(description)")
-          //TODO: Need to deal with getting the video thumbnail from the video at time x
-          selectedMedia.generateThumbnail(selectedMedia) { (thumbnail, err) in
-            if let thumbnail = thumbnail {
-              if let _ = selectedMedia as? PhotoObject {
-                self.configureMediaViewWithImage(thumbnail)
-              } else {
-                if let object = selectedMedia as? VideoObject, url = object.url {
-                  self.player = PeatAVPlayer(playerView: self.playerView, media: selectedMedia, url: url, thumbnail: thumbnail)
-                }
-              }
-            }
+          if selectedMedia is VideoObject {
+            self.player = PeatAVPlayer(playerView: playerView, media: selectedMedia, url: url)
           }
+          self.mediaOverlayView = MediaOverlayView(mediaView: playerView, player: self.player, mediaObject: selectedMedia, delegate: self)
         }
       }
-    }
-  }
-  
-  func configureMediaViewWithImage(image: UIImage) {
-//    self.descriptionLabel.text = self.currentMedia?.description
-    self.imageDisplay = UIImageView()
-    if let display = self.imageDisplay {
-      display.frame = self.playerView.bounds
-      display.contentMode = .ScaleAspectFill
-      display.image = image
-      self.playerView.addSubview(display)
     }
   }
   

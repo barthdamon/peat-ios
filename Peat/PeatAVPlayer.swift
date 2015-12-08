@@ -18,7 +18,6 @@ class PeatAVPlayer: AVPlayerViewController {
   var playerView: UIView!
   
   //Internal
-  var mediaOverlayView: VideoOverlayView?
   var playerWasFullscreen = false
   
   //Media Data
@@ -26,12 +25,11 @@ class PeatAVPlayer: AVPlayerViewController {
   var url: NSURL?
   var thumbnail: UIImage?
   
-  convenience init(playerView: UIView, media: MediaObject, url: NSURL, thumbnail: UIImage) {
+  convenience init(playerView: UIView, media: MediaObject, url: NSURL) {
     self.init()
     
     self.playerView = playerView
     self.mediaObject = media
-    self.thumbnail = thumbnail
     self.url = url
     configureMediaPlayer()
   }
@@ -40,7 +38,6 @@ class PeatAVPlayer: AVPlayerViewController {
     showsPlaybackControls = false
     view.frame = playerView.bounds
     playerView.addSubview(self.view)
-    mediaOverlayView = VideoOverlayView(container: playerView, playerController: self, mediaObject: mediaObject, thumbnail: thumbnail)
     prepareMediaData()
   }
   
@@ -53,7 +50,7 @@ class PeatAVPlayer: AVPlayerViewController {
   }
   
   func playButtonPressed() {
-      self.player?.play()
+    self.player?.play()
   }
   
   // MARK: - Fullscreen transitions
