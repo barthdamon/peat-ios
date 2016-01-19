@@ -36,30 +36,30 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
   }
   
   func checkForNewsfeedUpdates() {
-    PeatContentStore.sharedStore.updateNewsfeed() { (res, err) -> () in
-      if err != nil {
-        print("error updating newsfeed")
-      } else {
-        print("Newsfeed update complete")
-        if let mediaObjects = res as? Array<MediaObject> {
-          self.mediaObjects?.removeAll()
-          self.configureMedia(mediaObjects)
-        }
-      }
-    }
+//    PeatContentStore.sharedStore.updateNewsfeed() { (res, err) -> () in
+//      if err != nil {
+//        print("error updating newsfeed")
+//      } else {
+//        print("Newsfeed update complete")
+//        if let mediaObjects = res as? Array<MediaObject> {
+//          self.mediaObjects?.removeAll()
+//          self.configureMedia(mediaObjects)
+//        }
+//      }
+//    }
   }
   
   func queryForMediaData() {
-    PeatContentStore.sharedStore.initializeNewsfeed() { (res, err) -> () in
-      if err != nil {
-        print("error initializing newsfeed")
-      } else {
-        print("Store fetched Successfuly: \(res)")
-        if let mediaObjects = res as? Array<MediaObject> {
-          self.configureMedia(mediaObjects)
-        }
-      }
-    }
+//    PeatContentStore.sharedStore.initializeNewsfeed() { (res, err) -> () in
+//      if err != nil {
+//        print("error initializing newsfeed")
+//      } else {
+//        print("Store fetched Successfuly: \(res)")
+//        if let mediaObjects = res as? Array<MediaObject> {
+//          self.configureMedia(mediaObjects)
+//        }
+//      }
+//    }
   }
   
   func configureMedia(mediaObjects: Array<MediaObject>) {

@@ -18,10 +18,10 @@ class CameraViewController: UIViewController, ViewControllerWithMenu, UIPickerVi
   
   var sidebarClient: SideMenuClient?
   var selectedMedia: SelectedMedia?
-  var selectedLeaf: LeafNode?
+  var selectedLeaf: Leaf?
   var video: NSURL?
   var image: UIImage?
-  var leaves: Array<LeafNode>?
+  var leaves: Array<Leaf>?
   
   @IBOutlet weak var imagePickerView: UIPickerView!
   @IBOutlet weak var leafPathLabel: UILabel!
@@ -55,13 +55,14 @@ class CameraViewController: UIViewController, ViewControllerWithMenu, UIPickerVi
   
   func initializeLeaves() -> Bool {
     //right now it redraws every time... no harm in that
-    if let leaves = PeatContentStore.sharedStore.getLeaves(.Trampoline) {
-      self.leaves = leaves
-      self.imagePickerView.reloadAllComponents()
-      return true
-    } else {
-      return false
-    }
+//    if let leaves = PeatContentStore.sharedStore.getLeaves(.Trampoline) {
+//      self.leaves = leaves
+//      self.imagePickerView.reloadAllComponents()
+//      return true
+//    } else {
+//      return false
+//    }
+    return false
   }
   
   //MARK: Sidebar
@@ -120,7 +121,7 @@ class CameraViewController: UIViewController, ViewControllerWithMenu, UIPickerVi
   func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
     if let leaves = self.leaves {
       let leaf = leaves[row]
-      return leaf.abilityTitle
+      return leaf.title
     } else {
       return nil
     }
@@ -130,7 +131,7 @@ class CameraViewController: UIViewController, ViewControllerWithMenu, UIPickerVi
     if let leaves = self.leaves {
       self.selectedLeaf = leaves[row]
       if let leafSelected = self.selectedLeaf {
-        self.leafPathLabel.text = leafSelected.abilityTitle
+        self.leafPathLabel.text = leafSelected.title
       }
     }
   }

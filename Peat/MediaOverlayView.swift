@@ -68,14 +68,14 @@ class MediaOverlayView: UIView {
       let imageGenerator = AVAssetImageGenerator(asset: asset)
       imageGenerator.appliesPreferredTrackTransform=true
       //    let durationSeconds = CMTimeGetSeconds(asset.duration)
-      let midPoint = CMTimeMakeWithSeconds(1, 1)
-      imageGenerator.generateCGImagesAsynchronouslyForTimes( [ NSValue(CMTime:midPoint) ], completionHandler: { (requestTime, thumbnail, actualTime, result, error) -> Void in
+      let initialFrame = CMTimeMakeWithSeconds(0, 1)
+      imageGenerator.generateCGImagesAsynchronouslyForTimes( [ NSValue(CMTime:initialFrame) ], completionHandler: { (requestTime, thumbnail, actualTime, result, error) -> Void in
         
         if let thumbnail = thumbnail {
           dispatch_async(dispatch_get_main_queue(), { () -> Void in
             let thumbnailView = UIImageView(frame: self.mediaView.bounds)
             
-            thumbnailView.contentMode = .ScaleAspectFit
+            thumbnailView.contentMode = .ScaleAspectFill
             thumbnailView.image = UIImage(CGImage: thumbnail)
             
             self.addSubview(thumbnailView)

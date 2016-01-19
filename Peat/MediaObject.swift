@@ -22,6 +22,8 @@ class MediaObject: NSObject {
   var leafId: String?
   var thumbnail: UIImage?
   
+  var thread: Array<ThreadObject>?
+  
   func initWithJson(json: jsonObject) {
     
     //mediaInfo
@@ -59,6 +61,10 @@ class MediaObject: NSObject {
         }
       }
     }
+  }
+  
+  func addCommentsToMedia(json: jsonObject) {
+    
   }
   
 //  func generateImageForMedia() {

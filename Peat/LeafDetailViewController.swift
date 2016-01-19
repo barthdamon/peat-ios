@@ -10,7 +10,7 @@ import UIKit
 
 class LeafDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
   
-  var leaf: LeafNode?
+  var leaf: Leaf?
   var media: Array<MediaObject>?
   var currentMedia: MediaObject?
   var mediaDescription: String?
@@ -33,7 +33,7 @@ class LeafDetailViewController: UIViewController, UITableViewDelegate, UITableVi
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.navigationController?.navigationBarHidden = true
+//    self.navigationController?.navigationBarHidden = true
     configureLoadingView()
   }
   
@@ -41,20 +41,27 @@ class LeafDetailViewController: UIViewController, UITableViewDelegate, UITableVi
     configureAbilityLayout()
   }
   
+  override func viewWillDisappear(animated: Bool) {
+    self.player?.player?.pause()
+    self.player = nil
+    self.mediaOverlayView = nil
+    super.viewWillDisappear(true)
+  }
+  
   func configureLoadingView() {
     //configureForDefaultImage
-    self.playerView.backgroundColor = UIColor.lightGrayColor()
+    self.playerView.backgroundColor = UIColor.blackColor()
     //Starting:
     activityIndicator.hidesWhenStopped = true
     activityIndicator.startAnimating()
   }
 
   func configureAbilityLayout() {
-    if let title = leaf?.abilityTitle, status = leaf?.completionStatus {
+    if let title = leaf?.title, status = leaf?.completionStatus {
       self.abilityTitle.text = title
-      self.completionStatusLabel.text = status ? "Completed" : "Incomplete"
+//      self.completionStatusLabel.text = status ? "Completed" : "Incomplete"
       if let mediaIds = leaf?.mediaIds {
-        self.media = PeatContentStore.sharedStore.findMediaWithIds(mediaIds)
+//        self.media = PeatContentStore.sharedStore.findMediaWithIds(mediaIds)
       }
     }
     showPresentMedia()
@@ -82,6 +89,10 @@ class LeafDetailViewController: UIViewController, UITableViewDelegate, UITableVi
   
   @IBAction func backButtonPressed(sender: AnyObject) {
     self.navigationController?.popViewControllerAnimated(true)
+    self.player?.player?.pause()
+    self.player?.player = nil
+    self.player = nil
+    self.mediaOverlayView = nil
   }
   
   

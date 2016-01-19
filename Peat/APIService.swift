@@ -31,7 +31,7 @@ class APIService: NSObject {
   let baseURL = "https://device.oddworks.io"
   #endif
   
-    var authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1NjIyOWZhOTI4NmMyMDZkNzRmZWFiYzciLCJleHAiOjE0NDU5OTgyMzk5ODl9.Riw9k0ffHu6gx1nMcdC8opviKPuIX7y1Xjv-3t-VBaA"
+    var authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1NjkyODgwOTNhODUxZmJmOTYwNWY1YmEiLCJleHAiOjE0NTMwNDg0Njg0OTl9.OBug6yJP2AaGOIph4wEfx363hFHS_BRKSLXzYrVGOns"
     var apiURL: String { return "\(baseURL)/" }
     let keychain = KeychainSwift()
     private let api_pw = "fartpoop"
@@ -93,12 +93,9 @@ class APIService: NSObject {
     let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
       
       if (error != nil) {
+        print("Error making request to \(url)")
         callback(nil, error)
       }
-      
-      //      let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)!
-      //      println("JSON String: \(jsonStr)")
-      //
       
       if let res = response as! NSHTTPURLResponse! {
         //Use this notification for when user makes any request but gets unauthorized, means token is expired, send them back to login
@@ -107,7 +104,7 @@ class APIService: NSObject {
 //          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "errorUnauthorizedNotification", object: nil))
 //        }
         if res.statusCode != 200 {
-          print("Error, server responded with: \(res.statusCode)" )
+          print("Error, server responded with: \(res.statusCode) to request for \(url)" )
           let errorMessage = self.parseError(data!)
           let e = NSError(domain: "SRP", code: 100, userInfo: [ "statusCode": res.statusCode, "message" : errorMessage ])
           callback(nil, e)

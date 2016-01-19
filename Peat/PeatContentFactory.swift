@@ -15,7 +15,7 @@ struct LocalMedia {
   var filePath: NSURL?
   var image: UIImage?
   var leafPath: String?
-  var leaf: LeafNode?
+  var leaf: Leaf?
   var description: String?
 }
 
@@ -85,9 +85,9 @@ class PeatContentFactory: NSObject {
   }
 
   func sendToServer(media: LocalMedia) {
-    if let id = media.mediaId, description = media.description, leafPath = media.leafPath, leafId = media.leaf?.id, type = media.mediaType {
+    if let id = media.mediaId, description = media.description, leafPath = media.leafPath, leafId = media.leaf?.leafId, type = media.mediaType {
       let url = "https://s3.amazonaws.com/peat-assets/\(id)"
-      APIService.sharedService.post(["params":["mediaInfo": ["mediaID": id, "url" : url, "mediaType": type.rawValue], "leaf": leafId, "meta": ["leafPath": leafPath, "description": description]]], authType: HTTPRequestAuthType.Token, url: "media")
+      APIService.sharedService.post(["mediaInfo": ["mediaID": id, "url" : url, "mediaType": type.rawValue], "leaf": leafId, "meta": ["leafPath": leafPath, "description": description]], authType: HTTPRequestAuthType.Token, url: "media")
       { (res, err) -> () in
         if let e = err {
           print("Error:\(e)")

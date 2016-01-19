@@ -45,12 +45,13 @@ class PeatAVPlayer: AVPlayerViewController {
     if let url = self.url {
       let player = AVPlayer(URL: url)
       self.player = player
-      self.showsPlaybackControls = true
+      self.showsPlaybackControls = false
     }
   }
   
   func playButtonPressed() {
     self.player?.play()
+    self.showsPlaybackControls = true
   }
   
   // MARK: - Fullscreen transitions

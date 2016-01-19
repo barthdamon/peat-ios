@@ -11,8 +11,8 @@ import UIKit
 class TreeViewController: UIViewController, TreeDelegate {
   
   // Dynamic Data
-  var leaves = [LeafNode]()
-  var selectedLeaf: LeafNode?
+  var leaves: [Leaf] = Array()
+  var selectedLeaf: Leaf?
 
 
   @IBOutlet weak var scrollView: UIScrollView!
@@ -39,12 +39,6 @@ class TreeViewController: UIViewController, TreeDelegate {
     self.scrollView.addSubview(leafView)
   }
   
-  func fetchTreeData() {
-    if !initializeLeaves() {
-      //show loading view or something
-    }
-  }
-  
   func displayLeaves() {
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
       for leaf in self.leaves {
@@ -55,14 +49,16 @@ class TreeViewController: UIViewController, TreeDelegate {
     })
   }
 
-  func initializeLeaves() -> Bool {
+  func fetchTreeData() {
     //right now it redraws every time... no harm in that
-    if let leaves = PeatContentStore.sharedStore.getLeaves(.Trampoline) {
-      self.leaves = leaves
-      displayLeaves()
-      return true
-    } else {
-      return false
+    PeatContentStore.sharedStore.getTreeData("Snowboarding", delegate: self){ (res, err) -> () in
+      if let e = err {
+        print("ERROR: \(e)")
+        //show error view
+      } else {
+        self.leaves = PeatContentStore.sharedStore.abilityStore.currentLeaves
+        self.displayLeaves()
+      }
     }
   }
   
@@ -70,13 +66,10 @@ class TreeViewController: UIViewController, TreeDelegate {
     scrollView.layer.addSublayer(connection)
   }
   
-  func drillIntoLeaf(leaf: LeafNode) {
+  func drillIntoLeaf(leaf: Leaf) {
     selectedLeaf = leaf
     performSegueWithIdentifier("leafDrilldown", sender: self)
   }
-
-
-
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -90,6 +83,4 @@ class TreeViewController: UIViewController, TreeDelegate {
       }
       
     }
-
-
 }

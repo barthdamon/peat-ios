@@ -19,6 +19,8 @@
 		0239E5BD1BDDA41B00D85C3C /* TreeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0239E5BC1BDDA41B00D85C3C /* TreeViewController.swift */; };
 		023B03811C150853003497FB /* MediaOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023B03801C150853003497FB /* MediaOverlayView.swift */; };
 		023B03841C1515FC003497FB /* PeatAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023B03831C1515FC003497FB /* PeatAVPlayer.swift */; };
+		0242313F1C30A18200ED7E1B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0242313E1C30A18200ED7E1B /* Comment.swift */; };
+		024231411C30A58200ED7E1B /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024231401C30A58200ED7E1B /* Thread.swift */; };
 		025D0DB31BD5CACB00462783 /* PeatSocialMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */; };
 		025D0DB71BD72F6C00462783 /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */; };
 		026AC2B61BB0ECF1005F8E81 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026AC2B51BB0ECF1005F8E81 /* ViewController.swift */; };
@@ -34,13 +36,15 @@
 		02A11CA51BB9EDAB0064AE95 /* PeatContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11CA41BB9EDAB0064AE95 /* PeatContentStore.swift */; };
 		02A11CA71BB9EDC50064AE95 /* MediaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11CA61BB9EDC50064AE95 /* MediaObject.swift */; };
 		02A11CA91BB9F1670064AE95 /* AWSContentHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11CA81BB9F1670064AE95 /* AWSContentHelper.swift */; };
+		02A740F51C4DF944000C080D /* EnumHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A740F41C4DF944000C080D /* EnumHelpers.swift */; };
+		02A740F71C4E0044000C080D /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A740F61C4E0044000C080D /* Protocols.swift */; };
 		02B469B31BFE9BF100704269 /* SocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B469B21BFE9BF100704269 /* SocketService.swift */; };
 		02D0A9181BC349B30018596F /* VideoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D0A9171BC349B30018596F /* VideoObject.swift */; };
 		02D0A91A1BC349C10018596F /* PhotoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D0A9191BC349C10018596F /* PhotoObject.swift */; };
 		02D0A91C1BC35ACE0018596F /* PeatContentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D0A91B1BC35ACE0018596F /* PeatContentFactory.swift */; };
 		02D72E8B1BD0926900EC115E /* FriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D72E8A1BD0926900EC115E /* FriendsTableViewController.swift */; };
 		02D72E8D1BD0929B00EC115E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D72E8C1BD0929B00EC115E /* User.swift */; };
-		02EE26961BE181D6006DAE81 /* LeafNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EE26951BE181D6006DAE81 /* LeafNode.swift */; };
+		02EE26961BE181D6006DAE81 /* Leaf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EE26951BE181D6006DAE81 /* Leaf.swift */; };
 		02F2DA691C16875C00CA1328 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F2DA681C16875C00CA1328 /* UIImageExtension.swift */; };
 		02F60DEA1BB330F800F189F0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02F60DE91BB330F800F189F0 /* AVFoundation.framework */; };
 		02FD6C931BB38C69003A3DDD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FD6C921BB38C69003A3DDD /* CameraViewController.swift */; };
@@ -70,6 +74,8 @@
 		0239E5BC1BDDA41B00D85C3C /* TreeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TreeViewController.swift; sourceTree = "<group>"; };
 		023B03801C150853003497FB /* MediaOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaOverlayView.swift; sourceTree = "<group>"; };
 		023B03831C1515FC003497FB /* PeatAVPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatAVPlayer.swift; sourceTree = "<group>"; };
+		0242313E1C30A18200ED7E1B /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		024231401C30A58200ED7E1B /* Thread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
 		025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatSocialMediator.swift; sourceTree = "<group>"; };
 		025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
 		026AC2B51BB0ECF1005F8E81 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -89,13 +95,15 @@
 		02A11CA41BB9EDAB0064AE95 /* PeatContentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatContentStore.swift; sourceTree = "<group>"; };
 		02A11CA61BB9EDC50064AE95 /* MediaObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaObject.swift; sourceTree = "<group>"; };
 		02A11CA81BB9F1670064AE95 /* AWSContentHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWSContentHelper.swift; sourceTree = "<group>"; };
+		02A740F41C4DF944000C080D /* EnumHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumHelpers.swift; sourceTree = "<group>"; };
+		02A740F61C4E0044000C080D /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		02B469B21BFE9BF100704269 /* SocketService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketService.swift; sourceTree = "<group>"; };
 		02D0A9171BC349B30018596F /* VideoObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoObject.swift; sourceTree = "<group>"; };
 		02D0A9191BC349C10018596F /* PhotoObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoObject.swift; sourceTree = "<group>"; };
 		02D0A91B1BC35ACE0018596F /* PeatContentFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatContentFactory.swift; sourceTree = "<group>"; };
 		02D72E8A1BD0926900EC115E /* FriendsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendsTableViewController.swift; sourceTree = "<group>"; };
 		02D72E8C1BD0929B00EC115E /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		02EE26951BE181D6006DAE81 /* LeafNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeafNode.swift; sourceTree = "<group>"; };
+		02EE26951BE181D6006DAE81 /* Leaf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Leaf.swift; sourceTree = "<group>"; };
 		02F2DA681C16875C00CA1328 /* UIImageExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		02F60DE81BB32CD100F189F0 /* Peat-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Peat-Bridging-Header.h"; sourceTree = "<group>"; };
 		02F60DE91BB330F800F189F0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -134,6 +142,8 @@
 				02D72E8C1BD0929B00EC115E /* User.swift */,
 				02D0A91B1BC35ACE0018596F /* PeatContentFactory.swift */,
 				02A11CA41BB9EDAB0064AE95 /* PeatContentStore.swift */,
+				0242313E1C30A18200ED7E1B /* Comment.swift */,
+				024231401C30A58200ED7E1B /* Thread.swift */,
 				025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */,
 			);
 			name = DataObjects;
@@ -237,7 +247,7 @@
 			children = (
 				023B03821C15085A003497FB /* DataObjects */,
 				021C900F1BF0135B00C79538 /* SideMenuClient.swift */,
-				02EE26951BE181D6006DAE81 /* LeafNode.swift */,
+				02EE26951BE181D6006DAE81 /* Leaf.swift */,
 				023B03801C150853003497FB /* MediaOverlayView.swift */,
 				023B03831C1515FC003497FB /* PeatAVPlayer.swift */,
 			);
@@ -248,6 +258,8 @@
 			isa = PBXGroup;
 			children = (
 				02F2DA681C16875C00CA1328 /* UIImageExtension.swift */,
+				02A740F41C4DF944000C080D /* EnumHelpers.swift */,
+				02A740F61C4E0044000C080D /* Protocols.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -460,18 +472,22 @@
 				027E31281BA27875001FCF70 /* APIService.swift in Sources */,
 				02FD6C931BB38C69003A3DDD /* CameraViewController.swift in Sources */,
 				02D72E8B1BD0926900EC115E /* FriendsTableViewController.swift in Sources */,
+				02A740F71C4E0044000C080D /* Protocols.swift in Sources */,
 				025D0DB31BD5CACB00462783 /* PeatSocialMediator.swift in Sources */,
 				02A11CA51BB9EDAB0064AE95 /* PeatContentStore.swift in Sources */,
+				02A740F51C4DF944000C080D /* EnumHelpers.swift in Sources */,
 				02069E0E1C114F27007E18EB /* CommentsTableView.swift in Sources */,
 				0239E5BD1BDDA41B00D85C3C /* TreeViewController.swift in Sources */,
 				021C900C1BEFFF7000C79538 /* HomeViewController.swift in Sources */,
 				02D0A91C1BC35ACE0018596F /* PeatContentFactory.swift in Sources */,
 				0239E5811BDBEF5C00D85C3C /* ProfileViewController.swift in Sources */,
 				02A11CA71BB9EDC50064AE95 /* MediaObject.swift in Sources */,
+				024231411C30A58200ED7E1B /* Thread.swift in Sources */,
 				02D72E8D1BD0929B00EC115E /* User.swift in Sources */,
 				02069E081C114E68007E18EB /* CommentsTableViewCell.swift in Sources */,
+				0242313F1C30A18200ED7E1B /* Comment.swift in Sources */,
 				023355C81BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift in Sources */,
-				02EE26961BE181D6006DAE81 /* LeafNode.swift in Sources */,
+				02EE26961BE181D6006DAE81 /* Leaf.swift in Sources */,
 				02F2DA691C16875C00CA1328 /* UIImageExtension.swift in Sources */,
 				02A11CA01BB9D4CA0064AE95 /* NewsfeedTableViewController.swift in Sources */,
 				02D0A9181BC349B30018596F /* VideoObject.swift in Sources */,

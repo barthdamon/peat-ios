@@ -42,14 +42,14 @@ class ViewController: UIViewController, ViewControllerWithMenu {
   }
   
   func queryForMediaData() {
-    PeatContentStore.sharedStore.initializeNewsfeed() { (res, err) -> () in
-      if err != nil {
-        print("error fetching the store")
-      } else {
-        print("Store fetched Successfuly: \(res)")
-        
-      }
-    }
+//    PeatContentStore.sharedStore.initializeNewsfeed() { (res, err) -> () in
+//      if err != nil {
+//        print("error fetching the store")
+//      } else {
+//        print("Store fetched Successfuly: \(res)")
+//        
+//      }
+//    }
   }
   
   func showMedia() {
@@ -131,7 +131,7 @@ class ViewController: UIViewController, ViewControllerWithMenu {
   }
   
   func sendToken(sender: AnyObject) {
-    APIService.sharedService.post(["params":["auth_type":"Basic","user":["email":"mbmattbarth@gmail.com","password":"mattdamon7"]]], authType: HTTPRequestAuthType.Basic, url: "login") { (res, err) -> () in
+    APIService.sharedService.post(["auth_type":"Basic","user":["email":"mbmattbarth@gmail.com","password":"mattdamon7"]], authType: HTTPRequestAuthType.Basic, url: "login") { (res, err) -> () in
       if let e = err {
         print("Error:\(e)")
       } else {
