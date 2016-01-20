@@ -7,11 +7,3 @@
 //
 
 import Foundation
-
-
-protocol TreeDelegate {
-  func drawConnectionLayer(connection: CAShapeLayer)
-  func fetchTreeData()
-  func addLeafToScrollView(leafView: UIView)
-  func drillIntoLeaf(leaf: Leaf)
-}

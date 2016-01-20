@@ -9,6 +9,14 @@
 import Foundation
 import UIKit
 
+protocol TreeDelegate {
+  func drawConnectionLayer(connection: CAShapeLayer)
+  func fetchTreeData()
+  func addLeafToScrollView(leafView: UIView)
+  func drillIntoLeaf(leaf: Leaf)
+  func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer)
+}
+
 typealias CoordinatePair = (x: CGFloat, y: CGFloat)
 typealias LeafConnection = (leafId: String, type: LeafConnectionType)
 
@@ -27,12 +35,12 @@ class Leaf: NSObject {
     return standardHeight / 2
   }
   // Unique Drawing Variables
-  var centerCoords: CoordinatePair? {
-    didSet {
-      center = CGPoint(x: centerCoords!.x, y: centerCoords!.y)
+  var previousCenter: CGPoint?
+  var center: CGPoint? {
+    willSet {
+      previousCenter = center
     }
   }
-  var center: CGPoint?
   var connections: Array<LeafConnection>?
   var groupings: Array<String>?
   
@@ -51,6 +59,8 @@ class Leaf: NSObject {
   var title: String?
   var timestamp: Int?
   var details: String?
+  
+  var movingEnabled: Bool = false
   
   
 // MARK: INITIALIZATION
@@ -79,11 +89,34 @@ class Leaf: NSObject {
         }
       }
       if let coordinates = layout["coordinates"] as? jsonObject, x = coordinates["x"] as? CGFloat, y = coordinates["y"] as? CGFloat {
-        leaf.centerCoords = (x: x, y: y)
+        leaf.center = CGPoint(x: x, y: y)
       }
     }
-    
     return leaf
+  }
+  
+  static func initFromTree(center: CGPoint, delegate: TreeDelegate) -> Leaf {
+    let newLeaf = Leaf()
+    newLeaf.center = center
+    newLeaf.treeDelegate = delegate
+    return newLeaf
+  }
+  
+  func addGestureRecognizers() {
+    if let view = self.view {
+      
+      let tapRecognizer = UITapGestureRecognizer(target: self, action: "leafDrilldownInitiated")
+      tapRecognizer.numberOfTapsRequired = 1
+      tapRecognizer.numberOfTouchesRequired = 1
+      view.addGestureRecognizer(tapRecognizer)
+      
+      let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "leafMoveInitiated:")
+      longPressRecognizer.minimumPressDuration = 1
+      view.addGestureRecognizer(longPressRecognizer)
+      
+      let movingPanRecognizer = UIPanGestureRecognizer(target: self, action: "leafBeingMoved:")
+      view.addGestureRecognizer(movingPanRecognizer)
+    }
   }
   
   func setDelegate(delegate: TreeDelegate) {
@@ -92,6 +125,48 @@ class Leaf: NSObject {
   
   func initiateLeafDrilldown() {
     
+  }
+  
+  func leafMoveInitiated(sender: UILongPressGestureRecognizer) {
+    let state = sender.state
+    if state == UIGestureRecognizerState.Changed {
+      leafBeingMoved(sender)
+    } else if state == UIGestureRecognizerState.Ended {
+//      movingEnabled = false
+//      deselectLeaf()
+    } else {
+      self.drawLeafSelected()
+      self.movingEnabled = true
+    }
+  }
+  
+  func leafBeingMoved(sender: UIGestureRecognizer) {
+    if movingEnabled {
+      self.treeDelegate?.leafBeingMoved(self, sender: sender)
+    }
+  }
+  
+  func deselectLeaf() {
+    if let view = self.view {
+      view.layer.shadowColor = UIColor.clearColor().CGColor
+      view.layer.shadowOpacity = 0
+      view.layer.shadowRadius = 0
+      view.layer.shadowOffset = CGSizeMake(0, 0)
+      view.layer.shadowRadius = 0
+    }
+  }
+  
+  func drawLeafSelected() {
+    if let view = self.view {
+//      view.layer.borderColor = UIColor.darkGrayColor().CGColor
+//      view.layer.borderWidth = 2
+      
+      view.layer.shadowColor = UIColor.darkGrayColor().CGColor
+      view.layer.shadowOpacity = 0.8
+      view.layer.shadowRadius = 3.0
+      view.layer.shadowOffset = CGSizeMake(7, 7)
+      
+    }
   }
   
   
@@ -118,12 +193,9 @@ class Leaf: NSObject {
       view = UIView(frame: frame)
       if let view = self.view {
         view.backgroundColor = UIColor.whiteColor()
+        view.layer.cornerRadius = 10
 //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
-        
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: "leafDrilldownInitiated")
-        tapRecognizer.numberOfTapsRequired = 1
-        tapRecognizer.numberOfTouchesRequired = 1
-        view.addGestureRecognizer(tapRecognizer)
+        addGestureRecognizers()
         
         treeDelegate?.addLeafToScrollView(view)
       }
@@ -156,10 +228,12 @@ class Leaf: NSObject {
   }
   
   func leafDrilldownInitiated() {
-    treeDelegate?.drillIntoLeaf(self)
+    if movingEnabled {
+      movingEnabled = false
+      deselectLeaf()
+    } else {
+      treeDelegate?.drillIntoLeaf(self)
+    }
   }
-
-  
-  
   
 }

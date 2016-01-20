@@ -14,20 +14,20 @@ class TreeViewController: UIViewController, TreeDelegate {
   var leaves: [Leaf] = Array()
   var selectedLeaf: Leaf?
 
-
   @IBOutlet weak var scrollView: UIScrollView!
-    override func viewDidLoad() {
-      NSNotificationCenter.defaultCenter().addObserver(self, selector: "fetchTreeData", name: "leavesPopulated", object: nil)
-        super.viewDidLoad()
+  
+  
+  override func viewDidLoad() {
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "fetchTreeData", name: "leavesPopulated", object: nil)
+      super.viewDidLoad()
 
-      // Do any additional setup after loading the view.
-      scrollView.contentSize.height = 1000
-      scrollView.contentSize.width = 1000
-    }
+    // Do any additional setup after loading the view.
+    configureScrollView()
+    fetchTreeData()
+  }
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(true)
-    fetchTreeData()
   }
 
   override func didReceiveMemoryWarning() {
@@ -35,8 +35,31 @@ class TreeViewController: UIViewController, TreeDelegate {
       // Dispose of any resources that can be recreated.
   }
   
+  func configureScrollView() {
+    
+    let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "newLeafInitiated:")
+    doubleTapRecognizer.numberOfTouchesRequired = 1
+    doubleTapRecognizer.numberOfTapsRequired = 2
+    scrollView.addGestureRecognizer(doubleTapRecognizer)
+    
+//    var doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "scrollViewDoubleTapped:")
+//    doubleTapRecognizer.numberOfTapsRequired = 2
+//    doubleTapRecognizer.numberOfTouchesRequired = 1
+//    scrollView.addGestureRecognizer(doubleTapRecognizer)
+    scrollView.contentSize.height = 1000
+    scrollView.contentSize.width = 1000
+  }
+  
+  var falsey = true
+  
   func addLeafToScrollView(leafView: UIView) {
-    self.scrollView.addSubview(leafView)
+      self.scrollView.addSubview(leafView)
+  }
+  
+  func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer) {
+    let center = sender.locationInView(self.scrollView)
+    leaf.view?.center = center
+    //allow the leaf to move with the gesture until the gesture is finished, then place the leaf and remove the shadow
   }
   
   func displayLeaves() {
@@ -51,6 +74,7 @@ class TreeViewController: UIViewController, TreeDelegate {
 
   func fetchTreeData() {
     //right now it redraws every time... no harm in that
+    //In the future get the data for the selected user and the selected activity
     PeatContentStore.sharedStore.getTreeData("Snowboarding", delegate: self){ (res, err) -> () in
       if let e = err {
         print("ERROR: \(e)")
@@ -69,6 +93,15 @@ class TreeViewController: UIViewController, TreeDelegate {
   func drillIntoLeaf(leaf: Leaf) {
     selectedLeaf = leaf
     performSegueWithIdentifier("leafDrilldown", sender: self)
+  }
+  
+  func newLeafInitiated(sender: UILongPressGestureRecognizer) {
+    print("Sender: \(sender)")
+    let center: CGPoint = sender.locationInView(self.scrollView)
+    print("SENDER: \(center)")
+    let newLeaf = Leaf.initFromTree(center, delegate: self)
+    self.leaves.append(newLeaf)
+    newLeaf.generateBounds()
   }
     // MARK: - Navigation
 
