@@ -52,14 +52,36 @@ class TreeViewController: UIViewController, TreeDelegate {
   
   var falsey = true
   
-  func addLeafToScrollView(leafView: UIView) {
-      self.scrollView.addSubview(leafView)
+  func addLeafToScrollView(leaf: Leaf) {
+    if let view = leaf.view {
+      self.scrollView.addSubview(view)
+      checkForOverlaps(leaf)
+    }
   }
   
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer) {
-    let center = sender.locationInView(self.scrollView)
-    leaf.view?.center = center
+    if let view = leaf.view {
+      self.scrollView.bringSubviewToFront(view)
+      let center = sender.locationInView(self.scrollView)
+      leaf.view?.center = center
+    }
     //allow the leaf to move with the gesture until the gesture is finished, then place the leaf and remove the shadow
+  }
+  
+  func checkForOverlaps(intruder: Leaf) {
+    for leaf in leaves {
+      if leaf == intruder {return}
+      if let intruderView = intruder.view, leafView = leaf.view {
+        if CGRectIntersectsRect(intruderView.frame, leafView.frame) {
+          intruderView.center.x += Leaf.standardWidth
+          intruderView.center.y += Leaf.standardHeight
+          let newOffsetX = intruderView.center.x - self.scrollView.frame.width / 2
+          let newOffsetY = intruderView.center.y - self.scrollView.frame.height / 2
+          self.scrollView.setContentOffset(CGPointMake(newOffsetX, newOffsetY), animated: true)
+          checkForOverlaps(intruder)
+        }
+      }
+    }
   }
   
   func displayLeaves() {

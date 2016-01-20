@@ -12,9 +12,10 @@ import UIKit
 protocol TreeDelegate {
   func drawConnectionLayer(connection: CAShapeLayer)
   func fetchTreeData()
-  func addLeafToScrollView(leafView: UIView)
+  func addLeafToScrollView(leaf: Leaf)
   func drillIntoLeaf(leaf: Leaf)
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer)
+  func checkForOverlaps(intruder: Leaf)
 }
 
 typealias CoordinatePair = (x: CGFloat, y: CGFloat)
@@ -148,6 +149,7 @@ class Leaf: NSObject {
   
   func deselectLeaf() {
     if let view = self.view {
+      view.backgroundColor = UIColor.whiteColor()
       view.layer.shadowColor = UIColor.clearColor().CGColor
       view.layer.shadowOpacity = 0
       view.layer.shadowRadius = 0
@@ -160,7 +162,7 @@ class Leaf: NSObject {
     if let view = self.view {
 //      view.layer.borderColor = UIColor.darkGrayColor().CGColor
 //      view.layer.borderWidth = 2
-      
+      view.backgroundColor = UIColor.yellowColor()
       view.layer.shadowColor = UIColor.darkGrayColor().CGColor
       view.layer.shadowOpacity = 0.8
       view.layer.shadowRadius = 3.0
@@ -197,7 +199,7 @@ class Leaf: NSObject {
 //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
         addGestureRecognizers()
         
-        treeDelegate?.addLeafToScrollView(view)
+        treeDelegate?.addLeafToScrollView(self)
       }
     }
   }
@@ -231,6 +233,7 @@ class Leaf: NSObject {
     if movingEnabled {
       movingEnabled = false
       deselectLeaf()
+      treeDelegate?.checkForOverlaps(self)
     } else {
       treeDelegate?.drillIntoLeaf(self)
     }
