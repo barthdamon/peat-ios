@@ -13,8 +13,10 @@ class TreeViewController: UIViewController, TreeDelegate {
   // Dynamic Data
   var leaves: [Leaf] = Array()
   var selectedLeaf: Leaf?
+  var changesMade: Bool = false
 
   @IBOutlet weak var scrollView: UIScrollView!
+  @IBOutlet weak var saveButton: UIButton!
   
   
   override func viewDidLoad() {
@@ -50,10 +52,16 @@ class TreeViewController: UIViewController, TreeDelegate {
     scrollView.contentSize.width = 1000
   }
   
-  var falsey = true
+  func setChangesMade() {
+    if !changesMade {
+      changesMade = true
+//      self.saveButton.hidden = false
+    }
+  }
   
   func addLeafToScrollView(leaf: Leaf) {
     if let view = leaf.view {
+      self.leaves.append(leaf)
       self.scrollView.addSubview(view)
       checkForOverlaps(leaf)
     }
@@ -61,6 +69,7 @@ class TreeViewController: UIViewController, TreeDelegate {
   
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer) {
     if let view = leaf.view {
+      setChangesMade()
       self.scrollView.bringSubviewToFront(view)
       let center = sender.locationInView(self.scrollView)
       leaf.view?.center = center
@@ -70,15 +79,17 @@ class TreeViewController: UIViewController, TreeDelegate {
   
   func checkForOverlaps(intruder: Leaf) {
     for leaf in leaves {
-      if leaf == intruder {return}
-      if let intruderView = intruder.view, leafView = leaf.view {
-        if CGRectIntersectsRect(intruderView.frame, leafView.frame) {
-          intruderView.center.x += Leaf.standardWidth
-          intruderView.center.y += Leaf.standardHeight
-          let newOffsetX = intruderView.center.x - self.scrollView.frame.width / 2
-          let newOffsetY = intruderView.center.y - self.scrollView.frame.height / 2
-          self.scrollView.setContentOffset(CGPointMake(newOffsetX, newOffsetY), animated: true)
-          checkForOverlaps(intruder)
+      if leaf != intruder {
+        if let intruderView = intruder.view, leafView = leaf.view {
+          if CGRectIntersectsRect(leafView.frame, intruderView.frame) {
+            //TODO: offset these more intelligently
+            intruderView.center.x += Leaf.standardWidth
+            intruderView.center.y += Leaf.standardHeight
+            let newOffsetX = intruderView.center.x - self.scrollView.frame.width / 2
+            let newOffsetY = intruderView.center.y - self.scrollView.frame.height / 2
+            self.scrollView.setContentOffset(CGPointMake(newOffsetX, newOffsetY), animated: true)
+            checkForOverlaps(intruder)
+          }
         }
       }
     }
@@ -122,8 +133,8 @@ class TreeViewController: UIViewController, TreeDelegate {
     let center: CGPoint = sender.locationInView(self.scrollView)
     print("SENDER: \(center)")
     let newLeaf = Leaf.initFromTree(center, delegate: self)
-    self.leaves.append(newLeaf)
     newLeaf.generateBounds()
+    setChangesMade()
   }
     // MARK: - Navigation
 
@@ -138,4 +149,7 @@ class TreeViewController: UIViewController, TreeDelegate {
       }
       
     }
+  @IBAction func saveButtonPressed(sender: AnyObject) {
+    //save to the db
+  }
 }

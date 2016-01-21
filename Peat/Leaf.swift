@@ -37,11 +37,7 @@ class Leaf: NSObject {
   }
   // Unique Drawing Variables
   var previousCenter: CGPoint?
-  var center: CGPoint? {
-    willSet {
-      previousCenter = center
-    }
-  }
+  var center: CGPoint?
   var connections: Array<LeafConnection>?
   var groupings: Array<String>?
   
