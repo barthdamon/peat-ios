@@ -10,13 +10,13 @@ import Foundation
 
 class PhotoObject: MediaObject {
   
-  var photoData: NSData?
+//  var photoData: NSData?
   
-  func photoWithJson(json: jsonObject) -> PhotoObject {
-    let newPhoto = PhotoObject()
-    newPhoto.initWithJson(json)
-    return newPhoto
-  }
+//  func photoWithJson(json: jsonObject) -> PhotoObject {
+//    let newPhoto = PhotoObject()
+//    newPhoto.initFromJson(json)
+//    return newPhoto
+//  }
   
   
 }

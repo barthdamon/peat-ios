@@ -10,44 +10,36 @@ import Foundation
 
 class MediaObject: NSObject {
   
-  var id: String?
-  var mediaType: MediaType?
-  var mediaID: String?
-  var user: String?
-  var timeStamp: Double?
-  var datePosted: NSDate?
-  var url: NSURL?
-  var mediaDescription: String?
-  var leafPath: String?
+  //parsed
+  var _id: String?
+  var user_Id: String?
+  var mediaId: String?
   var leafId: String?
+  var mediaDescription: String?
+  var location: String?
+  var timestamp: Int?
+  var url: NSURL?
+  var mediaType: MediaType?
+  
+  //created
   var thumbnail: UIImage?
   
-  var thread: Array<ThreadObject>?
-  
-  func initWithJson(json: jsonObject) {
+  static func initWithJson(json: jsonObject) -> MediaObject {
+    let media = MediaObject()
     
-    //mediaInfo
-    if let mediaInfo = json["mediaInfo"] as? jsonObject, mediaId = mediaInfo["mediaID"] as? String, url = mediaInfo["url"] as? String, type = mediaInfo["mediaType"] as? String {
-      self.url = NSURL(string: url)
-      self.mediaType = MediaType(rawValue: type)
-      self.mediaID = mediaId
+    media._id = json["_id"] as? String
+    media.user_Id = json["user_Id"] as? String
+    media.mediaId = json["mediaId"] as? String
+    media.leafId = json["leafId"] as? String
+    media.mediaDescription = json["description"] as? String
+    media.location = json["location"] as? String
+    media.timestamp = json["timestamp"] as? Int
+    if let info = json["mediaInfo"] as? jsonObject, url = info["url"] as? String, mediaType = info["mediaType"] as? String {
+      media.url = NSURL(string: url)
+      media.mediaType = MediaType(rawValue: mediaType)
     }
     
-    //general
-    if let id = json["_id"] as? String, user = json["user"] as? String, leaf = json["leaf"] as? String {
-      self.id = id
-      self.user = user
-      self.leafId = leaf
-    }
-    
-    //meta
-    if let meta = json["meta"] as? jsonObject, timestamp = meta["timestamp"] as? Double, leafPath = meta["leafPath"] as? String, description = meta["description"] as? String {
-      self.timeStamp = timestamp
-      self.datePosted = NSDate(timeIntervalSince1970: timestamp)
-      self.mediaDescription = description
-      self.leafPath = leafPath
-    }
-    
+    return media
   }
   
   func generateThumbnail(media: MediaObject, callback: (UIImage?, NSError?) -> () ) {
@@ -66,17 +58,5 @@ class MediaObject: NSObject {
   func addCommentsToMedia(json: jsonObject) {
     
   }
-  
-//  func generateImageForMedia() {
-//    AWSContentHelper.sharedHelper.ge(mediaID!) { (res, err) in
-//      if err != nil {
-//        print("Error downloading Image")
-//      } else {
-//        if let image = res as? UIImage {
-//          self.thumbnail = image
-//        }
-//      }
-//    }
-//  }
   
 }

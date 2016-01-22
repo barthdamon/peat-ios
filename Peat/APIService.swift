@@ -12,9 +12,9 @@ import KeychainSwift
 
 typealias APICallback = ((AnyObject?, NSError?) -> ())
 
-enum HTTPRequestAuthType {
-  case Basic
-  case Token
+enum HTTPRequestAuthType: String {
+  case Basic = ""
+  case Token = "token/"
 }
 
 //// our singleton
@@ -28,7 +28,7 @@ class APIService: NSObject {
   let baseURL = "http://localhost:3000"
   #else
   // PRODUCTION
-  let baseURL = "https://device.oddworks.io"
+  let baseURL = "http://localhost:3000"
   #endif
   
     var authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1NjkyODgwOTNhODUxZmJmOTYwNWY1YmEiLCJleHAiOjE0NTMwNDg0Njg0OTl9.OBug6yJP2AaGOIph4wEfx363hFHS_BRKSLXzYrVGOns"
@@ -58,7 +58,7 @@ class APIService: NSObject {
   
   //MARK: Private Methods
   private func request(type: String, params: [ String : AnyObject ]?, authType: HTTPRequestAuthType, url: String, callback: APICallback) {
-    let request = NSMutableURLRequest(URL: NSURL(string: apiURL + url)!)
+    let request = NSMutableURLRequest(URL: NSURL(string: apiURL + authType.rawValue + url)!)
     let session = NSURLSession.sharedSession()
     request.HTTPMethod = type
     
@@ -167,7 +167,7 @@ class APIService: NSObject {
     }
     else {
       if let parsedJSON: AnyObject = json {
-//        print("RESPONSE: \(parsedJSON)")
+        print("RESPONSE: \(parsedJSON)")
         callback(parsedJSON, nil)
       }
       else {

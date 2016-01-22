@@ -41,11 +41,6 @@ class Leaf: NSObject {
   var connections: Array<LeafConnection>?
   var groupings: Array<String>?
   
-  // Leaf Contents
-  var mediaIds: Array<String>?
-  var comment_Ids: Array<String>?
-  var like_Ids: Array<String>?
-  
   // Leaf
   var treeDelegate: TreeDelegate?
   var view: UIView?
@@ -56,12 +51,16 @@ class Leaf: NSObject {
   var title: String?
   var timestamp: Int?
   var details: String?
-  
   var movingEnabled: Bool = false
   
+  //Contents (media, comments, likes, follows)
+  var media: [MediaObject]?
+  var comments: [Comment]?
+  //need likes, follows, and witnesses as well......
+  
+  var API = APIService.sharedService
   
 // MARK: INITIALIZATION
-  
   static func initWithJson(json: jsonObject, delegate: TreeDelegate?) -> Leaf {
     let leaf = Leaf()
     leaf.treeDelegate = delegate
@@ -120,8 +119,34 @@ class Leaf: NSObject {
     self.treeDelegate = delegate
   }
   
-  func initiateLeafDrilldown() {
-    
+  func fetchContents(callback: (Bool) -> ()) {
+    if let _ = self.media {callback(true); return}
+    if let leafId = leafId {
+      API.get(nil, url: "tree/leaves/\(leafId)"){ (res, err) -> () in
+        if let e = err {
+          print("error: \(e)")
+        } else {
+          if let json = res as? jsonObject {
+            //parse witnesses
+            if let witnesses = json["witnesses"] as? Array<jsonObject> {
+              print(witnesses)
+            }
+            //
+            if let info = json["mediaInfo"] as? jsonObject, mediaJson = info["media"] as? Array<jsonObject> {
+              self.media = Array()
+              for objectJson in mediaJson {
+                let object = MediaObject.initWithJson(objectJson)
+                self.media!.append(object)
+              }
+            }
+
+          }
+        }
+        callback(true)
+      }
+    } else {
+      callback(false)
+    }
   }
   
   func leafMoveInitiated(sender: UILongPressGestureRecognizer) {
@@ -234,5 +259,6 @@ class Leaf: NSObject {
       treeDelegate?.drillIntoLeaf(self)
     }
   }
+  
   
 }

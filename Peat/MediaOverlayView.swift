@@ -14,14 +14,14 @@ class MediaOverlayView: UIView {
 
     //passed in
     var player: PeatAVPlayer?
-    var delegate: LeafDetailViewController?
+    var delegate: LeafDetailTableViewController?
     var mediaView: UIView!
     var thumbnail: UIImage?
     var mediaObject: MediaObject?
     var overlayButton: UIImageView?
     var playButtonIcon = UIImage(named: "icon_play_solid")
   
-    init(mediaView: UIView, player: PeatAVPlayer?, mediaObject: MediaObject?, delegate: LeafDetailViewController) {
+    init(mediaView: UIView, player: PeatAVPlayer?, mediaObject: MediaObject?, delegate: MediaTableViewCell) {
       self.mediaView = mediaView
       self.player = player
       self.mediaObject = mediaObject
@@ -34,12 +34,12 @@ class MediaOverlayView: UIView {
     }
   
     func configureMediaView() {
-      if let object = self.mediaObject {
-        switch object {
-        case is VideoObject:
+      if let object = self.mediaObject, type = object.mediaType {
+        switch type {
+        case .Video:
           configureForVideo()
-        case is PhotoObject:
-          configureForPhoto()
+        case .Image:
+          configureForImage()
           break
         default:
           break
@@ -47,7 +47,7 @@ class MediaOverlayView: UIView {
       }
     }
   
-    func configureForPhoto() {
+    func configureForImage() {
       if let url = mediaObject?.url {
         UIImage.loadAsync(url, callback: { (image: UIImage) -> () in
           dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -55,8 +55,8 @@ class MediaOverlayView: UIView {
             imageDisplay.frame = self.mediaView.bounds
             imageDisplay.contentMode = .ScaleAspectFill
             imageDisplay.image = image
-            self.addSubview(imageDisplay)
-            self.delegate?.activityIndicator.stopAnimating()
+            self.mediaView?.addSubview(imageDisplay)
+            self.delegate?.activityIndicator?.stopAnimating()
           })
         })
       }

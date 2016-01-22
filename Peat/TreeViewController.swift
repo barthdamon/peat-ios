@@ -143,7 +143,7 @@ class TreeViewController: UIViewController, TreeDelegate {
       // Get the new view controller using segue.destinationViewController.
       // Pass the selected object to the new view controller.
       if segue.identifier == "leafDrilldown" {
-        if let vc = segue.destinationViewController as? LeafDetailViewController {
+        if let vc = segue.destinationViewController as? LeafDetailTableViewController {
           vc.leaf = self.selectedLeaf
         }
       }

@@ -10,6 +10,7 @@ import UIKit
 
 class MediaDescriptionTableViewCell: UITableViewCell {
   @IBOutlet weak var descriptionLabel: UILabel!
+  @IBOutlet weak var userLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

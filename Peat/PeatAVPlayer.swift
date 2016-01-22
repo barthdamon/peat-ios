@@ -25,12 +25,12 @@ class PeatAVPlayer: AVPlayerViewController {
   var url: NSURL?
   var thumbnail: UIImage?
   
-  convenience init(playerView: UIView, media: MediaObject, url: NSURL) {
+  convenience init(playerView: UIView, media: MediaObject) {
     self.init()
     
     self.playerView = playerView
     self.mediaObject = media
-    self.url = url
+    self.url = media.url
     configureMediaPlayer()
   }
   

@@ -25,13 +25,15 @@
 		025D0DB31BD5CACB00462783 /* PeatSocialMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */; };
 		025D0DB71BD72F6C00462783 /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */; };
 		026AC2B61BB0ECF1005F8E81 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026AC2B51BB0ECF1005F8E81 /* ViewController.swift */; };
+		027C75BF1C509AD1008D6DAE /* LeafDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027C75BE1C509AD1008D6DAE /* LeafDetailTableViewController.swift */; };
+		027C75C11C509E51008D6DAE /* PostCommentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027C75C01C509E51008D6DAE /* PostCommentTableViewCell.swift */; };
 		027E31081BA2780C001FCF70 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E31071BA2780C001FCF70 /* AppDelegate.swift */; };
 		027E310D1BA2780D001FCF70 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 027E310B1BA2780D001FCF70 /* Main.storyboard */; };
 		027E310F1BA2780D001FCF70 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 027E310E1BA2780D001FCF70 /* Images.xcassets */; };
 		027E31121BA2780D001FCF70 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 027E31101BA2780D001FCF70 /* LaunchScreen.xib */; };
 		027E311E1BA2780D001FCF70 /* PeatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E311D1BA2780D001FCF70 /* PeatTests.swift */; };
 		027E31281BA27875001FCF70 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E31271BA27875001FCF70 /* APIService.swift */; };
-		02917C141BEC27A90060999A /* LeafDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02917C131BEC27A90060999A /* LeafDetailViewController.swift */; };
+		02917C141BEC27A90060999A /* OLDLeafDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02917C131BEC27A90060999A /* OLDLeafDetailViewController.swift */; };
 		02A11C9E1BB9D48E0064AE95 /* MediaTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11C9D1BB9D48E0064AE95 /* MediaTableViewCell.swift */; };
 		02A11CA01BB9D4CA0064AE95 /* NewsfeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11C9F1BB9D4CA0064AE95 /* NewsfeedTableViewController.swift */; };
 		02A11CA51BB9EDAB0064AE95 /* PeatContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11CA41BB9EDAB0064AE95 /* PeatContentStore.swift */; };
@@ -81,6 +83,8 @@
 		025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatSocialMediator.swift; sourceTree = "<group>"; };
 		025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
 		026AC2B51BB0ECF1005F8E81 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		027C75BE1C509AD1008D6DAE /* LeafDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeafDetailTableViewController.swift; path = ../LeafDetailTableViewController.swift; sourceTree = "<group>"; };
+		027C75C01C509E51008D6DAE /* PostCommentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCommentTableViewCell.swift; sourceTree = "<group>"; };
 		027E31021BA2780C001FCF70 /* Peat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Peat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		027E31061BA2780C001FCF70 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		027E31071BA2780C001FCF70 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -91,7 +95,7 @@
 		027E311C1BA2780D001FCF70 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		027E311D1BA2780D001FCF70 /* PeatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeatTests.swift; sourceTree = "<group>"; };
 		027E31271BA27875001FCF70 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
-		02917C131BEC27A90060999A /* LeafDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeafDetailViewController.swift; sourceTree = "<group>"; };
+		02917C131BEC27A90060999A /* OLDLeafDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OLDLeafDetailViewController.swift; sourceTree = "<group>"; };
 		02A11C9D1BB9D48E0064AE95 /* MediaTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaTableViewCell.swift; sourceTree = "<group>"; };
 		02A11C9F1BB9D4CA0064AE95 /* NewsfeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsfeedTableViewController.swift; sourceTree = "<group>"; };
 		02A11CA41BB9EDAB0064AE95 /* PeatContentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatContentStore.swift; sourceTree = "<group>"; };
@@ -165,6 +169,7 @@
 				02069E051C114E5C007E18EB /* MediaDescriptionTableViewCell.swift */,
 				02069E071C114E68007E18EB /* CommentsTableViewCell.swift */,
 				02A11C9D1BB9D48E0064AE95 /* MediaTableViewCell.swift */,
+				027C75C01C509E51008D6DAE /* PostCommentTableViewCell.swift */,
 				023355C71BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift */,
 			);
 			name = Cells;
@@ -173,6 +178,7 @@
 		025D0DB91BD72F8900462783 /* TableViews */ = {
 			isa = PBXGroup;
 			children = (
+				027C75BE1C509AD1008D6DAE /* LeafDetailTableViewController.swift */,
 				02D72E8A1BD0926900EC115E /* FriendsTableViewController.swift */,
 				021C900D1BF0012C00C79538 /* MenuTableViewController.swift */,
 				02A11C9F1BB9D4CA0064AE95 /* NewsfeedTableViewController.swift */,
@@ -302,7 +308,7 @@
 				021C900B1BEFFF7000C79538 /* HomeViewController.swift */,
 				0239E5801BDBEF5C00D85C3C /* ProfileViewController.swift */,
 				0239E5BC1BDDA41B00D85C3C /* TreeViewController.swift */,
-				02917C131BEC27A90060999A /* LeafDetailViewController.swift */,
+				02917C131BEC27A90060999A /* OLDLeafDetailViewController.swift */,
 				025D0DB91BD72F8900462783 /* TableViews */,
 				025D0DB81BD72F7200462783 /* Cells */,
 			);
@@ -501,10 +507,12 @@
 				023355C81BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift in Sources */,
 				02EE26961BE181D6006DAE81 /* Leaf.swift in Sources */,
 				02F2DA691C16875C00CA1328 /* UIImageExtension.swift in Sources */,
+				027C75C11C509E51008D6DAE /* PostCommentTableViewCell.swift in Sources */,
 				02A11CA01BB9D4CA0064AE95 /* NewsfeedTableViewController.swift in Sources */,
+				027C75BF1C509AD1008D6DAE /* LeafDetailTableViewController.swift in Sources */,
 				02D0A9181BC349B30018596F /* VideoObject.swift in Sources */,
 				021C900A1BEFF5DD00C79538 /* RootViewController.swift in Sources */,
-				02917C141BEC27A90060999A /* LeafDetailViewController.swift in Sources */,
+				02917C141BEC27A90060999A /* OLDLeafDetailViewController.swift in Sources */,
 				021C90101BF0135B00C79538 /* SideMenuClient.swift in Sources */,
 				02D0A91A1BC349C10018596F /* PhotoObject.swift in Sources */,
 				02A11C9E1BB9D48E0064AE95 /* MediaTableViewCell.swift in Sources */,

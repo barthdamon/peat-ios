@@ -10,14 +10,14 @@ import Foundation
 
 class VideoObject: MediaObject {
   
-  var videoFile: NSData?
-  var videoFilePath: NSURL?
+//  var videoFile: NSData?
+//  var videoFilePath: NSURL?
   
-  func videoWithJson(json: jsonObject) -> VideoObject {
-    let newVideo = VideoObject()
-    newVideo.initWithJson(json)
-    newVideo.videoFile = nil
-    return newVideo
-  }
+//  func videoWithJson(json: jsonObject) -> VideoObject {
+//    let newVideo = VideoObject()
+//    newVideo.initWithJson(json)
+//    newVideo.videoFile = nil
+//    return newVideo
+//  }
   
 }

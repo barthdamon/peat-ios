@@ -10,9 +10,9 @@ import Foundation
 import UIKit
 
 enum MediaType: String {
-  case Image = "image"
-  case Video = "video"
-  case Other = "other"
+  case Image = "Image"
+  case Video = "Video"
+  case Other = "Other"
 }
 
 struct AbilityStore {
@@ -52,7 +52,7 @@ class PeatContentStore: NSObject {
   }
   
   func getTreeData(activityName: String, delegate: TreeDelegate?, callback: APICallback) {
-    API.get(nil, authType: .Token, url: "token/tree/\(activityName)"){ (res, err) -> () in
+    API.get(nil, authType: .Token, url: "tree/\(activityName)"){ (res, err) -> () in
       if let e = err {
         print("Error:\(e)")
         callback(nil, e)

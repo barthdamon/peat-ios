@@ -85,7 +85,7 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
         let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as! MediaTableViewCell
         if let mediaObjects = self.mediaObjects {
           let object = mediaObjects[indexPath.row]
-          cell.configureCell(object)
+          cell.configureWithMedia(object)
         }
         return cell
     }
