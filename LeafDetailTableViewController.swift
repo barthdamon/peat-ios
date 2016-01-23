@@ -12,21 +12,22 @@ class LeafDetailTableViewController: UITableViewController {
   
     var leaf: Leaf?
     var activityIndicator: UIActivityIndicatorView?
+    var playerCells: Array<MediaTableViewCell> = []
 
     override func viewDidLoad() {
       super.viewDidLoad()
-      if let leaf = leaf {
-        leaf.fetchContents(){ (success) ->() in
-          guard success else {
-            print("Error fetching leaf contents")
-            return
-          }
-          self.tableView.reloadData()
-        }
-      }
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
+  
+  override func viewWillDisappear(animated: Bool) {
+    for cell in playerCells {
+      cell.player = nil
+      cell.mediaView = nil
+      cell.overlayView = nil
+    }
+    super.viewWillDisappear(true)
+  }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -54,6 +55,7 @@ class LeafDetailTableViewController: UITableViewController {
       if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, leaf = leaf, media = leaf.media {
           let cellMedia = media[indexPath.row]
           cell.configureWithMedia(cellMedia)
+          self.playerCells.append(cell)
           return cell
       } else {
         let cell = UITableViewCell()

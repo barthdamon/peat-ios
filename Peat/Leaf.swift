@@ -12,6 +12,7 @@ import UIKit
 protocol TreeDelegate {
   func drawConnectionLayer(connection: CAShapeLayer)
   func fetchTreeData()
+  func getCurrentActivity() -> String
   func addLeafToScrollView(leaf: Leaf)
   func drillIntoLeaf(leaf: Leaf)
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer)
@@ -50,8 +51,9 @@ class Leaf: NSObject {
   var completionStatus: CompletionStatus?
   var title: String?
   var timestamp: Int?
-  var details: String?
+  var leafDescription: String?
   var movingEnabled: Bool = false
+  var brandNew: Bool = false
   
   //Contents (media, comments, likes, follows)
   var media: [MediaObject]?
@@ -71,7 +73,7 @@ class Leaf: NSObject {
       leaf.completionStatus = CompletionStatus(rawValue: status)
     }
     leaf.timestamp = json["timestamp"] as? Int
-    leaf.details = json["description"] as? String
+    leaf.leafDescription = json["description"] as? String
     leaf.title = json["title"] as? String
     
     if let layout = json["layout"] as? jsonObject {
@@ -95,8 +97,46 @@ class Leaf: NSObject {
     let newLeaf = Leaf()
     newLeaf.center = center
     newLeaf.treeDelegate = delegate
+    newLeaf.brandNew = true
+    newLeaf.leafId = generateId()
     return newLeaf
   }
+  
+  func params() -> jsonObject {
+    return [
+      "activityName" : self.treeDelegate!.getCurrentActivity(),
+      "leafId" : self.leafId!,
+      "layout" : [
+        "coordinates" : [
+          "x" : self.center?.x != nil ? String(self.center!.x) : "",
+          "y" : self.center?.y != nil ? String(self.center!.y) : "",
+        ],
+        "connections" : "",
+        "groupings" : ""
+      ],
+      "completionStatus" : self.completionStatus != nil ? self.completionStatus!.rawValue : "",
+      "title" : self.title != nil ? self.title! : "",
+      "description" : self.leafDescription != nil ? self.leafDescription! : ""
+    ]
+  }
+  
+  func save(callback: (Bool) -> ()) {
+    if brandNew {
+      API.post(self.params(), url: "leaf/new", callback: { (res, err) in
+        if let e = err {
+          print("Error creating leaf: \(e)")
+          callback(false)
+        } else {
+          print("Leaf created: \(res)")
+          callback(true)
+        }
+      })
+    } else {
+//      API.put
+    }
+  }
+  
+  
   
   func addGestureRecognizers() {
     if let view = self.view {

@@ -11,9 +11,12 @@ import UIKit
 class TreeViewController: UIViewController, TreeDelegate {
   
   // Dynamic Data
-  var leaves: [Leaf] = Array()
+//  var leaves: [Leaf] = Array()
   var selectedLeaf: Leaf?
   var changesMade: Bool = false
+  
+  var profileDelegate: ProfileViewController?
+  var currentActivity: String = "Snowboarding"
 
   @IBOutlet weak var scrollView: UIScrollView!
   @IBOutlet weak var saveButton: UIButton!
@@ -35,6 +38,10 @@ class TreeViewController: UIViewController, TreeDelegate {
   override func didReceiveMemoryWarning() {
       super.didReceiveMemoryWarning()
       // Dispose of any resources that can be recreated.
+  }
+  
+  func getCurrentActivity() -> String {
+    return currentActivity
   }
   
   func configureScrollView() {
@@ -61,9 +68,9 @@ class TreeViewController: UIViewController, TreeDelegate {
   
   func addLeafToScrollView(leaf: Leaf) {
     if let view = leaf.view {
-      self.leaves.append(leaf)
       self.scrollView.addSubview(view)
       checkForOverlaps(leaf)
+      PeatContentStore.sharedStore.addLeafToStore(leaf)
     }
   }
   
@@ -78,7 +85,7 @@ class TreeViewController: UIViewController, TreeDelegate {
   }
   
   func checkForOverlaps(intruder: Leaf) {
-    for leaf in leaves {
+    for leaf in PeatContentStore.sharedStore.leaves {
       if leaf != intruder {
         if let intruderView = intruder.view, leafView = leaf.view {
           if CGRectIntersectsRect(leafView.frame, intruderView.frame) {
@@ -97,7 +104,7 @@ class TreeViewController: UIViewController, TreeDelegate {
   
   func displayLeaves() {
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-      for leaf in self.leaves {
+      for leaf in PeatContentStore.sharedStore.leaves {
         leaf.treeDelegate = self
         leaf.generateBounds()
         leaf.drawConnections()
@@ -113,7 +120,9 @@ class TreeViewController: UIViewController, TreeDelegate {
         print("ERROR: \(e)")
         //show error view
       } else {
-        self.leaves = PeatContentStore.sharedStore.abilityStore.currentLeaves
+//        if let leaves = res as? Array<Leaf> {
+//          self.leaves = leaves
+//        }
         self.displayLeaves()
       }
     }
@@ -125,7 +134,7 @@ class TreeViewController: UIViewController, TreeDelegate {
   
   func drillIntoLeaf(leaf: Leaf) {
     selectedLeaf = leaf
-    performSegueWithIdentifier("leafDrilldown", sender: self)
+    self.profileDelegate?.drillIntoLeaf(leaf)
   }
   
   func newLeafInitiated(sender: UILongPressGestureRecognizer) {
@@ -142,11 +151,7 @@ class TreeViewController: UIViewController, TreeDelegate {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
       // Get the new view controller using segue.destinationViewController.
       // Pass the selected object to the new view controller.
-      if segue.identifier == "leafDrilldown" {
-        if let vc = segue.destinationViewController as? LeafDetailTableViewController {
-          vc.leaf = self.selectedLeaf
-        }
-      }
+
       
     }
   @IBAction func saveButtonPressed(sender: AnyObject) {

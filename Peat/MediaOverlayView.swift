@@ -21,19 +21,27 @@ class MediaOverlayView: UIView {
     var overlayButton: UIImageView?
     var playButtonIcon = UIImage(named: "icon_play_solid")
   
-    init(mediaView: UIView, player: PeatAVPlayer?, mediaObject: MediaObject?, delegate: MediaTableViewCell) {
+    init(mediaView: UIView, player: PeatAVPlayer?, mediaObject: MediaObject?, delegate: AnyObject?) {
       self.mediaView = mediaView
       self.player = player
       self.mediaObject = mediaObject
       super.init(frame: self.mediaView.bounds)
-      configureMediaView()
+      if let mediaObject = mediaObject where mediaObject.madeLocal {
+        configureViewForLocal()
+      }
+      //if tere is a video file || image already and its a photo configure for local
+      configureView()
     }
     
     required init?(coder aDecoder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
     }
   
-    func configureMediaView() {
+    func configureViewForLocal() {
+      
+    }
+  
+    func configureView() {
       if let object = self.mediaObject, type = object.mediaType {
         switch type {
         case .Video:
@@ -56,7 +64,6 @@ class MediaOverlayView: UIView {
             imageDisplay.contentMode = .ScaleAspectFill
             imageDisplay.image = image
             self.mediaView?.addSubview(imageDisplay)
-            self.delegate?.activityIndicator?.stopAnimating()
           })
         })
       }

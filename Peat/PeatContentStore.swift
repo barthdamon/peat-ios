@@ -17,7 +17,7 @@ enum MediaType: String {
 
 struct AbilityStore {
 //  var storedActivities: Array<Activity>?
-  var currentLeaves: Array<Leaf> = []
+  var currentLeaves: Set<Leaf> = []
   
 //  func findLeavesForActivity(activity: String) -> Array<LeafNode>? {
 //    var returnLeaves: Array<LeafNode> = []
@@ -46,6 +46,9 @@ class PeatContentStore: NSObject {
   var API = APIService.sharedService
   var mediaObjects: Array<MediaObject>?
   var abilityStore = AbilityStore()
+  var leaves: Set<Leaf> {
+    return abilityStore.currentLeaves
+  }
   
   class var sharedStore: PeatContentStore {
     return _sharedStore
@@ -60,15 +63,19 @@ class PeatContentStore: NSObject {
         if let json = res as? Dictionary<String, AnyObject> {
           print("TREE DATA: \(json)")
           if let treeInfo = json["treeInfo"] as? jsonObject, leaves = treeInfo["leaves"] as? Array<jsonObject> {
-            self.abilityStore.currentLeaves = []
+            self.abilityStore.currentLeaves = Set()
             for leaf in leaves {
-              self.abilityStore.currentLeaves.append(Leaf.initWithJson(leaf, delegate: delegate))
+              self.abilityStore.currentLeaves.insert(Leaf.initWithJson(leaf, delegate: delegate))
             }
             callback(self.abilityStore.currentLeaves, nil)
           }
         }
       }
     }
+  }
+  
+  func addLeafToStore(leaf: Leaf) {
+    self.abilityStore.currentLeaves.insert(leaf)
   }
 
 }

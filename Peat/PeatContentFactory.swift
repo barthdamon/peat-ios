@@ -70,7 +70,7 @@ class PeatContentFactory: NSObject {
   func postMedia(var media: LocalMedia) {
     if let type = media.mediaType, filePath = media.filePath {
       let typeExtension = type == .Video ? ".mov" : ".img"
-      let id = generateID(30)
+      let id = generateId()
       media.mediaId = "\(id)\(typeExtension)"
       if let id = media.mediaId {
         AWSContentHelper.sharedHelper.postMediaFromFactory(filePath, mediaID: id, mediaType: type) { (res, err) in
@@ -98,17 +98,6 @@ class PeatContentFactory: NSObject {
         }
       }
     }
-  }
-  
-  func generateID(length:Int)->String{
-    let wantedCharacters:NSString="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXZY0123456789"
-    let s=NSMutableString(capacity: length)
-    for (var i:Int = 0; i < length; i++) {
-      let r:UInt32 = arc4random() % UInt32( wantedCharacters.length)
-      let c:UniChar = wantedCharacters.characterAtIndex( Int(r) )
-      s.appendFormat("%C", c)
-    }
-    return s as String
   }
 
 

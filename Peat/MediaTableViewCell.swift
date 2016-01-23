@@ -34,6 +34,7 @@ class MediaTableViewCell: UITableViewCell, UITableViewDataSource, UITableViewDel
   
   func configureWithMedia(media: MediaObject) {
     self.media = media
+    self.selectionStyle = UITableViewCellSelectionStyle.None
     if let type = media.mediaType {
       switch type {
       case .Video:
@@ -44,7 +45,6 @@ class MediaTableViewCell: UITableViewCell, UITableViewDataSource, UITableViewDel
         break
       }
     }
-    self.selectionStyle = UITableViewCellSelectionStyle.None
   }
   
   func configureForImage() {

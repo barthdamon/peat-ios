@@ -44,7 +44,7 @@ class APIService: NSObject {
     request("GET", params: params, authType: authType, url: url, callback: callback)
   }
   
-  func post(params: [ String : AnyObject ]?, authType: HTTPRequestAuthType, url: String, callback: APICallback) {
+  func post(params: [ String : AnyObject ]?, authType: HTTPRequestAuthType = .Token, url: String, callback: APICallback) {
     request("POST", params: params, authType: authType, url: url, callback: callback)
   }
   
@@ -103,7 +103,7 @@ class APIService: NSObject {
 //          print("Error server responded with 401: Unauthorized")
 //          NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "errorUnauthorizedNotification", object: nil))
 //        }
-        if res.statusCode != 200 {
+        if res.statusCode != 200 && res.statusCode != 201 {
           print("Error, server responded with: \(res.statusCode) to request for \(url)" )
           let errorMessage = self.parseError(data!)
           let e = NSError(domain: "SRP", code: 100, userInfo: [ "statusCode": res.statusCode, "message" : errorMessage ])

@@ -34,7 +34,6 @@ class SideMenuClient {
   func configureNavBar() {
     NSNotificationCenter.defaultCenter().addObserver(self, selector: "toggleMenu:", name: "navItemSelected", object: nil)
     let mainLogoImage = UIImage(named: "menuIcon.png")
-    let cameraImage = UIImage(named: "camera.png")
     //    let imgWidth = infoImage?.size.width
     //    let imgHeight = infoImage?.size.height
     let logoButton: UIButton = UIButton(frame: CGRect(x: 0,y: 0,width: 40, height: 40))
@@ -43,13 +42,6 @@ class SideMenuClient {
     logoButton.clipsToBounds = true
     logoButton.addTarget(self, action: Selector("toggleMenu:"), forControlEvents: UIControlEvents.TouchUpInside)
     clientController?.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: logoButton)
-    
-    let cameraButton: UIButton = UIButton(frame: CGRect(x: 0,y: 0,width: 40, height: 40))
-    cameraButton.setBackgroundImage(cameraImage, forState: .Normal)
-    cameraButton.layer.cornerRadius = 10.0
-    cameraButton.clipsToBounds = true
-    cameraButton.addTarget(self, action: Selector("showCameraView:"), forControlEvents: UIControlEvents.TouchUpInside)
-    clientController?.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cameraButton)
     
     clientController?.navigationController?.navigationBar.barTintColor = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)
     clientController?.view.backgroundColor = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1)

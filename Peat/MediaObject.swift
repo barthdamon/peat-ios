@@ -23,6 +23,10 @@ class MediaObject: NSObject {
   
   //created
   var thumbnail: UIImage?
+  var filePath: NSURL?
+  var madeLocal: Bool = false
+  
+  var API = APIService.sharedService
   
   static func initWithJson(json: jsonObject) -> MediaObject {
     let media = MediaObject()
@@ -38,7 +42,16 @@ class MediaObject: NSObject {
       media.url = NSURL(string: url)
       media.mediaType = MediaType(rawValue: mediaType)
     }
-    
+    return media
+  }
+  
+  static func initFromUploader(leaf: Leaf?, type: MediaType?, thumbnail: UIImage?, filePath: NSURL?) -> MediaObject {
+    let media = MediaObject()
+    media.leafId = leaf?.leafId
+    media.mediaType = type
+    media.thumbnail = thumbnail
+    media.filePath = filePath
+    media.madeLocal = true
     return media
   }
   
@@ -55,8 +68,68 @@ class MediaObject: NSObject {
     }
   }
   
+  func params() -> jsonObject {
+//    ["mediaInfo": ["mediaID": mediaId, "url" : url, "mediaType": type.rawValue], "leaf": leafId, "meta": ["leafPath": leafPath, "description": description]]
+          let url = "https://s3.amazonaws.com/peat-assets/\(mediaId)"
+//    return [
+//      "activityName" : self.treeDelegate!.getCurrentActivity(),
+//      "leafId" : self.leafId!,
+//      "layout" : [
+//        "coordinates" : [
+//          "x" : self.center?.x != nil ? String(self.center!.x) : "",
+//          "y" : self.center?.y != nil ? String(self.center!.y) : "",
+//        ],
+//        "connections" : "",
+//        "groupings" : ""
+//      ],
+//      "completionStatus" : self.completionStatus != nil ? self.completionStatus!.rawValue : "",
+//      "title" : self.title != nil ? self.title! : "",
+//      "description" : self.details != nil ? self.details! : ""
+//    ]
+//    user_Id: req.user._id,
+//    mediaId: mediaId,
+//    leafId: leafId,
+//    mediaInfo: {
+//      url: req.body.mediaInfo.url,
+//      mediaType: req.body.mediaInfo.mediaType
+//    },
+//    description: req.body.description,
+//    location: req.body.location,
+//    timestamp: currentTime
+    return ["":""]
+  }
+  
   func addCommentsToMedia(json: jsonObject) {
     
+  }
+  
+  func publish() {
+    if let type = self.mediaType, filePath = self.filePath {
+      let typeExtension = type == .Video ? ".mov" : ".img"
+      let id = generateId()
+      self.mediaId = "\(id)\(typeExtension)"
+      if let id = self.mediaId {
+        AWSContentHelper.sharedHelper.postMediaFromFactory(filePath, mediaID: id, mediaType: type) { (res, err) in
+          if err != nil {
+            print(err)
+          } else {
+            self.sendToServer()
+          }
+        }
+      }
+    }
+  }
+  
+  func sendToServer() {
+    API.post(self.params(), authType: HTTPRequestAuthType.Token, url: "media") { (res, err) -> () in
+      if let e = err {
+        print("Error:\(e)")
+      } else {
+        if let json = res as? Dictionary<String, AnyObject> {
+          print(json)
+        }
+      }
+    }
   }
   
 }
