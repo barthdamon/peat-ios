@@ -15,23 +15,33 @@ enum MediaType: String {
   case Other = "Other"
 }
 
-struct AbilityStore {
+struct TreeStore {
 //  var storedActivities: Array<Activity>?
-  var currentLeaves: Set<Leaf> = []
+  var currentLeaves: Set<Leaf>?
+  var currentMediaObjects: Set<MediaObject>?
+  var selectedLeaf: Leaf?
   
-//  func findLeavesForActivity(activity: String) -> Array<LeafNode>? {
-//    var returnLeaves: Array<LeafNode> = []
-//    for leaf in leaves {
-//      if leaf.activity == activity {
-//        returnLeaves.append(leaf)
-//      }
-//    }
-//    if returnLeaves.count > 0 {
-//      return returnLeaves
-//    } else {
-//      return nil
-//    }
-//  }
+  var comments: Array<Comment>?
+  
+  func mediaForLeaf(leaf: Leaf) -> Array<MediaObject>? {
+    var leafMedia: Array<MediaObject> = []
+    if let leafId = leaf.leafId, mediaObjects = currentMediaObjects {
+      for media in mediaObjects {
+        if let id = media.leafId {
+          if id == leafId {
+            leafMedia.append(media)
+          }
+        }
+      }
+    }
+    return leafMedia.count > 0 ? leafMedia : nil
+  }
+  
+  mutating func resetStore() {
+    self.currentLeaves = Set()
+    self.currentMediaObjects = nil
+    self.selectedLeaf = nil
+  }
   
 }
 
@@ -45,9 +55,9 @@ class PeatContentStore: NSObject {
   
   var API = APIService.sharedService
   var mediaObjects: Array<MediaObject>?
-  var abilityStore = AbilityStore()
+  var treeStore = TreeStore()
   var leaves: Set<Leaf> {
-    return abilityStore.currentLeaves
+    return treeStore.currentLeaves != nil ? treeStore.currentLeaves! : []
   }
   
   class var sharedStore: PeatContentStore {
@@ -63,21 +73,44 @@ class PeatContentStore: NSObject {
         if let json = res as? Dictionary<String, AnyObject> {
           print("TREE DATA: \(json)")
           if let treeInfo = json["treeInfo"] as? jsonObject, leaves = treeInfo["leaves"] as? Array<jsonObject> {
-            self.abilityStore.currentLeaves = Set()
+            //reset the store, data for new tree incoming
+            self.treeStore.resetStore()
             for leaf in leaves {
-              self.abilityStore.currentLeaves.insert(Leaf.initWithJson(leaf, delegate: delegate))
+              self.treeStore.currentLeaves!.insert(Leaf.initWithJson(leaf, delegate: delegate))
             }
-            callback(self.abilityStore.currentLeaves, nil)
+            callback(self.treeStore.currentLeaves, nil)
           }
         }
       }
     }
   }
   
-  func addLeafToStore(leaf: Leaf) {
-    self.abilityStore.currentLeaves.insert(leaf)
+  
+  
+  
+  //MARK: Helpers
+  func setSelectedLeaf(leaf: Leaf) {
+    self.treeStore.selectedLeaf = leaf
   }
-
+  
+  func addLeafToStore(leaf: Leaf) {
+    if let _ = self.treeStore.currentLeaves {
+      self.treeStore.currentLeaves!.insert(leaf)
+    } else {
+      self.treeStore.currentLeaves = Set()
+      self.treeStore.currentLeaves!.insert(leaf)
+    }
+  }
+  
+  func addMediaToStore(media: MediaObject) {
+    if let _ = self.treeStore.currentMediaObjects {
+      self.treeStore.currentMediaObjects!.insert(media)
+    } else {
+      self.treeStore.currentMediaObjects = Set()
+      self.treeStore.currentMediaObjects!.insert(media)
+    }
+  }
+  
 }
 
 

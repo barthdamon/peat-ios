@@ -17,7 +17,9 @@ class LeafDetailViewController: UIViewController {
   @IBOutlet weak var completionStatusControl: UISegmentedControl!
   @IBOutlet weak var leafTitleLabel: UILabel!
   @IBOutlet weak var returnButton: UIButton!
-  var leaf: Leaf?
+  var leaf: Leaf? {
+    return PeatContentStore.sharedStore.treeStore.selectedLeaf
+  }
   var containerTableView: UITableView?
   
   @IBOutlet weak var titleSaveButton: UIButton!
@@ -47,7 +49,6 @@ class LeafDetailViewController: UIViewController {
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if segue.identifier == "leafDetailEmbed" {
       if let vc = segue.destinationViewController as? LeafDetailTableViewController {
-        vc.leaf = self.leaf
         self.containerTableView = vc.tableView
       }
     }

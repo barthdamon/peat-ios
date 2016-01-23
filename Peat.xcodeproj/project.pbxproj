@@ -163,6 +163,7 @@
 				02D0A9171BC349B30018596F /* VideoObject.swift */,
 				02D72E8C1BD0929B00EC115E /* User.swift */,
 				0242313E1C30A18200ED7E1B /* Comment.swift */,
+				02EE26951BE181D6006DAE81 /* Leaf.swift */,
 				024231401C30A58200ED7E1B /* Thread.swift */,
 			);
 			name = DataObjects;
@@ -269,7 +270,6 @@
 				021C1BF31C4F23DB00FDEFED /* ContentAggregators */,
 				023B03821C15085A003497FB /* DataObjects */,
 				021C900F1BF0135B00C79538 /* SideMenuClient.swift */,
-				02EE26951BE181D6006DAE81 /* Leaf.swift */,
 				021C1BF41C4F33B000FDEFED /* LeafView.swift */,
 				023B03801C150853003497FB /* MediaOverlayView.swift */,
 				023B03831C1515FC003497FB /* PeatAVPlayer.swift */,

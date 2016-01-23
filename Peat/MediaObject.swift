@@ -137,9 +137,9 @@ class MediaObject: NSObject {
       if let e = err {
         print("Error:\(e)")
       } else {
-        if let json = res as? Dictionary<String, AnyObject> {
-          print(json)
-        }
+        print("Server media post successful")
+        PeatContentStore.sharedStore.addMediaToStore(self)
+        NSNotificationCenter.defaultCenter().postNotificationName("newMediaPostSuccessful", object: self, userInfo: nil)
       }
     }
   }

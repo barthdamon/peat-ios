@@ -10,14 +10,19 @@ import UIKit
 
 class LeafDetailTableViewController: UITableViewController {
   
-    var leaf: Leaf?
+    var leaf: Leaf? {
+      return PeatContentStore.sharedStore.treeStore.selectedLeaf
+    }
     var activityIndicator: UIActivityIndicatorView?
     var playerCells: Array<MediaTableViewCell> = []
+  
+    var mediaOnLoad: Array<MediaObject>?
 
     override func viewDidLoad() {
       super.viewDidLoad()
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "newMediaAdded", name: "newMediaPostSuccessful", object: nil)
     }
   
   override func viewWillDisappear(animated: Bool) {
@@ -27,6 +32,10 @@ class LeafDetailTableViewController: UITableViewController {
       cell.overlayView = nil
     }
     super.viewWillDisappear(true)
+  }
+  
+  func newMediaAdded() {
+    self.tableView.reloadData()
   }
 
     override func didReceiveMemoryWarning() {
@@ -44,15 +53,15 @@ class LeafDetailTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
       if let leaf = leaf, media = leaf.media {
+        self.mediaOnLoad = media
         return media.count
       } else {
         return 0
       }
     }
 
-  
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-      if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, leaf = leaf, media = leaf.media {
+      if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, media = mediaOnLoad {
           let cellMedia = media[indexPath.row]
           cell.configureWithMedia(cellMedia)
           self.playerCells.append(cell)
@@ -63,7 +72,6 @@ class LeafDetailTableViewController: UITableViewController {
       }
       
     }
-
 
     /*
     // Override to support conditional editing of the table view.

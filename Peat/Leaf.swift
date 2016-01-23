@@ -55,9 +55,13 @@ class Leaf: NSObject {
   var movingEnabled: Bool = false
   var brandNew: Bool = false
   
+  var media: Array<MediaObject>? {
+    return PeatContentStore.sharedStore.treeStore.mediaForLeaf(self)
+  }
+  
   //Contents (media, comments, likes, follows)
-  var media: [MediaObject]?
-  var comments: [Comment]?
+//  var media: [MediaObject]?
+//  var comments: [Comment]?
   //need likes, follows, and witnesses as well......
   
   var API = APIService.sharedService
@@ -160,24 +164,28 @@ class Leaf: NSObject {
   }
   
   func fetchContents(callback: (Bool) -> ()) {
-    if let _ = self.media {callback(true); return}
+    if let _ = PeatContentStore.sharedStore.treeStore.mediaForLeaf(self) {callback(true); return}
     if let leafId = leafId {
       API.get(nil, url: "tree/leaves/\(leafId)"){ (res, err) -> () in
         if let e = err {
           print("error: \(e)")
         } else {
           if let json = res as? jsonObject {
-            //parse witnesses
+
             if let witnesses = json["witnesses"] as? Array<jsonObject> {
               print(witnesses)
+              //add witnesses to store
             }
-            //
+
             if let info = json["mediaInfo"] as? jsonObject, mediaJson = info["media"] as? Array<jsonObject> {
-              self.media = Array()
               for objectJson in mediaJson {
-                let object = MediaObject.initWithJson(objectJson)
-                self.media!.append(object)
+                PeatContentStore.sharedStore.addMediaToStore(MediaObject.initWithJson(objectJson))
               }
+            }
+            
+            if let comments = json["comments"] as? Array<jsonObject> {
+              print(comments)
+              //add commnts to store
             }
 
           }

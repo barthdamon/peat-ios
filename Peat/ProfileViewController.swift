@@ -11,7 +11,6 @@ import UIKit
 class ProfileViewController: UIViewController, ViewControllerWithMenu {
 
     var sidebarClient: SideMenuClient?
-    var selectedLeaf: Leaf?
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +28,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
     }
   
     func drillIntoLeaf(leaf: Leaf) {
-      self.selectedLeaf = leaf
+      PeatContentStore.sharedStore.setSelectedLeaf(leaf)
       self.performSegueWithIdentifier("leafDrilldown", sender: self)
     }
   
@@ -47,11 +46,11 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
         }
       }
       
-      if segue.identifier == "leafDrilldown" {
-        if let vc = segue.destinationViewController as? LeafDetailViewController {
-          vc.leaf = self.selectedLeaf
-        }
-      }
+//      if segue.identifier == "leafDrilldown" {
+//        if let vc = segue.destinationViewController as? LeafDetailViewController {
+//          vc.leaf = self.selectedLeaf
+//        }
+//      }
     }
 
   

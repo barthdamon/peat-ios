@@ -14,7 +14,10 @@ class MediaUploadViewController: UIViewController {
   @IBOutlet weak var descriptionTextField: UITextField!
   @IBOutlet weak var locationTextField: UITextField!
   
-  var leaf: Leaf?
+  var leaf: Leaf? {
+    return PeatContentStore.sharedStore.treeStore.selectedLeaf
+  }
+  
   var overlayView: MediaOverlayView?
   
   var leafDetailDelegate: LeafDetailViewController?
@@ -32,6 +35,7 @@ class MediaUploadViewController: UIViewController {
     override func viewDidLoad() {
       super.viewDidLoad()
       displayCameraControl()
+      addListeners()
       // Do any additional setup after loading the view.
     }
 
@@ -39,7 +43,27 @@ class MediaUploadViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+  
+  func addListeners() {
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "mediaPostSuccess", name: "newMediaPostSuccessful", object: nil)
+    let tapRecognizer = UITapGestureRecognizer(target: self, action: "resignResponder")
+    tapRecognizer.numberOfTapsRequired = 1
+    tapRecognizer.numberOfTouchesRequired = 1
+    self.view.addGestureRecognizer(tapRecognizer)
+  }
+  
+  func resignResponder() {
+    self.descriptionTextField.resignFirstResponder()
+    self.locationTextField.resignFirstResponder()
+  }
+  
+  func mediaPostSuccess() {
+//    self.leafDetailDelegate?.tableView.reloadData() = true
+    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+      self.dismissSelf(true)
+    })
+  }
+  
 
     /*
     // MARK: - Navigation
@@ -50,16 +74,18 @@ class MediaUploadViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-  func dismissSelf() {
-    self.navigationController?.popToRootViewControllerAnimated(false)
+  func dismissSelf(animated: Bool) {
+    self.navigationController?.popToRootViewControllerAnimated(animated)
   }
 
   @IBAction func publishButtonPressed(sender: AnyObject) {
+    self.mediaObject?.mediaDescription = self.descriptionTextField.text
+    self.mediaObject?.location = self.locationTextField.text
     self.mediaObject?.publish()
   }
   
   @IBAction func cancelButtonPressed(sender: AnyObject) {
-    dismissSelf()
+    dismissSelf(false)
   }
   
 }
@@ -102,8 +128,8 @@ extension MediaUploadViewController: UINavigationControllerDelegate, UIImagePick
   }
   
   func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-    self.dismissViewControllerAnimated(false) { () -> Void in
-      self.dismissSelf()
-    }
+    self.dismissViewControllerAnimated(false, completion: {
+      self.dismissSelf(false)
+    })
   }
 }
