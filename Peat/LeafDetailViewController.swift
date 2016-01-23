@@ -85,8 +85,8 @@ class LeafDetailViewController: UIViewController {
   
   @IBAction func uploadButtonPressed(sender: AnyObject) {
     //open up the ol camera role.....
-    
-    
+    self.performSegueWithIdentifier("showUploadOptions", sender: self)
+    //also pause any media playing here, might already work
   }
   
   @IBAction func returnButtonPressed(sender: AnyObject) {

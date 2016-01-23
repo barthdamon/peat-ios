@@ -18,7 +18,12 @@ class MediaObject: NSObject {
   var mediaDescription: String?
   var location: String?
   var timestamp: Int?
-  var url: NSURL?
+  var url: NSURL? {
+    didSet {
+      self.urlString = String(url)
+    }
+  }
+  var urlString: String?
   var mediaType: MediaType?
   
   //created
@@ -69,34 +74,16 @@ class MediaObject: NSObject {
   }
   
   func params() -> jsonObject {
-//    ["mediaInfo": ["mediaID": mediaId, "url" : url, "mediaType": type.rawValue], "leaf": leafId, "meta": ["leafPath": leafPath, "description": description]]
-          let url = "https://s3.amazonaws.com/peat-assets/\(mediaId)"
-//    return [
-//      "activityName" : self.treeDelegate!.getCurrentActivity(),
-//      "leafId" : self.leafId!,
-//      "layout" : [
-//        "coordinates" : [
-//          "x" : self.center?.x != nil ? String(self.center!.x) : "",
-//          "y" : self.center?.y != nil ? String(self.center!.y) : "",
-//        ],
-//        "connections" : "",
-//        "groupings" : ""
-//      ],
-//      "completionStatus" : self.completionStatus != nil ? self.completionStatus!.rawValue : "",
-//      "title" : self.title != nil ? self.title! : "",
-//      "description" : self.details != nil ? self.details! : ""
-//    ]
-//    user_Id: req.user._id,
-//    mediaId: mediaId,
-//    leafId: leafId,
-//    mediaInfo: {
-//      url: req.body.mediaInfo.url,
-//      mediaType: req.body.mediaInfo.mediaType
-//    },
-//    description: req.body.description,
-//    location: req.body.location,
-//    timestamp: currentTime
-    return ["":""]
+    return [
+      "mediaId": self.mediaId != nil ? self.mediaId! : "",
+      "leafId": self.leafId != nil ? self.leafId! : "",
+      "mediaInfo": [
+        "url" : self.urlString != nil ? self.urlString! : "",
+        "mediaType" : self.mediaType != nil ? self.mediaType!.rawValue : ""
+      ],
+      "description": self.mediaDescription != nil ? self.mediaDescription! : "",
+      "location": self.location != nil ? self.location! : ""
+    ]
   }
   
   func addCommentsToMedia(json: jsonObject) {
@@ -104,6 +91,28 @@ class MediaObject: NSObject {
   }
   
   func publish() {
+    if let mediaType = self.mediaType {
+      mediaType == .Image ? bundleImageFile() : sendToAWS()
+    }
+  }
+  
+  func bundleImageFile() {
+    //write the image data somewhere you can upload from (documents directory)
+    if let image = self.thumbnail {
+      let fileManager = NSFileManager.defaultManager()
+      let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+      let filePathToWrite = "\(paths)/SaveFile.png"
+      let imageData: NSData = UIImagePNGRepresentation(image)!
+      fileManager.createFileAtPath(filePathToWrite, contents: imageData, attributes: nil)
+      
+      //get url of where image was just saved
+      let urlPaths = NSURL(fileURLWithPath: paths)
+      self.filePath = urlPaths.URLByAppendingPathComponent("SaveFile.png")
+      sendToAWS()
+    }
+  }
+  
+  func sendToAWS() {
     if let type = self.mediaType, filePath = self.filePath {
       let typeExtension = type == .Video ? ".mov" : ".img"
       let id = generateId()
@@ -113,7 +122,10 @@ class MediaObject: NSObject {
           if err != nil {
             print(err)
           } else {
-            self.sendToServer()
+            if let mediaId = self.mediaId {
+              self.url = NSURL(string: "https://s3.amazonaws.com/peat-assets/\(mediaId)")
+              self.sendToServer()
+            }
           }
         }
       }

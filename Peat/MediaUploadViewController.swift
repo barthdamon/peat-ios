@@ -17,6 +17,8 @@ class MediaUploadViewController: UIViewController {
   var leaf: Leaf?
   var overlayView: MediaOverlayView?
   
+  var leafDetailDelegate: LeafDetailViewController?
+  
   var mediaType: MediaType? {
     didSet {
       self.mediaObject = MediaObject.initFromUploader(leaf, type: mediaType, thumbnail: image, filePath: videoPath)
@@ -29,7 +31,7 @@ class MediaUploadViewController: UIViewController {
 
     override func viewDidLoad() {
       super.viewDidLoad()
-      
+      displayCameraControl()
       // Do any additional setup after loading the view.
     }
 
@@ -48,12 +50,16 @@ class MediaUploadViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+  func dismissSelf() {
+    self.navigationController?.popToRootViewControllerAnimated(false)
+  }
 
   @IBAction func publishButtonPressed(sender: AnyObject) {
     self.mediaObject?.publish()
   }
   
   @IBAction func cancelButtonPressed(sender: AnyObject) {
+    dismissSelf()
   }
   
 }
@@ -71,27 +77,33 @@ extension MediaUploadViewController: UINavigationControllerDelegate, UIImagePick
       imagePickerController.mediaTypes = availableMediaTypes
     }
     
-    self.presentViewController(imagePickerController, animated: true, completion: nil)
+    self.navigationController?.presentViewController(imagePickerController, animated: false, completion: nil)
   }
   
   func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
     // dismiss the image picker controller window
-    self.dismissViewControllerAnimated(true, completion: nil)
-    
-    //Determine if Video or Image Data
-    if (info[UIImagePickerControllerEditedImage] == nil && info[UIImagePickerControllerOriginalImage] == nil) {
-      //VIDEO
-      videoPath = info[UIImagePickerControllerMediaURL] as? NSURL
-      mediaType = .Video
-    } else {
-      //IMAGE
-      // fetch the selected image
-      if picker.allowsEditing {
-        image = info[UIImagePickerControllerEditedImage] as? UIImage
+    self.dismissViewControllerAnimated(true, completion: {
+      //Determine if Video or Image Data
+      if (info[UIImagePickerControllerEditedImage] == nil && info[UIImagePickerControllerOriginalImage] == nil) {
+        //VIDEO
+        self.videoPath = info[UIImagePickerControllerMediaURL] as? NSURL
+        self.mediaType = .Video
       } else {
-        image = info[UIImagePickerControllerOriginalImage] as? UIImage
+        //IMAGE
+        // fetch the selected image
+        if picker.allowsEditing {
+          self.image = info[UIImagePickerControllerEditedImage] as? UIImage
+        } else {
+          self.image = info[UIImagePickerControllerOriginalImage] as? UIImage
+        }
+        self.mediaType = .Image
       }
-      mediaType = .Image
+    })
+  }
+  
+  func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+    self.dismissViewControllerAnimated(false) { () -> Void in
+      self.dismissSelf()
     }
   }
 }

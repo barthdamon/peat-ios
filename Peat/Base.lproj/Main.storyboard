@@ -328,7 +328,7 @@
                     <tabBarItem key="tabBarItem" title="Item" id="U7K-0o-hbc"/>
                     <navigationItem key="navigationItem" id="Dny-7G-ghU"/>
                     <connections>
-                        <segue destination="kkl-n5-IFP" kind="presentation" identifier="leafDrilldown" id="9gW-Uz-RKO"/>
+                        <segue destination="sy4-pZ-XUR" kind="presentation" identifier="leafDrilldown" id="YFv-bi-nzi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Nm-tX-4HO" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -347,13 +347,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EyS-0T-H8w">
+                            <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EyS-0T-H8w">
                                 <rect key="frame" x="0.0" y="105" width="600" height="495"/>
                                 <connections>
                                     <segue destination="vPg-FK-PxY" kind="embed" identifier="leafDetailEmbed" id="An4-8O-VqM"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fpa-ML-dh9">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fpa-ML-dh9">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="105"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AbilityTitle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jvp-AS-0ui">
@@ -658,6 +658,7 @@
                             <constraint firstItem="EyS-0T-H8w" firstAttribute="top" secondItem="fpa-ML-dh9" secondAttribute="bottom" id="WMX-20-Ft1"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="erm-nT-lrZ"/>
                     <connections>
                         <outlet property="completionStatusControl" destination="Q5X-MM-8wV" id="xy8-Ec-2qO"/>
                         <outlet property="editButton" destination="6ka-QB-VpC" id="RaM-pC-8Bi"/>
@@ -668,12 +669,28 @@
                         <outlet property="titleView" destination="fpa-ML-dh9" id="ksl-wL-w4F"/>
                         <outlet property="uploadLabel" destination="QNM-Ke-s9P" id="hMY-ch-vut"/>
                         <outlet property="witnessLabel" destination="zuw-Vh-fco" id="cNE-NE-6I1"/>
-                        <segue destination="DQ0-yx-8xZ" kind="presentation" id="sPE-RS-xmR"/>
+                        <segue destination="DQ0-yx-8xZ" kind="show" identifier="showUploadOptions" id="sPE-RS-xmR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BMv-Fn-Ou9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2471" y="1240"/>
+            <point key="canvasLocation" x="3195" y="1240"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="ZnZ-qD-w9f">
+            <objects>
+                <navigationController navigationBarHidden="YES" id="sy4-pZ-XUR" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Wmg-6X-yjX">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="kkl-n5-IFP" kind="relationship" relationship="rootViewController" id="cCd-MV-n0d"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4LS-el-nOx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2498" y="1240"/>
         </scene>
         <!--Media Upload View Controller-->
         <scene sceneID="lGU-PJ-0cU">
@@ -695,7 +712,7 @@
                                 </constraints>
                             </view>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Location" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="STS-5U-dFl">
-                                <rect key="frame" x="8" y="383" width="584" height="30"/>
+                                <rect key="frame" x="8" y="391" width="584" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="TZi-g9-yXh"/>
                                 </constraints>
@@ -703,18 +720,23 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="swW-DH-Xzo">
-                                <rect key="frame" x="320" y="496" width="185" height="30"/>
+                                <rect key="frame" x="320" y="504" width="185" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="185" id="32l-Xl-Zp9"/>
                                     <constraint firstAttribute="height" constant="30" id="zlH-XA-2ML"/>
                                 </constraints>
                                 <state key="normal" title="Publish"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="32l-Xl-Zp9"/>
+                                    </mask>
+                                </variation>
                                 <connections>
                                     <action selector="publishButtonPressed:" destination="DQ0-yx-8xZ" eventType="touchUpInside" id="7BQ-6D-jLQ"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Description" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="atO-XS-hhb">
-                                <rect key="frame" x="8" y="345" width="584" height="30"/>
+                                <rect key="frame" x="8" y="353" width="584" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="VjA-mz-cdr"/>
                                 </constraints>
@@ -722,11 +744,16 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cu7-oW-ZOa">
-                                <rect key="frame" x="95" y="496" width="185" height="30"/>
+                                <rect key="frame" x="95" y="504" width="185" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="185" id="EaR-a2-vnb"/>
                                 </constraints>
                                 <state key="normal" title="Cancel"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="EaR-a2-vnb"/>
+                                    </mask>
+                                </variation>
                                 <connections>
                                     <action selector="cancelButtonPressed:" destination="DQ0-yx-8xZ" eventType="touchUpInside" id="w9C-K2-wtk"/>
                                 </connections>
@@ -739,21 +766,30 @@
                             <constraint firstItem="swW-DH-Xzo" firstAttribute="width" secondItem="Cu7-oW-ZOa" secondAttribute="width" id="4VX-xO-6Yn"/>
                             <constraint firstAttribute="trailing" secondItem="atO-XS-hhb" secondAttribute="trailing" constant="8" id="4Yb-JT-5Zl"/>
                             <constraint firstItem="uy4-CB-DvL" firstAttribute="width" secondItem="uy4-CB-DvL" secondAttribute="height" multiplier="16:9" id="5N0-KQ-Tep"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="uy4-CB-DvL" secondAttribute="trailing" constant="-12" id="5uV-dV-kge"/>
                             <constraint firstItem="Cu7-oW-ZOa" firstAttribute="top" secondItem="STS-5U-dFl" secondAttribute="bottom" constant="83" id="8VJ-V7-I9I"/>
                             <constraint firstAttribute="trailing" secondItem="STS-5U-dFl" secondAttribute="trailing" constant="8" id="8og-FY-tne"/>
+                            <constraint firstItem="swW-DH-Xzo" firstAttribute="leading" secondItem="Cu7-oW-ZOa" secondAttribute="trailing" constant="40" id="AlD-rJ-6DZ"/>
                             <constraint firstItem="STS-5U-dFl" firstAttribute="top" secondItem="atO-XS-hhb" secondAttribute="bottom" constant="8" id="JJT-L6-LiV"/>
+                            <constraint firstItem="atO-XS-hhb" firstAttribute="top" secondItem="uy4-CB-DvL" secondAttribute="bottom" constant="16" id="KTQ-kU-xz3"/>
                             <constraint firstItem="atO-XS-hhb" firstAttribute="leading" secondItem="Rwb-d6-RRM" secondAttribute="leading" constant="8" id="MrZ-8K-Egk"/>
                             <constraint firstItem="swW-DH-Xzo" firstAttribute="top" secondItem="STS-5U-dFl" secondAttribute="bottom" constant="83" id="OEt-D8-3CG"/>
                             <constraint firstItem="swW-DH-Xzo" firstAttribute="height" secondItem="Cu7-oW-ZOa" secondAttribute="height" id="OOZ-88-Yjh"/>
                             <constraint firstItem="uy4-CB-DvL" firstAttribute="leading" secondItem="Rwb-d6-RRM" secondAttribute="leading" constant="8" id="RNo-uB-gMN"/>
-                            <constraint firstItem="atO-XS-hhb" firstAttribute="top" secondItem="uy4-CB-DvL" secondAttribute="bottom" constant="8" id="VhH-ma-Rtr"/>
+                            <constraint firstItem="atO-XS-hhb" firstAttribute="top" secondItem="uy4-CB-DvL" secondAttribute="bottom" constant="16" id="VhH-ma-Rtr"/>
                             <constraint firstItem="Cu7-oW-ZOa" firstAttribute="leading" secondItem="Rwb-d6-RRM" secondAttribute="leadingMargin" constant="75" id="W1O-pO-sZy"/>
                             <constraint firstAttribute="trailingMargin" secondItem="swW-DH-Xzo" secondAttribute="trailing" constant="75" id="ZFt-Sw-vfq"/>
+                            <constraint firstItem="uy4-CB-DvL" firstAttribute="top" secondItem="vMd-y3-7Sp" secondAttribute="bottom" constant="8" id="jjl-dk-sLT"/>
+                            <constraint firstItem="uy4-CB-DvL" firstAttribute="leading" secondItem="Rwb-d6-RRM" secondAttribute="leadingMargin" constant="-12" id="lII-DL-bBg"/>
                             <constraint firstItem="uy4-CB-DvL" firstAttribute="top" secondItem="vMd-y3-7Sp" secondAttribute="bottom" constant="8" id="psK-Ed-Xoz"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="47b-Au-JuM"/>
                                 <exclude reference="5N0-KQ-Tep"/>
+                                <exclude reference="RNo-uB-gMN"/>
+                                <exclude reference="psK-Ed-Xoz"/>
+                                <exclude reference="VhH-ma-Rtr"/>
                             </mask>
                         </variation>
                     </view>
@@ -765,7 +801,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7lF-ac-hDM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3218" y="1240"/>
+            <point key="canvasLocation" x="3906" y="1240"/>
         </scene>
         <!--Leaf Detail Table View Controller-->
         <scene sceneID="P6j-hL-yTx">
@@ -904,7 +940,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4oG-ld-aad" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2848" y="2230"/>
+            <point key="canvasLocation" x="3195" y="2192"/>
         </scene>
         <!--Tree View Controller-->
         <scene sceneID="ah9-Av-MOg">
