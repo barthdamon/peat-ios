@@ -24,10 +24,13 @@
 		024231411C30A58200ED7E1B /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024231401C30A58200ED7E1B /* Thread.swift */; };
 		025D0DB31BD5CACB00462783 /* PeatSocialMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */; };
 		025D0DB71BD72F6C00462783 /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */; };
-		026AC2B61BB0ECF1005F8E81 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026AC2B51BB0ECF1005F8E81 /* ViewController.swift */; };
 		027C33FE1C532E6100D86F0F /* StringHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027C33FD1C532E6100D86F0F /* StringHelpers.swift */; };
 		027C34001C53332900D86F0F /* AlertViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027C33FF1C53332900D86F0F /* AlertViews.swift */; };
 		027C34021C53392300D86F0F /* MediaUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027C34011C53392300D86F0F /* MediaUploadViewController.swift */; };
+		027C34041C55178000D86F0F /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027C34031C55178000D86F0F /* LoginViewController.swift */; };
+		027C34081C55239800D86F0F /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027C34071C55239800D86F0F /* CurrentUser.swift */; };
+		027C340B1C55465200D86F0F /* GatekeeperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027C340A1C55465200D86F0F /* GatekeeperViewController.swift */; };
+		027C340D1C5562A800D86F0F /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027C340C1C5562A800D86F0F /* AuthViewController.swift */; };
 		027C75BF1C509AD1008D6DAE /* LeafDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027C75BE1C509AD1008D6DAE /* LeafDetailTableViewController.swift */; };
 		027C75C11C509E51008D6DAE /* PostCommentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027C75C01C509E51008D6DAE /* PostCommentTableViewCell.swift */; };
 		027E31081BA2780C001FCF70 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E31071BA2780C001FCF70 /* AppDelegate.swift */; };
@@ -85,10 +88,13 @@
 		024231401C30A58200ED7E1B /* Thread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
 		025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatSocialMediator.swift; sourceTree = "<group>"; };
 		025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
-		026AC2B51BB0ECF1005F8E81 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		027C33FD1C532E6100D86F0F /* StringHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringHelpers.swift; sourceTree = "<group>"; };
 		027C33FF1C53332900D86F0F /* AlertViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertViews.swift; sourceTree = "<group>"; };
 		027C34011C53392300D86F0F /* MediaUploadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaUploadViewController.swift; sourceTree = "<group>"; };
+		027C34031C55178000D86F0F /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		027C34071C55239800D86F0F /* CurrentUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
+		027C340A1C55465200D86F0F /* GatekeeperViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GatekeeperViewController.swift; sourceTree = "<group>"; };
+		027C340C1C5562A800D86F0F /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		027C75BE1C509AD1008D6DAE /* LeafDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LeafDetailTableViewController.swift; path = ../LeafDetailTableViewController.swift; sourceTree = "<group>"; };
 		027C75C01C509E51008D6DAE /* PostCommentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCommentTableViewCell.swift; sourceTree = "<group>"; };
 		027E31021BA2780C001FCF70 /* Peat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Peat.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -148,6 +154,7 @@
 		021C1BF31C4F23DB00FDEFED /* ContentAggregators */ = {
 			isa = PBXGroup;
 			children = (
+				027C34071C55239800D86F0F /* CurrentUser.swift */,
 				025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */,
 				02A11CA41BB9EDAB0064AE95 /* PeatContentStore.swift */,
 				02D0A91B1BC35ACE0018596F /* PeatContentFactory.swift */,
@@ -201,6 +208,15 @@
 				027E31101BA2780D001FCF70 /* LaunchScreen.xib */,
 			);
 			name = Interface;
+			sourceTree = "<group>";
+		};
+		027C34091C5523A700D86F0F /* Custom Views */ = {
+			isa = PBXGroup;
+			children = (
+				021C1BF41C4F33B000FDEFED /* LeafView.swift */,
+				023B03801C150853003497FB /* MediaOverlayView.swift */,
+			);
+			name = "Custom Views";
 			sourceTree = "<group>";
 		};
 		027E30F91BA2780C001FCF70 = {
@@ -269,10 +285,9 @@
 			children = (
 				021C1BF31C4F23DB00FDEFED /* ContentAggregators */,
 				023B03821C15085A003497FB /* DataObjects */,
-				021C900F1BF0135B00C79538 /* SideMenuClient.swift */,
-				021C1BF41C4F33B000FDEFED /* LeafView.swift */,
-				023B03801C150853003497FB /* MediaOverlayView.swift */,
+				027C34091C5523A700D86F0F /* Custom Views */,
 				023B03831C1515FC003497FB /* PeatAVPlayer.swift */,
+				021C900F1BF0135B00C79538 /* SideMenuClient.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -310,8 +325,10 @@
 		02F60DE71BB32CA200F189F0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				027C340C1C5562A800D86F0F /* AuthViewController.swift */,
 				02FD6C921BB38C69003A3DDD /* CameraViewController.swift */,
-				026AC2B51BB0ECF1005F8E81 /* ViewController.swift */,
+				027C34031C55178000D86F0F /* LoginViewController.swift */,
+				027C340A1C55465200D86F0F /* GatekeeperViewController.swift */,
 				021C90091BEFF5DD00C79538 /* RootViewController.swift */,
 				021C900B1BEFFF7000C79538 /* HomeViewController.swift */,
 				0239E5801BDBEF5C00D85C3C /* ProfileViewController.swift */,
@@ -511,6 +528,7 @@
 				0239E5811BDBEF5C00D85C3C /* ProfileViewController.swift in Sources */,
 				02A11CA71BB9EDC50064AE95 /* MediaObject.swift in Sources */,
 				024231411C30A58200ED7E1B /* Thread.swift in Sources */,
+				027C340D1C5562A800D86F0F /* AuthViewController.swift in Sources */,
 				02D72E8D1BD0929B00EC115E /* User.swift in Sources */,
 				02069E081C114E68007E18EB /* CommentsTableViewCell.swift in Sources */,
 				0242313F1C30A18200ED7E1B /* Comment.swift in Sources */,
@@ -519,6 +537,8 @@
 				02F2DA691C16875C00CA1328 /* UIImageExtension.swift in Sources */,
 				027C75C11C509E51008D6DAE /* PostCommentTableViewCell.swift in Sources */,
 				02A11CA01BB9D4CA0064AE95 /* NewsfeedTableViewController.swift in Sources */,
+				027C340B1C55465200D86F0F /* GatekeeperViewController.swift in Sources */,
+				027C34081C55239800D86F0F /* CurrentUser.swift in Sources */,
 				027C75BF1C509AD1008D6DAE /* LeafDetailTableViewController.swift in Sources */,
 				02D0A9181BC349B30018596F /* VideoObject.swift in Sources */,
 				021C900A1BEFF5DD00C79538 /* RootViewController.swift in Sources */,
@@ -529,8 +549,8 @@
 				02A11C9E1BB9D48E0064AE95 /* MediaTableViewCell.swift in Sources */,
 				02A11CA91BB9F1670064AE95 /* AWSContentHelper.swift in Sources */,
 				021C900E1BF0012C00C79538 /* MenuTableViewController.swift in Sources */,
+				027C34041C55178000D86F0F /* LoginViewController.swift in Sources */,
 				027C34021C53392300D86F0F /* MediaUploadViewController.swift in Sources */,
-				026AC2B61BB0ECF1005F8E81 /* ViewController.swift in Sources */,
 				023B03811C150853003497FB /* MediaOverlayView.swift in Sources */,
 				02069E061C114E5C007E18EB /* MediaDescriptionTableViewCell.swift in Sources */,
 				027E31081BA2780C001FCF70 /* AppDelegate.swift in Sources */,

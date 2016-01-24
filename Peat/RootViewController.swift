@@ -19,10 +19,8 @@ class RootViewController: UIViewController {
   
     override func viewDidLoad() {
         super.viewDidLoad()
-      
       configureContainers()
-      SocketService.sharedService.configureSocket()
-      
+//      SocketService.sharedService.configureSocket()
         // Do any additional setup after loading the view.
     }
 

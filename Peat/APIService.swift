@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import KeychainSwift
 
 typealias APICallback = ((AnyObject?, NSError?) -> ())
 
@@ -31,9 +30,10 @@ class APIService: NSObject {
   let baseURL = "http://localhost:3000"
   #endif
   
-    var authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1NjkyODgwOTNhODUxZmJmOTYwNWY1YmEiLCJleHAiOjE0NTMwNDg0Njg0OTl9.OBug6yJP2AaGOIph4wEfx363hFHS_BRKSLXzYrVGOns"
+    var authToken: String? {
+      return CurrentUser.info.token()
+    }
     var apiURL: String { return "\(baseURL)/" }
-    let keychain = KeychainSwift()
     private let api_pw = "fartpoop"
   
     class var sharedService: APIService {
@@ -86,8 +86,10 @@ class APIService: NSObject {
       request.addValue("Basic", forHTTPHeaderField: "auth_type")
       //add username and password params to body
     case .Token:
+      if let token = authToken {
         request.addValue("Token", forHTTPHeaderField: "auth_type")
-        request.addValue(authToken, forHTTPHeaderField: "token")
+        request.addValue(token, forHTTPHeaderField: "token")
+      }
     }
     
     let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
