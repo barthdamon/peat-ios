@@ -288,6 +288,17 @@
                                             <action selector="saveButtonPressed:" destination="u9J-yl-I1T" eventType="touchUpInside" id="v5O-HZ-GdN"/>
                                         </connections>
                                     </button>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nEw-ic-wLJ">
+                                        <rect key="frame" x="545" y="46" width="48" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="Zjg-rF-Gbc"/>
+                                            <constraint firstAttribute="width" constant="48" id="zci-1l-c18"/>
+                                        </constraints>
+                                        <state key="normal" title="Cancel"/>
+                                        <connections>
+                                            <action selector="cancelButtonPressed:" destination="u9J-yl-I1T" eventType="touchUpInside" id="aZS-Cn-h4Q"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -296,6 +307,8 @@
                                     <constraint firstItem="BTd-ef-NRq" firstAttribute="top" secondItem="J1F-o6-7ir" secondAttribute="top" constant="8" id="3Dw-zx-s8U"/>
                                     <constraint firstItem="C6B-Zw-agW" firstAttribute="leading" secondItem="aFy-zm-ufg" secondAttribute="trailing" constant="8" id="8C8-41-G9U"/>
                                     <constraint firstItem="a2R-97-0fD" firstAttribute="top" secondItem="J1F-o6-7ir" secondAttribute="top" constant="8" id="Hfi-CB-TOE"/>
+                                    <constraint firstItem="nEw-ic-wLJ" firstAttribute="top" secondItem="a2R-97-0fD" secondAttribute="bottom" constant="8" id="Iuk-sg-2Os"/>
+                                    <constraint firstAttribute="trailing" secondItem="nEw-ic-wLJ" secondAttribute="trailing" constant="7" id="MG9-NB-U18"/>
                                     <constraint firstItem="aFy-zm-ufg" firstAttribute="leading" secondItem="J1F-o6-7ir" secondAttribute="leading" constant="8" id="O28-mC-5NO"/>
                                     <constraint firstAttribute="trailing" secondItem="a2R-97-0fD" secondAttribute="trailing" constant="8" id="PSz-Wu-3oi"/>
                                     <constraint firstAttribute="bottom" secondItem="aFy-zm-ufg" secondAttribute="bottom" constant="8" id="Q9O-gp-0OO"/>
@@ -341,6 +354,7 @@
                     <tabBarItem key="tabBarItem" title="Item" id="U7K-0o-hbc"/>
                     <navigationItem key="navigationItem" id="Dny-7G-ghU"/>
                     <connections>
+                        <outlet property="cancelButton" destination="nEw-ic-wLJ" id="U0S-hJ-PoU"/>
                         <outlet property="saveButton" destination="a2R-97-0fD" id="Lnr-cq-yMM"/>
                         <segue destination="sy4-pZ-XUR" kind="presentation" identifier="leafDrilldown" id="YFv-bi-nzi"/>
                     </connections>

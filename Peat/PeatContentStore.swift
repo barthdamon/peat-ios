@@ -46,11 +46,13 @@ struct TreeStore {
   
   func treeParams() -> jsonObject {
     if let leaves = self.currentLeaves, name = self.activityName {
-      var leafParams: Array<jsonObject> = []
+      var updates: Array<jsonObject> = []
+      var removals: Array<jsonObject> = []
       for leaf in leaves {
-        leafParams.append(leaf.params())
+        //future optimization can be only update leaves that NEED updating
+        leaf.deleted ? removals.append(leaf.params()) : updates.append(leaf.params())
       }
-      let params: jsonObject = ["activityName" : name, "leaves": leafParams]
+      let params: jsonObject = ["activityName" : name, "updated" : updates, "removed" : removals]
       print("PARAMS FOR TREE SAVE: \(params)")
       return params
     } else {

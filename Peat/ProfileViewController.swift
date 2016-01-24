@@ -10,16 +10,13 @@ import UIKit
 
 class ProfileViewController: UIViewController, ViewControllerWithMenu {
 
-    var sidebarClient: SideMenuClient?
-  var changesPresent: Bool = false {
-    didSet {
-      self.saveButton.hidden = false
-    }
-  }
+  var sidebarClient: SideMenuClient?
+  var changesPresent: Bool = false
   
   @IBOutlet weak var saveButton: UIButton!
+  @IBOutlet weak var cancelButton: UIButton!
   
-  
+  var treeController: TreeViewController?
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +49,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
       if segue.identifier == "treeViewEmbed" {
         if let vc = segue.destinationViewController as? TreeViewController {
           vc.profileDelegate = self
+          self.treeController = vc
         }
       }
     }
@@ -59,6 +57,8 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
   func changesMade() {
     if !changesPresent {
       changesPresent = true
+      self.saveButton.hidden = false
+      self.cancelButton.hidden = true
     }
   }
 
@@ -80,11 +80,22 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
     PeatContentStore.sharedStore.syncTreeChanges({ (success) in
       if success {
         alertShow(self, alertText: "Success", alertMessage: "Tree Saved Successfully")
-        self.changesPresent = false
-        self.saveButton.hidden = true
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+          self.saveButton.hidden = true
+          self.cancelButton.hidden = true
+          self.changesPresent = false
+        })
       } else {
         alertShow(self, alertText: "Error", alertMessage: "Tree Save Unsuccessful")
       }
     })
   }
+  
+  @IBAction func cancelButtonPressed(sender: AnyObject) {
+    treeController?.fetchTreeData()
+    self.changesPresent = false
+    self.cancelButton.hidden = true
+    self.saveButton.hidden = true
+  }
+  
 }

@@ -134,6 +134,12 @@ class TreeViewController: UIViewController, TreeDelegate {
     newLeaf.generateBounds()
     self.profileDelegate?.changesMade()
   }
+  
+  func removeLeafFromView(leaf: Leaf) {
+    if let view = leaf.view {
+      view.removeFromSuperview()
+    }
+  }
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation

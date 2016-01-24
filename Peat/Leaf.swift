@@ -17,6 +17,7 @@ protocol TreeDelegate {
   func drillIntoLeaf(leaf: Leaf)
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer)
   func checkForOverlaps(intruder: Leaf)
+  func removeLeafFromView(leaf: Leaf)
 }
 
 typealias CoordinatePair = (x: CGFloat, y: CGFloat)
@@ -48,6 +49,7 @@ class Leaf: NSObject {
   // Leaf
   var treeDelegate: TreeDelegate?
   var view: UIView?
+  var deleteButton: UIButton?
   var _id: String?
   var leafId: String?
   var activityName: String?
@@ -57,6 +59,7 @@ class Leaf: NSObject {
   var leafDescription: String?
   var movingEnabled: Bool = false
   var brandNew: Bool = false
+  var deleted: Bool = false
   
   var media: Array<MediaObject>? {
     return PeatContentStore.sharedStore.treeStore.mediaForLeaf(self)
@@ -116,7 +119,7 @@ class Leaf: NSObject {
       "layout" : [
         "coordinates" : [
           "x" : self.paramCenter?.x != nil ? String(self.paramCenter!.x) : "",
-          "y" : self.paramCenter?.y != nil ? String(self.paramCenter!.y) : "",
+          "y" : self.paramCenter?.y != nil ? String(self.paramCenter!.y) : ""
         ],
         "connections" : "",
         "groupings" : ""
@@ -235,6 +238,8 @@ class Leaf: NSObject {
       view.layer.shadowRadius = 0
       view.layer.shadowOffset = CGSizeMake(0, 0)
       view.layer.shadowRadius = 0
+      //remove the delete button
+      self.deleteButton?.removeFromSuperview()
     }
   }
   
@@ -248,7 +253,17 @@ class Leaf: NSObject {
       view.layer.shadowRadius = 3.0
       view.layer.shadowOffset = CGSizeMake(7, 7)
       
+      //add a delete button and save it as a var on leaf
+      self.deleteButton = UIButton(frame: CGRectMake(0,0,15,15))
+      deleteButton?.setBackgroundImage(UIImage(named: "cancel"), forState: .Normal)
+      deleteButton?.addTarget(self, action: "deleteButtonPressed", forControlEvents: .TouchUpInside)
+      self.view?.addSubview(self.deleteButton!)
     }
+  }
+  
+  func deleteButtonPressed() {
+    self.deleted = true
+    self.treeDelegate?.removeLeafFromView(self)
   }
   
   
