@@ -54,8 +54,9 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
       }
     }
   
-  func changesMade() {
+  func changesMade(leaf: Leaf) {
     if !changesPresent {
+      PeatContentStore.sharedStore.leafChanged(leaf)
       changesPresent = true
       self.saveButton.hidden = false
       self.cancelButton.hidden = true

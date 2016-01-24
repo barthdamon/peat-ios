@@ -22,6 +22,8 @@ struct TreeStore {
   var selectedLeaf: Leaf?
   var activityName: String?
   
+  var changedLeaves: Set<Leaf>?
+  
   var comments: Array<Comment>?
   
   func mediaForLeaf(leaf: Leaf) -> Array<MediaObject>? {
@@ -45,7 +47,7 @@ struct TreeStore {
   }
   
   func treeParams() -> jsonObject {
-    if let leaves = self.currentLeaves, name = self.activityName {
+    if let leaves = self.changedLeaves, name = self.activityName {
       var updates: Array<jsonObject> = []
       var removals: Array<jsonObject> = []
       for leaf in leaves {
@@ -125,6 +127,15 @@ class PeatContentStore: NSObject {
   //MARK: Helpers
   func setSelectedLeaf(leaf: Leaf) {
     self.treeStore.selectedLeaf = leaf
+  }
+  
+  func leafChanged(leaf: Leaf) {
+    if let _ = self.treeStore.changedLeaves {
+      self.treeStore.changedLeaves!.insert(leaf)
+    } else {
+      self.treeStore.changedLeaves = Set()
+      self.treeStore.changedLeaves!.insert(leaf)
+    }
   }
   
   func addLeafToStore(leaf: Leaf) {

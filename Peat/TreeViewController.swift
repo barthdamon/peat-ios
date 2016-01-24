@@ -72,7 +72,7 @@ class TreeViewController: UIViewController, TreeDelegate {
       self.scrollView.bringSubviewToFront(view)
       let center = sender.locationInView(self.scrollView)
       leaf.view?.center = center
-      self.profileDelegate?.changesMade()
+      self.profileDelegate?.changesMade(leaf)
     }
     //allow the leaf to move with the gesture until the gesture is finished, then place the leaf and remove the shadow
   }
@@ -132,12 +132,13 @@ class TreeViewController: UIViewController, TreeDelegate {
     print("SENDER: \(center)")
     let newLeaf = Leaf.initFromTree(center, delegate: self)
     newLeaf.generateBounds()
-    self.profileDelegate?.changesMade()
+    self.profileDelegate?.changesMade(newLeaf)
   }
   
   func removeLeafFromView(leaf: Leaf) {
     if let view = leaf.view {
       view.removeFromSuperview()
+      self.profileDelegate?.changesMade(leaf)
     }
   }
     // MARK: - Navigation
