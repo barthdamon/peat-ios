@@ -60,41 +60,6 @@ class MediaTableViewCell: UITableViewCell, UITableViewDataSource, UITableViewDel
     }
   }
   
-//  func togglePlaystate() {
-//    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-//      self.moviePlayer?.play()
-//      self.videoOverlayView?.hidden = true
-//      self.videoOverlayView?.removeFromSuperview()
-//    })
-//  }
-  
-//  func configureCell(object: MediaObject) {
-//    if let url = object.url {
-//
-//      if object is PhotoObject {
-//        if self.mediaImage == nil {
-//          if let object = object as? PhotoObject {
-//            if let thumbnail = object.thumbnail {
-//              configureMediaViewWithImage(thumbnail)
-//            } else {
-//              if let data = NSData(contentsOfURL: url), image = UIImage(data: data) {
-//                self.mediaImage = image
-//                object.thumbnail = image
-//                configureMediaViewWithImage(image)
-//              }
-//            }
-//          }
-//        }
-//        
-//      } else if object is VideoObject {
-//        self.videoPath = url
-//        configureMediaViewWithVideo(url)
-//      }
-//      
-//    }
-//  }
-
-  
   //MARK: Comment Section
   override func setSelected(selected: Bool, animated: Bool) {
     super.setSelected(selected, animated: animated)

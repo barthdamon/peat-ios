@@ -11,6 +11,15 @@ import UIKit
 class ProfileViewController: UIViewController, ViewControllerWithMenu {
 
     var sidebarClient: SideMenuClient?
+  var changesPresent: Bool = false {
+    didSet {
+      self.saveButton.hidden = false
+    }
+  }
+  
+  @IBOutlet weak var saveButton: UIButton!
+  
+  
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,13 +54,13 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
           vc.profileDelegate = self
         }
       }
-      
-//      if segue.identifier == "leafDrilldown" {
-//        if let vc = segue.destinationViewController as? LeafDetailViewController {
-//          vc.leaf = self.selectedLeaf
-//        }
-//      }
     }
+  
+  func changesMade() {
+    if !changesPresent {
+      changesPresent = true
+    }
+  }
 
   
   //MARK: Sidebar
@@ -67,4 +76,15 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
     sidebarClient?.configureMenuSwipes()
   }
 
+  @IBAction func saveButtonPressed(sender: AnyObject) {
+    PeatContentStore.sharedStore.syncTreeChanges({ (success) in
+      if success {
+        alertShow(self, alertText: "Success", alertMessage: "Tree Saved Successfully")
+        self.changesPresent = false
+        self.saveButton.hidden = true
+      } else {
+        alertShow(self, alertText: "Error", alertMessage: "Tree Save Unsuccessful")
+      }
+    })
+  }
 }

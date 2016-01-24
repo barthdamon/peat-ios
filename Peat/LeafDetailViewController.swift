@@ -106,8 +106,7 @@ class LeafDetailViewController: UIViewController {
   }
   
   @IBAction func returnButtonPressed(sender: AnyObject) {
-    self.dismissViewControllerAnimated(true) { () -> Void in
-    }
+    self.dismissViewControllerAnimated(true, completion: nil)
   }
   
  }

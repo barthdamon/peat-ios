@@ -39,6 +39,9 @@ class Leaf: NSObject {
   // Unique Drawing Variables
   var previousCenter: CGPoint?
   var center: CGPoint?
+  var paramCenter: CGPoint? {
+    return self.view != nil ? self.view!.center : center
+  }
   var connections: Array<LeafConnection>?
   var groupings: Array<String>?
   
@@ -112,8 +115,8 @@ class Leaf: NSObject {
       "leafId" : self.leafId!,
       "layout" : [
         "coordinates" : [
-          "x" : self.center?.x != nil ? String(self.center!.x) : "",
-          "y" : self.center?.y != nil ? String(self.center!.y) : "",
+          "x" : self.paramCenter?.x != nil ? String(self.paramCenter!.x) : "",
+          "y" : self.paramCenter?.y != nil ? String(self.paramCenter!.y) : "",
         ],
         "connections" : "",
         "groupings" : ""

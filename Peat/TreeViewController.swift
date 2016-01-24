@@ -59,13 +59,6 @@ class TreeViewController: UIViewController, TreeDelegate {
     scrollView.contentSize.width = 1000
   }
   
-  func setChangesMade() {
-    if !changesMade {
-      changesMade = true
-//      self.saveButton.hidden = false
-    }
-  }
-  
   func addLeafToScrollView(leaf: Leaf) {
     if let view = leaf.view {
       self.scrollView.addSubview(view)
@@ -76,10 +69,10 @@ class TreeViewController: UIViewController, TreeDelegate {
   
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer) {
     if let view = leaf.view {
-      setChangesMade()
       self.scrollView.bringSubviewToFront(view)
       let center = sender.locationInView(self.scrollView)
       leaf.view?.center = center
+      self.profileDelegate?.changesMade()
     }
     //allow the leaf to move with the gesture until the gesture is finished, then place the leaf and remove the shadow
   }
@@ -115,15 +108,11 @@ class TreeViewController: UIViewController, TreeDelegate {
   func fetchTreeData() {
     //right now it redraws every time... no harm in that
     //In the future get the data for the selected user and the selected activity
-    PeatContentStore.sharedStore.getTreeData("Snowboarding", delegate: self){ (res, err) -> () in
-      if let e = err {
-        print("ERROR: \(e)")
-        //show error view
-      } else {
-//        if let leaves = res as? Array<Leaf> {
-//          self.leaves = leaves
-//        }
+    PeatContentStore.sharedStore.getTreeData(self){ (success) -> () in
+      if success {
         self.displayLeaves()
+      } else {
+        //show error
       }
     }
   }
@@ -143,7 +132,7 @@ class TreeViewController: UIViewController, TreeDelegate {
     print("SENDER: \(center)")
     let newLeaf = Leaf.initFromTree(center, delegate: self)
     newLeaf.generateBounds()
-    setChangesMade()
+    self.profileDelegate?.changesMade()
   }
     // MARK: - Navigation
 

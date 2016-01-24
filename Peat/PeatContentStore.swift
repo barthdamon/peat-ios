@@ -20,6 +20,7 @@ struct TreeStore {
   var currentLeaves: Set<Leaf>?
   var currentMediaObjects: Set<MediaObject>?
   var selectedLeaf: Leaf?
+  var activityName: String?
   
   var comments: Array<Comment>?
   
@@ -43,6 +44,20 @@ struct TreeStore {
     self.selectedLeaf = nil
   }
   
+  func treeParams() -> jsonObject {
+    if let leaves = self.currentLeaves, name = self.activityName {
+      var leafParams: Array<jsonObject> = []
+      for leaf in leaves {
+        leafParams.append(leaf.params())
+      }
+      let params: jsonObject = ["activityName" : name, "leaves": leafParams]
+      print("PARAMS FOR TREE SAVE: \(params)")
+      return params
+    } else {
+      return ["":""]
+    }
+  }
+  
 }
 
 typealias jsonObject = Dictionary<String, AnyObject>
@@ -64,22 +79,39 @@ class PeatContentStore: NSObject {
     return _sharedStore
   }
   
-  func getTreeData(activityName: String, delegate: TreeDelegate?, callback: APICallback) {
-    API.get(nil, authType: .Token, url: "tree/\(activityName)"){ (res, err) -> () in
-      if let e = err {
-        print("Error:\(e)")
-        callback(nil, e)
-      } else {
-        if let json = res as? Dictionary<String, AnyObject> {
-          print("TREE DATA: \(json)")
-          if let treeInfo = json["treeInfo"] as? jsonObject, leaves = treeInfo["leaves"] as? Array<jsonObject> {
-            //reset the store, data for new tree incoming
-            self.treeStore.resetStore()
-            for leaf in leaves {
-              self.treeStore.currentLeaves!.insert(Leaf.initWithJson(leaf, delegate: delegate))
+  func getTreeData(delegate: TreeDelegate?, callback: (Bool) -> () ) {
+    self.treeStore.activityName = "Snowboarding"
+    if let activityName = treeStore.activityName {
+      API.get(nil, authType: .Token, url: "tree/\(activityName)"){ (res, err) -> () in
+        if let e = err {
+          print("Error:\(e)")
+          callback(false)
+        } else {
+          if let json = res as? Dictionary<String, AnyObject> {
+            print("TREE DATA: \(json)")
+            if let treeInfo = json["treeInfo"] as? jsonObject, leaves = treeInfo["leaves"] as? Array<jsonObject> {
+              //reset the store, data for new tree incoming
+              self.treeStore.resetStore()
+              for leaf in leaves {
+                self.treeStore.currentLeaves!.insert(Leaf.initWithJson(leaf, delegate: delegate))
+              }
+              callback(true)
             }
-            callback(self.treeStore.currentLeaves, nil)
           }
+        }
+      }
+    }
+  }
+  
+  func syncTreeChanges(callback: (Bool) -> ()) {
+
+    if let name = treeStore.activityName {
+      API.put(treeStore.treeParams(), authType: .Token, url: "tree/\(name)/update"){ (res, err) -> () in
+        if let e = err {
+          print("Error:\(e)")
+          callback(false)
+        } else {
+          callback(true)
         }
       }
     }
