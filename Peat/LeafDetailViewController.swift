@@ -37,6 +37,7 @@ class LeafDetailViewController: UIViewController {
         self.containerTableView?.reloadData()
       }
     }
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "newMediaAdded", name: "newMediaPostSuccessful", object: nil)
   }
   
   func configureTitleView() {
@@ -54,15 +55,29 @@ class LeafDetailViewController: UIViewController {
     }
   }
   
+  func newMediaAdded() {
+    setValuesOnLeaf()
+    saveLeaf()
+  }
+  
+  func saveLeaf() {
+    self.leaf?.save(){ (success) in
+      dispatch_async(dispatch_get_main_queue(), { () -> Void in
+        if success {
+          self.editButton.setTitle("Edit", forState: UIControlState.Normal)
+//          alertShow(self, alertText: "Success", alertMessage: "Leaf saved sucessfully")
+        } else {
+          self.editButton.setTitle("Edit", forState: UIControlState.Normal)
+//          alertShow(self, alertText: "Error", alertMessage: "Leaf save unsuccessful")
+        }
+      })
+    }
+  }
+  
   func setValuesOnLeaf() {
     //actually save the values of all of the fields now....
     self.leaf?.title = self.leafTitleLabel.text
-    self.leaf?.save(){ (success) in
-      if success {
-        self.editButton.setTitle("Edit", forState: UIControlState.Normal)
-        alertShow(self, alertText: "Success", alertMessage: "Leaf saved sucessfully")
-      }
-    }
+    saveLeaf()
   }
   
   @IBAction func editButtonPressed(sender: AnyObject) {
@@ -75,9 +90,9 @@ class LeafDetailViewController: UIViewController {
       self.titleSaveButton.hidden = false
     }
   }
+  
   @IBAction func textFieldEditDone(sender: AnyObject) {
     titleEditField.resignFirstResponder()
-    self.leaf?.title = self.titleEditField.text
     self.leafTitleLabel.text = self.titleEditField.text
     self.titleEditField.hidden = true
     self.titleSaveButton.hidden = true

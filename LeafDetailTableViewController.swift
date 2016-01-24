@@ -54,7 +54,8 @@ class LeafDetailTableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of rows
       if let leaf = leaf, media = leaf.media {
         self.mediaOnLoad = media
-        return media.count
+//        return media.count
+        return 1
       } else {
         return 0
       }

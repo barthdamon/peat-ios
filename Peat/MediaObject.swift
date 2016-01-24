@@ -20,7 +20,7 @@ class MediaObject: NSObject {
   var timestamp: Int?
   var url: NSURL? {
     didSet {
-      self.urlString = String(url)
+      self.urlString = String(url!)
     }
   }
   var urlString: String?
@@ -122,8 +122,8 @@ class MediaObject: NSObject {
           if err != nil {
             print(err)
           } else {
-            if let mediaId = self.mediaId {
-              self.url = NSURL(string: "https://s3.amazonaws.com/peat-assets/\(mediaId)")
+            if let mediaId = self.mediaId, url = NSURL(string: "https://s3.amazonaws.com/peat-assets/\(mediaId)") {
+              self.url = url
               self.sendToServer()
             }
           }

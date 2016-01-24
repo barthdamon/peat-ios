@@ -13,10 +13,10 @@ func alertShow(vc: UIViewController, alertText :String, alertMessage :String) {
   let alert = UIAlertController(title: alertText, message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
   
   alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
-    
-    vc.dismissViewControllerAnimated(true, completion: nil)
-    
+    alert.dismissViewControllerAnimated(true, completion: nil)
   }))
   //can add another action (maybe cancel, here)
-  vc.presentViewController(alert, animated: true, completion: nil)
+  dispatch_async(dispatch_get_main_queue(), { () -> Void in
+    vc.presentViewController(alert, animated: true, completion: nil)
+  })
 }

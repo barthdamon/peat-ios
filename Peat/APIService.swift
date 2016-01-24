@@ -40,7 +40,7 @@ class APIService: NSObject {
       return _sharedService
     }
   
-  func get(params: [ String : String ]?, authType: HTTPRequestAuthType = .Token, url: String, callback: APICallback) {
+  func get(params: [ String : AnyObject ]?, authType: HTTPRequestAuthType = .Token, url: String, callback: APICallback) {
     request("GET", params: params, authType: authType, url: url, callback: callback)
   }
   
@@ -48,11 +48,11 @@ class APIService: NSObject {
     request("POST", params: params, authType: authType, url: url, callback: callback)
   }
   
-  func put(params: [ String : String ]?, authType: HTTPRequestAuthType = .Token, url: String, callback: APICallback) {
+  func put(params: [ String : AnyObject ]?, authType: HTTPRequestAuthType = .Token, url: String, callback: APICallback) {
     request("PUT", params: params, authType: authType, url: url, callback: callback)
   }
   
-  func delete(params: [ String : String ]?, authType: HTTPRequestAuthType = .Token, url: String, callback: APICallback) {
+  func delete(params: [ String : AnyObject ]?, authType: HTTPRequestAuthType = .Token, url: String, callback: APICallback) {
     request("DELETE", params: params, authType: authType, url: url, callback: callback)
   }
   

@@ -136,7 +136,15 @@ class Leaf: NSObject {
         }
       })
     } else {
-//      API.put
+      API.put(self.params(), url: "leaf/update", callback: { (res, err) in
+        if let e = err {
+          print("Error updating leaf \(e)")
+          callback(false)
+        } else {
+          print("Leaf created: \(res)")
+          callback(true)
+        }
+      })
     }
   }
   
@@ -171,7 +179,7 @@ class Leaf: NSObject {
           print("error: \(e)")
         } else {
           if let json = res as? jsonObject {
-
+            print("LEAF DATA: \(json)")
             if let witnesses = json["witnesses"] as? Array<jsonObject> {
               print(witnesses)
               //add witnesses to store
