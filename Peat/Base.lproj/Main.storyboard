@@ -1220,7 +1220,6 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="logInButtonPressed:" destination="zkr-ks-dMV" eventType="touchUpInside" id="7au-vF-UIw"/>
                                             <action selector="switchToSignUpButtonPressed:" destination="zkr-ks-dMV" eventType="touchUpInside" id="wt3-am-Fdo"/>
                                         </connections>
                                     </button>
@@ -1248,7 +1247,6 @@
                                         </state>
                                         <connections>
                                             <action selector="logInButtonPressed:" destination="zkr-ks-dMV" eventType="touchUpInside" id="I1I-WL-zcW"/>
-                                            <action selector="signUpButtonPressed:" destination="zkr-ks-dMV" eventType="touchUpInside" id="ruF-eL-XH7"/>
                                         </connections>
                                     </button>
                                 </subviews>

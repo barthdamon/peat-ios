@@ -57,6 +57,7 @@ class CurrentUser: NSObject {
   }
   
   func newUser(params: jsonObject, callback: (Bool) -> ()) {
+    print("SENDING PARAMS: \(params)")
     API.post(params, authType: .Basic, url: "new"){ (res, err) in
       if let e = err {
         print("Error creating user: \(e)")
@@ -72,6 +73,7 @@ class CurrentUser: NSObject {
   }
   
   func logIn(params:jsonObject, callback: (Bool) -> ()) {
+    print("SENDING PARAMS: \(params)")
     API.post(params, authType: .Basic, url: "login"){ (res, err) in
       if let e = err {
         print("Error creating user: \(e)")

@@ -23,6 +23,9 @@ class AuthViewController: UIViewController {
   @IBOutlet weak var loginEmailUsernameTextField: UITextField!
   @IBOutlet weak var loginPasswordTextField: UITextField!
   
+  var logoImageViewReference: UIImageView?
+  var lifted = false
+  
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -35,10 +38,10 @@ class AuthViewController: UIViewController {
   }
   
   func addGestureRecognizers() {
-    let tapRecognizer = UITapGestureRecognizer(target: self, action: "resignResponders")
-    tapRecognizer.numberOfTapsRequired = 1
-    tapRecognizer.numberOfTouchesRequired = 1
-    self.view.addGestureRecognizer(tapRecognizer)
+//    let tapRecognizer = UITapGestureRecognizer(target: self, action: "resignResponders")
+//    tapRecognizer.numberOfTapsRequired = 1
+//    tapRecognizer.numberOfTouchesRequired = 1
+//    self.view.addGestureRecognizer(tapRecognizer)
   }
   
   func resignResponders() {
@@ -50,27 +53,43 @@ class AuthViewController: UIViewController {
   }
   
   func keyboardWillShow(notification: NSNotification) {
-    if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+    if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() where !lifted {
       //      let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+      self.logoImageViewReference = self.logoImageView
       self.logoImageView.removeFromSuperview()
       let height = keyboardSize.height
       self.signUpOptionsView.frame.origin.y -= height
       self.logInOptionsView.frame.origin.y -= height
+      lifted = true
     }
   }
   
   func keyboardWillHide(notification: NSNotification) {
-    if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+//    if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
       //      let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
-      let height = keyboardSize.height
-      self.signUpOptionsView.frame.origin.y += height
-      self.logInOptionsView.frame.origin.y -= height
-      self.logoImageView.hidden = false
-    }
+//      let height = keyboardSize.height
+//      self.signUpOptionsView.frame.origin.y += height
+//      self.logInOptionsView.frame.origin.y -= height
+//      if let ref = self.logoImageViewReference {
+//        self.view.addSubview(ref)
+//        let leftConstraint = NSLayoutConstraint(item: ref, attribute: NSLayoutAttribute.Leading, relatedBy: NSLayoutRelation.Equal, toItem: ref, attribute: NSLayoutAttribute.LeadingMargin, multiplier: 1, constant: 89)
+//        let rightConstraint = NSLayoutConstraint(item: ref, attribute: NSLayoutAttribute.Trailing, relatedBy: NSLayoutRelation.Equal, toItem: ref, attribute: NSLayoutAttribute.TrailingMargin, multiplier: 1, constant: 89)
+////        let topConstraint = NSLayoutConstraint(item: ref, attribute: NSLayoutAttribute.Top, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.Top, multiplier: 1, constant: 0)
+//        let heightConstraint = NSLayoutConstraint(item: ref, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1, constant: 273)
+//        
+//        let bottomConstraintSignIn = NSLayoutConstraint(item: self.signUpOptionsView, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: ref, attribute: NSLayoutAttribute.Top, multiplier: 1, constant: 8)
+//        let bottomConstraintLogIn = NSLayoutConstraint(item: self.logInOptionsView, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: ref, attribute: NSLayoutAttribute.Top, multiplier: 1, constant: 8)
+////        let constraints = [heightConstraint, leftConstraint, rightConstraint]
+////        ref.addConstraints(constraints)
+//        self.logInOptionsView.addConstraint(bottomConstraintLogIn)
+//        self.signUpOptionsView.addConstraint(bottomConstraintSignIn)
+//        self.view.addConstraints([leftConstraint, rightConstraint])
+//      }
+//    }
   }
   
   func checkSignUpFields() -> jsonObject? {
-    if let first = self.firstNameTextField.text, last = self.lastNameTextField.text, username = self.usernameTextField.text, email = self.emailTextField.text, password = self.passwordTextField.text {
+    if let first = self.firstNameTextField.text, last = self.lastNameTextField.text, username = self.usernameTextField.text, email = self.emailTextField.text, password = self.passwordTextField.text where first != "" && last != "" && username != "" && email != "" && password != "" {
       return ["first" : first, "last" : last, "username" : username, "email" : email, "password" : password]
     } else {
       alertShow(self, alertText: "Error", alertMessage: "Missing Fields")
@@ -78,14 +97,27 @@ class AuthViewController: UIViewController {
     }
   }
   
+  func checkLogInFields() -> jsonObject? {
+    if let emailUsername = self.loginEmailUsernameTextField.text, password = self.loginPasswordTextField.text where emailUsername != "" && password != "" {
+      return ["emailUsername" : emailUsername, "password" : password]
+    } else {
+      alertShow(self, alertText: "Error", alertMessage: "Missing Fields")
+      return nil
+    }
+  }
+  
   @IBAction func signUpButtonPressed(sender: AnyObject) {
-    resignResponders()
+//    resignResponders()
     if let fields = checkSignUpFields() {
       CurrentUser.info.newUser(fields){ (success) in
         if success {
-          self.dismissViewControllerAnimated(true, completion: nil)
+          print("authentication successful")
+//          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+//            self.resignResponders()
+//            self.dismissViewControllerAnimated(true, completion: nil)
+//          })
         } else {
-          alertShow(self, alertText: "Error", alertMessage: "Login Unsuccessful")
+          alertShow(self, alertText: "Error", alertMessage: "Sign Up Unsuccessful")
         }
       }
     }
@@ -102,7 +134,20 @@ class AuthViewController: UIViewController {
   }
   
   @IBAction func logInButtonPressed(sender: AnyObject) {
-    
+//    resignResponders()
+    if let fields = checkLogInFields() {
+      CurrentUser.info.logIn(fields){ (success) in
+        if success {
+          print("authentication successful")
+//          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+//            self.resignResponders()
+//            self.dismissViewControllerAnimated(true, completion: nil)
+//          })
+        } else {
+          alertShow(self, alertText: "Error", alertMessage: "Login Unsuccessful")
+        }
+      }
+    }
   }
 
 
