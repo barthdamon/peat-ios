@@ -51,6 +51,7 @@ class Leaf: NSObject {
   var view: UIView?
   var deleteButton: UIButton?
   var _id: String?
+  var user_Id: String?
   var leafId: String?
   var activityName: String?
   var completionStatus: CompletionStatus?
@@ -77,6 +78,7 @@ class Leaf: NSObject {
     let leaf = Leaf()
     leaf.treeDelegate = delegate
     leaf._id = json["_id"] as? String
+    leaf.user_Id = json["user_Id"] as? String
     leaf.leafId = json["leafId"] as? String
     leaf.activityName = json["activityName"] as? String
     if let status = json["completionStatus"] as? String {
@@ -109,6 +111,7 @@ class Leaf: NSObject {
     newLeaf.treeDelegate = delegate
     newLeaf.brandNew = true
     newLeaf.leafId = generateId()
+    newLeaf.user_Id = CurrentUser.info.model?._id
     return newLeaf
   }
   
@@ -116,6 +119,7 @@ class Leaf: NSObject {
     return [
       "activityName" : self.treeDelegate!.getCurrentActivity(),
       "leafId" : self.leafId!,
+      "user_Id" : self.user_Id != nil ? self.user_Id! : "",
       "layout" : [
         "coordinates" : [
           "x" : self.paramCenter?.x != nil ? String(self.paramCenter!.x) : "",
@@ -138,6 +142,7 @@ class Leaf: NSObject {
           callback(false)
         } else {
           print("Leaf created: \(res)")
+          self.brandNew = false
           callback(true)
         }
       })

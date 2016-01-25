@@ -17,7 +17,7 @@ class HomeViewController: UIViewController, ViewControllerWithMenu {
     override func viewDidLoad() {
         super.viewDidLoad()
       
-        // Do any additional setup after loading the view.
+      // Do any additional setup after loading the view.
       initializeSidebar()
       configureNavBar()
       configureMenuSwipes()

@@ -57,7 +57,6 @@ class CurrentUser: NSObject {
   }
   
   func newUser(params: jsonObject, callback: (Bool) -> ()) {
-    print("SENDING PARAMS: \(params)")
     API.post(params, authType: .Basic, url: "new"){ (res, err) in
       if let e = err {
         print("Error creating user: \(e)")
@@ -73,7 +72,6 @@ class CurrentUser: NSObject {
   }
   
   func logIn(params:jsonObject, callback: (Bool) -> ()) {
-    print("SENDING PARAMS: \(params)")
     API.post(params, authType: .Basic, url: "login"){ (res, err) in
       if let e = err {
         print("Error creating user: \(e)")
@@ -92,7 +90,25 @@ class CurrentUser: NSObject {
     keychain.delete("api_authtoken")
   }
   
-  func getProfile() {
+  
+  func fetchProfile(callback: (Bool) -> ()) {
+    API.get(nil, url: "users/profile/") { (res, err) in
+      if let e = err {
+        print("Error fetching user profile: \(e)")
+        callback(false)
+      } else {
+        if let json = res as? jsonObject {
+          print("PROFILE RESPONSE: \(json)")
+          self.model = User.userFromProfile(json)
+          callback(true)
+        } else {
+          callback(false)
+        }
+      }
+    }
+  }
+  
+  func fetchProfileForUser(user_Id: String, callback: (Bool) -> ()) {
     
   }
   

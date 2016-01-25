@@ -50,11 +50,17 @@ struct TreeStore {
     if let leaves = self.changedLeaves, name = self.activityName {
       var updates: Array<jsonObject> = []
       var removals: Array<jsonObject> = []
+      var newLeaves: Array<jsonObject> = []
       for leaf in leaves {
-        //future optimization can be only update leaves that NEED updating
-        leaf.deleted ? removals.append(leaf.params()) : updates.append(leaf.params())
+        if leaf.deleted {
+          removals.append(leaf.params())
+        } else if leaf.brandNew {
+          newLeaves.append(leaf.params())
+        } else {
+          updates.append(leaf.params())
+        }
       }
-      let params: jsonObject = ["activityName" : name, "updated" : updates, "removed" : removals]
+      let params: jsonObject = ["activityName" : name, "newLeaves" : newLeaves, "updated" : updates, "removed" : removals]
       print("PARAMS FOR TREE SAVE: \(params)")
       return params
     } else {

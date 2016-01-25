@@ -13,8 +13,12 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
   var sidebarClient: SideMenuClient?
   var changesPresent: Bool = false
   
+  @IBOutlet weak var usernameLabel: UILabel!
+  @IBOutlet weak var avatarImageView: UIImageView!
+  @IBOutlet weak var nameLabel: UILabel!
   @IBOutlet weak var saveButton: UIButton!
   @IBOutlet weak var cancelButton: UIButton!
+  @IBOutlet weak var currentAbilityLabel: UILabel!
   
   var treeController: TreeViewController?
   
@@ -24,13 +28,25 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
       initializeSidebar()
       configureMenuSwipes()
       configureNavBar()
-
-        // Do any additional setup after loading the view.
+      CurrentUser.info.fetchProfile(){ (success) in
+        if success {
+          self.setupUserProfile()
+        }
+      }
+      
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+  
+    func setupUserProfile() {
+      print("Setting Up User Profile")
+      if let user = CurrentUser.info.model {
+        if let first = user.first, last = user.last, username = user.username {
+          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.nameLabel.text = "\(first) \(last)"
+            self.usernameLabel.text = username
+          })
+        }
+        
+      }
     }
   
     func drillIntoLeaf(leaf: Leaf) {
@@ -55,12 +71,9 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
     }
   
   func changesMade(leaf: Leaf) {
-    if !changesPresent {
-      PeatContentStore.sharedStore.leafChanged(leaf)
-      changesPresent = true
-      self.saveButton.hidden = false
-      self.cancelButton.hidden = true
-    }
+    PeatContentStore.sharedStore.leafChanged(leaf)
+    self.saveButton.hidden = false
+    self.cancelButton.hidden = true
   }
 
   

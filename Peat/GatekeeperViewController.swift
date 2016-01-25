@@ -14,7 +14,7 @@ class GatekeeperViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-      CurrentUser.info.logOut()
+//      CurrentUser.info.logOut()
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "tokenFound", name: "userHasToken", object: nil)
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "needsLogin", name: "noUserTokenFound", object: nil)
       CurrentUser.info.token()
