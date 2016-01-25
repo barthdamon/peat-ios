@@ -88,6 +88,7 @@ class CurrentUser: NSObject {
   
   func logOut() {
     keychain.delete("api_authtoken")
+    NSNotificationCenter.defaultCenter().postNotificationName("userLoggedOut", object: nil, userInfo: nil)
   }
   
   

@@ -11,131 +11,91 @@ import UIKit
 class MenuTableViewController: UITableViewController {
   
   var rootController: RootViewController?
+  
+  var settingsNavItems: Array<String> = ["Log Out"]
+  var notificationItems: Array<String> = ["Example Notification"]
 
+  var activeItems: Array<String>? {
+    didSet {
+      self.tableView.reloadData()
+    }
+  }
+  
     override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+      super.viewDidLoad()
       configureNavBar()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    // MARK: - Table view data source
-
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+      loadNotifications()
     }
   
+  func loadNotifications() {
+    self.activeItems = notificationItems
+  }
+  
+  func loadSettings() {
+    self.activeItems = settingsNavItems
+  }
+  
   func configureNavBar() {
-    let navOptionView = UIView(frame: CGRectMake(-200,0,300,40))
+    let navOptionView = UIView(frame: CGRectMake(-200,0,300,20))
     
-    let newsfeedImage = UIImage(named:"newsfeed.png")
-    let treeImage = UIImage(named:"tree.png")
-    let friendsImage = UIImage(named:"friends.png")
+    let notificationsImage = UIImage(named:"notifications")
+    let settingsImage = UIImage(named:"settings")
     
-    let newsfeedButton:UIButton = UIButton(frame: CGRect(x: 0,y: 0,width: 40, height: 40))
-    newsfeedButton.setBackgroundImage(newsfeedImage, forState: .Normal)
-    newsfeedButton.addTarget(self, action: Selector("showNewsfeed:"), forControlEvents: UIControlEvents.TouchUpInside)
+    let notificationsButton:UIButton = UIButton(frame: CGRect(x: 0,y: -35,width: 80, height: 80))
+    notificationsButton.setBackgroundImage(notificationsImage, forState: .Normal)
+    notificationsButton.addTarget(self, action: Selector("showNotifications:"), forControlEvents: UIControlEvents.TouchUpInside)
     
-    let treeButton:UIButton = UIButton(frame: CGRect(x: 50,y: 0,width: 40, height: 40))
-    treeButton.setBackgroundImage(treeImage, forState: .Normal)
-    treeButton.addTarget(self, action: Selector("showTree:"), forControlEvents: UIControlEvents.TouchUpInside)
+    let settingsButton:UIButton = UIButton(frame: CGRect(x: 50,y: -35,width: 80, height: 80))
+    settingsButton.setBackgroundImage(settingsImage, forState: .Normal)
+    settingsButton.addTarget(self, action: Selector("showSettings:"), forControlEvents: UIControlEvents.TouchUpInside)
     
-    let friendsButton:UIButton = UIButton(frame: CGRect(x: 100,y: 0,width: 40, height: 40))
-    friendsButton.setBackgroundImage(friendsImage, forState: .Normal)
-    friendsButton.addTarget(self, action: Selector("showFriends:"), forControlEvents: UIControlEvents.TouchUpInside)
-    
-    navOptionView.addSubview(newsfeedButton)
-    navOptionView.addSubview(treeButton)
-    navOptionView.addSubview(friendsButton)
-    
+    navOptionView.addSubview(notificationsButton)
+    navOptionView.addSubview(settingsButton)
+
     navOptionView.backgroundColor = UIColor.clearColor()
     self.navigationItem.titleView = navOptionView
     self.navigationController?.navigationBar.barTintColor = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)
   }
   
-  @IBAction func showNewsfeed(sender: AnyObject) {
-    print("Newsfeed Selected")
-    if let tabBar = self.rootController?.mainTabBarController {
-      tabBar.selectedIndex = 0
-      NSNotificationCenter.defaultCenter().postNotificationName("navItemSelected", object: nil, userInfo: nil)
-    }
+  @IBAction func showNotifications(sender: AnyObject) {
+    print("Notifications Selected")
+    loadNotifications()
   }
   
-  @IBAction func showTree(sender: AnyObject) {
-    print("Tree Selected")
-    if let tabBar = self.rootController?.mainTabBarController {
-      tabBar.selectedIndex = 2
-      NSNotificationCenter.defaultCenter().postNotificationName("navItemSelected", object: nil, userInfo: nil)
-    }
+  @IBAction func showSettings(sender: AnyObject) {
+    print("Settings Selected")
+    loadSettings()
   }
   
-  @IBAction func showFriends(sender: AnyObject) {
-    print("Friends Selected")
-    if let tabBar = self.rootController?.mainTabBarController {
-      tabBar.selectedIndex = 1
-      NSNotificationCenter.defaultCenter().postNotificationName("navItemSelected", object: nil, userInfo: nil)
-    }
+  // MARK: - Table view data source
+  
+  override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    // #warning Incomplete implementation, return the number of sections
+    return self.activeItems != nil ? 1 : 0
+  }
+  
+  override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    // #warning Incomplete implementation, return the number of rows
+    return self.activeItems != nil ? self.activeItems!.count : 0
   }
 
-    /*
+  
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
-
-        // Configure the cell...
+        let cell = tableView.dequeueReusableCellWithIdentifier("menuCell", forIndexPath: indexPath)
+        if let activeItems = self.activeItems {
+          cell.textLabel?.text = activeItems[indexPath.row]
+        }
 
         return cell
     }
-    */
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+  override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    if let activeItems = self.activeItems {
+      if activeItems[indexPath.row] == "Log Out" {
+        CurrentUser.info.logOut()
+      }
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
+  }
 
     /*
     // MARK: - Navigation

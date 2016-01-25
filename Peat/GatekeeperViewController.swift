@@ -7,14 +7,19 @@
 //
 
 import UIKit
+import KeychainSwift
 
 class GatekeeperViewController: UIViewController {
+  
+  //NOTE: ONLY FOR DEBUGGING
+  var keychain = KeychainSwift()
   
   var authController: AuthViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//      CurrentUser.info.logOut()
+//      keychain.delete("api_authtoken")
+      NSNotificationCenter.defaultCenter().addObserver(self, selector: "logOutUser", name: "userLoggedOut", object: nil)
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "tokenFound", name: "userHasToken", object: nil)
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "needsLogin", name: "noUserTokenFound", object: nil)
       CurrentUser.info.token()
@@ -28,6 +33,11 @@ class GatekeeperViewController: UIViewController {
   }
   
   func needsLogin() {
+    self.performSegueWithIdentifier("auth", sender: self)
+  }
+  
+  func logOutUser() {
+    self.navigationController?.popToRootViewControllerAnimated(false)
     self.performSegueWithIdentifier("auth", sender: self)
   }
 
