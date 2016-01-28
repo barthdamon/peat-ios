@@ -33,7 +33,9 @@ class GatekeeperViewController: UIViewController {
   }
   
   func needsLogin() {
+    UIView.setAnimationsEnabled(false)
     self.performSegueWithIdentifier("auth", sender: self)
+    UIView.setAnimationsEnabled(true)
   }
   
   func logOutUser() {

@@ -11,9 +11,13 @@ import UIKit
 class MenuTableViewController: UITableViewController {
   
   var rootController: RootViewController?
+  var API = APIService.sharedService
   
   var settingsNavItems: Array<String> = ["Log Out"]
   var notificationItems: Array<String> = ["Example Notification"]
+  
+  var requestUsers: Array<User>?
+  var unconfirmedFriendships: Array<Friendship>?
 
   var activeItems: Array<String>? {
     didSet {
@@ -28,6 +32,28 @@ class MenuTableViewController: UITableViewController {
     }
   
   func loadNotifications() {
+    API.get(nil, url: "mail/requests") { (res, err) -> () in
+      if let e = err {
+        print("Error fetching requests: \(e)")
+      } else {
+        if let json = res as? jsonObject {
+          if let requestUsers = json["requestUsers"] as? Array<jsonObject> {
+            self.requestUsers = Array()
+            for user in requestUsers {
+              self.requestUsers?.append(User.userFromProfile(user))
+            }
+          }
+          
+          if let unconfirmedFriends = json["unconfirmedFriends"] as? Array<jsonObject> {
+            self.unconfirmedFriendships = Array()
+            for friend in unconfirmedFriends {
+              self.unconfirmedFriendships?.append(Friendship.friendFromJson(friend))
+            }
+          }
+          
+        }
+      }
+    }
     self.activeItems = notificationItems
   }
   

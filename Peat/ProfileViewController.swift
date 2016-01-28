@@ -13,6 +13,8 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
   var sidebarClient: SideMenuClient?
   var changesPresent: Bool = false
   
+  var notCurrentUser: User?
+  
   @IBOutlet weak var usernameLabel: UILabel!
   @IBOutlet weak var avatarImageView: UIImageView!
   @IBOutlet weak var nameLabel: UILabel!
@@ -28,24 +30,33 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
       initializeSidebar()
       configureMenuSwipes()
       configureNavBar()
-      CurrentUser.info.fetchProfile(){ (success) in
-        if success {
-          self.setupUserProfile()
+      if let user = notCurrentUser {
+        setupUserProfile(user)
+      } else {
+        CurrentUser.info.fetchProfile(){ (success) in
+          if success {
+            if let user = CurrentUser.info.model {
+              self.setupUserProfile(user)
+            }
+          }
         }
       }
-      
     }
   
-    func setupUserProfile() {
+  func setupUserProfile(user: User) {
       print("Setting Up User Profile")
-      if let user = CurrentUser.info.model {
-        if let first = user.first, last = user.last, username = user.username {
-          dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            self.nameLabel.text = "\(first) \(last)"
-            self.usernameLabel.text = username
-          })
-        }
+      if let first = user.first, last = user.last, username = user.username {
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+          self.nameLabel.text = "\(first) \(last)"
+          self.usernameLabel.text = username
+        })
         
+        user.generateAvatarImage({ (image) -> () in
+          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.avatarImageView.image = image
+            self.avatarImageView.contentMode = .ScaleAspectFit
+          })
+        })
       }
     }
   
@@ -66,6 +77,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
         if let vc = segue.destinationViewController as? TreeViewController {
           vc.profileDelegate = self
           self.treeController = vc
+          vc.viewing = self.notCurrentUser != nil ? self.notCurrentUser! : CurrentUser.info.model
         }
       }
     }

@@ -12,11 +12,15 @@ class FriendTableViewCell: UITableViewCell {
   
   var friend: User?
   
+  @IBOutlet weak var avatarImageView: UIImageView!
   @IBOutlet weak var usernameLabel: UILabel!
   @IBOutlet weak var nameLabel: UILabel!
   
     override func awakeFromNib() {
         super.awakeFromNib()
+        friend?.generateAvatarImage({ (image) -> () in
+          self.avatarImageView.image = image
+        })
         // Initialization code
     }
 

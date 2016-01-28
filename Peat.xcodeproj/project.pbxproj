@@ -16,6 +16,7 @@
 		021C900E1BF0012C00C79538 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021C900D1BF0012C00C79538 /* MenuTableViewController.swift */; };
 		021C90101BF0135B00C79538 /* SideMenuClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021C900F1BF0135B00C79538 /* SideMenuClient.swift */; };
 		023355C81BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023355C71BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift */; };
+		0234BEFB1C59CBB40008BA89 /* Friendship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0234BEFA1C59CBB40008BA89 /* Friendship.swift */; };
 		0239E5811BDBEF5C00D85C3C /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0239E5801BDBEF5C00D85C3C /* ProfileViewController.swift */; };
 		0239E5BD1BDDA41B00D85C3C /* TreeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0239E5BC1BDDA41B00D85C3C /* TreeViewController.swift */; };
 		023B03811C150853003497FB /* MediaOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023B03801C150853003497FB /* MediaOverlayView.swift */; };
@@ -80,6 +81,7 @@
 		021C900D1BF0012C00C79538 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		021C900F1BF0135B00C79538 /* SideMenuClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuClient.swift; sourceTree = "<group>"; };
 		023355C71BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSearchResultTableViewCell.swift; sourceTree = "<group>"; };
+		0234BEFA1C59CBB40008BA89 /* Friendship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Friendship.swift; sourceTree = "<group>"; };
 		0239E5801BDBEF5C00D85C3C /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		0239E5BC1BDDA41B00D85C3C /* TreeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TreeViewController.swift; sourceTree = "<group>"; };
 		023B03801C150853003497FB /* MediaOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaOverlayView.swift; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 				0242313E1C30A18200ED7E1B /* Comment.swift */,
 				02EE26951BE181D6006DAE81 /* Leaf.swift */,
 				024231401C30A58200ED7E1B /* Thread.swift */,
+				0234BEFA1C59CBB40008BA89 /* Friendship.swift */,
 			);
 			name = DataObjects;
 			sourceTree = "<group>";
@@ -525,6 +528,7 @@
 				021C900C1BEFFF7000C79538 /* HomeViewController.swift in Sources */,
 				021C1BF51C4F33B000FDEFED /* LeafView.swift in Sources */,
 				02D0A91C1BC35ACE0018596F /* PeatContentFactory.swift in Sources */,
+				0234BEFB1C59CBB40008BA89 /* Friendship.swift in Sources */,
 				0239E5811BDBEF5C00D85C3C /* ProfileViewController.swift in Sources */,
 				02A11CA71BB9EDC50064AE95 /* MediaObject.swift in Sources */,
 				024231411C30A58200ED7E1B /* Thread.swift in Sources */,

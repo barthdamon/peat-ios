@@ -23,15 +23,17 @@ class User: NSObject {
   var contact: String?
   
   //Other
-  var friendIds: Array<String>?
-  var followingIds: Array<String>?
+  var avatarImage: UIImage?
+  var friends: Array<User>?
+  var outstandingFriendRequests: Array<String>?
+  
+  var following: Array<User>?
   
   static func userFromProfile(json: jsonObject) -> User {
     let user = User()
     
     //Info
-    if let data = json["userData"] as? jsonObject {
-      if let info = data["userInfo"] as? jsonObject {
+      if let info = json["userInfo"] as? jsonObject {
         user._id = info["_id"] as? String
         user.first = info["first"] as? String
         user.last = info["last"] as? String
@@ -40,31 +42,47 @@ class User: NSObject {
       }
       
       //Profile
-      if let profile = data["profile"] as? jsonObject {
+      if let profile = json["profile"] as? jsonObject {
         user.avatarURLString = profile["avatarUrl"] as? String
         user.summary = profile["summary"] as? String
         user.contact = profile["contact"] as? String
       }
+    
+    if let unconfirmedRelationships = json["unconfirmedRelationships"] as? jsonObject {
       
-      //Other
-      user.friendIds = data["friendIds"] as? Array<String>
-      user.followingIds = data["followingIds"] as? Array<String>
     }
     return user
   }
   
-//  func initWithJson(json: jsonObject) {
-//    if let name = json["name"] as? String, user = json["username"] as? String, email = json["email"] as? String, friends = json["friends"] as? Array<String>, id = json["_id"] as? String {
-//      self.name = name
-//      self.username = user
-//      self.email = email
-//      self.friendsIds = friends
-//      self.id = id
-//    }
-//  }
-  
-  func initializeFriendsList() {
+  func parsePastRelationships(json: Array<jsonObject>) {
     
   }
   
+  func generateAvatarImage(callback: (UIImage) -> ()) {
+    if let image = self.avatarImage {
+      callback(image)
+    } else {
+      if let urlString = avatarURLString, url = NSURL(string: urlString) {
+        UIImage.loadAsync(url, callback: { (image: UIImage) -> () in
+          self.avatarImage = image
+          callback(image)
+        })
+      }
+    }
+  }
+  
+  func initializeFriendsList(callback: (Bool) -> ()) {
+    if let _id = self._id {
+      PeatSocialMediator.sharedMediator.getFriends(forUser_Id: _id, callback: { (friends) -> () in
+        if let friends = friends {
+          self.friends = friends
+          callback(true)
+        } else {
+          callback(false)
+        }
+      })
+    }
+  }
+  
 }
+

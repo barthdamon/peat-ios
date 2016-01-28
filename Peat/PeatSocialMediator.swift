@@ -1,98 +1,75 @@
-////
-////  PeatSocialMediator.swift
-////  Peat
-////
-////  Created by Matthew Barth on 10/19/15.
-////  Copyright © 2015 Matthew Barth. All rights reserved.
-////
 //
-//import Foundation
-//import UIKit
+//  PeatSocialMediator.swift
+//  Peat
 //
+//  Created by Matthew Barth on 10/19/15.
+//  Copyright © 2015 Matthew Barth. All rights reserved.
 //
-//private let _sharedMediator = PeatSocialMediator()
-//
-//class PeatSocialMediator: NSObject {
-//  
-//  class var sharedMediator: PeatSocialMediator {
-//    return _sharedMediator
-//  }
-//  
-//  var API = APIService.sharedService
-//  var users: Array<User> = []
-//  var friends: Array<User> = []
-//  var userSearchResults: Array<User> = []
-//  
-//  //MARK: Friends List
-//  func initializeFriendsList() {
-//    API.get(nil, url: "friends") { (res, err) -> () in
-//      if let e = err {
-//        print("Error fetching friends: \(e)")
-//        NSNotificationCenter.defaultCenter().postNotificationName("errorLoadingFriends", object: self, userInfo: nil)
-//      } else {
-//        if let json = res as? jsonObject {
-//          self.saveFriendData(json)
-//        }
-//      }
-//    }
-//  }
-//  
-//  func saveFriendData(json: jsonObject) {
-//    if let friends = json["friends"] as? Array<jsonObject> {
-//      for friend in friends {
-//        let newFriend = User()
-//        newFriend.initWithJson(friend)
-//        newFriend.isFriend = true
-//        self.friends.append(newFriend)
-//      }
-//      NSNotificationCenter.defaultCenter().postNotificationName("loadingFriendsComplete", object: self, userInfo: nil)
-//    }
-//  }
-//  
-//  //MARK: Changing Friend Relation
-//  
-//  func putFriendRelation(friendID: String, callback: APICallback) {
-//    API.put(["friend" : friendID], url: "friends") { (res, err) -> () in
-//      if let e = err {
-//        print("Error adding friend: \(e)")
-//        callback(nil, e)
-//      } else {
-//        print("RESPONSE \(res)")
-//        callback(res, nil)
-//      }
-//    }
-//  }
-//  
-//  //MARK: Search
-//  func searchUsers(searchTerm: String) {
-//    self.userSearchResults.removeAll()
-//    API.post(["searchTerm" : searchTerm], authType: .Token, url: "users/search") { (res, err) -> () in
-//      if let e = err {
-//        print("Error fetching users: \(e)")
-//      } else {
-//        if let json = res as? jsonObject {
-//          self.generateSearchedUsers(json)
-//        }
-//      }
-//    }
-//  }
-//  
-//  func generateSearchedUsers(json: jsonObject) {
-//    if let users = json["users"] as? Array<jsonObject> {
-//      for user in users {
-//        let newUser = User()
-//        newUser.initWithJson(user)
-//        for friend in self.friends {
-//          if friend.id == newUser.id {
-//            newUser.isFriend = true
-//          }
-//        }
-//        self.userSearchResults.append(newUser)
-//      }
-//      NSNotificationCenter.defaultCenter().postNotificationName("recievedSearchResults", object: self, userInfo: nil)
-//    }
-//  }
-//  
-//  
-//  
-//}
+
+import Foundation
+import UIKit
+
+
+private let _sharedMediator = PeatSocialMediator()
+
+class PeatSocialMediator: NSObject {
+  
+  class var sharedMediator: PeatSocialMediator {
+    return _sharedMediator
+  }
+  
+  var API = APIService.sharedService
+  
+  var userSearchResults: Array<User>?
+  
+  //MARK: Friends List
+  func getFriends(forUser_Id forUser_Id: String, callback: (Array<User>?) ->()) {
+    API.get(nil, url: "friends/\(forUser_Id)") { (res, err) -> () in
+      if let e = err {
+        print("Error fetching friends: \(e)")
+        callback(nil)
+      } else {
+        if let json = res as? jsonObject, friendJson = json["friends"] as? Array<jsonObject> {
+          var friends: Array<User> = []
+          for friend in friendJson {
+            let newUser = User.userFromProfile(friend)
+            if let pastRelationshipsJson = json["pastRelationships"] as? Array<jsonObject> {
+              newUser.parsePastRelationships(pastRelationshipsJson)
+            }
+            friends.append(newUser)
+          }
+          callback(friends)
+        }
+      }
+    }
+  }
+  
+  //MARK: Search
+  func searchUsers(searchTerm: String, callback: (Array<jsonObject>?) -> ()) {
+    self.userSearchResults?.removeAll()
+    self.userSearchResults = Array()
+    API.get(nil, url: "users/search/\(searchTerm)") { (res, err) -> () in
+      if let e = err {
+        print("Error fetching users: \(e)")
+        callback(nil)
+      } else {
+        if let json = res as? jsonObject, users = json["users"] as? Array<jsonObject> {
+          callback(users)
+        }
+      }
+    }
+  }
+  
+  func createFriendRequest(id: String, callback: (Bool) -> ()) {
+    API.post(nil, authType: .Token, url: "friends/\(id)"){ (res, err) in
+      if let e = err {
+        print("Error creating friend request \(e)")
+        callback(false)
+      } else {
+        callback(true)
+      }
+    }
+  }
+  
+  
+}

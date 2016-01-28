@@ -14,6 +14,7 @@ class TreeViewController: UIViewController, TreeDelegate {
 //  var leaves: [Leaf] = Array()
   var selectedLeaf: Leaf?
   var changesMade: Bool = false
+  var viewing: User?
   
   var profileDelegate: ProfileViewController?
   var currentActivity: String = "Snowboarding"
@@ -108,7 +109,7 @@ class TreeViewController: UIViewController, TreeDelegate {
   func fetchTreeData() {
     //right now it redraws every time... no harm in that
     //In the future get the data for the selected user and the selected activity
-    PeatContentStore.sharedStore.getTreeData(self){ (success) -> () in
+    PeatContentStore.sharedStore.getTreeData(self, viewing: viewing){ (success) -> () in
       if success {
         self.displayLeaves()
       } else {

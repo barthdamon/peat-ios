@@ -24,6 +24,7 @@ class CurrentUser: NSObject {
   var API = APIService.sharedService
   
   var model: User?
+  var friends: Array<User>?
   //store to keychain and when called return from the keychain
   var authToken: String?
   let keychain = KeychainSwift()
@@ -93,14 +94,14 @@ class CurrentUser: NSObject {
   
   
   func fetchProfile(callback: (Bool) -> ()) {
-    API.get(nil, url: "users/profile/") { (res, err) in
+    API.get(nil, url: "currentUser/profile") { (res, err) in
       if let e = err {
         print("Error fetching user profile: \(e)")
         callback(false)
       } else {
-        if let json = res as? jsonObject {
+        if let json = res as? jsonObject, userData = json["userData"] as? jsonObject {
           print("PROFILE RESPONSE: \(json)")
-          self.model = User.userFromProfile(json)
+          self.model = User.userFromProfile(userData)
           callback(true)
         } else {
           callback(false)
@@ -109,12 +110,30 @@ class CurrentUser: NSObject {
     }
   }
   
-  func fetchProfileForUser(user_Id: String, callback: (Bool) -> ()) {
-    
+  func isFriend(user: User) -> Bool {
+    if let friends = self.model?.friends {
+      for friend in friends {
+        if user._id == friend._id {
+          return true
+        }
+      }
+      return false
+    } else {
+      return false
+    }
   }
   
   func getMailbox() {
+    API.get(nil, url: "mail/requests"){ (res, err) in
+      if let e = err {
+        print("Error fetching mailbox: \(e)")
     
+      } else {
+        if let json = res as? jsonObject {
+          
+        }
+      }
+    }
   }
   
 }

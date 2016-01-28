@@ -89,10 +89,14 @@ class PeatContentStore: NSObject {
     return _sharedStore
   }
   
-  func getTreeData(delegate: TreeDelegate?, callback: (Bool) -> () ) {
+  func getTreeData(delegate: TreeDelegate?, viewing: User?, callback: (Bool) -> () ) {
     self.treeStore.activityName = "Snowboarding"
     if let activityName = treeStore.activityName {
-      API.get(nil, authType: .Token, url: "tree/\(activityName)"){ (res, err) -> () in
+      var viewing_Id: [String: AnyObject]? = nil
+      if let viewing = viewing, id = viewing._id {
+        viewing_Id = ["viewing": "\(id)"]
+      }
+      API.get(viewing_Id, authType: .Token, url: "tree/\(activityName)"){ (res, err) -> () in
         if let e = err {
           print("Error:\(e)")
           callback(false)
