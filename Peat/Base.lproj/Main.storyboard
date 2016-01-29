@@ -265,6 +265,9 @@
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Item" id="wjm-zc-bEN"/>
                     <navigationItem key="navigationItem" id="0bc-q5-yBa"/>
+                    <connections>
+                        <segue destination="u9J-yl-I1T" kind="show" identifier="profileForUser" id="X8s-oc-rXj"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ExM-vm-3dM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -438,7 +441,9 @@
                         </variation>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="U7K-0o-hbc"/>
-                    <navigationItem key="navigationItem" id="Dny-7G-ghU"/>
+                    <navigationItem key="navigationItem" id="Dny-7G-ghU">
+                        <barButtonItem key="rightBarButtonItem" id="Cqf-FX-v4A"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="avatarImageView" destination="aFy-zm-ufg" id="Oxn-Xt-wJC"/>
                         <outlet property="cancelButton" destination="nEw-ic-wLJ" id="U0S-hJ-PoU"/>
@@ -1690,4 +1695,7 @@
         <image name="tree" width="32" height="32"/>
         <image name="up-arrow" width="46" height="22"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="X8s-oc-rXj"/>
+    </inferredMetricsTieBreakers>
 </document>

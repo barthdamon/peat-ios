@@ -15,6 +15,7 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate, Vi
     case List
   }
   
+  var selectedUser: User?
   var foundUsers: Array<User>?
   var friends: Array<User>? {
     return CurrentUser.info.model?.friends
@@ -120,15 +121,15 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate, Vi
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     switch mode {
     case .List:
-      if let friend = self.friends {
-        //Perform the profile view segue with the friend
-        print(friend)
+      if let friends = self.friends {
+        self.selectedUser = friends[indexPath.row]
+        self.performSegueWithIdentifier("profileForUser", sender: self)
       }
     case .Search:
-      if let user = self.foundUsers {
-        
+      if let users = self.foundUsers {
+        self.selectedUser = users[indexPath.row]
+        self.performSegueWithIdentifier("profileForUser", sender: self)
       }
-      //Perform the profile view segue with the foundUser
     }
   }
   
@@ -144,15 +145,7 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate, Vi
   func configureMenuSwipes() {
     sidebarClient?.configureMenuSwipes()
   }
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
   
   func configureSearchBar() {
     let width = self.view.frame.width  * 0.6
@@ -240,6 +233,19 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate, Vi
     self.searchField?.text = ""
     self.searchField?.resignFirstResponder()
     tableView.reloadData()
+  }
+  
+  // MARK: - Navigation
+  
+  // In a storyboard-based application, you will often want to do a little preparation before navigation
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    // Get the new view controller using segue.destinationViewController.
+    // Pass the selected object to the new view controller.
+    if segue.identifier == "profileForUser" {
+      if let vc = segue.destinationViewController as? ProfileViewController {
+        vc.notCurrentUser = self.selectedUser
+      }
+    }
   }
 
 
