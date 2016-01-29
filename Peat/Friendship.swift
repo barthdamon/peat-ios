@@ -19,7 +19,7 @@ class Friendship: NSObject {
   
   var nonCurrentUser: User?
   
-  static func friendFromJson(json: jsonObject) -> Friendship {
+  static func friendFromUnconfirmed(json: jsonObject) -> Friendship {
     let friend = Friendship()
     
     friend.confirmed = json["confirmed"] as? Bool

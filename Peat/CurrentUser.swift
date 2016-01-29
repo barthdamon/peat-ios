@@ -75,7 +75,7 @@ class CurrentUser: NSObject {
   func logIn(params:jsonObject, callback: (Bool) -> ()) {
     API.post(params, authType: .Basic, url: "login"){ (res, err) in
       if let e = err {
-        print("Error creating user: \(e)")
+        print("Error logging in user: \(e)")
         callback(false)
       } else {
         if let json = res as? jsonObject {

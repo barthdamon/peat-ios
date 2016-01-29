@@ -25,7 +25,8 @@ class User: NSObject {
   //Other
   var avatarImage: UIImage?
   var friends: Array<User>?
-  var outstandingFriendRequests: Array<String>?
+  var unconfirmedFriendship: Friendship?
+  var unconfirmedWitness: NSObject?
   
   var following: Array<User>?
   
@@ -48,9 +49,16 @@ class User: NSObject {
         user.contact = profile["contact"] as? String
       }
     
-    if let unconfirmedRelationships = json["unconfirmedRelationships"] as? jsonObject {
-      
+    
+    //MARK: Parsing specific traits for other users (not found on current user)
+    if let friendshipJson = json["unconfirmedFriendship"] as? jsonObject {
+      user.unconfirmedFriendship = Friendship.friendFromUnconfirmed(friendshipJson)
     }
+    
+    if let witnessJson = json["unconfirmedWitnesses"] as? jsonObject {
+      user.unconfirmedWitness = witnessJson
+    }
+    
     return user
   }
   

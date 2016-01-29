@@ -8,57 +8,58 @@
 
 import UIKit
 
+enum MenuMode {
+  case Notification
+  case Settings
+}
+
 class MenuTableViewController: UITableViewController {
   
   var rootController: RootViewController?
   var API = APIService.sharedService
+  var mode: MenuMode = .Notification
   
   var settingsNavItems: Array<String> = ["Log Out"]
-  var notificationItems: Array<String> = ["Example Notification"]
+//  var notificationItems: Array<String> = ["Example Notification"]
   
   var requestUsers: Array<User>?
-  var unconfirmedFriendships: Array<Friendship>?
 
-  var activeItems: Array<String>? {
-    didSet {
-      self.tableView.reloadData()
-    }
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    configureNavBar()
+    loadNotifications()
+//    loadRequests()
   }
   
-    override func viewDidLoad() {
-      super.viewDidLoad()
-      configureNavBar()
-      loadNotifications()
-    }
-  
   func loadNotifications() {
-    API.get(nil, url: "mail/requests") { (res, err) -> () in
-      if let e = err {
-        print("Error fetching requests: \(e)")
-      } else {
-        if let json = res as? jsonObject {
-          if let requestUsers = json["requestUsers"] as? Array<jsonObject> {
-            self.requestUsers = Array()
-            for user in requestUsers {
-              self.requestUsers?.append(User.userFromProfile(user))
+    if self.requestUsers != nil {
+      //TODO: actually ask for an update here
+      self.mode = .Notification
+      self.tableView.reloadData()
+    } else {
+      API.get(nil, url: "mail/requests") { (res, err) -> () in
+        if let e = err {
+          print("Error fetching requests: \(e)")
+        } else {
+          if let json = res as? jsonObject {
+            if let requestUsers = json["requestUsers"] as? Array<jsonObject> {
+              self.requestUsers = Array()
+              for user in requestUsers {
+                self.requestUsers?.append(User.userFromProfile(user))
+              }
+              self.mode = .Notification
+              self.tableView.reloadData()
             }
           }
-          
-          if let unconfirmedFriends = json["unconfirmedFriends"] as? Array<jsonObject> {
-            self.unconfirmedFriendships = Array()
-            for friend in unconfirmedFriends {
-              self.unconfirmedFriendships?.append(Friendship.friendFromJson(friend))
-            }
-          }
-          
         }
       }
     }
-    self.activeItems = notificationItems
   }
   
   func loadSettings() {
-    self.activeItems = settingsNavItems
+    self.mode = .Settings
+    self.tableView.reloadData()
+//    self.activeItems = settingsNavItems
   }
   
   func configureNavBar() {
@@ -97,28 +98,54 @@ class MenuTableViewController: UITableViewController {
   
   override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
     // #warning Incomplete implementation, return the number of sections
-    return self.activeItems != nil ? 1 : 0
+    switch mode {
+    case .Notification:
+      return 1
+    case .Settings:
+      return 1
+    }
   }
   
   override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     // #warning Incomplete implementation, return the number of rows
-    return self.activeItems != nil ? self.activeItems!.count : 0
+    switch mode {
+    case .Notification:
+      return self.requestUsers != nil ? self.requestUsers!.count : 0
+    case .Settings:
+      return self.settingsNavItems.count
+    }
+  }
+  
+  override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    return 60
   }
 
   
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("menuCell", forIndexPath: indexPath)
-        if let activeItems = self.activeItems {
-          cell.textLabel?.text = activeItems[indexPath.row]
+      switch mode {
+      case .Notification:
+        if let cell = tableView.dequeueReusableCellWithIdentifier("friendRequestCell", forIndexPath: indexPath) as? FriendRequestTableViewCell {
+          if let users = requestUsers {
+            cell.configureWithUser(users[indexPath.row])
+            return cell
+          }
         }
-
+      case .Settings:
+        let cell = tableView.dequeueReusableCellWithIdentifier("menuCell", forIndexPath: indexPath)
+        cell.textLabel?.text = self.settingsNavItems[indexPath.row]
         return cell
+      }
+      
+      return UITableViewCell()
     }
 
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    if let activeItems = self.activeItems {
-      if activeItems[indexPath.row] == "Log Out" {
-        CurrentUser.info.logOut()
+    switch mode {
+    case .Notification:
+      break
+    case .Settings:
+        if settingsNavItems[indexPath.row] == "Log Out" {
+          CurrentUser.info.logOut()
       }
     }
   }
