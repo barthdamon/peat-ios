@@ -71,5 +71,26 @@ class PeatSocialMediator: NSObject {
     }
   }
   
+  func confirmFriendRequest(id: String, callback: (Bool) -> ()) {
+    API.put(nil, url: "friends/\(id)") { (res, err) -> () in
+      if let e = err {
+        print("Error confirming friend request \(e)")
+        callback(false)
+      } else {
+        callback(true)
+      }
+    }
+  }
+  
+  func destroyFriendRequest(id: String, callback: (Bool) -> ()) {
+    API.put(nil, url: "friends/remove/\(id)") { (res, err) -> () in
+      if let e = err {
+        print("Error removing friend request \(e)")
+        callback(false)
+      } else {
+        callback(true)
+      }
+    }
+  }
   
 }

@@ -1400,7 +1400,9 @@
                                 <connections>
                                     <outlet property="avatarImageView" destination="Kej-C1-mDh" id="2KO-Tv-D8Z"/>
                                     <outlet property="nameLabel" destination="pan-ek-TMt" id="poH-n9-JGs"/>
+                                    <outlet property="noButton" destination="H8q-du-fdY" id="6Yu-hN-OTV"/>
                                     <outlet property="usernameLabel" destination="WRB-4K-9qR" id="pt7-dw-BDl"/>
+                                    <outlet property="yesButton" destination="Ajx-XK-1SE" id="Lmi-H9-jph"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

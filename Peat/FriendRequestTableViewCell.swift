@@ -13,7 +13,10 @@ class FriendRequestTableViewCell: UITableViewCell {
   @IBOutlet weak var avatarImageView: UIImageView!
   @IBOutlet weak var usernameLabel: UILabel!
   @IBOutlet weak var nameLabel: UILabel!
+  @IBOutlet weak var yesButton: UIButton!
+  @IBOutlet weak var noButton: UIButton!
   
+  var user: User?
   var delegate: MenuTableViewController?
   
   override func awakeFromNib() {
@@ -27,6 +30,7 @@ class FriendRequestTableViewCell: UITableViewCell {
   }
   
   func configureWithUser(user: User) {
+    self.user = user
     if let username = user.username, first = user.first, last = user.last {
       self.usernameLabel.text = username
       self.nameLabel.text = "\(first) \(last)"
@@ -39,11 +43,36 @@ class FriendRequestTableViewCell: UITableViewCell {
   }
 
   @IBAction func yesButtonPressed(sender: AnyObject) {
+    if let user = user, id = user._id {
+      PeatSocialMediator.sharedMediator.confirmFriendRequest(id, callback: { (success) -> () in
+        if success {
+          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.backgroundColor = UIColor.greenColor()
+            self.yesButton.enabled = false
+            self.noButton.enabled = false
+          })
+        } else {
+          print("Error confirming friend")
+        }
+      })
+    }
     //confirm friend, on success tell delegate to make cell faded color
   }
   
   @IBAction func noButtonPressed(sender: AnyObject) {
-    //remove cell
+    if let user = user, id = user._id {
+      PeatSocialMediator.sharedMediator.destroyFriendRequest(id, callback: { (success) -> () in
+        if success {
+          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.backgroundColor = UIColor.redColor()
+            self.yesButton.enabled = false
+            self.noButton.enabled = false
+          })
+        } else {
+          print("Error destroying friend")
+        }
+      })
+    }
   }
   
 }

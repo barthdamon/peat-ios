@@ -106,6 +106,19 @@ class MenuTableViewController: UITableViewController {
     }
   }
   
+  override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    return 40
+  }
+  
+  override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    switch mode {
+    case .Notification:
+      return "Notifications"
+    case .Settings:
+      return "Settings"
+    }
+  }
+  
   override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     // #warning Incomplete implementation, return the number of rows
     switch mode {
@@ -127,6 +140,7 @@ class MenuTableViewController: UITableViewController {
         if let cell = tableView.dequeueReusableCellWithIdentifier("friendRequestCell", forIndexPath: indexPath) as? FriendRequestTableViewCell {
           if let users = requestUsers {
             cell.configureWithUser(users[indexPath.row])
+            cell.delegate = self
             return cell
           }
         }
