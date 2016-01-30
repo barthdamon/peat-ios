@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 protocol TreeDelegate {
-  func drawConnectionLayer(connection: CAShapeLayer)
   func fetchTreeData()
   func getCurrentActivity() -> String
   func addLeafToScrollView(leaf: Leaf)
@@ -22,7 +21,6 @@ protocol TreeDelegate {
 }
 
 typealias CoordinatePair = (x: CGFloat, y: CGFloat)
-typealias LeafConnection = (leafId: String, type: LeafConnectionType)
 
 class Leaf: NSObject {
   
@@ -45,6 +43,7 @@ class Leaf: NSObject {
     return self.view != nil ? self.view!.center : center
   }
   var connections: Array<LeafConnection>?
+  var connectionLayers: Array<CAShapeLayer>?
   var grouping: LeafGrouping? {
     didSet {
       drawGrouping()
@@ -106,7 +105,7 @@ class Leaf: NSObject {
         leaf.connections = Array()
         for connection in connections {
           if let leafId = connection["leafId"] as? String, typeString = connection["type"] as? String, type = LeafConnectionType(rawValue: typeString) {
-            leaf.connections!.append((leafId: leafId, type: type))
+//            leaf.connections!.append((leafId: leafId, type: type))
           }
         }
         

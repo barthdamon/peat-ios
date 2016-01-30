@@ -78,6 +78,17 @@ class TreeViewController: UIViewController, TreeDelegate {
       self.scrollView.bringSubviewToFront(view)
       let center = sender.locationInView(self.scrollView)
       leaf.view?.center = center
+      //deal with connections
+      if let connections = PeatContentStore.sharedStore.treeStore.currentConnections {
+        for connection in connections {
+          if connection.toId == leaf.leafId || connection.fromId == leaf.leafId {
+            if let fromLeafId = connection.fromId, fromLeaf = PeatContentStore.sharedStore.leafWithId(fromLeafId) {
+              connectionsBeingDrawn(fromLeaf, sender: sender)
+            }
+            //probably just redraw the connection starting with a new bezier path on the previous leaf
+          }
+        }
+      }
       self.profileDelegate?.changesMade(leaf)
     }
     //allow the leaf to move with the gesture until the gesture is finished, then place the leaf and remove the shadow
@@ -95,24 +106,26 @@ class TreeViewController: UIViewController, TreeDelegate {
       shapeLayer.strokeColor = UIColor.grayColor().CGColor
       shapeLayer.zPosition = -1
       
+      var connected = false
+      var toLeaf: Leaf?
       if sender.state == UIGestureRecognizerState.Ended {
-        var connected = false
         for leaf in PeatContentStore.sharedStore.leaves {
           if leaf != fromLeaf {
             if let leafView = leaf.view {
               if CGRectContainsPoint(leafView.frame, finger) {
                 connected = true
+                toLeaf = leaf
               }
             }
           }
         }
         if connected {
-          self.drawConnectionLayer(shapeLayer)
+          self.drawConnectionLayer(shapeLayer, from: fromLeaf, to: toLeaf)
         } else {
           self.previousConnectionLayer?.removeFromSuperlayer()
         }
       } else {
-        self.drawConnectionLayer(shapeLayer)
+        self.drawConnectionLayer(shapeLayer, from: nil, to: nil)
       }
     }
   }
@@ -175,12 +188,18 @@ class TreeViewController: UIViewController, TreeDelegate {
     }
   }
   
-  func drawConnectionLayer(connection: CAShapeLayer) {
+  func drawConnectionLayer(connection: CAShapeLayer, from: Leaf?, to: Leaf?) {
     if let previous = self.previousConnectionLayer {
       previous.removeFromSuperlayer()
     }
-    scrollView.layer.addSublayer(connection)
-    self.previousConnectionLayer = connection
+    if let from = from, to = to {
+      let newConnection = LeafConnection.newConnection(connection, from: from, to: to)
+      PeatContentStore.sharedStore.addConnection(newConnection)
+      scrollView.layer.addSublayer(connection)
+    } else {
+      scrollView.layer.addSublayer(connection)
+      self.previousConnectionLayer = connection
+    }
   }
   
   func drillIntoLeaf(leaf: Leaf) {

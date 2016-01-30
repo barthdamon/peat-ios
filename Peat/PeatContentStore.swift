@@ -18,6 +18,7 @@ enum MediaType: String {
 struct TreeStore {
 //  var storedActivities: Array<Activity>?
   var currentLeaves: Set<Leaf>?
+  var currentConnections: Set<LeafConnection>?
   var currentMediaObjects: Set<MediaObject>?
   var selectedLeaf: Leaf?
   var activityName: String?
@@ -135,6 +136,17 @@ class PeatContentStore: NSObject {
   
   
   //MARK: Helpers
+  func leafWithId(leafId: String) -> Leaf? {
+    if let currentLeaves = self.treeStore.currentLeaves {
+      for leaf in currentLeaves {
+        if leaf.leafId == leafId {
+          return leaf
+        }
+      }
+    }
+    return nil
+  }
+  
   func setSelectedLeaf(leaf: Leaf) {
     self.treeStore.selectedLeaf = leaf
   }
@@ -159,11 +171,18 @@ class PeatContentStore: NSObject {
   
   func addMediaToStore(media: MediaObject) {
     if let _ = self.treeStore.currentMediaObjects {
-      self.treeStore.currentMediaObjects!.insert(media)
     } else {
       self.treeStore.currentMediaObjects = Set()
-      self.treeStore.currentMediaObjects!.insert(media)
     }
+    self.treeStore.currentMediaObjects!.insert(media)
+  }
+  
+  func addConnection(connection: LeafConnection) {
+    if let _ = self.treeStore.currentConnections {
+    } else {
+      self.treeStore.currentConnections = Set()
+    }
+    self.treeStore.currentConnections!.insert(connection)
   }
   
 }
