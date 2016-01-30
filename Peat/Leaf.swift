@@ -17,7 +17,7 @@ protocol TreeDelegate {
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer)
   func checkForOverlaps(intruder: Leaf)
   func removeLeafFromView(leaf: Leaf)
-  func connectionsBeingDrawn(fromLeaf: Leaf, sender: UIGestureRecognizer)
+  func connectionsBeingDrawn(fromLeaf: Leaf, sender: UIGestureRecognizer, previousConnection: LeafConnection?)
 }
 
 typealias CoordinatePair = (x: CGFloat, y: CGFloat)
@@ -246,7 +246,7 @@ class Leaf: NSObject {
     if movingEnabled {
       self.treeDelegate?.leafBeingMoved(self, sender: sender)
     } else {
-      self.treeDelegate?.connectionsBeingDrawn(self, sender: sender)
+      self.treeDelegate?.connectionsBeingDrawn(self, sender: sender, previousConnection: nil)
     }
   }
   

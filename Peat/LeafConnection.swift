@@ -13,8 +13,16 @@ class LeafConnection: NSObject {
   var toId: String?
   var type: LeafConnectionType?
   
-  var fromLeaf: Leaf?
-  var toLeaf: Leaf?
+  var fromLeaf: Leaf? {
+    didSet {
+      fromId = fromLeaf!.leafId
+    }
+  }
+  var toLeaf: Leaf? {
+    didSet {
+      toId = toLeaf!.leafId
+    }
+  }
   
   var connectionLayer: CAShapeLayer?
   

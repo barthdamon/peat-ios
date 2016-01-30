@@ -79,13 +79,15 @@ class TreeViewController: UIViewController, TreeDelegate {
       let center = sender.locationInView(self.scrollView)
       leaf.view?.center = center
       //deal with connections
-      if let connections = PeatContentStore.sharedStore.treeStore.currentConnections {
+      if let connections = PeatContentStore.sharedStore.treeStore.currentConnections, leaves = PeatContentStore.sharedStore.treeStore.currentLeaves {
         for connection in connections {
-          if connection.toId == leaf.leafId || connection.fromId == leaf.leafId {
-            if let fromLeafId = connection.fromId, fromLeaf = PeatContentStore.sharedStore.leafWithId(fromLeafId) {
-              connectionsBeingDrawn(fromLeaf, sender: sender)
+          for maybeConnected in leaves {
+            if connection.toId == maybeConnected.leafId || connection.fromId == maybeConnected.leafId {
+              if let fromLeafId = connection.fromId, fromLeaf = PeatContentStore.sharedStore.leafWithId(fromLeafId) {
+                connectionsBeingDrawn(fromLeaf, sender: sender, previousConnection: connection)
+              }
+              //probably just redraw the connection starting with a new bezier path on the previous leaf
             }
-            //probably just redraw the connection starting with a new bezier path on the previous leaf
           }
         }
       }
@@ -94,7 +96,7 @@ class TreeViewController: UIViewController, TreeDelegate {
     //allow the leaf to move with the gesture until the gesture is finished, then place the leaf and remove the shadow
   }
   
-  func connectionsBeingDrawn(fromLeaf: Leaf, sender: UIGestureRecognizer) {
+  func connectionsBeingDrawn(fromLeaf: Leaf, sender: UIGestureRecognizer, previousConnection: LeafConnection?) {
     if let view = fromLeaf.view {
       let finger = sender.locationInView(self.scrollView)
       let path = UIBezierPath()
@@ -108,6 +110,7 @@ class TreeViewController: UIViewController, TreeDelegate {
       
       var connected = false
       var toLeaf: Leaf?
+      //gesture ending, check if should place line
       if sender.state == UIGestureRecognizerState.Ended {
         for leaf in PeatContentStore.sharedStore.leaves {
           if leaf != fromLeaf {
@@ -120,13 +123,37 @@ class TreeViewController: UIViewController, TreeDelegate {
           }
         }
         if connected {
-          self.drawConnectionLayer(shapeLayer, from: fromLeaf, to: toLeaf)
+          //connected, place
+          self.drawConnectionLayer(shapeLayer, from: fromLeaf, to: toLeaf, previousConnection: nil)
         } else {
+          //not connected, remove
           self.previousConnectionLayer?.removeFromSuperlayer()
         }
+        //gesture not ending, just keep drawing
       } else {
-        self.drawConnectionLayer(shapeLayer, from: nil, to: nil)
+        self.drawConnectionLayer(shapeLayer, from: nil, to: nil, previousConnection: previousConnection)
       }
+    }
+  }
+  
+  func drawConnectionLayer(connection: CAShapeLayer, from: Leaf?, to: Leaf?, previousConnection: LeafConnection?) {
+    //when picking up a leaf that already has a conenction
+    if let lastPlacedConnection = previousConnection?.connectionLayer {
+      self.previousConnectionLayer = lastPlacedConnection
+      previousConnection?.connectionLayer = nil
+    }
+    //just normal movement
+    if let previous = self.previousConnectionLayer {
+      previous.removeFromSuperlayer()
+    }
+    if let from = from, to = to {
+      let newConnection = LeafConnection.newConnection(connection, from: from, to: to)
+      PeatContentStore.sharedStore.addConnection(newConnection)
+      scrollView.layer.addSublayer(connection)
+      self.previousConnectionLayer = nil
+    } else {
+      scrollView.layer.addSublayer(connection)
+      self.previousConnectionLayer = connection
     }
   }
   
@@ -188,20 +215,6 @@ class TreeViewController: UIViewController, TreeDelegate {
     }
   }
   
-  func drawConnectionLayer(connection: CAShapeLayer, from: Leaf?, to: Leaf?) {
-    if let previous = self.previousConnectionLayer {
-      previous.removeFromSuperlayer()
-    }
-    if let from = from, to = to {
-      let newConnection = LeafConnection.newConnection(connection, from: from, to: to)
-      PeatContentStore.sharedStore.addConnection(newConnection)
-      scrollView.layer.addSublayer(connection)
-    } else {
-      scrollView.layer.addSublayer(connection)
-      self.previousConnectionLayer = connection
-    }
-  }
-  
   func drillIntoLeaf(leaf: Leaf) {
     selectedLeaf = leaf
     self.profileDelegate?.drillIntoLeaf(leaf)
@@ -221,17 +234,5 @@ class TreeViewController: UIViewController, TreeDelegate {
       view.removeFromSuperview()
       self.profileDelegate?.changesMade(leaf)
     }
-  }
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-      // Get the new view controller using segue.destinationViewController.
-      // Pass the selected object to the new view controller.
-
-      
-    }
-  @IBAction func saveButtonPressed(sender: AnyObject) {
-    //save to the db
   }
 }
