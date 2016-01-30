@@ -17,9 +17,9 @@ enum MediaType: String {
 
 struct TreeStore {
 //  var storedActivities: Array<Activity>?
-  var currentLeaves: Set<Leaf>?
-  var currentConnections: Set<LeafConnection>?
-  var currentMediaObjects: Set<MediaObject>?
+  var currentLeaves: Array<Leaf>?
+  var currentConnections: Array<LeafConnection>?
+  var currentMediaObjects: Array<MediaObject>?
   var selectedLeaf: Leaf?
   var activityName: String?
   
@@ -42,7 +42,7 @@ struct TreeStore {
   }
   
   mutating func resetStore() {
-    self.currentLeaves = Set()
+    self.currentLeaves = Array()
     self.currentMediaObjects = nil
     self.selectedLeaf = nil
   }
@@ -82,7 +82,7 @@ class PeatContentStore: NSObject {
   var API = APIService.sharedService
   var mediaObjects: Array<MediaObject>?
   var treeStore = TreeStore()
-  var leaves: Set<Leaf> {
+  var leaves: Array<Leaf> {
     return treeStore.currentLeaves != nil ? treeStore.currentLeaves! : []
   }
   
@@ -108,7 +108,7 @@ class PeatContentStore: NSObject {
               //reset the store, data for new tree incoming
               self.treeStore.resetStore()
               for leaf in leaves {
-                self.treeStore.currentLeaves!.insert(Leaf.initWithJson(leaf, delegate: delegate))
+                self.treeStore.currentLeaves!.append(Leaf.initWithJson(leaf, delegate: delegate))
               }
               callback(true)
             }
@@ -162,27 +162,53 @@ class PeatContentStore: NSObject {
   
   func addLeafToStore(leaf: Leaf) {
     if let _ = self.treeStore.currentLeaves {
-      self.treeStore.currentLeaves!.insert(leaf)
+      self.treeStore.currentLeaves!.append(leaf)
     } else {
-      self.treeStore.currentLeaves = Set()
-      self.treeStore.currentLeaves!.insert(leaf)
+      self.treeStore.currentLeaves = Array()
+      self.treeStore.currentLeaves!.append(leaf)
     }
   }
   
   func addMediaToStore(media: MediaObject) {
     if let _ = self.treeStore.currentMediaObjects {
     } else {
-      self.treeStore.currentMediaObjects = Set()
+      self.treeStore.currentMediaObjects = Array()
     }
-    self.treeStore.currentMediaObjects!.insert(media)
+    self.treeStore.currentMediaObjects!.append(media)
   }
   
   func addConnection(connection: LeafConnection) {
     if let _ = self.treeStore.currentConnections {
     } else {
-      self.treeStore.currentConnections = Set()
+      self.treeStore.currentConnections = Array()
     }
-    self.treeStore.currentConnections!.insert(connection)
+    self.treeStore.currentConnections!.append(connection)
+  }
+  
+  func removeCollection(connection: LeafConnection) {
+    if let _ = self.treeStore.currentConnections {
+//      self.treeStore.currentConnections!.remove(connection)
+    }
+  }
+  
+  func findCollection(from: Leaf, to: Leaf) -> LeafConnection? {
+    if let currentConnections = self.treeStore.currentConnections {
+      for connection in currentConnections {
+        if connection.toId == to.leafId && connection.fromId == from.leafId {
+          return connection
+        }
+      }
+    }
+    return nil
+  }
+  
+  func newConnection(connectionLayer: CAShapeLayer, from: Leaf, to: Leaf) {
+    if let existingConnection = findCollection(from, to: to) {
+      existingConnection.connectionLayer = connectionLayer
+    } else {
+      let newConnection = LeafConnection.newConnection(connectionLayer, from: from, to: to)
+      self.addConnection(newConnection)
+    }
   }
   
 }

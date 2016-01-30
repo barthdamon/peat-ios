@@ -34,4 +34,8 @@ class LeafConnection: NSObject {
     return newConnection
   }
   
+  func resetForMovement() {
+    self.connectionLayer = nil
+  }
+  
 }

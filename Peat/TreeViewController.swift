@@ -24,6 +24,7 @@ class TreeViewController: UIViewController, TreeDelegate {
   
   //Drawing
   var previousConnectionLayer: CAShapeLayer?
+  var previousPlacedConnection: LeafConnection?
   
   
   override func viewDidLoad() {
@@ -140,15 +141,15 @@ class TreeViewController: UIViewController, TreeDelegate {
     //when picking up a leaf that already has a conenction
     if let lastPlacedConnection = previousConnection?.connectionLayer {
       self.previousConnectionLayer = lastPlacedConnection
-      previousConnection?.connectionLayer = nil
+      previousConnection?.resetForMovement()
     }
     //just normal movement
     if let previous = self.previousConnectionLayer {
       previous.removeFromSuperlayer()
     }
     if let from = from, to = to {
-      let newConnection = LeafConnection.newConnection(connection, from: from, to: to)
-      PeatContentStore.sharedStore.addConnection(newConnection)
+//      let newConnection = LeafConnection.newConnection(connection, from: from, to: to)
+      PeatContentStore.sharedStore.newConnection(connection, from: from, to: to)
       scrollView.layer.addSublayer(connection)
       self.previousConnectionLayer = nil
     } else {
