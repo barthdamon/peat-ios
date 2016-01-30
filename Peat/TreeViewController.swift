@@ -22,6 +22,9 @@ class TreeViewController: UIViewController, TreeDelegate {
   @IBOutlet weak var scrollView: UIScrollView!
   @IBOutlet weak var saveButton: UIButton!
   
+  //Drawing
+  var previousConnectionLayer: CAShapeLayer?
+  
   
   override func viewDidLoad() {
     NSNotificationCenter.defaultCenter().addObserver(self, selector: "fetchTreeData", name: "leavesPopulated", object: nil)
@@ -46,12 +49,14 @@ class TreeViewController: UIViewController, TreeDelegate {
   }
   
   func configureScrollView() {
-    
-    let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "newLeafInitiated:")
-    doubleTapRecognizer.numberOfTouchesRequired = 1
-    doubleTapRecognizer.numberOfTapsRequired = 2
-    scrollView.addGestureRecognizer(doubleTapRecognizer)
-    
+    if let _ = viewing {
+      //Do whatever for when you are viewing anothers profile
+    } else {
+      let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "newLeafInitiated:")
+      doubleTapRecognizer.numberOfTouchesRequired = 1
+      doubleTapRecognizer.numberOfTapsRequired = 2
+      scrollView.addGestureRecognizer(doubleTapRecognizer)
+    }
 //    var doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "scrollViewDoubleTapped:")
 //    doubleTapRecognizer.numberOfTapsRequired = 2
 //    doubleTapRecognizer.numberOfTouchesRequired = 1
@@ -78,21 +83,73 @@ class TreeViewController: UIViewController, TreeDelegate {
     //allow the leaf to move with the gesture until the gesture is finished, then place the leaf and remove the shadow
   }
   
+  func connectionsBeingDrawn(fromLeaf: Leaf, sender: UIGestureRecognizer) {
+    if let view = fromLeaf.view {
+      let finger = sender.locationInView(self.scrollView)
+      let path = UIBezierPath()
+      path.moveToPoint(view.center)
+      path.addLineToPoint(finger)
+      let shapeLayer = CAShapeLayer()
+      shapeLayer.path = path.CGPath
+      //TODO: check completionStatus when line set?
+      shapeLayer.strokeColor = UIColor.grayColor().CGColor
+      shapeLayer.zPosition = -1
+      
+      if sender.state == UIGestureRecognizerState.Ended {
+        var connected = false
+        for leaf in PeatContentStore.sharedStore.leaves {
+          if leaf != fromLeaf {
+            if let leafView = leaf.view {
+              if CGRectContainsPoint(leafView.frame, finger) {
+                connected = true
+              }
+            }
+          }
+        }
+        if connected {
+          self.drawConnectionLayer(shapeLayer)
+        } else {
+          self.previousConnectionLayer?.removeFromSuperlayer()
+        }
+      } else {
+        self.drawConnectionLayer(shapeLayer)
+      }
+    }
+  }
+  
   func checkForOverlaps(intruder: Leaf) {
     for leaf in PeatContentStore.sharedStore.leaves {
       if leaf != intruder {
         if let intruderView = intruder.view, leafView = leaf.view {
           if CGRectIntersectsRect(leafView.frame, intruderView.frame) {
-            //TODO: offset these more intelligently
+            //TODO: offset these more intelligently. still do, but make them a group
             intruderView.center.x += Leaf.standardWidth
             intruderView.center.y += Leaf.standardHeight
             let newOffsetX = intruderView.center.x - self.scrollView.frame.width / 2
             let newOffsetY = intruderView.center.y - self.scrollView.frame.height / 2
+            //need to check if intruder view is in a group already first
+            dealWithGroupings(leaf, lowerLeaf: intruder)
             self.scrollView.setContentOffset(CGPointMake(newOffsetX, newOffsetY), animated: true)
             checkForOverlaps(intruder)
           }
         }
       }
+    }
+  }
+  
+  func dealWithGroupings(higherLeaf: Leaf, lowerLeaf: Leaf) {
+  //[{name: String, color: String, zIndex: Number}]
+    if let existingGrouping = lowerLeaf.grouping {
+      //add the leaf to the existing grouping
+    } else {
+      //create new grouping and put both leaves in it
+      //prompt user for a name in a popover text field
+      let groupingName = "Rails"
+      let newGrouping = LeafGrouping.newGrouping(groupingName)
+      higherLeaf.grouping = newGrouping
+      lowerLeaf.grouping = newGrouping
+      
+      
     }
   }
   
@@ -119,7 +176,11 @@ class TreeViewController: UIViewController, TreeDelegate {
   }
   
   func drawConnectionLayer(connection: CAShapeLayer) {
+    if let previous = self.previousConnectionLayer {
+      previous.removeFromSuperlayer()
+    }
     scrollView.layer.addSublayer(connection)
+    self.previousConnectionLayer = connection
   }
   
   func drillIntoLeaf(leaf: Leaf) {

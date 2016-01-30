@@ -18,6 +18,7 @@ protocol TreeDelegate {
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer)
   func checkForOverlaps(intruder: Leaf)
   func removeLeafFromView(leaf: Leaf)
+  func connectionsBeingDrawn(fromLeaf: Leaf, sender: UIGestureRecognizer)
 }
 
 typealias CoordinatePair = (x: CGFloat, y: CGFloat)
@@ -44,7 +45,11 @@ class Leaf: NSObject {
     return self.view != nil ? self.view!.center : center
   }
   var connections: Array<LeafConnection>?
-  var groupings: Array<String>?
+  var grouping: LeafGrouping? {
+    didSet {
+      drawGrouping()
+    }
+  }
   
   // Leaf
   var treeDelegate: TreeDelegate?
@@ -61,6 +66,9 @@ class Leaf: NSObject {
   var movingEnabled: Bool = false
   var brandNew: Bool = false
   var deleted: Bool = false
+  
+  var abilityTitleLabel: UILabel?
+  var groupingLabel: UILabel?
   
   var media: Array<MediaObject>? {
     return PeatContentStore.sharedStore.treeStore.mediaForLeaf(self)
@@ -89,7 +97,11 @@ class Leaf: NSObject {
     leaf.title = json["title"] as? String
     
     if let layout = json["layout"] as? jsonObject {
-      leaf.groupings = layout["groupings"] as? Array<String>
+      
+      if let grouping = layout["grouping"] as? jsonObject {
+        leaf.grouping = LeafGrouping.groupingFromJson(grouping)
+      }
+      
       if let connections = layout["connections"] as? Array<jsonObject> {
         leaf.connections = Array()
         for connection in connections {
@@ -97,10 +109,12 @@ class Leaf: NSObject {
             leaf.connections!.append((leafId: leafId, type: type))
           }
         }
+        
       }
       if let coordinates = layout["coordinates"] as? jsonObject, x = coordinates["x"] as? CGFloat, y = coordinates["y"] as? CGFloat {
         leaf.center = CGPoint(x: x, y: y)
       }
+      
     }
     return leaf
   }
@@ -126,7 +140,7 @@ class Leaf: NSObject {
           "y" : self.paramCenter?.y != nil ? String(self.paramCenter!.y) : ""
         ],
         "connections" : "",
-        "groupings" : ""
+        "grouping" : self.grouping != nil ? self.grouping!.params() : ["":""],
       ],
       "completionStatus" : self.completionStatus != nil ? self.completionStatus!.rawValue : "",
       "title" : self.title != nil ? self.title! : "",
@@ -159,8 +173,6 @@ class Leaf: NSObject {
     }
   }
   
-  
-  
   func addGestureRecognizers() {
     if let view = self.view {
       
@@ -173,8 +185,10 @@ class Leaf: NSObject {
       longPressRecognizer.minimumPressDuration = 1
       view.addGestureRecognizer(longPressRecognizer)
       
-      let movingPanRecognizer = UIPanGestureRecognizer(target: self, action: "leafBeingMoved:")
+      let movingPanRecognizer = UIPanGestureRecognizer(target: self, action: "leafBeingPanned:")
       view.addGestureRecognizer(movingPanRecognizer)
+      
+      //maybe when they tap a plus button and drag that adds a connection????
     }
   }
   
@@ -219,7 +233,7 @@ class Leaf: NSObject {
   func leafMoveInitiated(sender: UILongPressGestureRecognizer) {
     let state = sender.state
     if state == UIGestureRecognizerState.Changed {
-      leafBeingMoved(sender)
+      leafBeingPanned(sender)
     } else if state == UIGestureRecognizerState.Ended {
 //      movingEnabled = false
 //      deselectLeaf()
@@ -229,9 +243,11 @@ class Leaf: NSObject {
     }
   }
   
-  func leafBeingMoved(sender: UIGestureRecognizer) {
+  func leafBeingPanned(sender: UIGestureRecognizer) {
     if movingEnabled {
       self.treeDelegate?.leafBeingMoved(self, sender: sender)
+    } else {
+      self.treeDelegate?.connectionsBeingDrawn(self, sender: sender)
     }
   }
   
@@ -298,9 +314,17 @@ class Leaf: NSObject {
         view.layer.cornerRadius = 10
 //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
         addGestureRecognizers()
-        
+        drawGrouping()
         treeDelegate?.addLeafToScrollView(self)
       }
+    }
+  }
+  
+  func drawGrouping() {
+    if let grouping = self.grouping, view = self.view {
+      view.layer.borderColor = grouping.rgbColor?.CGColor
+      view.layer.borderWidth = 3
+      self.groupingLabel?.text = grouping.name
     }
   }
   

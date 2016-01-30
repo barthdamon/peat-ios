@@ -19,3 +19,4 @@ pod 'AWSCognito'
 use_frameworks!
 pod 'KeychainSwift', '~> 3.0'
 pod 'Socket.IO-Client-Swift', '~> 4.1.2'
+pod 'UIColor_Hex_Swift', '~> 1.8'

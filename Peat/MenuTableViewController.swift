@@ -156,7 +156,12 @@ class MenuTableViewController: UITableViewController {
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     switch mode {
     case .Notification:
-      break
+      NSNotificationCenter.defaultCenter().postNotificationName("navItemSelected", object: self, userInfo: nil)
+      self.rootController?.tabBarController?.selectedIndex = 1
+      if let users = self.requestUsers {
+        let user = users[indexPath.row]
+        NSNotificationCenter.defaultCenter().postNotificationName("userSelected", object: nil, userInfo: nil)
+      }
     case .Settings:
         if settingsNavItems[indexPath.row] == "Log Out" {
           CurrentUser.info.logOut()

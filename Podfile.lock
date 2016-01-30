@@ -32,6 +32,7 @@ PODS:
     - AWSCore (= 2.2.6)
   - KeychainSwift (3.0.0)
   - Socket.IO-Client-Swift (4.1.2)
+  - UIColor_Hex_Swift (1.8)
 
 DEPENDENCIES:
   - AWSAutoScaling
@@ -52,6 +53,7 @@ DEPENDENCIES:
   - AWSSQS
   - KeychainSwift (~> 3.0)
   - Socket.IO-Client-Swift (~> 4.1.2)
+  - UIColor_Hex_Swift (~> 1.8)
 
 SPEC CHECKSUMS:
   AWSAutoScaling: cafa0f5bba29dbb20122b314abac57132ba669ab
@@ -72,5 +74,6 @@ SPEC CHECKSUMS:
   AWSSQS: a2304d18086ce907aa7a8bba275861a69886a662
   KeychainSwift: 735f3b9803ce56c47f6f772c8f2013afd515ae07
   Socket.IO-Client-Swift: e9e173cf20d6fa33c1c1c4f6354c7b168259eeb6
+  UIColor_Hex_Swift: a66b9d5f6e8fddbd9fe32996504f0b7e9d20d680
 
-COCOAPODS: 0.38.2
+COCOAPODS: 0.39.0

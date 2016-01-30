@@ -46,7 +46,7 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate, Vi
           //show error
         }
       })
-      
+      NSNotificationCenter.defaultCenter().addObserver(self, selector: "showProfileForUser:", name: "userSelected", object: nil)
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "showSearchResults", name: "recievedSearchResults", object: nil)
     }
 
@@ -134,6 +134,13 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate, Vi
   }
   
   //MARK: Sidebar
+  func showProfileForUser(notification: NSNotification) {
+    if let userObject = notification.object as? User {
+      self.selectedUser = userObject
+      self.performSegueWithIdentifier("profileForUser", sender: self)
+    }
+  }
+  
   func initializeSidebar() {
     self.sidebarClient = SideMenuClient(clientController: self, tabBar: self.tabBarController)
   }
