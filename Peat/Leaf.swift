@@ -17,7 +17,7 @@ protocol TreeDelegate {
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer)
   func checkForOverlaps(intruder: Leaf)
   func removeLeafFromView(leaf: Leaf)
-  func connectionsBeingDrawn(fromLeaf: Leaf, sender: UIGestureRecognizer, previousConnection: LeafConnection?)
+  func connectionsBeingDrawn(fromLeaf: Leaf, sender: UIGestureRecognizer)
 }
 
 typealias CoordinatePair = (x: CGFloat, y: CGFloat)
@@ -246,7 +246,7 @@ class Leaf: NSObject {
     if movingEnabled {
       self.treeDelegate?.leafBeingMoved(self, sender: sender)
     } else {
-      self.treeDelegate?.connectionsBeingDrawn(self, sender: sender, previousConnection: nil)
+      self.treeDelegate?.connectionsBeingDrawn(self, sender: sender)
     }
   }
   
@@ -286,17 +286,6 @@ class Leaf: NSObject {
     self.treeDelegate?.removeLeafFromView(self)
   }
   
-  
-// MARK: DRAWING
-  func parseConnections() {
-    //Note: need to add more data in connections
-    //    for connection in connections {
-    //      if let leaf = PeatContentStore.sharedStore.findLeafWithId(connection) {
-    //        self.connectedLeaves.append(leaf)
-    //      }
-    //    }
-  }
-  
   func generateBounds() {
     if let center = center {
       referenceFrame = (x: center.x - Leaf.xOffset, y: center.y - Leaf.yOffset)
@@ -327,30 +316,8 @@ class Leaf: NSObject {
     }
   }
   
-  func drawConnections() {
-//    parseConnections()
-//    for connection in self.connectedLeaves {
-//      if let center = center, connectedCenter = connection.center {
-//      
-//      let path = UIBezierPath()
-//      path.moveToPoint(center)
-//      path.addLineToPoint(connectedCenter)
-//      
-//      let shapeLayer = CAShapeLayer()
-//      shapeLayer.path = path.CGPath
-//      if self.completionStatus {
-//        shapeLayer.strokeColor = connection.completionStatus ? UIColor.greenColor().CGColor : UIColor.grayColor().CGColor
-//      } else {
-//        shapeLayer.strokeColor = UIColor.grayColor().CGColor
-//      }
-//      shapeLayer.lineWidth = 3.0
-//      shapeLayer.fillColor = UIColor.blackColor().CGColor
-//      //LOL @SETH
-//      shapeLayer.zPosition = -1
-//      treeDelegate?.drawConnectionLayer(shapeLayer)
-//      }
-//    }
-  }
+  
+  
   
   func leafDrilldownInitiated() {
     if movingEnabled {

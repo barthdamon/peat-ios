@@ -23,9 +23,7 @@ class TreeViewController: UIViewController, TreeDelegate {
   @IBOutlet weak var saveButton: UIButton!
   
   //Drawing
-  var previousConnectionLayer: CAShapeLayer?
-  var previousPlacedConnection: LeafConnection?
-  
+  var previousConnectionDrawing: CAShapeLayer?
   
   override func viewDidLoad() {
     NSNotificationCenter.defaultCenter().addObserver(self, selector: "fetchTreeData", name: "leavesPopulated", object: nil)
@@ -34,15 +32,6 @@ class TreeViewController: UIViewController, TreeDelegate {
     // Do any additional setup after loading the view.
     configureScrollView()
     fetchTreeData()
-  }
-  
-  override func viewWillAppear(animated: Bool) {
-    super.viewWillAppear(true)
-  }
-
-  override func didReceiveMemoryWarning() {
-      super.didReceiveMemoryWarning()
-      // Dispose of any resources that can be recreated.
   }
   
   func getCurrentActivity() -> String {
@@ -66,39 +55,102 @@ class TreeViewController: UIViewController, TreeDelegate {
     scrollView.contentSize.width = 1000
   }
   
-  func addLeafToScrollView(leaf: Leaf) {
-    if let view = leaf.view {
-      self.scrollView.addSubview(view)
-      checkForOverlaps(leaf)
-      PeatContentStore.sharedStore.addLeafToStore(leaf)
-    }
-  }
-  
+  //MARK: Movement
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer) {
     if let view = leaf.view {
       self.scrollView.bringSubviewToFront(view)
       let center = sender.locationInView(self.scrollView)
       leaf.view?.center = center
       //deal with connections
-      if let connections = PeatContentStore.sharedStore.treeStore.currentConnections, leaves = PeatContentStore.sharedStore.treeStore.currentLeaves {
-        for connection in connections {
-          for maybeConnected in leaves {
-            if connection.toId == maybeConnected.leafId || connection.fromId == maybeConnected.leafId {
-              if let fromLeafId = connection.fromId, fromLeaf = PeatContentStore.sharedStore.leafWithId(fromLeafId) {
-                connectionsBeingDrawn(fromLeaf, sender: sender, previousConnection: connection)
-              }
-              //probably just redraw the connection starting with a new bezier path on the previous leaf
-            }
-          }
-        }
-      }
       self.profileDelegate?.changesMade(leaf)
+    }
+    if let existingAnchors = findExistingConnectionsForMoving(leaf) {
+      for anchor in existingAnchors {
+        updateConnection(anchor, sender: sender)
+      }
     }
     //allow the leaf to move with the gesture until the gesture is finished, then place the leaf and remove the shadow
   }
   
-  func connectionsBeingDrawn(fromLeaf: Leaf, sender: UIGestureRecognizer, previousConnection: LeafConnection?) {
+  func findExistingConnectionsForMoving(leaf: Leaf) -> Array<(leaf: Leaf, connection: LeafConnection)>? {
+    if let connections = PeatContentStore.sharedStore.treeStore.currentConnections, leaves = PeatContentStore.sharedStore.treeStore.currentLeaves {
+      var anchorLeaves: Array<(leaf: Leaf, connection: LeafConnection)> = Array()
+      for connection in connections {
+        //          var toLeaf: Leaf?
+        for maybeConnected in leaves {
+          if connection.toId == maybeConnected.leafId && connection.fromId == leaf.leafId || connection.fromId == maybeConnected.leafId && connection.toId == leaf.leafId {
+            anchorLeaves.append(leaf: maybeConnected, connection: connection)
+          }
+        }
+      }
+      if anchorLeaves.count > 0 {
+        return anchorLeaves
+      }
+    }
+    return nil
+  }
+  
+  func findExistingConnectionsForDrawn(leaf: Leaf) -> (leaf: Leaf, connection: LeafConnection)? {
+    var anchorLeaf: (leaf: Leaf, connection: LeafConnection)?
+    if let connections = PeatContentStore.sharedStore.treeStore.currentConnections, leaves = PeatContentStore.sharedStore.treeStore.currentLeaves {
+      for connection in connections {
+        //          var toLeaf: Leaf?
+        if connection.fromId == leaf.leafId || connection.toId == nil {
+          anchorLeaf = (leaf: leaf, connection: connection)
+        }
+      }
+    }
+    return anchorLeaf
+  }
+  
+  func connectionsBeingDrawn(fromLeaf: Leaf, sender: UIGestureRecognizer) {
+    if let anchor = findExistingConnectionsForDrawn(fromLeaf) {
+      //should only be one in this case if it gets found....
+      updateConnection(anchor, sender: sender)
+    } else {
+      drawConnection(fromLeaf, sender: sender)
+    }
+  }
+  
+  func updateConnection(anchor: (leaf: Leaf, connection: LeafConnection), sender: UIGestureRecognizer) {
+    let finger = sender.locationInView(self.scrollView)
+    if sender.state == UIGestureRecognizerState.Ended {
+      var connected = false
+      for storedLeaf in PeatContentStore.sharedStore.leaves {
+        if storedLeaf != anchor.leaf {
+          if let leafView = storedLeaf.view {
+            if CGRectContainsPoint(leafView.frame, finger) {
+              anchor.connection.toId = storedLeaf.leafId
+              connected = true
+            }
+          }
+        }
+      }
+      if !connected {
+        anchor.connection.connectionLayer?.removeFromSuperlayer()
+      }
+    } else {
+      let path = UIBezierPath()
+      path.moveToPoint(view.center)
+      path.addLineToPoint(finger)
+      anchor.connection.connectionLayer?.path = path.CGPath
+//      let path = UIBezierPath()
+//      anchor.connection.connectionLayer?.removeFromSuperlayer()
+//      let finger = sender.locationInView(self.scrollView)
+//      path.moveToPoint(view.center)
+//      path.addLineToPoint(finger)
+//      let shapeLayer = CAShapeLayer()
+//      shapeLayer.path = path.CGPath
+//      //TODO: check completionStatus when line set?
+//      shapeLayer.strokeColor = UIColor.grayColor().CGColor
+//      anchor.connection.connectionLayer = shapeLayer
+//      scrollView.layer.addSublayer(shapeLayer)
+    }
+  }
+  
+  func drawConnection(fromLeaf: Leaf, sender: UIGestureRecognizer) {
     if let view = fromLeaf.view {
+      //see if there is an eistingConnection first
       let finger = sender.locationInView(self.scrollView)
       let path = UIBezierPath()
       path.moveToPoint(view.center)
@@ -108,56 +160,50 @@ class TreeViewController: UIViewController, TreeDelegate {
       //TODO: check completionStatus when line set?
       shapeLayer.strokeColor = UIColor.grayColor().CGColor
       shapeLayer.zPosition = -1
-      
-      var connected = false
-      var toLeaf: Leaf?
-      //gesture ending, check if should place line
-      if sender.state == UIGestureRecognizerState.Ended {
-        for leaf in PeatContentStore.sharedStore.leaves {
-          if leaf != fromLeaf {
-            if let leafView = leaf.view {
-              if CGRectContainsPoint(leafView.frame, finger) {
-                connected = true
-                toLeaf = leaf
-              }
-            }
-          }
-        }
-        if connected {
-          //connected, place
-          self.drawConnectionLayer(shapeLayer, from: fromLeaf, to: toLeaf, previousConnection: nil)
-        } else {
-          //not connected, remove
-          self.previousConnectionLayer?.removeFromSuperlayer()
-        }
-        //gesture not ending, just keep drawing
-      } else {
-        self.drawConnectionLayer(shapeLayer, from: nil, to: nil, previousConnection: previousConnection)
-      }
+      PeatContentStore.sharedStore.newConnection(shapeLayer, from: fromLeaf, to: nil)
+      scrollView.layer.addSublayer(shapeLayer)
     }
   }
   
-  func drawConnectionLayer(connection: CAShapeLayer, from: Leaf?, to: Leaf?, previousConnection: LeafConnection?) {
-    //when picking up a leaf that already has a conenction
-    if let lastPlacedConnection = previousConnection?.connectionLayer {
-      self.previousConnectionLayer = lastPlacedConnection
-      previousConnection?.resetForMovement()
-    }
-    //just normal movement
-    if let previous = self.previousConnectionLayer {
-      previous.removeFromSuperlayer()
-    }
-    if let from = from, to = to {
-//      let newConnection = LeafConnection.newConnection(connection, from: from, to: to)
-      PeatContentStore.sharedStore.newConnection(connection, from: from, to: to)
-      scrollView.layer.addSublayer(connection)
-      self.previousConnectionLayer = nil
+  
+  //MARK: Groupings
+  func dealWithGroupings(higherLeaf: Leaf, lowerLeaf: Leaf) {
+  //[{name: String, color: String, zIndex: Number}]
+    if let existingGrouping = lowerLeaf.grouping {
+      //add the leaf to the existing grouping
+      higherLeaf.grouping = lowerLeaf.grouping
     } else {
-      scrollView.layer.addSublayer(connection)
-      self.previousConnectionLayer = connection
+      //create new grouping and put both leaves in it
+      //prompt user for a name in a popover text field
+      let groupingName = "Rails"
+      let newGrouping = LeafGrouping.newGrouping(groupingName)
+      higherLeaf.grouping = newGrouping
+      lowerLeaf.grouping = newGrouping
     }
   }
   
+  
+  
+  
+  //Mark General Drawing:
+  func addLeafToScrollView(leaf: Leaf) {
+    if let view = leaf.view {
+      self.scrollView.addSubview(view)
+      checkForOverlaps(leaf)
+      PeatContentStore.sharedStore.addLeafToStore(leaf)
+    }
+  }
+  
+  func displayLeaves() {
+    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+      for leaf in PeatContentStore.sharedStore.leaves {
+        leaf.treeDelegate = self
+        leaf.generateBounds()
+//        leaf.drawConnections()
+      }
+    })
+  }
+
   func checkForOverlaps(intruder: Leaf) {
     for leaf in PeatContentStore.sharedStore.leaves {
       if leaf != intruder {
@@ -176,32 +222,6 @@ class TreeViewController: UIViewController, TreeDelegate {
         }
       }
     }
-  }
-  
-  func dealWithGroupings(higherLeaf: Leaf, lowerLeaf: Leaf) {
-  //[{name: String, color: String, zIndex: Number}]
-    if let existingGrouping = lowerLeaf.grouping {
-      //add the leaf to the existing grouping
-    } else {
-      //create new grouping and put both leaves in it
-      //prompt user for a name in a popover text field
-      let groupingName = "Rails"
-      let newGrouping = LeafGrouping.newGrouping(groupingName)
-      higherLeaf.grouping = newGrouping
-      lowerLeaf.grouping = newGrouping
-      
-      
-    }
-  }
-  
-  func displayLeaves() {
-    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-      for leaf in PeatContentStore.sharedStore.leaves {
-        leaf.treeDelegate = self
-        leaf.generateBounds()
-        leaf.drawConnections()
-      }
-    })
   }
 
   func fetchTreeData() {

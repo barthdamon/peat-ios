@@ -15,18 +15,18 @@ class LeafConnection: NSObject {
   
   var fromLeaf: Leaf? {
     didSet {
-      fromId = fromLeaf!.leafId
+      fromId = fromLeaf?.leafId
     }
   }
   var toLeaf: Leaf? {
     didSet {
-      toId = toLeaf!.leafId
+      toId = toLeaf?.leafId
     }
   }
   
   var connectionLayer: CAShapeLayer?
   
-  static func newConnection(layer: CAShapeLayer, from: Leaf, to: Leaf) -> LeafConnection {
+  static func newConnection(layer: CAShapeLayer, from: Leaf?, to: Leaf?) -> LeafConnection {
     let newConnection = LeafConnection()
     newConnection.fromLeaf = from
     newConnection.toLeaf = to
@@ -34,7 +34,12 @@ class LeafConnection: NSObject {
     return newConnection
   }
   
+  func params() {
+    
+  }
+  
   func resetForMovement() {
+    self.connectionLayer?.removeFromSuperlayer()
     self.connectionLayer = nil
   }
   
