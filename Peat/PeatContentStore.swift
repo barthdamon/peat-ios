@@ -191,11 +191,13 @@ class PeatContentStore: NSObject {
     }
   }
   
-  func findCollection(from: Leaf, to: Leaf) -> LeafConnection? {
-    if let currentConnections = self.treeStore.currentConnections {
-      for connection in currentConnections {
-        if connection.toId == to.leafId && connection.fromId == from.leafId {
-          return connection
+  func findConnection(from: Leaf?, to: Leaf?) -> LeafConnection? {
+    if let from = from, to = to {
+      if let currentConnections = self.treeStore.currentConnections {
+        for connection in currentConnections {
+          if connection.toId == to.leafId && connection.fromId == from.leafId {
+            return connection
+          }
         }
       }
     }
@@ -203,8 +205,12 @@ class PeatContentStore: NSObject {
   }
   
   func newConnection(connectionLayer: CAShapeLayer, from: Leaf?, to: Leaf?) {
-    let newConnection = LeafConnection.newConnection(connectionLayer, from: from, to: to)
-    self.addConnection(newConnection)
+//    if let existingConnection = findConnection(from, to: to) {
+//      existingConnection.connectionLayer = connectionLayer
+//    } else {
+      let newConnection = LeafConnection.newConnection(connectionLayer, from: from, to: to)
+      self.addConnection(newConnection)
+//    }
   }
   
 }

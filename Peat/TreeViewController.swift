@@ -95,7 +95,7 @@ class TreeViewController: UIViewController, TreeDelegate {
     if let connections = PeatContentStore.sharedStore.treeStore.currentConnections, leaves = PeatContentStore.sharedStore.treeStore.currentLeaves {
       for connection in connections {
         //          var toLeaf: Leaf?
-        if connection.fromId == leaf.leafId || connection.toId == nil {
+        if connection.fromId == leaf.leafId && connection.toId == nil {
           anchorLeaf = (leaf: leaf, connection: connection)
         }
       }
@@ -108,7 +108,7 @@ class TreeViewController: UIViewController, TreeDelegate {
       //should only be one in this case if it gets found....
       updateConnection(anchor, sender: sender)
     } else {
-      drawConnection(fromLeaf, sender: sender)
+      drawConnection(fromLeaf, sender: sender, existingConnection: nil)
     }
   }
   
@@ -130,25 +130,12 @@ class TreeViewController: UIViewController, TreeDelegate {
         anchor.connection.connectionLayer?.removeFromSuperlayer()
       }
     } else {
-      let path = UIBezierPath()
-      path.moveToPoint(view.center)
-      path.addLineToPoint(finger)
-      anchor.connection.connectionLayer?.path = path.CGPath
-//      let path = UIBezierPath()
-//      anchor.connection.connectionLayer?.removeFromSuperlayer()
-//      let finger = sender.locationInView(self.scrollView)
-//      path.moveToPoint(view.center)
-//      path.addLineToPoint(finger)
-//      let shapeLayer = CAShapeLayer()
-//      shapeLayer.path = path.CGPath
-//      //TODO: check completionStatus when line set?
-//      shapeLayer.strokeColor = UIColor.grayColor().CGColor
-//      anchor.connection.connectionLayer = shapeLayer
-//      scrollView.layer.addSublayer(shapeLayer)
+      anchor.connection.connectionLayer?.removeFromSuperlayer()
+      drawConnection(anchor.leaf, sender: sender, existingConnection: anchor.connection)
     }
   }
   
-  func drawConnection(fromLeaf: Leaf, sender: UIGestureRecognizer) {
+  func drawConnection(fromLeaf: Leaf, sender: UIGestureRecognizer, existingConnection: LeafConnection?) {
     if let view = fromLeaf.view {
       //see if there is an eistingConnection first
       let finger = sender.locationInView(self.scrollView)
@@ -160,7 +147,11 @@ class TreeViewController: UIViewController, TreeDelegate {
       //TODO: check completionStatus when line set?
       shapeLayer.strokeColor = UIColor.grayColor().CGColor
       shapeLayer.zPosition = -1
-      PeatContentStore.sharedStore.newConnection(shapeLayer, from: fromLeaf, to: nil)
+      if let existing = existingConnection {
+        existing.connectionLayer = shapeLayer
+      } else {
+        PeatContentStore.sharedStore.newConnection(shapeLayer, from: fromLeaf, to: nil)
+      }
       scrollView.layer.addSublayer(shapeLayer)
     }
   }
