@@ -15,6 +15,15 @@ class LeafGrouping: NSObject {
   var name: String?
   var colorString: String?
   
+  var groupingView: UIView?
+  var groupingId: String?
+  
+  var center: CGPoint?
+  var height: Int?
+  var width: Int?
+  
+  var leafIds: Array<String>?
+  
   var rgbColor: UIColor? {
     didSet {
       self.colorString = rgbColor?.hexString()
@@ -22,10 +31,12 @@ class LeafGrouping: NSObject {
   }
   
   
-  static func newGrouping(name: String) -> LeafGrouping {
+  static func newGrouping(center: CGPoint) -> LeafGrouping {
     let newGrouping = LeafGrouping()
+    newGrouping.center = center
+    //generate random color
     newGrouping.rgbColor = UIColor.redColor()
-    newGrouping.name = name
+    newGrouping.groupingId = generateId()
     
     return newGrouping
   }
@@ -35,6 +46,11 @@ class LeafGrouping: NSObject {
     grouping.name = json["name"] as? String
     grouping.zIndex = json["zIndex"] as? Int
     grouping.colorString = json["colorString"] as? String
+    if let layout = json["layout"] as? jsonObject {
+      if let coordinates = layout["center"] as? jsonObject, x = coordinates["x"] as? Int, y = coordinates["y"] as? Int {
+        grouping.center = CGPoint(x: x, y: y)
+      }
+    }
     if let colorString = grouping.colorString {
       grouping.rgbColor = UIColor.fromHex(colorString)
     }

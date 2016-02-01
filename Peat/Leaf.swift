@@ -37,13 +37,10 @@ class Leaf: NSObject {
     return standardHeight / 2
   }
   // Unique Drawing Variables
-  var previousCenter: CGPoint?
   var center: CGPoint?
   var paramCenter: CGPoint? {
     return self.view != nil ? self.view!.center : center
   }
-  var connections: Array<LeafConnection>?
-  var connectionLayers: Array<CAShapeLayer>?
   var grouping: LeafGrouping? {
     didSet {
       drawGrouping()
@@ -101,15 +98,15 @@ class Leaf: NSObject {
         leaf.grouping = LeafGrouping.groupingFromJson(grouping)
       }
       
-      if let connections = layout["connections"] as? Array<jsonObject> {
-        leaf.connections = Array()
-        for connection in connections {
-          if let leafId = connection["leafId"] as? String, typeString = connection["type"] as? String, type = LeafConnectionType(rawValue: typeString) {
-//            leaf.connections!.append((leafId: leafId, type: type))
-          }
-        }
-        
-      }
+//      if let connections = layout["connections"] as? Array<jsonObject> {
+//        leaf.connections = Array()
+//        for connection in connections {
+//          if let leafId = connection["leafId"] as? String, typeString = connection["type"] as? String, type = LeafConnectionType(rawValue: typeString) {
+////            leaf.connections!.append((leafId: leafId, type: type))
+//          }
+//        }
+//        
+//      }
       if let coordinates = layout["coordinates"] as? jsonObject, x = coordinates["x"] as? CGFloat, y = coordinates["y"] as? CGFloat {
         leaf.center = CGPoint(x: x, y: y)
       }

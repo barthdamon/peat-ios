@@ -13,7 +13,7 @@
         <scene sceneID="CcB-Jw-sJR">
             <objects>
                 <navigationController title="Friends Navigation Controller" id="b9L-JY-Id9" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="friends" id="VG0-os-B03"/>
+                    <tabBarItem key="tabBarItem" title="Following" image="friends" id="VG0-os-B03"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Knm-q0-6DS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -30,7 +30,7 @@
         <scene sceneID="KoD-Gz-hEa">
             <objects>
                 <navigationController title="Profile Navigation Controller" id="RZZ-TF-ezG" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="tree" id="CoR-x4-VKF"/>
+                    <tabBarItem key="tabBarItem" title="My Progress" image="tree" id="CoR-x4-VKF"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="JET-n0-Zzi">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -47,7 +47,7 @@
         <scene sceneID="tu3-cn-ixd">
             <objects>
                 <navigationController title="Newsfeed Navigation Controller" id="t9h-xH-1sD" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="newsfeed" id="ACA-HO-xH1"/>
+                    <tabBarItem key="tabBarItem" title="News" image="newsfeed" id="ACA-HO-xH1"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="QZs-T6-jE5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1696,6 +1696,6 @@
         <image name="up-arrow" width="46" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="TiI-T8-EkV"/>
+        <segue reference="QPT-Dv-15e"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -162,15 +162,38 @@ class TreeViewController: UIViewController, TreeDelegate {
   //[{name: String, color: String, zIndex: Number}]
     if let existingGrouping = lowerLeaf.grouping {
       //add the leaf to the existing grouping
+      //need a didset that adds the leaf to the grouping view if the grouping view exists perhaps??
       higherLeaf.grouping = lowerLeaf.grouping
     } else {
       //create new grouping and put both leaves in it
       //prompt user for a name in a popover text field
-      let groupingName = "Rails"
-      let newGrouping = LeafGrouping.newGrouping(groupingName)
-      higherLeaf.grouping = newGrouping
-      lowerLeaf.grouping = newGrouping
+      if let center = lowerLeaf.center {
+        let newGrouping = LeafGrouping.newGrouping(center)
+        higherLeaf.grouping = newGrouping
+        lowerLeaf.grouping = newGrouping
+        drawGrouping(newGrouping, lowerLeaf: lowerLeaf, higherLeaf: higherLeaf)
+      }
     }
+  }
+  
+  
+  func drawGrouping(grouping: LeafGrouping, lowerLeaf: Leaf, higherLeaf: Leaf) {
+    if let x = lowerLeaf.center?.x, y = lowerLeaf.center?.y {
+      let groupingFrame = CGRectMake(x - Leaf.standardWidth, y - Leaf.standardWidth, Leaf.standardWidth * 3, Leaf.standardHeight * 3)
+      let groupingView = UIView(frame: groupingFrame)
+      groupingView.layer.zPosition = -2
+      //Take the leaves centers and manipuate them by subtracting off the groupings stats. that way
+      //when grouping is deleted the leaves stay where they are but you can also move the leaves and change their centers
+      //would have to change their centers within the scroll view, not the grouping view
+      
+      //groupingViews need a lot of the same gesture recognizers as leaves.....
+      if let colorString = grouping.colorString {
+        groupingView.backgroundColor = UIColor.fromHex(colorString)
+      }
+      self.scrollView.addSubview(groupingView)
+      grouping.groupingView = groupingView
+    }
+    
   }
   
   
