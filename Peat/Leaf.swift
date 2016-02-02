@@ -18,7 +18,7 @@ protocol TreeDelegate {
   func checkForOverlaps(intruder: Leaf)
   func removeLeafFromView(leaf: Leaf)
   func connectionsBeingDrawn(fromLeaf: Leaf?, fromGrouping: LeafGrouping?, sender: UIGestureRecognizer)
-  func addGroupingToScrollView(grouping: LeafGrouping)
+  func addGroupingToScrollView(grouping: LeafGrouping, lowerLeaf: Leaf, higherLeaf: Leaf)
   func groupingBeingMoved(leaf: LeafGrouping, sender: UIGestureRecognizer)
 }
 
@@ -45,11 +45,8 @@ class Leaf: NSObject {
   var paramCenter: CGPoint? {
     return self.view != nil ? self.view!.center : center
   }
-  var grouping: LeafGrouping? {
-    didSet {
-      drawGrouping()
-    }
-  }
+  var grouping: LeafGrouping?
+  var scrollView: UIScrollView?
   
   // Leaf
   var treeDelegate: TreeDelegate?
@@ -119,12 +116,13 @@ class Leaf: NSObject {
     return leaf
   }
   
-  static func initFromTree(center: CGPoint, delegate: TreeDelegate) -> Leaf {
+  static func initFromTree(center: CGPoint, delegate: TreeDelegate, scrollView: UIScrollView) -> Leaf {
     let newLeaf = Leaf()
     newLeaf.center = center
     newLeaf.treeDelegate = delegate
     newLeaf.brandNew = true
     newLeaf.leafId = generateId()
+    newLeaf.scrollView = scrollView
     newLeaf.user_Id = CurrentUser.info.model?._id
     return newLeaf
   }
@@ -303,28 +301,38 @@ class Leaf: NSObject {
         view.layer.cornerRadius = 10
 //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
         addGestureRecognizers()
-        drawGrouping()
+//        drawGrouping()
         treeDelegate?.addLeafToScrollView(self)
       }
     }
   }
   
-  func drawGrouping() {
-    if let grouping = self.grouping, view = self.view {
-      view.layer.borderColor = grouping.rgbColor?.CGColor
-      view.layer.borderWidth = 3
-      self.groupingLabel?.text = grouping.name
-    }
-  }
+//  func drawGrouping() {
+//    if let grouping = self.grouping, view = self.view {
+//      view.layer.borderColor = grouping.rgbColor?.CGColor
+//      view.layer.borderWidth = 3
+//      self.groupingLabel?.text = grouping.name
+//    }
+//  }
   
   
   func leafDrilldownInitiated() {
     if movingEnabled {
       movingEnabled = false
       deselectLeaf()
-      treeDelegate?.checkForOverlaps(self)
+//      treeDelegate?.checkForOverlaps(self)
     } else {
       treeDelegate?.drillIntoLeaf(self)
+    }
+  }
+  
+  func parentView() -> UIView? {
+    if let grouping = grouping, groupingView = grouping.view {
+      return groupingView
+    } else if let scrollView = scrollView {
+      return scrollView
+    } else {
+      return nil
     }
   }
   

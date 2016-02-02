@@ -61,12 +61,9 @@ class TreeViewController: UIViewController, TreeDelegate {
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer) {
     if let view = leaf.view {
       var finger: CGPoint = CGPoint()
-      if let grouping = leaf.grouping {
-        grouping.view?.bringSubviewToFront(view)
-        finger = sender.locationInView(grouping.view)
-      } else {
-        self.scrollView.bringSubviewToFront(view)
-        finger = sender.locationInView(self.scrollView)
+      if let parentView = leaf.parentView() {
+        parentView.bringSubviewToFront(view)
+        finger = sender.locationInView(parentView)
       }
       leaf.view?.center = finger
       self.profileDelegate?.changesMade(leaf, grouping: nil)
@@ -172,32 +169,34 @@ class TreeViewController: UIViewController, TreeDelegate {
   }
   
   func updateConnection(anchor: (leaf: Leaf, connection: LeafConnection), sender: UIGestureRecognizer) {
-    let finger = sender.locationInView(self.scrollView)
-    if sender.state == UIGestureRecognizerState.Ended {
-      var connected = false
-      for storedLeaf in PeatContentStore.sharedStore.leaves {
-        if storedLeaf != anchor.leaf {
-          if let leafView = storedLeaf.view {
-            if CGRectContainsPoint(leafView.frame, finger) {
-              anchor.connection.toId = storedLeaf.leafId
-              connected = true
+    if let parentView = anchor.leaf.parentView() {
+      let finger = sender.locationInView(parentView)
+      if sender.state == UIGestureRecognizerState.Ended {
+        var connected = false
+        for storedLeaf in PeatContentStore.sharedStore.leaves {
+          if storedLeaf != anchor.leaf {
+            if let leafView = storedLeaf.view {
+              if CGRectContainsPoint(leafView.frame, finger) {
+                anchor.connection.toId = storedLeaf.leafId
+                connected = true
+              }
             }
           }
         }
-      }
-      if !connected {
+        if !connected {
+          anchor.connection.connectionLayer?.removeFromSuperlayer()
+        }
+      } else {
         anchor.connection.connectionLayer?.removeFromSuperlayer()
+        drawConnection(anchor.leaf, sender: sender, existingConnection: anchor.connection)
       }
-    } else {
-      anchor.connection.connectionLayer?.removeFromSuperlayer()
-      drawConnection(anchor.leaf, sender: sender, existingConnection: anchor.connection)
     }
   }
   
   func drawConnection(fromLeaf: Leaf, sender: UIGestureRecognizer, existingConnection: LeafConnection?) {
-    if let view = fromLeaf.view {
+    if let view = fromLeaf.view, parentView = fromLeaf.parentView(){
       //see if there is an eistingConnection first
-      let finger = sender.locationInView(self.scrollView)
+      let finger = sender.locationInView(parentView)
       let path = UIBezierPath()
       path.moveToPoint(view.center)
       path.addLineToPoint(finger)
@@ -263,30 +262,26 @@ class TreeViewController: UIViewController, TreeDelegate {
   func newGrouping(timer: NSTimer) {
     if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, lowerLeaf = info["lowerLeaf"] as? Leaf, leafView = leaf.view, lowerView = lowerLeaf.view, center = lowerLeaf.center {
       let newGrouping = LeafGrouping.newGrouping(center, delegate: self)
-      newGrouping.generateBounds()
-      if let groupingView = newGrouping.view {
-        leafView.removeFromSuperview()
-        lowerView.removeFromSuperview()
-        leafView.center.x -= groupingView.center.x
-        leafView.center.y -= groupingView.center.y
-        lowerView.center.x -= groupingView.center.x
-        lowerView.center.y -= groupingView.center.y
-        lowerLeaf.grouping = newGrouping
-        leaf.grouping = newGrouping
-        leaf.deselectLeaf()
-        groupingView.addSubview(leafView)
-        groupingView.addSubview(lowerView)
-      }
+      newGrouping.drawGrouping(lowerLeaf, highlightedLeaf: leaf)
     }
   }
   
-  
-  
   //Mark General Drawing:
-  func addGroupingToScrollView(grouping: LeafGrouping) {
+  func addGroupingToScrollView(grouping: LeafGrouping, lowerLeaf: Leaf, higherLeaf: Leaf) {
     if let view = grouping.view {
       self.scrollView.addSubview(view)
       PeatContentStore.sharedStore.addGroupingToStore(grouping)
+      if let lowerView = lowerLeaf.view, highlightedView = higherLeaf.view {
+//        highlightedView.removeFromSuperview()
+//        lowerView.removeFromSuperview()
+        view.addSubview(lowerView)
+        view.addSubview(highlightedView)
+        lowerView.center.x = Leaf.standardWidth
+        lowerView.center.y = Leaf.standardHeight / 2
+        highlightedView.center.x = Leaf.standardWidth
+        highlightedView.center.y = Leaf.standardHeight * 2
+        higherLeaf.deselectLeaf()
+      }
     }
   }
   
@@ -348,7 +343,7 @@ class TreeViewController: UIViewController, TreeDelegate {
     print("Sender: \(sender)")
     let center: CGPoint = sender.locationInView(self.scrollView)
     print("SENDER: \(center)")
-    let newLeaf = Leaf.initFromTree(center, delegate: self)
+    let newLeaf = Leaf.initFromTree(center, delegate: self, scrollView: self.scrollView)
     newLeaf.generateBounds()
     self.profileDelegate?.changesMade(newLeaf, grouping: nil)
   }

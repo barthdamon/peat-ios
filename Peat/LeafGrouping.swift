@@ -104,14 +104,10 @@ class LeafGrouping: NSObject {
     }
   }
   
-  func generateBounds() {
+  func drawGrouping(lowerLeaf: Leaf, highlightedLeaf: Leaf) {
     if let center = center {
-      referenceFrame = (x: center.x - (Leaf.standardWidth * 2), y: center.y - (Leaf.standardHeight * 2))
-      createFrame()
+      referenceFrame = (x: center.x - Leaf.standardWidth, y: center.y - Leaf.standardHeight)
     }
-  }
-  
-  func createFrame() {
     if let frame = referenceFrame {
       let frame = CGRectMake(frame.x, frame.y, Leaf.standardWidth * 3, Leaf.standardHeight * 3)
       view = UIView(frame: frame)
@@ -122,7 +118,7 @@ class LeafGrouping: NSObject {
         view.layer.cornerRadius = 10
         //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
         addGestureRecognizers()
-        treeDelegate?.addGroupingToScrollView(self)
+        treeDelegate?.addGroupingToScrollView(self, lowerLeaf: lowerLeaf, higherLeaf: highlightedLeaf)
       }
     }
   }
@@ -163,7 +159,6 @@ class LeafGrouping: NSObject {
     if movingEnabled {
       movingEnabled = false
       deselectGrouping()
-//      treeDelegate?.checkForOverlaps(self)
     }
   }
 
