@@ -44,6 +44,7 @@
 		027E311E1BA2780D001FCF70 /* PeatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E311D1BA2780D001FCF70 /* PeatTests.swift */; };
 		027E31281BA27875001FCF70 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E31271BA27875001FCF70 /* APIService.swift */; };
 		02917C141BEC27A90060999A /* LeafDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02917C131BEC27A90060999A /* LeafDetailViewController.swift */; };
+		0296A8C51C603BA10074D1F1 /* UIColor+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0296A8C41C603BA10074D1F1 /* UIColor+Random.swift */; };
 		02A11C9E1BB9D48E0064AE95 /* MediaTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11C9D1BB9D48E0064AE95 /* MediaTableViewCell.swift */; };
 		02A11CA01BB9D4CA0064AE95 /* NewsfeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11C9F1BB9D4CA0064AE95 /* NewsfeedTableViewController.swift */; };
 		02A11CA51BB9EDAB0064AE95 /* PeatContentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11CA41BB9EDAB0064AE95 /* PeatContentStore.swift */; };
@@ -117,6 +118,7 @@
 		027E311D1BA2780D001FCF70 /* PeatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeatTests.swift; sourceTree = "<group>"; };
 		027E31271BA27875001FCF70 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		02917C131BEC27A90060999A /* LeafDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeafDetailViewController.swift; sourceTree = "<group>"; };
+		0296A8C41C603BA10074D1F1 /* UIColor+Random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Random.swift"; sourceTree = "<group>"; };
 		02A11C9D1BB9D48E0064AE95 /* MediaTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaTableViewCell.swift; sourceTree = "<group>"; };
 		02A11C9F1BB9D4CA0064AE95 /* NewsfeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsfeedTableViewController.swift; sourceTree = "<group>"; };
 		02A11CA41BB9EDAB0064AE95 /* PeatContentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatContentStore.swift; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 				027C33FD1C532E6100D86F0F /* StringHelpers.swift */,
 				027C33FF1C53332900D86F0F /* AlertViews.swift */,
 				022AB6921C5C313D00F1168E /* ColorExtensions.swift */,
+				0296A8C41C603BA10074D1F1 /* UIColor+Random.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -534,6 +537,7 @@
 				02D72E8B1BD0926900EC115E /* FriendsTableViewController.swift in Sources */,
 				02A740F71C4E0044000C080D /* Protocols.swift in Sources */,
 				022AB6931C5C313D00F1168E /* ColorExtensions.swift in Sources */,
+				0296A8C51C603BA10074D1F1 /* UIColor+Random.swift in Sources */,
 				025D0DB31BD5CACB00462783 /* PeatSocialMediator.swift in Sources */,
 				02A11CA51BB9EDAB0064AE95 /* PeatContentStore.swift in Sources */,
 				02A740F51C4DF944000C080D /* EnumHelpers.swift in Sources */,

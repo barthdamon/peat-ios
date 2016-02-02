@@ -16,6 +16,8 @@ class TreeViewController: UIViewController, TreeDelegate {
   var changesMade: Bool = false
   var viewing: User?
   
+  var hoverTimer: NSTimer?
+  
   var profileDelegate: ProfileViewController?
   var currentActivity: String = "Snowboarding"
 
@@ -58,20 +60,73 @@ class TreeViewController: UIViewController, TreeDelegate {
   //MARK: Movement
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer) {
     if let view = leaf.view {
-      self.scrollView.bringSubviewToFront(view)
-      let center = sender.locationInView(self.scrollView)
-      leaf.view?.center = center
-      //deal with connections
-      self.profileDelegate?.changesMade(leaf)
-    }
-    if let existingAnchors = findExistingConnectionsForMoving(leaf) {
-      for anchor in existingAnchors {
-        updateConnection(anchor, sender: sender)
+      var finger: CGPoint = CGPoint()
+      if let grouping = leaf.grouping {
+        grouping.view?.bringSubviewToFront(view)
+        finger = sender.locationInView(grouping.view)
+      } else {
+        self.scrollView.bringSubviewToFront(view)
+        finger = sender.locationInView(self.scrollView)
       }
+      leaf.view?.center = finger
+      self.profileDelegate?.changesMade(leaf, grouping: nil)
+      
+        //Check for grouping hover, with a timer, if it
+        //allow the leaf to move with the gesture until the gesture is finished, then place the leaf and remove the shadow
+        var hovering = false
+        var hoveredGrouping: LeafGrouping?
+        var hoveredLeaf: Leaf?
+      
+        //check if hovering over existing grouping
+        if let groupings = PeatContentStore.sharedStore.treeStore.currentGroupings {
+          for grouping in groupings {
+            if let groupingView = grouping.view {
+              if CGRectContainsPoint(groupingView.frame, finger) {
+                hovering = true
+                hoveredGrouping = grouping
+              }
+            }
+          }
+        }
+
+      //Check if hovering ove existing leaf for new grouping being made
+      if let leaves = PeatContentStore.sharedStore.treeStore.currentLeaves {
+        for lowerLeaf in leaves {
+          if let lowerView = lowerLeaf.view where lowerLeaf != leaf {
+            if CGRectContainsPoint(lowerView.frame, finger) {
+              hovering = true
+              hoveredLeaf = lowerLeaf
+            }
+          }
+        }
+      }
+        
+      if hovering {
+        if let _ = hoverTimer {
+          print("Hovering")
+        } else {
+          if let grouping = hoveredGrouping {
+            hoverTimer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "addLeafToGrouping:", userInfo: ["leaf" : leaf, "grouping" : grouping], repeats: false)
+          } else if let lowerLeaf = hoveredLeaf {
+            hoverTimer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "newGrouping:", userInfo: ["leaf" : leaf, "lowerLeaf" : lowerLeaf], repeats: false)
+          }
+        }
+      } else {
+        hoverTimer = nil
+      }
+      
+      //Update connections
+      if let existingAnchors = findExistingConnectionsForMoving(leaf) {
+        for anchor in existingAnchors {
+          updateConnection(anchor, sender: sender)
+        }
+      }
+      
     }
-    //allow the leaf to move with the gesture until the gesture is finished, then place the leaf and remove the shadow
   }
   
+  
+  //MARK: CONNECTIONS
   func findExistingConnectionsForMoving(leaf: Leaf) -> Array<(leaf: Leaf, connection: LeafConnection)>? {
     if let connections = PeatContentStore.sharedStore.treeStore.currentConnections, leaves = PeatContentStore.sharedStore.treeStore.currentLeaves {
       var anchorLeaves: Array<(leaf: Leaf, connection: LeafConnection)> = Array()
@@ -103,12 +158,16 @@ class TreeViewController: UIViewController, TreeDelegate {
     return anchorLeaf
   }
   
-  func connectionsBeingDrawn(fromLeaf: Leaf, sender: UIGestureRecognizer) {
-    if let anchor = findExistingConnectionsForDrawn(fromLeaf) {
-      //should only be one in this case if it gets found....
-      updateConnection(anchor, sender: sender)
-    } else {
-      drawConnection(fromLeaf, sender: sender, existingConnection: nil)
+  func connectionsBeingDrawn(fromLeaf: Leaf?, fromGrouping: LeafGrouping?, sender: UIGestureRecognizer) {
+    if let fromLeaf = fromLeaf {
+      if let anchor = findExistingConnectionsForDrawn(fromLeaf) {
+        //should only be one in this case if it gets found....
+        updateConnection(anchor, sender: sender)
+      } else {
+        drawConnection(fromLeaf, sender: sender, existingConnection: nil)
+      }
+    } else if let fromGrouping = fromGrouping {
+      
     }
   }
   
@@ -158,48 +217,79 @@ class TreeViewController: UIViewController, TreeDelegate {
   
   
   //MARK: Groupings
-  func dealWithGroupings(higherLeaf: Leaf, lowerLeaf: Leaf) {
-  //[{name: String, color: String, zIndex: Number}]
-    if let existingGrouping = lowerLeaf.grouping {
-      //add the leaf to the existing grouping
-      //need a didset that adds the leaf to the grouping view if the grouping view exists perhaps??
-      higherLeaf.grouping = lowerLeaf.grouping
-    } else {
-      //create new grouping and put both leaves in it
-      //prompt user for a name in a popover text field
-      if let center = lowerLeaf.center {
-        let newGrouping = LeafGrouping.newGrouping(center)
-        higherLeaf.grouping = newGrouping
+  
+  
+//  func dealWithGroupings(higherLeaf: Leaf, lowerLeaf: Leaf) {
+//  //[{name: String, color: String, zIndex: Number}]
+//    if let existingGrouping = lowerLeaf.grouping {
+//      //add the leaf to the existing grouping
+//      //need a didset that adds the leaf to the grouping view if the grouping view exists perhaps??
+//      higherLeaf.grouping = lowerLeaf.grouping
+//    } else {
+//      //create new grouping and put both leaves in it
+//      //prompt user for a name in a popover text field
+////        let newGrouping = LeafGrouping.newGrouping(center)
+////        higherLeaf.grouping = newGrouping
+////        lowerLeaf.grouping = newGrouping
+//        drawGrouping(lowerLeaf, higherLeaf: higherLeaf)
+//    }
+//  }
+  
+  func groupingBeingMoved(grouping: LeafGrouping, sender: UIGestureRecognizer) {
+    if let view = grouping.view {
+      self.scrollView.bringSubviewToFront(view)
+      let center = sender.locationInView(self.scrollView)
+      grouping.view?.center = center
+      //deal with connections
+      self.profileDelegate?.changesMade(nil, grouping: grouping)
+    }
+//    if let existingAnchors = findExistingConnectionsForMoving(leaf) {
+//      for anchor in existingAnchors {
+//        updateConnection(anchor, sender: sender)
+//      }
+//    }
+  }
+  
+  func addLeafToGrouping(timer: NSTimer) {
+    if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, grouping = info["grouping"] as? LeafGrouping, leafView = leaf.view, groupingView = grouping.view {
+      //add leaf to
+      leafView.removeFromSuperview()
+      leafView.center.x -= groupingView.center.x
+      leafView.center.y -= groupingView.center.y
+      groupingView.addSubview(leafView)
+    }
+  }
+  
+  func newGrouping(timer: NSTimer) {
+    if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, lowerLeaf = info["lowerLeaf"] as? Leaf, leafView = leaf.view, lowerView = lowerLeaf.view, center = lowerLeaf.center {
+      let newGrouping = LeafGrouping.newGrouping(center, delegate: self)
+      newGrouping.generateBounds()
+      if let groupingView = newGrouping.view {
+        leafView.removeFromSuperview()
+        lowerView.removeFromSuperview()
+        leafView.center.x -= groupingView.center.x
+        leafView.center.y -= groupingView.center.y
+        lowerView.center.x -= groupingView.center.x
+        lowerView.center.y -= groupingView.center.y
         lowerLeaf.grouping = newGrouping
-        drawGrouping(newGrouping, lowerLeaf: lowerLeaf, higherLeaf: higherLeaf)
+        leaf.grouping = newGrouping
+        leaf.deselectLeaf()
+        groupingView.addSubview(leafView)
+        groupingView.addSubview(lowerView)
       }
     }
   }
-  
-  
-  func drawGrouping(grouping: LeafGrouping, lowerLeaf: Leaf, higherLeaf: Leaf) {
-    if let x = lowerLeaf.center?.x, y = lowerLeaf.center?.y {
-      let groupingFrame = CGRectMake(x - Leaf.standardWidth, y - Leaf.standardWidth, Leaf.standardWidth * 3, Leaf.standardHeight * 3)
-      let groupingView = UIView(frame: groupingFrame)
-      groupingView.layer.zPosition = -2
-      //Take the leaves centers and manipuate them by subtracting off the groupings stats. that way
-      //when grouping is deleted the leaves stay where they are but you can also move the leaves and change their centers
-      //would have to change their centers within the scroll view, not the grouping view
-      
-      //groupingViews need a lot of the same gesture recognizers as leaves.....
-      if let colorString = grouping.colorString {
-        groupingView.backgroundColor = UIColor.fromHex(colorString)
-      }
-      self.scrollView.addSubview(groupingView)
-      grouping.groupingView = groupingView
-    }
-    
-  }
-  
   
   
   
   //Mark General Drawing:
+  func addGroupingToScrollView(grouping: LeafGrouping) {
+    if let view = grouping.view {
+      self.scrollView.addSubview(view)
+      PeatContentStore.sharedStore.addGroupingToStore(grouping)
+    }
+  }
+  
   func addLeafToScrollView(leaf: Leaf) {
     if let view = leaf.view {
       self.scrollView.addSubview(view)
@@ -229,7 +319,6 @@ class TreeViewController: UIViewController, TreeDelegate {
             let newOffsetX = intruderView.center.x - self.scrollView.frame.width / 2
             let newOffsetY = intruderView.center.y - self.scrollView.frame.height / 2
             //need to check if intruder view is in a group already first
-            dealWithGroupings(leaf, lowerLeaf: intruder)
             self.scrollView.setContentOffset(CGPointMake(newOffsetX, newOffsetY), animated: true)
             checkForOverlaps(intruder)
           }
@@ -261,13 +350,13 @@ class TreeViewController: UIViewController, TreeDelegate {
     print("SENDER: \(center)")
     let newLeaf = Leaf.initFromTree(center, delegate: self)
     newLeaf.generateBounds()
-    self.profileDelegate?.changesMade(newLeaf)
+    self.profileDelegate?.changesMade(newLeaf, grouping: nil)
   }
   
   func removeLeafFromView(leaf: Leaf) {
     if let view = leaf.view {
       view.removeFromSuperview()
-      self.profileDelegate?.changesMade(leaf)
+      self.profileDelegate?.changesMade(leaf, grouping: nil)
     }
   }
 }

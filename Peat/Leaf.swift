@@ -17,7 +17,9 @@ protocol TreeDelegate {
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer)
   func checkForOverlaps(intruder: Leaf)
   func removeLeafFromView(leaf: Leaf)
-  func connectionsBeingDrawn(fromLeaf: Leaf, sender: UIGestureRecognizer)
+  func connectionsBeingDrawn(fromLeaf: Leaf?, fromGrouping: LeafGrouping?, sender: UIGestureRecognizer)
+  func addGroupingToScrollView(grouping: LeafGrouping)
+  func groupingBeingMoved(leaf: LeafGrouping, sender: UIGestureRecognizer)
 }
 
 typealias CoordinatePair = (x: CGFloat, y: CGFloat)
@@ -38,6 +40,8 @@ class Leaf: NSObject {
   }
   // Unique Drawing Variables
   var center: CGPoint?
+  var groupingCenter: CGPoint?
+  
   var paramCenter: CGPoint? {
     return self.view != nil ? self.view!.center : center
   }
@@ -243,7 +247,7 @@ class Leaf: NSObject {
     if movingEnabled {
       self.treeDelegate?.leafBeingMoved(self, sender: sender)
     } else {
-      self.treeDelegate?.connectionsBeingDrawn(self, sender: sender)
+      self.treeDelegate?.connectionsBeingDrawn(self, fromGrouping: nil, sender: sender)
     }
   }
   
@@ -312,8 +316,6 @@ class Leaf: NSObject {
       self.groupingLabel?.text = grouping.name
     }
   }
-  
-  
   
   
   func leafDrilldownInitiated() {

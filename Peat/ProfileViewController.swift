@@ -82,8 +82,13 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
       }
     }
   
-  func changesMade(leaf: Leaf) {
-    PeatContentStore.sharedStore.leafChanged(leaf)
+  func changesMade(leaf: Leaf?, grouping: LeafGrouping?) {
+    if let leaf = leaf {
+      PeatContentStore.sharedStore.leafChanged(leaf)
+    }
+    if let grouping = grouping {
+//      print(grouping)
+    }
     self.saveButton.hidden = false
     self.cancelButton.hidden = true
   }

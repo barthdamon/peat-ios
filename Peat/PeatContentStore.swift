@@ -20,6 +20,7 @@ struct TreeStore {
   var currentLeaves: Array<Leaf>?
   var currentConnections: Array<LeafConnection>?
   var currentMediaObjects: Array<MediaObject>?
+  var currentGroupings: Array<LeafGrouping>?
   var selectedLeaf: Leaf?
   var activityName: String?
   
@@ -217,6 +218,15 @@ class PeatContentStore: NSObject {
       let newConnection = LeafConnection.newConnection(connectionLayer, from: from, to: to)
       self.addConnection(newConnection)
 //    }
+  }
+  
+  func addGroupingToStore(grouping: LeafGrouping) {
+    if let _ = self.treeStore.currentGroupings {
+      self.treeStore.currentGroupings!.append(grouping)
+    } else {
+      self.treeStore.currentGroupings = Array()
+      self.treeStore.currentGroupings!.append(grouping)
+    }
   }
   
 }
