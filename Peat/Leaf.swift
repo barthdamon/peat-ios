@@ -26,6 +26,8 @@ typealias CoordinatePair = (x: CGFloat, y: CGFloat)
 
 class Leaf: NSObject {
   
+  var changeStatus: ChangeStatus = .Unchanged
+  
   // Leaf Standards
   static let standardWidth: CGFloat = 100
   static let standardHeight: CGFloat = 50
@@ -46,7 +48,11 @@ class Leaf: NSObject {
     return self.view != nil ? self.view!.center : center
   }
   var grouping: LeafGrouping?
-  var scrollView: UIScrollView?
+  var groupingId: String? {
+    return grouping?.groupingId
+  }
+  
+  var treeView: UIView?
   
   // Leaf
   var treeDelegate: TreeDelegate?
@@ -61,8 +67,6 @@ class Leaf: NSObject {
   var timestamp: Int?
   var leafDescription: String?
   var movingEnabled: Bool = false
-  var brandNew: Bool = false
-  var deleted: Bool = false
   
   var abilityTitleLabel: UILabel?
   var groupingLabel: UILabel?
@@ -95,9 +99,9 @@ class Leaf: NSObject {
     
     if let layout = json["layout"] as? jsonObject {
       
-//      if let grouping = layout["grouping"] as? jsonObject {
-//        leaf.grouping = LeafGrouping.groupingFromJson(grouping)
-//      }
+      if let grouping = layout["grouping"] as? jsonObject {
+        leaf.grouping = LeafGrouping.groupingFromJson(grouping)
+      }
       
 //      if let connections = layout["connections"] as? Array<jsonObject> {
 //        leaf.connections = Array()
@@ -116,45 +120,50 @@ class Leaf: NSObject {
     return leaf
   }
   
-  static func initFromTree(center: CGPoint, delegate: TreeDelegate, scrollView: UIScrollView) -> Leaf {
+  static func initFromTree(center: CGPoint, delegate: TreeDelegate, treeView: UIView) -> Leaf {
     let newLeaf = Leaf()
     newLeaf.center = center
     newLeaf.treeDelegate = delegate
-    newLeaf.brandNew = true
+    newLeaf.changeStatus = .BrandNew
     newLeaf.leafId = generateId()
-    newLeaf.scrollView = scrollView
+    newLeaf.treeView = treeView
     newLeaf.user_Id = CurrentUser.info.model?._id
+    newLeaf.activityName = delegate.getCurrentActivity()
     return newLeaf
+  }
+  
+  func changed(status: ChangeStatus) {
+    //Note: might break on server when updating a leaf that got removed before being created on server
+    guard changeStatus == .BrandNew && status == .Updated else { changeStatus = status; return}
   }
   
   func params() -> jsonObject {
     return [
-      "activityName" : self.treeDelegate!.getCurrentActivity(),
-      "leafId" : self.leafId!,
-      "user_Id" : self.user_Id != nil ? self.user_Id! : "",
+      "activityName" : paramFor(activityName),
+      "leafId" : paramFor(leafId),
+      "user_Id" : paramFor(user_Id),
       "layout" : [
         "coordinates" : [
           "x" : self.paramCenter?.x != nil ? String(self.paramCenter!.x) : "",
           "y" : self.paramCenter?.y != nil ? String(self.paramCenter!.y) : ""
         ],
-        "connections" : "",
-        "grouping" : self.grouping != nil ? self.grouping!.params() : ["":""],
+        "grouping" : paramFor(groupingId),
       ],
       "completionStatus" : self.completionStatus != nil ? self.completionStatus!.rawValue : "",
-      "title" : self.title != nil ? self.title! : "",
-      "description" : self.leafDescription != nil ? self.leafDescription! : ""
+      "title" : paramFor(title),
+      "description" : paramFor(leafDescription)
     ]
   }
   
   func save(callback: (Bool) -> ()) {
-    if brandNew {
+    if changeStatus == .BrandNew {
       API.post(self.params(), url: "leaf/new", callback: { (res, err) in
         if let e = err {
           print("Error creating leaf: \(e)")
           callback(false)
         } else {
           print("Leaf created: \(res)")
-          self.brandNew = false
+          self.changeStatus = .Unchanged
           callback(true)
         }
       })
@@ -251,6 +260,7 @@ class Leaf: NSObject {
   
   func deselectLeaf() {
     if let view = self.view {
+      self.movingEnabled = false
       view.backgroundColor = UIColor.whiteColor()
       view.layer.shadowColor = UIColor.clearColor().CGColor
       view.layer.shadowOpacity = 0
@@ -281,7 +291,7 @@ class Leaf: NSObject {
   }
   
   func deleteButtonPressed() {
-    self.deleted = true
+    self.changeStatus = .Removed
     self.treeDelegate?.removeLeafFromView(self)
   }
   
@@ -329,8 +339,8 @@ class Leaf: NSObject {
   func parentView() -> UIView? {
     if let grouping = grouping, groupingView = grouping.view {
       return groupingView
-    } else if let scrollView = scrollView {
-      return scrollView
+    } else if let treeView = treeView {
+      return treeView
     } else {
       return nil
     }

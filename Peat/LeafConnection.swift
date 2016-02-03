@@ -9,9 +9,12 @@
 import Foundation
 class LeafConnection: NSObject {
   
+  var changeStatus: ChangeStatus = .Unchanged
+  var user_Id: String?
   var fromId: String?
   var toId: String?
   var type: LeafConnectionType?
+  var activityName: String?
   
   var fromLeaf: Leaf? {
     didSet {
@@ -24,18 +27,31 @@ class LeafConnection: NSObject {
     }
   }
   
+  var treeDelegate: TreeDelegate?
   var connectionLayer: CAShapeLayer?
   
-  static func newConnection(layer: CAShapeLayer, from: Leaf?, to: Leaf?) -> LeafConnection {
+  static func newConnection(layer: CAShapeLayer, from: Leaf?, to: Leaf?, delegate: TreeDelegate) -> LeafConnection {
     let newConnection = LeafConnection()
     newConnection.fromLeaf = from
     newConnection.toLeaf = to
     newConnection.connectionLayer = layer
+    newConnection.activityName = delegate.getCurrentActivity()
     return newConnection
   }
   
-  func params() {
-    
+  func changed(status: ChangeStatus) {
+    //Note: might break on server when updating a leaf that got removed before being created on server
+    guard changeStatus == .BrandNew && status == .Updated else { changeStatus = status; return}
+  }
+  
+  func params() -> Dictionary<String, AnyObject> {
+    return [
+      "user_Id": paramFor(user_Id),
+      "type": self.type != nil ? self.type!.rawValue : "",
+      "activityName" : paramFor(activityName),
+      "toId": paramFor(toId),
+      "fromId": paramFor(fromId)
+    ]
   }
   
   func resetForMovement() {

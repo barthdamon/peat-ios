@@ -15,7 +15,14 @@ enum CompletionStatus: String {
 }
 
 enum LeafConnectionType: String {
-  case pre = "pre"
-  case post = "post"
-  case even = "even"
+  case Pre = "pre"
+  case Post = "post"
+  case Even = "even"
+}
+
+enum ChangeStatus {
+  case Removed
+  case Updated
+  case BrandNew
+  case Unchanged
 }

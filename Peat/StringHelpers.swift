@@ -18,3 +18,11 @@ func generateId(length:Int = 50)->String{
   }
   return s as String
 }
+
+func paramFor<T>(param: T?) -> String {
+  if let param = param {
+    return String(param)
+  } else {
+    return ""
+  }
+}

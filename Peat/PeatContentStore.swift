@@ -24,10 +24,6 @@ struct TreeStore {
   var selectedLeaf: Leaf?
   var activityName: String?
   
-  var changedLeaves: Set<Leaf>?
-  var changedConnections: Set<LeafConnection>?
-  var changedGroupings: Set<LeafGrouping>?
-  
   var comments: Array<Comment>?
   
   func mediaForLeaf(leaf: Leaf) -> Array<MediaObject>? {
@@ -52,23 +48,64 @@ struct TreeStore {
   
   func treeParams() -> jsonObject {
     if let name = self.activityName {
-      var updates: Array<jsonObject> = []
-      var removals: Array<jsonObject> = []
+      var updatedLeaves: Array<jsonObject> = []
+      var removedLeaves: Array<jsonObject> = []
       var newLeaves: Array<jsonObject> = []
+      
+      var updatedConnections: Array<jsonObject> = []
+      var removedConnections: Array<jsonObject> = []
       var newConnections: Array<jsonObject> = []
+      
+      var updatedGroupings: Array<jsonObject> = []
+      var removedGroupings: Array<jsonObject> = []
       var newGroupings: Array<jsonObject> = []
-      if let leaves = changedLeaves {
+      
+      if let leaves = currentLeaves {
         for leaf in leaves {
-          if leaf.deleted {
-            removals.append(leaf.params())
-          } else if leaf.brandNew {
+          switch leaf.changeStatus {
+          case .Updated:
+             updatedLeaves.append(leaf.params())
+          case .Removed:
+            removedLeaves.append(leaf.params())
+          case .BrandNew:
             newLeaves.append(leaf.params())
-          } else {
-            updates.append(leaf.params())
+          case .Unchanged:
+            break
           }
         }
       }
-      let params: jsonObject = ["activityName" : name, "newLeaves" : newLeaves, "updated" : updates, "removed" : removals, "newConnections" : newConnections, "newGroupings" : newGroupings]
+      
+      if let groupings = currentGroupings {
+        for grouping in groupings {
+          switch grouping.changeStatus {
+          case .Updated:
+            updatedGroupings.append(grouping.params())
+          case .Removed:
+            removedGroupings.append(grouping.params())
+          case .BrandNew:
+            newGroupings.append(grouping.params())
+          case .Unchanged:
+            break
+          }
+        }
+      }
+      
+      if let connections = currentConnections {
+        for connection in connections {
+          switch connection.changeStatus {
+          case .Updated:
+            updatedConnections.append(connection.params())
+          case .Removed:
+            removedConnections.append(connection.params())
+          case .BrandNew:
+            newConnections.append(connection.params())
+          case .Unchanged:
+            break
+          }
+        }
+      }
+      
+      let params: jsonObject = ["activityName" : name, "updatedLeaves" : updatedLeaves, "removedLeaves" : removedLeaves, "newLeaves" : newLeaves, "updatedConnections" : updatedConnections, "removedConnections": removedConnections, "newConnections" : newConnections, "updatedGroupings" : updatedGroupings, "removedGroupings": removedGroupings, "newGroupings" : newGroupings]
       print("PARAMS FOR TREE SAVE: \(params)")
       return params
     } else {
@@ -158,14 +195,14 @@ class PeatContentStore: NSObject {
     self.treeStore.selectedLeaf = leaf
   }
   
-  func leafChanged(leaf: Leaf) {
-    if let _ = self.treeStore.changedLeaves {
-      self.treeStore.changedLeaves!.insert(leaf)
-    } else {
-      self.treeStore.changedLeaves = Set()
-      self.treeStore.changedLeaves!.insert(leaf)
-    }
-  }
+//  func leafChanged(leaf: Leaf) {
+//    if let _ = self.treeStore.changedLeaves {
+//      self.treeStore.changedLeaves!.insert(leaf)
+//    } else {
+//      self.treeStore.changedLeaves = Set()
+//      self.treeStore.changedLeaves!.insert(leaf)
+//    }
+//  }
   
   func addLeafToStore(leaf: Leaf) {
     if let _ = self.treeStore.currentLeaves {
@@ -211,11 +248,11 @@ class PeatContentStore: NSObject {
     return nil
   }
   
-  func newConnection(connectionLayer: CAShapeLayer, from: Leaf?, to: Leaf?) {
+  func newConnection(connectionLayer: CAShapeLayer, from: Leaf?, to: Leaf?, delegate: TreeDelegate) {
 //    if let existingConnection = findConnection(from, to: to) {
 //      existingConnection.connectionLayer = connectionLayer
 //    } else {
-      let newConnection = LeafConnection.newConnection(connectionLayer, from: from, to: to)
+    let newConnection = LeafConnection.newConnection(connectionLayer, from: from, to: to, delegate: delegate)
       self.addConnection(newConnection)
 //    }
   }

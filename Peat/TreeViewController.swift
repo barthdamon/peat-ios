@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TreeViewController: UIViewController, TreeDelegate {
+class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   // Dynamic Data
 //  var leaves: [Leaf] = Array()
@@ -23,6 +23,8 @@ class TreeViewController: UIViewController, TreeDelegate {
 
   @IBOutlet weak var scrollView: UIScrollView!
   @IBOutlet weak var saveButton: UIButton!
+  
+  var treeView: UIView = UIView()
   
   //Drawing
   var previousConnectionDrawing: CAShapeLayer?
@@ -53,8 +55,29 @@ class TreeViewController: UIViewController, TreeDelegate {
 //    doubleTapRecognizer.numberOfTapsRequired = 2
 //    doubleTapRecognizer.numberOfTouchesRequired = 1
 //    scrollView.addGestureRecognizer(doubleTapRecognizer)
+    scrollView.minimumZoomScale = 0.5
+    scrollView.maximumZoomScale = 6
     scrollView.contentSize.height = 1000
     scrollView.contentSize.width = 1000
+    scrollView.delegate = self
+    
+    //note: 65 cause of the stupid navbar
+    self.treeView = UIView(frame: CGRectMake(0,-65,1000,2000))
+    treeView.backgroundColor = UIColor.blackColor()
+    self.scrollView.addSubview(self.treeView)
+  }
+  
+  func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
+    return self.treeView
+  }
+  
+  func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
+    //do something to expand the view if the user is getting to the edge, then unexpand when the content is shrinking and none of the views are out there
+  }
+  
+  func scrollViewDidEndZooming(scrollView: UIScrollView, withView view: UIView?, atScale scale: CGFloat) {
+    let newScale = scrollView.zoomScale
+    self.treeView.contentScaleFactor = newScale
   }
   
   //MARK: Movement
@@ -66,7 +89,8 @@ class TreeViewController: UIViewController, TreeDelegate {
         finger = sender.locationInView(parentView)
       }
       leaf.view?.center = finger
-      self.profileDelegate?.changesMade(leaf, grouping: nil)
+      leaf.changed(.Updated)
+      self.profileDelegate?.changesMade()
       
         //Check for grouping hover, with a timer, if it
         //allow the leaf to move with the gesture until the gesture is finished, then place the leaf and remove the shadow
@@ -208,7 +232,7 @@ class TreeViewController: UIViewController, TreeDelegate {
       if let existing = existingConnection {
         existing.connectionLayer = shapeLayer
       } else {
-        PeatContentStore.sharedStore.newConnection(shapeLayer, from: fromLeaf, to: nil)
+        PeatContentStore.sharedStore.newConnection(shapeLayer, from: fromLeaf, to: nil, delegate: self)
       }
       parentView.layer.addSublayer(shapeLayer)
     }
@@ -236,11 +260,12 @@ class TreeViewController: UIViewController, TreeDelegate {
   
   func groupingBeingMoved(grouping: LeafGrouping, sender: UIGestureRecognizer) {
     if let view = grouping.view {
-      self.scrollView.bringSubviewToFront(view)
-      let center = sender.locationInView(self.scrollView)
+      self.treeView.bringSubviewToFront(view)
+      let center = sender.locationInView(self.treeView)
       grouping.view?.center = center
       //deal with connections
-      self.profileDelegate?.changesMade(nil, grouping: grouping)
+      grouping.changeStatus = .Updated
+      self.profileDelegate?.changesMade()
     }
 //    if let existingAnchors = findExistingConnectionsForMoving(leaf) {
 //      for anchor in existingAnchors {
@@ -272,7 +297,7 @@ class TreeViewController: UIViewController, TreeDelegate {
   func addGroupingToScrollView(grouping: LeafGrouping, lowerLeaf: Leaf, higherLeaf: Leaf) {
     if let view = grouping.view {
       view.layer.zPosition = -10
-      self.scrollView.addSubview(view)
+      self.treeView.addSubview(view)
       PeatContentStore.sharedStore.addGroupingToStore(grouping)
       if let lowerView = lowerLeaf.view, highlightedView = higherLeaf.view {
 //        highlightedView.removeFromSuperview()
@@ -290,7 +315,7 @@ class TreeViewController: UIViewController, TreeDelegate {
   
   func addLeafToScrollView(leaf: Leaf) {
     if let view = leaf.view {
-      self.scrollView.addSubview(view)
+      self.treeView.addSubview(view)
       checkForOverlaps(leaf)
       PeatContentStore.sharedStore.addLeafToStore(leaf)
     }
@@ -314,8 +339,8 @@ class TreeViewController: UIViewController, TreeDelegate {
             //TODO: offset these more intelligently. still do, but make them a group
             intruderView.center.x += Leaf.standardWidth
             intruderView.center.y += Leaf.standardHeight
-            let newOffsetX = intruderView.center.x - self.scrollView.frame.width / 2
-            let newOffsetY = intruderView.center.y - self.scrollView.frame.height / 2
+            let newOffsetX = intruderView.center.x - self.treeView.frame.width / 2
+            let newOffsetY = intruderView.center.y - self.treeView.frame.height / 2
             //need to check if intruder view is in a group already first
             self.scrollView.setContentOffset(CGPointMake(newOffsetX, newOffsetY), animated: true)
             checkForOverlaps(intruder)
@@ -344,17 +369,19 @@ class TreeViewController: UIViewController, TreeDelegate {
   
   func newLeafInitiated(sender: UILongPressGestureRecognizer) {
     print("Sender: \(sender)")
-    let center: CGPoint = sender.locationInView(self.scrollView)
+    let center: CGPoint = sender.locationInView(self.treeView)
     print("SENDER: \(center)")
-    let newLeaf = Leaf.initFromTree(center, delegate: self, scrollView: self.scrollView)
+    let newLeaf = Leaf.initFromTree(center, delegate: self, treeView: self.treeView)
     newLeaf.generateBounds()
-    self.profileDelegate?.changesMade(newLeaf, grouping: nil)
+    newLeaf.changed(.BrandNew)
+    self.profileDelegate?.changesMade()
   }
   
   func removeLeafFromView(leaf: Leaf) {
     if let view = leaf.view {
       view.removeFromSuperview()
-      self.profileDelegate?.changesMade(leaf, grouping: nil)
+      leaf.changed(.Removed)
+      self.profileDelegate?.changesMade()
     }
   }
 }

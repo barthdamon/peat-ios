@@ -11,18 +11,22 @@ import Foundation
 
 class LeafGrouping: NSObject {
   
-  var zIndex: Int?
+  var changeStatus: ChangeStatus = .Unchanged
   var name: String?
   var colorString: String?
+  var activityName: String?
   
   var view: UIView?
+  var user_Id: String?
   var groupingId: String?
   
   var center: CGPoint?
+  var paramCenter: CGPoint? {
+    return self.view != nil ? self.view!.center : center
+  }
   var height: Int?
   var width: Int?
   
-  var leafIds: Array<String>?
   var deleteButton: UIButton?
   var referenceFrame: CoordinatePair?
   
@@ -43,6 +47,8 @@ class LeafGrouping: NSObject {
     //generate random color
     newGrouping.rgbColor = UIColor.redColor()
     newGrouping.groupingId = generateId()
+    newGrouping.user_Id = CurrentUser.info.model?._id
+    newGrouping.activityName = delegate.getCurrentActivity()
     
     return newGrouping
   }
@@ -50,7 +56,6 @@ class LeafGrouping: NSObject {
   static func groupingFromJson(json: jsonObject) -> LeafGrouping {
     let grouping = LeafGrouping()
     grouping.name = json["name"] as? String
-    grouping.zIndex = json["zIndex"] as? Int
     grouping.colorString = json["colorString"] as? String
     if let layout = json["layout"] as? jsonObject {
       if let coordinates = layout["center"] as? jsonObject, x = coordinates["x"] as? Int, y = coordinates["y"] as? Int {
@@ -63,12 +68,42 @@ class LeafGrouping: NSObject {
     return grouping
   }
   
-  func params() -> Dictionary<String, String> {
+  func changed(status: ChangeStatus) {
+    //Note: might break on server when updating a leaf that got removed before being created on server
+    guard changeStatus == .BrandNew && status == .Updated else { changeStatus = status; return}
+  }
+  
+  func params() -> Dictionary<String, AnyObject> {
     return [
-      "zIndex": self.zIndex != nil ? "\(self.zIndex!)" : "",
-      "name": self.name != nil ? self.name! : "",
-      "colorString": self.colorString != nil ? self.colorString! : ""
+      "user_Id": paramFor(user_Id),
+      "groupingId": paramFor(groupingId),
+      "activityName": paramFor(activityName),
+      "name": paramFor(name),
+      "colorString": paramFor(colorString),
+      "width": paramFor(width),
+      "height": paramFor(height),
+      "layout" : [
+        "coordinates" : [
+          "x" : self.paramCenter?.x != nil ? String(self.paramCenter!.x) : "",
+          "y" : self.paramCenter?.y != nil ? String(self.paramCenter!.y) : ""
+        ]
+      ]
     ]
+//    return [
+//      "user_Id": self.user_Id != nil ? self.user_Id! : "",
+//      "groupingId": self.groupingId != nil ? self.groupingId! : "",
+//      "activityName": self.activityName != nil ? self.activityName! : "",
+//      "name": self.name != nil ? self.name! : "",
+//      "colorString": self.colorString != nil ? self.colorString! : "",
+//      "width": self.width != nil ? String(self.width!) : "",
+//      "height": self.height != nil ? String(self.height!) : "",
+//      "layout" : [
+//        "coordinates" : [
+//          "x" : self.paramCenter?.x != nil ? String(self.paramCenter!.x) : "",
+//          "y" : self.paramCenter?.y != nil ? String(self.paramCenter!.y) : ""
+//        ]
+//      ]
+//    ]
   }
   
   //need a color slider and everything
