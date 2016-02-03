@@ -203,6 +203,9 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
               if CGRectContainsPoint(leafView.frame, finger) {
                 anchor.connection.toId = storedLeaf.leafId
                 connected = true
+                //only save when connection to other leaf occurs
+                anchor.connection.changed(.BrandNew)
+                self.profileDelegate?.changesMade()
               }
             }
           }
@@ -285,11 +288,24 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   }
   
   func newGrouping(timer: NSTimer) {
-    if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, lowerLeaf = info["lowerLeaf"] as? Leaf, leafView = leaf.view, lowerView = lowerLeaf.view, center = lowerLeaf.center {
+    if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, lowerLeaf = info["lowerLeaf"] as? Leaf, center = lowerLeaf.center {
       let newGrouping = LeafGrouping.newGrouping(center, delegate: self)
       newGrouping.drawGrouping(lowerLeaf, highlightedLeaf: leaf)
       leaf.grouping = newGrouping
       lowerLeaf.grouping = newGrouping
+      self.profileDelegate?.changesMade()
+      leaf.changed(.Updated)
+      lowerLeaf.changed(.Updated)
+      newGrouping.changed(.BrandNew)
+    }
+  }
+  
+  func removeGroupingFromView(grouping: LeafGrouping) {
+    if let view = grouping.view {
+      view.removeFromSuperview()
+      grouping.changed(.Removed)
+      //move the leaves out of the grouping view
+      self.profileDelegate?.changesMade()
     }
   }
   
