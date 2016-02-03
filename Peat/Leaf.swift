@@ -95,9 +95,9 @@ class Leaf: NSObject {
     
     if let layout = json["layout"] as? jsonObject {
       
-      if let grouping = layout["grouping"] as? jsonObject {
-        leaf.grouping = LeafGrouping.groupingFromJson(grouping)
-      }
+//      if let grouping = layout["grouping"] as? jsonObject {
+//        leaf.grouping = LeafGrouping.groupingFromJson(grouping)
+//      }
       
 //      if let connections = layout["connections"] as? Array<jsonObject> {
 //        leaf.connections = Array()

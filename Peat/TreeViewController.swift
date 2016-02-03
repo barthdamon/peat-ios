@@ -102,9 +102,9 @@ class TreeViewController: UIViewController, TreeDelegate {
         if let _ = hoverTimer {
           print("Hovering")
         } else {
-          if let grouping = hoveredGrouping {
+          if let grouping = hoveredGrouping where leaf.grouping == nil {
             hoverTimer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "addLeafToGrouping:", userInfo: ["leaf" : leaf, "grouping" : grouping], repeats: false)
-          } else if let lowerLeaf = hoveredLeaf {
+          } else if let lowerLeaf = hoveredLeaf where leaf.grouping == nil {
             hoverTimer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "newGrouping:", userInfo: ["leaf" : leaf, "lowerLeaf" : lowerLeaf], repeats: false)
           }
         }
@@ -210,7 +210,7 @@ class TreeViewController: UIViewController, TreeDelegate {
       } else {
         PeatContentStore.sharedStore.newConnection(shapeLayer, from: fromLeaf, to: nil)
       }
-      scrollView.layer.addSublayer(shapeLayer)
+      parentView.layer.addSublayer(shapeLayer)
     }
   }
   
@@ -252,10 +252,10 @@ class TreeViewController: UIViewController, TreeDelegate {
   func addLeafToGrouping(timer: NSTimer) {
     if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, grouping = info["grouping"] as? LeafGrouping, leafView = leaf.view, groupingView = grouping.view {
       //add leaf to
-      leafView.removeFromSuperview()
-      leafView.center.x -= groupingView.center.x
-      leafView.center.y -= groupingView.center.y
       groupingView.addSubview(leafView)
+      leafView.center.x = Leaf.standardWidth
+      leafView.center.y = Leaf.standardHeight * 2
+      leaf.grouping = grouping
     }
   }
   
@@ -263,12 +263,15 @@ class TreeViewController: UIViewController, TreeDelegate {
     if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, lowerLeaf = info["lowerLeaf"] as? Leaf, leafView = leaf.view, lowerView = lowerLeaf.view, center = lowerLeaf.center {
       let newGrouping = LeafGrouping.newGrouping(center, delegate: self)
       newGrouping.drawGrouping(lowerLeaf, highlightedLeaf: leaf)
+      leaf.grouping = newGrouping
+      lowerLeaf.grouping = newGrouping
     }
   }
   
   //Mark General Drawing:
   func addGroupingToScrollView(grouping: LeafGrouping, lowerLeaf: Leaf, higherLeaf: Leaf) {
     if let view = grouping.view {
+      view.layer.zPosition = -10
       self.scrollView.addSubview(view)
       PeatContentStore.sharedStore.addGroupingToStore(grouping)
       if let lowerView = lowerLeaf.view, highlightedView = higherLeaf.view {
