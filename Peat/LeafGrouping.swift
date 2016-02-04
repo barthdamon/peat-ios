@@ -53,15 +53,20 @@ class LeafGrouping: NSObject {
     return newGrouping
   }
   
-  static func groupingFromJson(json: jsonObject) -> LeafGrouping {
+  static func initFromJson(json: jsonObject, delegate: TreeDelegate?) -> LeafGrouping {
     let grouping = LeafGrouping()
+    grouping.treeDelegate = delegate
     grouping.name = json["name"] as? String
-    grouping.colorString = json["colorString"] as? String
+    grouping.groupingId = json["groupingId"] as? String
+    grouping.activityName = json["activityName"] as? String
     if let layout = json["layout"] as? jsonObject {
       if let coordinates = layout["center"] as? jsonObject, x = coordinates["x"] as? Int, y = coordinates["y"] as? Int {
         grouping.center = CGPoint(x: x, y: y)
       }
+      grouping.width = layout["width"] as? Int
+      grouping.height = layout["height"] as? Int
     }
+    grouping.colorString = json["colorString"] as? String
     if let colorString = grouping.colorString {
       grouping.rgbColor = UIColor.fromHex(colorString)
     }
@@ -80,13 +85,13 @@ class LeafGrouping: NSObject {
       "activityName": paramFor(activityName),
       "name": paramFor(name),
       "colorString": paramFor(colorString),
-      "width": paramFor(width),
-      "height": paramFor(height),
       "layout" : [
         "coordinates" : [
           "x" : self.paramCenter?.x != nil ? String(self.paramCenter!.x) : "",
           "y" : self.paramCenter?.y != nil ? String(self.paramCenter!.y) : ""
-        ]
+        ],
+        "width": paramFor(width),
+        "height": paramFor(height)
       ]
     ]
 //    return [

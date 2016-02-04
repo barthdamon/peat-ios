@@ -339,11 +339,22 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   func displayLeaves() {
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
+      //leaves will have the grouping, just draw the grouping
+      for grouping in PeatContentStore.sharedStore.groupings {
+        
+      }
+      
+      for connection in PeatContentStore.sharedStore.connections {
+        
+      }
+      
       for leaf in PeatContentStore.sharedStore.leaves {
+        //if leaf has a groupingId, add leaf to the grouping, not the treeView
         leaf.treeDelegate = self
         leaf.generateBounds()
 //        leaf.drawConnections()
       }
+      
     })
   }
 

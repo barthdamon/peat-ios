@@ -19,8 +19,9 @@ struct TreeStore {
 //  var storedActivities: Array<Activity>?
   var currentLeaves: Array<Leaf>?
   var currentConnections: Array<LeafConnection>?
-  var currentMediaObjects: Array<MediaObject>?
   var currentGroupings: Array<LeafGrouping>?
+  
+  var currentMediaObjects: Array<MediaObject>?
   var selectedLeaf: Leaf?
   var activityName: String?
   
@@ -42,6 +43,8 @@ struct TreeStore {
   
   mutating func resetStore() {
     self.currentLeaves = Array()
+    self.currentGroupings = Array()
+    self.currentConnections = Array()
     self.currentMediaObjects = nil
     self.selectedLeaf = nil
   }
@@ -129,6 +132,12 @@ class PeatContentStore: NSObject {
   var leaves: Array<Leaf> {
     return treeStore.currentLeaves != nil ? treeStore.currentLeaves! : []
   }
+  var groupings: Array<LeafGrouping> {
+    return treeStore.currentGroupings != nil ? treeStore.currentGroupings! : []
+  }
+  var connections: Array<LeafConnection> {
+    return treeStore.currentConnections != nil ? treeStore.currentConnections! : []
+  }
   
   class var sharedStore: PeatContentStore {
     return _sharedStore
@@ -148,14 +157,27 @@ class PeatContentStore: NSObject {
         } else {
           if let json = res as? Dictionary<String, AnyObject> {
             print("TREE DATA: \(json)")
-            if let treeInfo = json["treeInfo"] as? jsonObject, leaves = treeInfo["leaves"] as? Array<jsonObject> {
+            if let leaves = json["leaves"] as? Array<jsonObject> {
               //reset the store, data for new tree incoming
               self.treeStore.resetStore()
               for leaf in leaves {
                 self.treeStore.currentLeaves!.append(Leaf.initWithJson(leaf, delegate: delegate))
               }
-              callback(true)
             }
+            
+            if let connections = json["connections"] as? Array<jsonObject> {
+              for connection in connections {
+                self.treeStore.currentConnections!.append(LeafConnection.initFromJson(connection, delegate: delegate))
+              }
+            }
+            
+            if let groupings = json["groupings"] as? Array<jsonObject> {
+              for grouping in groupings {
+                self.treeStore.currentGroupings!.append(LeafGrouping.initFromJson(grouping, delegate: delegate))
+              }
+            }
+            
+            callback(true)
           }
         }
       }
