@@ -8,6 +8,21 @@
 
 import UIKit
 
+protocol TreeDelegate {
+  func fetchTreeData()
+  func getCurrentActivity() -> String
+  func addLeafToScrollView(leaf: Leaf)
+  func addLeafToGrouping(leaf: Leaf, grouping: LeafGrouping)
+  func drillIntoLeaf(leaf: Leaf)
+  func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer)
+  func checkForOverlaps(intruder: Leaf)
+  func removeLeafFromView(leaf: Leaf)
+  func connectionsBeingDrawn(fromLeaf: Leaf?, fromGrouping: LeafGrouping?, sender: UIGestureRecognizer)
+  func addGroupingToScrollView(grouping: LeafGrouping)
+  func groupingBeingMoved(leaf: LeafGrouping, sender: UIGestureRecognizer)
+  func addNewLeafToGrouping(grouping: LeafGrouping, sender: UITapGestureRecognizer)
+}
+
 class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   // Dynamic Data
@@ -63,7 +78,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     
     //note: 65 cause of the stupid navbar
     self.treeView = UIView(frame: CGRectMake(0,-65,1000,2000))
-    treeView.backgroundColor = UIColor.blackColor()
+    treeView.backgroundColor = UIColor.lightGrayColor()
     self.scrollView.addSubview(self.treeView)
   }
   
@@ -127,7 +142,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
           print("Hovering")
         } else {
           if let grouping = hoveredGrouping where leaf.grouping == nil {
-            hoverTimer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "addLeafToGrouping:", userInfo: ["leaf" : leaf, "grouping" : grouping], repeats: false)
+            hoverTimer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "moveLeafToGrouping:", userInfo: ["leaf" : leaf, "grouping" : grouping], repeats: false)
           } else if let lowerLeaf = hoveredLeaf where leaf.grouping == nil {
             hoverTimer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "newGrouping:", userInfo: ["leaf" : leaf, "lowerLeaf" : lowerLeaf], repeats: false)
           }
@@ -244,23 +259,6 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   //MARK: Groupings
   
-  
-//  func dealWithGroupings(higherLeaf: Leaf, lowerLeaf: Leaf) {
-//  //[{name: String, color: String, zIndex: Number}]
-//    if let existingGrouping = lowerLeaf.grouping {
-//      //add the leaf to the existing grouping
-//      //need a didset that adds the leaf to the grouping view if the grouping view exists perhaps??
-//      higherLeaf.grouping = lowerLeaf.grouping
-//    } else {
-//      //create new grouping and put both leaves in it
-//      //prompt user for a name in a popover text field
-////        let newGrouping = LeafGrouping.newGrouping(center)
-////        higherLeaf.grouping = newGrouping
-////        lowerLeaf.grouping = newGrouping
-//        drawGrouping(lowerLeaf, higherLeaf: higherLeaf)
-//    }
-//  }
-  
   func groupingBeingMoved(grouping: LeafGrouping, sender: UIGestureRecognizer) {
     if let view = grouping.view {
       self.treeView.bringSubviewToFront(view)
@@ -277,7 +275,18 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
 //    }
   }
   
-  func addLeafToGrouping(timer: NSTimer) {
+  func addNewLeafToGrouping(grouping: LeafGrouping, sender: UITapGestureRecognizer) {
+    if let view = grouping.view {
+      let center: CGPoint = sender.locationInView(view)
+      let newLeaf = Leaf.initFromTree(center, delegate: self, treeView: self.treeView)
+      newLeaf.grouping = grouping
+      newLeaf.generateBounds()
+      newLeaf.changed(.BrandNew)
+      self.profileDelegate?.changesMade()
+    }
+  }
+  
+  func moveLeafToGrouping(timer: NSTimer) {
     if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, grouping = info["grouping"] as? LeafGrouping, leafView = leaf.view, groupingView = grouping.view {
       //add leaf to
       groupingView.addSubview(leafView)
@@ -290,9 +299,11 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   func newGrouping(timer: NSTimer) {
     if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, lowerLeaf = info["lowerLeaf"] as? Leaf, center = lowerLeaf.center {
       let newGrouping = LeafGrouping.newGrouping(center, delegate: self)
-      newGrouping.drawGrouping(lowerLeaf, highlightedLeaf: leaf)
+      newGrouping.drawGrouping()
+      addLeavesToGrouping(newGrouping, leaves: [lowerLeaf, leaf])
       leaf.grouping = newGrouping
       lowerLeaf.grouping = newGrouping
+      leaf.deselectLeaf()
       self.profileDelegate?.changesMade()
       leaf.changed(.Updated)
       lowerLeaf.changed(.Updated)
@@ -309,23 +320,24 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     }
   }
   
+  func addLeavesToGrouping(grouping: LeafGrouping, leaves: Array<Leaf>) {
+    if let groupingView = grouping.view {
+      for leaf in leaves {
+        if let view = leaf.view {
+          groupingView.addSubview(view)
+          view.center.x = groupingView.center.x - groupingView.frame.minX
+          view.center.y = groupingView.center.y - groupingView.frame.minY
+        }
+      }
+    }
+  }
+  
   //Mark General Drawing:
-  func addGroupingToScrollView(grouping: LeafGrouping, lowerLeaf: Leaf, higherLeaf: Leaf) {
+  func addGroupingToScrollView(grouping: LeafGrouping) {
     if let view = grouping.view {
       view.layer.zPosition = -10
       self.treeView.addSubview(view)
       PeatContentStore.sharedStore.addGroupingToStore(grouping)
-      if let lowerView = lowerLeaf.view, highlightedView = higherLeaf.view {
-//        highlightedView.removeFromSuperview()
-//        lowerView.removeFromSuperview()
-        view.addSubview(lowerView)
-        view.addSubview(highlightedView)
-        lowerView.center.x = Leaf.standardWidth
-        lowerView.center.y = Leaf.standardHeight / 2
-        highlightedView.center.x = Leaf.standardWidth
-        highlightedView.center.y = Leaf.standardHeight * 2
-        higherLeaf.deselectLeaf()
-      }
     }
   }
   
@@ -333,7 +345,12 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     if let view = leaf.view {
       self.treeView.addSubview(view)
       checkForOverlaps(leaf)
-      PeatContentStore.sharedStore.addLeafToStore(leaf)
+    }
+  }
+  
+  func addLeafToGrouping(leaf: Leaf, grouping: LeafGrouping) {
+    if let leafView = leaf.view, groupingView = grouping.view {
+      groupingView.addSubview(leafView)
     }
   }
   
@@ -341,18 +358,18 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
       //leaves will have the grouping, just draw the grouping
       for grouping in PeatContentStore.sharedStore.groupings {
-        
-      }
-      
-      for connection in PeatContentStore.sharedStore.connections {
-        
+        grouping.drawGrouping()
       }
       
       for leaf in PeatContentStore.sharedStore.leaves {
         //if leaf has a groupingId, add leaf to the grouping, not the treeView
         leaf.treeDelegate = self
+        leaf.findGrouping()
         leaf.generateBounds()
-//        leaf.drawConnections()
+      }
+      
+      for connection in PeatContentStore.sharedStore.connections {
+        
       }
       
     })

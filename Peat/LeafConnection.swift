@@ -9,7 +9,7 @@
 import Foundation
 class LeafConnection: NSObject {
   
-  var _id: String?
+  var connectionId: String?
   var changeStatus: ChangeStatus = .Unchanged
   var user_Id: String?
   var fromId: String?
@@ -42,6 +42,7 @@ class LeafConnection: NSObject {
   
   static func initFromJson(json: jsonObject, delegate: TreeDelegate?) -> LeafConnection {
     let newConnection = LeafConnection()
+    newConnection.connectionId = json["connectionId"] as? String
     newConnection.treeDelegate = delegate
     newConnection.activityName = json["actiivtyName"] as? String
     newConnection.toId = json["toId"] as? String
@@ -60,7 +61,7 @@ class LeafConnection: NSObject {
   
   func params() -> Dictionary<String, AnyObject> {
     return [
-      "_id": paramFor(_id),
+      "connectionId": paramFor(connectionId),
       "user_Id": paramFor(user_Id),
       "type": self.type != nil ? self.type!.rawValue : "",
       "activityName" : paramFor(activityName),

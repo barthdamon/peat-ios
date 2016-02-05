@@ -9,19 +9,6 @@
 import Foundation
 import UIKit
 
-protocol TreeDelegate {
-  func fetchTreeData()
-  func getCurrentActivity() -> String
-  func addLeafToScrollView(leaf: Leaf)
-  func drillIntoLeaf(leaf: Leaf)
-  func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer)
-  func checkForOverlaps(intruder: Leaf)
-  func removeLeafFromView(leaf: Leaf)
-  func connectionsBeingDrawn(fromLeaf: Leaf?, fromGrouping: LeafGrouping?, sender: UIGestureRecognizer)
-  func addGroupingToScrollView(grouping: LeafGrouping, lowerLeaf: Leaf, higherLeaf: Leaf)
-  func groupingBeingMoved(leaf: LeafGrouping, sender: UIGestureRecognizer)
-}
-
 typealias CoordinatePair = (x: CGFloat, y: CGFloat)
 
 class Leaf: NSObject {
@@ -48,7 +35,8 @@ class Leaf: NSObject {
     return self.view != nil ? self.view!.center : center
   }
   var grouping: LeafGrouping?
-  var groupingId: String? {
+  var groupingId: String?
+  var paramGroupingId: String? {
     return grouping?.groupingId
   }
   
@@ -98,24 +86,10 @@ class Leaf: NSObject {
     leaf.title = json["title"] as? String
     
     if let layout = json["layout"] as? jsonObject {
-      
-      if let grouping = layout["grouping"] as? jsonObject {
-        leaf.grouping = LeafGrouping.groupingFromJson(grouping)
-      }
-      
-//      if let connections = layout["connections"] as? Array<jsonObject> {
-//        leaf.connections = Array()
-//        for connection in connections {
-//          if let leafId = connection["leafId"] as? String, typeString = connection["type"] as? String, type = LeafConnectionType(rawValue: typeString) {
-////            leaf.connections!.append((leafId: leafId, type: type))
-//          }
-//        }
-//        
-//      }
+      leaf.groupingId = layout["groupingId"] as? String
       if let coordinates = layout["coordinates"] as? jsonObject, x = coordinates["x"] as? CGFloat, y = coordinates["y"] as? CGFloat {
         leaf.center = CGPoint(x: x, y: y)
       }
-      
     }
     return leaf
   }
@@ -147,7 +121,7 @@ class Leaf: NSObject {
           "x" : self.paramCenter?.x != nil ? String(self.paramCenter!.x) : "",
           "y" : self.paramCenter?.y != nil ? String(self.paramCenter!.y) : ""
         ],
-        "grouping" : paramFor(groupingId),
+        "grouping" : paramFor(paramGroupingId),
       ],
       "completionStatus" : self.completionStatus != nil ? self.completionStatus!.rawValue : "",
       "title" : paramFor(title),
@@ -295,6 +269,16 @@ class Leaf: NSObject {
     self.treeDelegate?.removeLeafFromView(self)
   }
   
+  func findGrouping() {
+    if let groupingId = self.groupingId {
+      for grouping in PeatContentStore.sharedStore.groupings {
+        if grouping.groupingId == groupingId {
+          self.grouping = grouping
+        }
+      }
+    }
+  }
+  
   func generateBounds() {
     if let center = center {
       referenceFrame = (x: center.x - Leaf.xOffset, y: center.y - Leaf.yOffset)
@@ -312,19 +296,15 @@ class Leaf: NSObject {
 //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
         addGestureRecognizers()
 //        drawGrouping()
-        treeDelegate?.addLeafToScrollView(self)
+        if let grouping = self.grouping {
+          treeDelegate?.addLeafToGrouping(self, grouping: grouping)
+        } else {
+          treeDelegate?.addLeafToScrollView(self)
+        }
+        PeatContentStore.sharedStore.addLeafToStore(self)
       }
     }
   }
-  
-//  func drawGrouping() {
-//    if let grouping = self.grouping, view = self.view {
-//      view.layer.borderColor = grouping.rgbColor?.CGColor
-//      view.layer.borderWidth = 3
-//      self.groupingLabel?.text = grouping.name
-//    }
-//  }
-  
   
   func leafDrilldownInitiated() {
     if movingEnabled {

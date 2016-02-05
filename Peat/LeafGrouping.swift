@@ -94,21 +94,6 @@ class LeafGrouping: NSObject {
         "height": paramFor(height)
       ]
     ]
-//    return [
-//      "user_Id": self.user_Id != nil ? self.user_Id! : "",
-//      "groupingId": self.groupingId != nil ? self.groupingId! : "",
-//      "activityName": self.activityName != nil ? self.activityName! : "",
-//      "name": self.name != nil ? self.name! : "",
-//      "colorString": self.colorString != nil ? self.colorString! : "",
-//      "width": self.width != nil ? String(self.width!) : "",
-//      "height": self.height != nil ? String(self.height!) : "",
-//      "layout" : [
-//        "coordinates" : [
-//          "x" : self.paramCenter?.x != nil ? String(self.paramCenter!.x) : "",
-//          "y" : self.paramCenter?.y != nil ? String(self.paramCenter!.y) : ""
-//        ]
-//      ]
-//    ]
   }
   
   //need a color slider and everything
@@ -144,7 +129,7 @@ class LeafGrouping: NSObject {
     }
   }
   
-  func drawGrouping(lowerLeaf: Leaf, highlightedLeaf: Leaf) {
+  func drawGrouping() {
     if let center = center {
       referenceFrame = (x: center.x - Leaf.standardWidth, y: center.y - Leaf.standardHeight)
     }
@@ -158,7 +143,7 @@ class LeafGrouping: NSObject {
         view.layer.cornerRadius = 10
         //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
         addGestureRecognizers()
-        treeDelegate?.addGroupingToScrollView(self, lowerLeaf: lowerLeaf, higherLeaf: highlightedLeaf)
+        treeDelegate?.addGroupingToScrollView(self)
       }
     }
   }
@@ -178,8 +163,18 @@ class LeafGrouping: NSObject {
       let movingPanRecognizer = UIPanGestureRecognizer(target: self, action: "groupingBeingPanned:")
       view.addGestureRecognizer(movingPanRecognizer)
       
+      let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "newLeafInitiatedOnGrouping:")
+      doubleTapRecognizer.numberOfTouchesRequired = 1
+      doubleTapRecognizer.numberOfTapsRequired = 2
+      
+      view.addGestureRecognizer(doubleTapRecognizer)
+      
       //maybe when they tap a plus button and drag that adds a connection????
     }
+  }
+  
+  func newLeafInitiatedOnGrouping(sender: UITapGestureRecognizer) {
+    self.treeDelegate?.addNewLeafToGrouping(self, sender: sender)
   }
   
   func groupingMoveInitiated(sender: UILongPressGestureRecognizer) {
