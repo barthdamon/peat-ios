@@ -31,7 +31,7 @@ class LeafConnection: NSObject {
   var treeDelegate: TreeDelegate?
   var connectionLayer: CAShapeLayer?
   
-  static func newConnection(layer: CAShapeLayer, from: Leaf?, to: Leaf?, delegate: TreeDelegate) -> LeafConnection {
+  static func newConnection(layer: CAShapeLayer, from: TreeObject?, to: TreeObject?, delegate: TreeDelegate) -> LeafConnection {
     let newConnection = LeafConnection()
     newConnection.user_Id = CurrentUser.info.model?._id
     newConnection.fromObject = from

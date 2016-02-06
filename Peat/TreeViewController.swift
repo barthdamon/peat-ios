@@ -164,57 +164,62 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   
   //MARK: CONNECTIONS
-  func findExistingConnectionsForMoving(leaf: Leaf) -> Array<(leaf: Leaf, connection: LeafConnection)>? {
-    if let connections = PeatContentStore.sharedStore.treeStore.currentConnections, leaves = PeatContentStore.sharedStore.treeStore.currentLeaves {
-      var anchorLeaves: Array<(leaf: Leaf, connection: LeafConnection)> = Array()
-      for connection in connections {
-        //          var toLeaf: Leaf?
-        for maybeConnected in leaves {
-          if connection.toId == maybeConnected.leafId && connection.fromId == leaf.leafId || connection.fromId == maybeConnected.leafId && connection.toId == leaf.leafId {
-            anchorLeaves.append(leaf: maybeConnected, connection: connection)
-          }
+  //find all connections for moving object to update them when they need to be
+  func findExistingConnectionsForMoving(object: TreeObject) -> Array<(object: TreeObject, connection: LeafConnection)>? {
+    var anchorLeaves: Array<(object: TreeObject, connection: LeafConnection)> = Array()
+    for connection in PeatContentStore.sharedStore.connections {
+      //          var toLeaf: Leaf?
+      for maybeConnected in PeatContentStore.sharedStore.leaves {
+        if (connection.toId == maybeConnected.leafId && connection.fromId == object.objectId()) || (connection.fromId == maybeConnected.leafId && connection.toId == object.objectId()) {
+          anchorLeaves.append((object: maybeConnected, connection: connection))
         }
       }
-      if anchorLeaves.count > 0 {
-        return anchorLeaves
+      for maybeConnected in PeatContentStore.sharedStore.groupings {
+        if (connection.toId == maybeConnected.groupingId && connection.fromId == object.objectId()) || (connection.fromId == maybeConnected.groupingId && connection.toId == object.objectId()) {
+          anchorLeaves.append((object: maybeConnected, connection: connection))
+        }
       }
     }
-    return nil
+    return anchorLeaves
   }
   
-  func findExistingConnectionsForDrawn(leaf: Leaf) -> (leaf: Leaf, connection: LeafConnection)? {
-    var anchorLeaf: (leaf: Leaf, connection: LeafConnection)?
-    if let connections = PeatContentStore.sharedStore.treeStore.currentConnections, leaves = PeatContentStore.sharedStore.treeStore.currentLeaves {
-      for connection in connections {
+  //This exists becasue connections are created when you start drawing, the to and from are added later
+  func findExistingConnectionsForObject(object: TreeObject) -> (object: TreeObject, connection: LeafConnection)? {
+    var anchor: (object: TreeObject, connection: LeafConnection)?
+      for connection in PeatContentStore.sharedStore.connections {
         //          var toLeaf: Leaf?
-        if connection.fromId == leaf.leafId && connection.toId == nil {
-          anchorLeaf = (leaf: leaf, connection: connection)
+        if connection.fromId == object.objectId() && connection.toId == nil {
+          anchor = (object: object, connection: connection)
         }
       }
-    }
-    return anchorLeaf
+    return anchor
   }
   
   func connectionsBeingDrawn(fromLeaf: Leaf?, fromGrouping: LeafGrouping?, sender: UIGestureRecognizer) {
     if let fromLeaf = fromLeaf {
-      if let anchor = findExistingConnectionsForDrawn(fromLeaf) {
+      if let anchor = findExistingConnectionsForObject(fromLeaf) {
         //should only be one in this case if it gets found....
         updateConnection(anchor, sender: sender)
       } else {
         drawConnection(fromLeaf, sender: sender, existingConnection: nil)
       }
     } else if let fromGrouping = fromGrouping {
-      
+      if let anchor = findExistingConnectionsForObject(fromGrouping) {
+        //should only be one in this case if it gets found....
+        updateConnection(anchor, sender: sender)
+      } else {
+        drawConnection(fromGrouping, sender: sender, existingConnection: nil)
+      }
     }
   }
   
-  func updateConnection(anchor: (leaf: Leaf, connection: LeafConnection), sender: UIGestureRecognizer) {
-    if let parentView = anchor.leaf.parentView() {
+  func updateConnection(anchor: (object: TreeObject, connection: LeafConnection), sender: UIGestureRecognizer) {
+    if let parentView = anchor.object.parentView() {
       let finger = sender.locationInView(parentView)
       if sender.state == UIGestureRecognizerState.Ended {
         var connected = false
         for storedLeaf in PeatContentStore.sharedStore.leaves {
-          if storedLeaf != anchor.leaf {
+          if storedLeaf.leafId != anchor.object.objectId() {
             if let leafView = storedLeaf.view {
               if CGRectContainsPoint(leafView.frame, finger) {
                 anchor.connection.toId = storedLeaf.leafId
@@ -228,16 +233,17 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
         }
         if !connected {
           anchor.connection.connectionLayer?.removeFromSuperlayer()
+//          PeatContentStore.sharedStore.removeConnection(anchor.connection)
         }
       } else {
         anchor.connection.connectionLayer?.removeFromSuperlayer()
-        drawConnection(anchor.leaf, sender: sender, existingConnection: anchor.connection)
+        drawConnection(anchor.object, sender: sender, existingConnection: anchor.connection)
       }
     }
   }
   
-  func drawConnection(fromLeaf: Leaf, sender: UIGestureRecognizer, existingConnection: LeafConnection?) {
-    if let view = fromLeaf.view, parentView = fromLeaf.parentView(){
+  func drawConnection(fromObject: TreeObject, sender: UIGestureRecognizer, existingConnection: LeafConnection?) {
+    if let view = fromObject.viewForTree(), parentView = fromObject.parentView(){
       //see if there is an eistingConnection first
       let finger = sender.locationInView(parentView)
       let path = UIBezierPath()
@@ -248,10 +254,11 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       //TODO: check completionStatus when line set?
       shapeLayer.strokeColor = UIColor.grayColor().CGColor
       shapeLayer.zPosition = -1
+
       if let existing = existingConnection {
         existing.connectionLayer = shapeLayer
       } else {
-        PeatContentStore.sharedStore.newConnection(shapeLayer, from: fromLeaf, to: nil, delegate: self)
+        PeatContentStore.sharedStore.newConnection(shapeLayer, from: fromObject, to: nil, delegate: self)
       }
       parentView.layer.addSublayer(shapeLayer)
     }
@@ -284,11 +291,11 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       grouping.changed(.Updated)
       self.profileDelegate?.changesMade()
     }
-//    if let existingAnchors = findExistingConnectionsForMoving(leaf) {
-//      for anchor in existingAnchors {
-//        updateConnection(anchor, sender: sender)
-//      }
-//    }
+    if let existingAnchors = findExistingConnectionsForMoving(grouping) {
+      for anchor in existingAnchors {
+        updateConnection(anchor, sender: sender)
+      }
+    }
   }
   
   func addNewLeafToGrouping(grouping: LeafGrouping, sender: UITapGestureRecognizer) {
