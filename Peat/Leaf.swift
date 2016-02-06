@@ -10,6 +10,7 @@ protocol TreeObject {
   func viewForTree() -> UIView?
   func objectId() -> String?
   func parentView() -> UIView?
+  func changed(status: ChangeStatus)
 }
 
 import Foundation
@@ -269,7 +270,7 @@ class Leaf: NSObject, TreeObject {
   
   func deleteButtonPressed() {
     self.changeStatus = .Removed
-    self.treeDelegate?.removeLeafFromView(self)
+    self.treeDelegate?.removeObjectFromView(self)
   }
   
   func findGrouping() {

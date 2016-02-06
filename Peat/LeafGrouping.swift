@@ -198,6 +198,11 @@ class LeafGrouping: NSObject, TreeObject {
       deselectGrouping()
     }
   }
+  
+  func deleteButtonPressed() {
+    self.changeStatus = .Removed
+    self.treeDelegate?.removeObjectFromView(self)
+  }
 
   
   func groupingBeingPanned(sender: UIGestureRecognizer) {

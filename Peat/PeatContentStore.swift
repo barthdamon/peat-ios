@@ -216,8 +216,6 @@ class PeatContentStore: NSObject {
   }
   
   
-  
-  
   //MARK: Helpers
   func leafWithId(leafId: String) -> Leaf? {
     if let currentLeaves = self.treeStore.currentLeaves {

@@ -17,7 +17,7 @@ protocol TreeDelegate {
   func drillIntoLeaf(leaf: Leaf)
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer)
   func checkForOverlaps(intruder: Leaf)
-  func removeLeafFromView(leaf: Leaf)
+  func removeObjectFromView(object: TreeObject)
   func connectionsBeingDrawn(fromLeaf: Leaf?, fromGrouping: LeafGrouping?, sender: UIGestureRecognizer)
   func addGroupingToScrollView(grouping: LeafGrouping)
   func groupingBeingMoved(leaf: LeafGrouping, sender: UIGestureRecognizer)
@@ -253,7 +253,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       shapeLayer.path = path.CGPath
       //TODO: check completionStatus when line set?
       shapeLayer.strokeColor = UIColor.grayColor().CGColor
-      shapeLayer.zPosition = -1
+      shapeLayer.zPosition = -200
 
       if let existing = existingConnection {
         existing.connectionLayer = shapeLayer
@@ -264,8 +264,8 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     }
   }
   
-  func drawConnectionFromStore(connection: LeafConnection) {
-    if let fromObject = connection.fromObject, toObject = connection.toObject, fromView = fromObject.viewForTree(), toView = toObject.viewForTree(), parentView = fromObject.parentView() {
+  func drawFreshConnection(connection: LeafConnection) {
+    if let fromObject = connection.fromObject, toObject = connection.toObject, fromView = fromObject.viewForTree(), toView = toObject.viewForTree(), parentView = fromObject.parentView() where connection.changeStatus != .Removed {
       let path = UIBezierPath()
       path.moveToPoint(fromView.center)
       path.addLineToPoint(toView.center)
@@ -273,7 +273,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       shapeLayer.path = path.CGPath
       //TODO: check completionStatus when line set?
       shapeLayer.strokeColor = UIColor.grayColor().CGColor
-      shapeLayer.zPosition = -1
+      shapeLayer.zPosition = -200
       parentView.layer.addSublayer(shapeLayer)
       connection.connectionLayer = shapeLayer
     }
@@ -393,7 +393,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       
       for connection in PeatContentStore.sharedStore.connections {
         PeatContentStore.sharedStore.attachObjectsToConnection(connection)
-        self.drawConnectionFromStore(connection)
+        self.drawFreshConnection(connection)
       }
       
     })
@@ -445,11 +445,37 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     self.profileDelegate?.changesMade()
   }
   
-  func removeLeafFromView(leaf: Leaf) {
-    if let view = leaf.view {
+  func removeObjectFromView(object: TreeObject) {
+    if let view = object.viewForTree() {
       view.removeFromSuperview()
-      leaf.changed(.Removed)
+      object.changed(.Removed)
+      if object is LeafGrouping {
+        emptyGroupingContainer(object as! LeafGrouping)
+      }
       self.profileDelegate?.changesMade()
+    }
+  }
+  
+  func emptyGroupingContainer(grouping: LeafGrouping) {
+    for leaf in PeatContentStore.sharedStore.leaves {
+      if leaf.groupingId == grouping.groupingId {
+        leaf.groupingId = nil
+        leaf.grouping = nil
+        //redraw connections
+        leaf.changed(.Updated)
+        self.addLeafToScrollView(leaf)
+        if let groupingView = grouping.view {
+          leaf.view?.center.x += groupingView.center.x
+          leaf.view?.center.y += groupingView.center.y
+        }
+      }
+    }
+    for connection in PeatContentStore.sharedStore.connections {
+      if connection.fromId == grouping.groupingId || connection.toId == grouping.groupingId {
+        connection.changed(.Removed)
+      }
+      connection.connectionLayer?.removeFromSuperlayer()
+      drawFreshConnection(connection)
     }
   }
   
