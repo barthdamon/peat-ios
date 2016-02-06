@@ -9,7 +9,7 @@
 import Foundation
 
 
-class LeafGrouping: NSObject {
+class LeafGrouping: NSObject, TreeObject {
   
   var changeStatus: ChangeStatus = .Unchanged
   var name: String?
@@ -56,11 +56,13 @@ class LeafGrouping: NSObject {
   static func initFromJson(json: jsonObject, delegate: TreeDelegate?) -> LeafGrouping {
     let grouping = LeafGrouping()
     grouping.treeDelegate = delegate
+    grouping.user_Id = json["user_Id"] as? String
     grouping.name = json["name"] as? String
     grouping.groupingId = json["groupingId"] as? String
     grouping.activityName = json["activityName"] as? String
+    
     if let layout = json["layout"] as? jsonObject {
-      if let coordinates = layout["center"] as? jsonObject, x = coordinates["x"] as? Int, y = coordinates["y"] as? Int {
+      if let coordinates = layout["coordinates"] as? jsonObject, x = coordinates["x"] as? CGFloat, y = coordinates["y"] as? CGFloat {
         grouping.center = CGPoint(x: x, y: y)
       }
       grouping.width = layout["width"] as? Int
@@ -139,7 +141,7 @@ class LeafGrouping: NSObject {
       if let view = self.view {
 //        view.backgroundColor = UIColor.fromHex(colorString)
         
-        view.backgroundColor = UIColor.randomColor()
+        view.backgroundColor = self.rgbColor != nil ? self.rgbColor : UIColor.randomColor()
         view.layer.cornerRadius = 10
         //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
         addGestureRecognizers()
@@ -204,6 +206,18 @@ class LeafGrouping: NSObject {
     } else {
       self.treeDelegate?.connectionsBeingDrawn(nil, fromGrouping: self, sender: sender)
     }
+  }
+  
+  func viewForTree() -> UIView? {
+    return self.view
+  }
+  
+  func objectId() -> String? {
+    return self.groupingId
+  }
+  
+  func parentView() -> UIView? {
+    return treeDelegate?.viewForTree()
   }
   
   

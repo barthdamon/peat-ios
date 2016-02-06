@@ -169,7 +169,7 @@ class APIService: NSObject {
     }
     else {
       if let parsedJSON: AnyObject = json {
-        print("RESPONSE: \(parsedJSON)")
+//        print("RESPONSE: \(parsedJSON)")
         callback(parsedJSON, nil)
       }
       else {

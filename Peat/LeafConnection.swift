@@ -17,14 +17,14 @@ class LeafConnection: NSObject {
   var type: LeafConnectionType?
   var activityName: String?
   
-  var fromLeaf: Leaf? {
+  var fromObject: TreeObject? {
     didSet {
-      fromId = fromLeaf?.leafId
+      fromId = fromObject?.objectId()
     }
   }
-  var toLeaf: Leaf? {
+  var toObject: TreeObject? {
     didSet {
-      toId = toLeaf?.leafId
+      toId = toObject?.objectId()
     }
   }
   
@@ -33,8 +33,9 @@ class LeafConnection: NSObject {
   
   static func newConnection(layer: CAShapeLayer, from: Leaf?, to: Leaf?, delegate: TreeDelegate) -> LeafConnection {
     let newConnection = LeafConnection()
-    newConnection.fromLeaf = from
-    newConnection.toLeaf = to
+    newConnection.user_Id = CurrentUser.info.model?._id
+    newConnection.fromObject = from
+    newConnection.toObject = to
     newConnection.connectionLayer = layer
     newConnection.activityName = delegate.getCurrentActivity()
     return newConnection
@@ -44,7 +45,7 @@ class LeafConnection: NSObject {
     let newConnection = LeafConnection()
     newConnection.connectionId = json["connectionId"] as? String
     newConnection.treeDelegate = delegate
-    newConnection.activityName = json["actiivtyName"] as? String
+    newConnection.activityName = json["activityName"] as? String
     newConnection.toId = json["toId"] as? String
     newConnection.fromId = json["fromId"] as? String
     if let type = json["type"] as? String {

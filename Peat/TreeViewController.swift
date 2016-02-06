@@ -10,6 +10,7 @@ import UIKit
 
 protocol TreeDelegate {
   func fetchTreeData()
+  func viewForTree() -> UIView?
   func getCurrentActivity() -> String
   func addLeafToScrollView(leaf: Leaf)
   func addLeafToGrouping(leaf: Leaf, grouping: LeafGrouping)
@@ -256,6 +257,21 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     }
   }
   
+  func drawConnectionFromStore(connection: LeafConnection) {
+    if let fromObject = connection.fromObject, toObject = connection.toObject, fromView = fromObject.viewForTree(), toView = toObject.viewForTree(), parentView = fromObject.parentView() {
+      let path = UIBezierPath()
+      path.moveToPoint(fromView.center)
+      path.addLineToPoint(toView.center)
+      let shapeLayer = CAShapeLayer()
+      shapeLayer.path = path.CGPath
+      //TODO: check completionStatus when line set?
+      shapeLayer.strokeColor = UIColor.grayColor().CGColor
+      shapeLayer.zPosition = -1
+      parentView.layer.addSublayer(shapeLayer)
+      connection.connectionLayer = shapeLayer
+    }
+  }
+  
   
   //MARK: Groupings
   
@@ -265,7 +281,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       let center = sender.locationInView(self.treeView)
       grouping.view?.center = center
       //deal with connections
-      grouping.changeStatus = .Updated
+      grouping.changed(.Updated)
       self.profileDelegate?.changesMade()
     }
 //    if let existingAnchors = findExistingConnectionsForMoving(leaf) {
@@ -278,7 +294,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   func addNewLeafToGrouping(grouping: LeafGrouping, sender: UITapGestureRecognizer) {
     if let view = grouping.view {
       let center: CGPoint = sender.locationInView(view)
-      let newLeaf = Leaf.initFromTree(center, delegate: self, treeView: self.treeView)
+      let newLeaf = Leaf.initFromTree(center, delegate: self)
       newLeaf.grouping = grouping
       newLeaf.generateBounds()
       newLeaf.changed(.BrandNew)
@@ -369,7 +385,8 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       }
       
       for connection in PeatContentStore.sharedStore.connections {
-        
+        PeatContentStore.sharedStore.attachObjectsToConnection(connection)
+        self.drawConnectionFromStore(connection)
       }
       
     })
@@ -415,7 +432,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     print("Sender: \(sender)")
     let center: CGPoint = sender.locationInView(self.treeView)
     print("SENDER: \(center)")
-    let newLeaf = Leaf.initFromTree(center, delegate: self, treeView: self.treeView)
+    let newLeaf = Leaf.initFromTree(center, delegate: self)
     newLeaf.generateBounds()
     newLeaf.changed(.BrandNew)
     self.profileDelegate?.changesMade()
@@ -428,4 +445,9 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       self.profileDelegate?.changesMade()
     }
   }
+  
+  func viewForTree() -> UIView? {
+    return self.treeView
+  }
+  
 }

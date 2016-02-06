@@ -17,15 +17,15 @@ enum MediaType: String {
 
 struct TreeStore {
 //  var storedActivities: Array<Activity>?
-  var currentLeaves: Array<Leaf>?
-  var currentConnections: Array<LeafConnection>?
-  var currentGroupings: Array<LeafGrouping>?
+  var currentLeaves: Set<Leaf>?
+  var currentConnections: Set<LeafConnection>?
+  var currentGroupings: Set<LeafGrouping>?
   
-  var currentMediaObjects: Array<MediaObject>?
+  var currentMediaObjects: Set<MediaObject>?
   var selectedLeaf: Leaf?
   var activityName: String?
   
-  var comments: Array<Comment>?
+  var comments: Set<Comment>?
   
   func mediaForLeaf(leaf: Leaf) -> Array<MediaObject>? {
     var leafMedia: Array<MediaObject> = []
@@ -42,26 +42,28 @@ struct TreeStore {
   }
   
   mutating func resetStore() {
-    self.currentLeaves = Array()
-    self.currentGroupings = Array()
-    self.currentConnections = Array()
+    self.currentLeaves = Set()
+    self.currentGroupings = Set()
+    self.currentConnections = Set()
     self.currentMediaObjects = nil
     self.selectedLeaf = nil
   }
   
-  func treeParams() -> jsonObject {
+  mutating func treeParams() -> jsonObject {
+    
+    var updatedLeaves: Array<jsonObject> = []
+    var removedLeaves: Array<jsonObject> = []
+    var newLeaves: Array<jsonObject> = []
+    
+    var updatedConnections: Array<jsonObject> = []
+    var removedConnections: Array<jsonObject> = []
+    var newConnections: Array<jsonObject> = []
+    
+    var updatedGroupings: Array<jsonObject> = []
+    var removedGroupings: Array<jsonObject> = []
+    var newGroupings: Array<jsonObject> = []
+    
     if let name = self.activityName {
-      var updatedLeaves: Array<jsonObject> = []
-      var removedLeaves: Array<jsonObject> = []
-      var newLeaves: Array<jsonObject> = []
-      
-      var updatedConnections: Array<jsonObject> = []
-      var removedConnections: Array<jsonObject> = []
-      var newConnections: Array<jsonObject> = []
-      
-      var updatedGroupings: Array<jsonObject> = []
-      var removedGroupings: Array<jsonObject> = []
-      var newGroupings: Array<jsonObject> = []
       
       if let leaves = currentLeaves {
         for leaf in leaves {
@@ -129,14 +131,14 @@ class PeatContentStore: NSObject {
   var API = APIService.sharedService
   var mediaObjects: Array<MediaObject>?
   var treeStore = TreeStore()
-  var leaves: Array<Leaf> {
-    return treeStore.currentLeaves != nil ? treeStore.currentLeaves! : []
+  var leaves: Set<Leaf> {
+    return treeStore.currentLeaves != nil ? treeStore.currentLeaves! : Set()
   }
-  var groupings: Array<LeafGrouping> {
-    return treeStore.currentGroupings != nil ? treeStore.currentGroupings! : []
+  var groupings: Set<LeafGrouping> {
+    return treeStore.currentGroupings != nil ? treeStore.currentGroupings! : Set()
   }
-  var connections: Array<LeafConnection> {
-    return treeStore.currentConnections != nil ? treeStore.currentConnections! : []
+  var connections: Set<LeafConnection> {
+    return treeStore.currentConnections != nil ? treeStore.currentConnections! : Set()
   }
   
   class var sharedStore: PeatContentStore {
@@ -161,19 +163,19 @@ class PeatContentStore: NSObject {
               //reset the store, data for new tree incoming
               self.treeStore.resetStore()
               for leaf in leaves {
-                self.treeStore.currentLeaves!.append(Leaf.initWithJson(leaf, delegate: delegate))
+                self.treeStore.currentLeaves!.insert(Leaf.initWithJson(leaf, delegate: delegate))
               }
             }
             
             if let connections = json["connections"] as? Array<jsonObject> {
               for connection in connections {
-                self.treeStore.currentConnections!.append(LeafConnection.initFromJson(connection, delegate: delegate))
+                self.treeStore.currentConnections!.insert(LeafConnection.initFromJson(connection, delegate: delegate))
               }
             }
             
             if let groupings = json["groupings"] as? Array<jsonObject> {
               for grouping in groupings {
-                self.treeStore.currentGroupings!.append(LeafGrouping.initFromJson(grouping, delegate: delegate))
+                self.treeStore.currentGroupings!.insert(LeafGrouping.initFromJson(grouping, delegate: delegate))
               }
             }
             
@@ -192,9 +194,24 @@ class PeatContentStore: NSObject {
           print("Error:\(e)")
           callback(false)
         } else {
+          self.resetTreeChanges()
           callback(true)
         }
       }
+    }
+  }
+  
+  func resetTreeChanges() {
+    for leaf in leaves {
+      leaf.changeStatus = .Unchanged
+    }
+  
+    for grouping in groupings {
+      grouping.changeStatus = .Unchanged
+    }
+  
+    for connection in connections {
+      connection.changeStatus = .Unchanged
     }
   }
   
@@ -228,27 +245,27 @@ class PeatContentStore: NSObject {
   
   func addLeafToStore(leaf: Leaf) {
     if let _ = self.treeStore.currentLeaves {
-      self.treeStore.currentLeaves!.append(leaf)
+      self.treeStore.currentLeaves!.insert(leaf)
     } else {
-      self.treeStore.currentLeaves = Array()
-      self.treeStore.currentLeaves!.append(leaf)
+      self.treeStore.currentLeaves = Set()
+      self.treeStore.currentLeaves!.insert(leaf)
     }
   }
   
   func addMediaToStore(media: MediaObject) {
     if let _ = self.treeStore.currentMediaObjects {
     } else {
-      self.treeStore.currentMediaObjects = Array()
+      self.treeStore.currentMediaObjects = Set()
     }
-    self.treeStore.currentMediaObjects!.append(media)
+    self.treeStore.currentMediaObjects!.insert(media)
   }
   
   func addConnection(connection: LeafConnection) {
     if let _ = self.treeStore.currentConnections {
     } else {
-      self.treeStore.currentConnections = Array()
+      self.treeStore.currentConnections = Set()
     }
-    self.treeStore.currentConnections!.append(connection)
+    self.treeStore.currentConnections!.insert(connection)
   }
   
   func removeCollection(connection: LeafConnection) {
@@ -281,10 +298,23 @@ class PeatContentStore: NSObject {
   
   func addGroupingToStore(grouping: LeafGrouping) {
     if let _ = self.treeStore.currentGroupings {
-      self.treeStore.currentGroupings!.append(grouping)
+      self.treeStore.currentGroupings!.insert(grouping)
     } else {
-      self.treeStore.currentGroupings = Array()
-      self.treeStore.currentGroupings!.append(grouping)
+      self.treeStore.currentGroupings = Set()
+      self.treeStore.currentGroupings!.insert(grouping)
+    }
+  }
+  
+  func attachObjectsToConnection(connection: LeafConnection) {
+    if let fromId = connection.fromId, toId = connection.toId {
+      for leaf in leaves {
+        if leaf.leafId == toId { connection.toObject = leaf }
+        if leaf.leafId == fromId { connection.fromObject = leaf }
+      }
+      for grouping in groupings {
+        if grouping.groupingId == toId { connection.toObject = grouping }
+        if grouping.groupingId == fromId { connection.fromObject = grouping }
+      }
     }
   }
   

@@ -6,12 +6,18 @@
 //  Copyright © 2015 Matthew Barth. All rights reserved.
 //
 
+protocol TreeObject {
+  func viewForTree() -> UIView?
+  func objectId() -> String?
+  func parentView() -> UIView?
+}
+
 import Foundation
 import UIKit
 
 typealias CoordinatePair = (x: CGFloat, y: CGFloat)
 
-class Leaf: NSObject {
+class Leaf: NSObject, TreeObject {
   
   var changeStatus: ChangeStatus = .Unchanged
   
@@ -39,8 +45,6 @@ class Leaf: NSObject {
   var paramGroupingId: String? {
     return grouping?.groupingId
   }
-  
-  var treeView: UIView?
   
   // Leaf
   var treeDelegate: TreeDelegate?
@@ -94,13 +98,12 @@ class Leaf: NSObject {
     return leaf
   }
   
-  static func initFromTree(center: CGPoint, delegate: TreeDelegate, treeView: UIView) -> Leaf {
+  static func initFromTree(center: CGPoint, delegate: TreeDelegate) -> Leaf {
     let newLeaf = Leaf()
     newLeaf.center = center
     newLeaf.treeDelegate = delegate
     newLeaf.changeStatus = .BrandNew
     newLeaf.leafId = generateId()
-    newLeaf.treeView = treeView
     newLeaf.user_Id = CurrentUser.info.model?._id
     newLeaf.activityName = delegate.getCurrentActivity()
     return newLeaf
@@ -121,7 +124,7 @@ class Leaf: NSObject {
           "x" : self.paramCenter?.x != nil ? String(self.paramCenter!.x) : "",
           "y" : self.paramCenter?.y != nil ? String(self.paramCenter!.y) : ""
         ],
-        "grouping" : paramFor(paramGroupingId),
+        "groupingId" : paramFor(paramGroupingId),
       ],
       "completionStatus" : self.completionStatus != nil ? self.completionStatus!.rawValue : "",
       "title" : paramFor(title),
@@ -319,11 +322,19 @@ class Leaf: NSObject {
   func parentView() -> UIView? {
     if let grouping = grouping, groupingView = grouping.view {
       return groupingView
-    } else if let treeView = treeView {
+    } else if let treeView = treeDelegate?.viewForTree() {
       return treeView
     } else {
       return nil
     }
+  }
+  
+  func viewForTree() -> UIView? {
+    return self.view
+  }
+  
+  func objectId() -> String? {
+    return self.leafId
   }
   
   
