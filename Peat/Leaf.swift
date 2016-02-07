@@ -201,16 +201,10 @@ class Leaf: NSObject, TreeObject {
             }
 
             if let info = json["mediaInfo"] as? jsonObject, mediaJson = info["media"] as? Array<jsonObject> {
-              for objectJson in mediaJson {
-                PeatContentStore.sharedStore.addMediaToStore(MediaObject.initWithJson(objectJson))
+              for json in mediaJson {
+                PeatContentStore.sharedStore.addMediaToStore(MediaObject.initWithJson(json))
               }
             }
-            
-            if let comments = json["comments"] as? Array<jsonObject> {
-              print(comments)
-              //add commnts to store
-            }
-
           }
         }
         callback(true)

@@ -11,15 +11,33 @@ import Foundation
 
 class Comment: NSObject {
   
-  var sender: String?
-  var media: [String]?
-  var witnessEvent: Bool?
+  var sender_Id: String?
+  var mediaId: String?
   var text: String?
-  var timestamp: Int?
+  var timestamp: Double?
   
-  func initFromJson(json: jsonObject) {
-    
-    
+  static func initFromJson(json: jsonObject) -> Comment {
+    let newComment = Comment()
+    newComment.sender_Id = json["sender"] as? String
+    newComment.mediaId = json["mediaId"] as? String
+    newComment.text = json["text"] as? String
+    newComment.timestamp = json["timestamp"] as? Double
+    return newComment
+  }
+
+}
+
+class Like: NSObject {
+  var user_Id: String?
+  var mediaId: String?
+  var comment_Id: String?
+  
+  static func initFromJson(json: jsonObject) -> Like {
+    let newLike = Like()
+    newLike.user_Id = json["user_Id"] as? String
+    newLike.mediaId = json["mediaId"] as? String
+    newLike.comment_Id = json["comment_Id"] as? String
+    return newLike
   }
   
 }

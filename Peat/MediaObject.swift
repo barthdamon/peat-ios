@@ -31,6 +31,9 @@ class MediaObject: NSObject {
   var filePath: NSURL?
   var madeLocal: Bool = false
   
+  var comments: Array<Comment>?
+  var likes: Array<Like>?
+  
   var API = APIService.sharedService
   
   static func initWithJson(json: jsonObject) -> MediaObject {
@@ -43,10 +46,26 @@ class MediaObject: NSObject {
     media.mediaDescription = json["description"] as? String
     media.location = json["location"] as? String
     media.timestamp = json["timestamp"] as? Int
-    if let info = json["mediaInfo"] as? jsonObject, url = info["url"] as? String, mediaType = info["mediaType"] as? String {
+    
+    if let info = json["source"] as? jsonObject, url = info["url"] as? String, mediaType = info["mediaType"] as? String {
       media.url = NSURL(string: url)
       media.mediaType = MediaType(rawValue: mediaType)
     }
+    
+    if let comments = json["comments"] as? Array<jsonObject> {
+      media.comments = Array()
+      for comment in comments {
+        media.comments!.append(Comment.initFromJson(comment))
+      }
+    }
+    
+    if let likes = json["likes"] as? Array<jsonObject> {
+      media.likes = Array()
+      for like in likes {
+        media.likes!.append(Like.initFromJson(like))
+      }
+    }
+    
     return media
   }
   
@@ -77,7 +96,7 @@ class MediaObject: NSObject {
     return [
       "mediaId": self.mediaId != nil ? self.mediaId! : "",
       "leafId": self.leafId != nil ? self.leafId! : "",
-      "mediaInfo": [
+      "source": [
         "url" : self.urlString != nil ? self.urlString! : "",
         "mediaType" : self.mediaType != nil ? self.mediaType!.rawValue : ""
       ],

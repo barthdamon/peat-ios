@@ -36,6 +36,7 @@ class MediaUploadViewController: UIViewController {
       super.viewDidLoad()
       displayCameraControl()
       addListeners()
+    
       // Do any additional setup after loading the view.
     }
 

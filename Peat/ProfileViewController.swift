@@ -33,11 +33,13 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
       configureNavBar()
       if let user = viewing {
         setupUserProfile(user)
+        treeController?.fetchTreeData()
       } else {
         CurrentUser.info.fetchProfile(){ (success) in
           if success {
             if let user = CurrentUser.info.model {
               self.setupUserProfile(user)
+              self.treeController?.fetchTreeData()
             }
           }
         }
