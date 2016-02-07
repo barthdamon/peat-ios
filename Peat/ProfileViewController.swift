@@ -23,6 +23,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
   @IBOutlet weak var currentAbilityLabel: UILabel!
   
   var treeController: TreeViewController?
+  var drilldownController: LeafDetailViewController?
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,6 +85,8 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
       if segue.identifier == "leafDrilldown" {
         if let nav = segue.destinationViewController as? UINavigationController, vc = nav.topViewController as? LeafDetailViewController {
           vc.viewing = self.viewing
+          vc.profileDelegate = self
+          self.drilldownController = vc
         }
       }
     }
@@ -127,6 +130,10 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
     self.changesPresent = false
     self.cancelButton.hidden = true
     self.saveButton.hidden = true
+  }
+  
+  func dismissDrilldownModal() {
+    self.drilldownController?.dismissViewControllerAnimated(true, completion: nil)
   }
   
 }

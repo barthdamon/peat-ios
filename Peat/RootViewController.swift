@@ -22,6 +22,9 @@ class RootViewController: UIViewController {
       configureContainers()
 //      SocketService.sharedService.configureSocket()
         // Do any additional setup after loading the view.
+      if let tabBar = self.mainTabBarController {
+        tabBar.selectedIndex = 2
+      }
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,9 +34,6 @@ class RootViewController: UIViewController {
   
   override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(true)
-    if let tabBar = self.mainTabBarController {
-      tabBar.selectedIndex = 2
-    }
   }
   
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

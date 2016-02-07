@@ -36,6 +36,8 @@ class LeafDetailViewController: UIViewController {
   @IBOutlet weak var witnessLabel: UILabel!
   @IBOutlet weak var uploadButton: UIButton!
   
+  var profileDelegate: ProfileViewController?
+  
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -82,6 +84,12 @@ class LeafDetailViewController: UIViewController {
         let lingo = witnessCount == 1 ? "Witness" : "Witnesses"
         self.witnessLabel.text = "\(witnessCount) \(lingo)"
       }
+      var mediaCount = 0
+      if let media = leaf.media {
+        mediaCount = media.count
+      }
+      let lingo = mediaCount == 1 ? "Upload" : "Uploads"
+      self.uploadLabel.text = "\(mediaCount) \(lingo)"
     }
   }
   
@@ -167,7 +175,7 @@ class LeafDetailViewController: UIViewController {
     ]
     PeatSocialMediator.sharedMediator.sendWitnessRequest(params) { (success) -> () in
       if success {
-        print("SUCECSS, show something")
+        print("SUCCESS, show something")
       } else {
         print("FAILURE, still show something")
       }
@@ -176,11 +184,6 @@ class LeafDetailViewController: UIViewController {
   
   @IBAction func returnButtonPressed(sender: AnyObject) {
     self.dismissViewControllerAnimated(true, completion: nil)
-  }
-  
-  func adaptivePresentationStyleForPresentationController(controller: UIPresentationController!) -> UIModalPresentationStyle {
-    // Return no adaptive presentation style, use default presentation behaviour
-    return .None
   }
   
  }

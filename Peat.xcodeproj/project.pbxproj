@@ -17,6 +17,7 @@
 		021C90101BF0135B00C79538 /* SideMenuClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021C900F1BF0135B00C79538 /* SideMenuClient.swift */; };
 		0221BB521C6663C00027EB42 /* WitnessRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0221BB511C6663C00027EB42 /* WitnessRequestViewController.swift */; };
 		0221BB541C66FC7C0027EB42 /* Witness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0221BB531C66FC7C0027EB42 /* Witness.swift */; };
+		0221BB581C67938A0027EB42 /* ProfileLoadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0221BB571C67938A0027EB42 /* ProfileLoadViewController.swift */; };
 		022AB6911C5C251900F1168E /* LeafGrouping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022AB6901C5C251900F1168E /* LeafGrouping.swift */; };
 		022AB6931C5C313D00F1168E /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022AB6921C5C313D00F1168E /* ColorExtensions.swift */; };
 		022AB6971C5C45AA00F1168E /* LeafConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022AB6961C5C45AA00F1168E /* LeafConnection.swift */; };
@@ -89,6 +90,7 @@
 		021C900F1BF0135B00C79538 /* SideMenuClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuClient.swift; sourceTree = "<group>"; };
 		0221BB511C6663C00027EB42 /* WitnessRequestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WitnessRequestViewController.swift; sourceTree = "<group>"; };
 		0221BB531C66FC7C0027EB42 /* Witness.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Witness.swift; sourceTree = "<group>"; };
+		0221BB571C67938A0027EB42 /* ProfileLoadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileLoadViewController.swift; sourceTree = "<group>"; };
 		022AB6901C5C251900F1168E /* LeafGrouping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeafGrouping.swift; sourceTree = "<group>"; };
 		022AB6921C5C313D00F1168E /* ColorExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
 		022AB6961C5C45AA00F1168E /* LeafConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeafConnection.swift; sourceTree = "<group>"; };
@@ -354,6 +356,7 @@
 				027C34031C55178000D86F0F /* LoginViewController.swift */,
 				027C340A1C55465200D86F0F /* GatekeeperViewController.swift */,
 				021C90091BEFF5DD00C79538 /* RootViewController.swift */,
+				0221BB571C67938A0027EB42 /* ProfileLoadViewController.swift */,
 				021C900B1BEFFF7000C79538 /* HomeViewController.swift */,
 				0239E5801BDBEF5C00D85C3C /* ProfileViewController.swift */,
 				0239E5BC1BDDA41B00D85C3C /* TreeViewController.swift */,
@@ -566,6 +569,7 @@
 				02F2DA691C16875C00CA1328 /* UIImageExtension.swift in Sources */,
 				027C75C11C509E51008D6DAE /* PostCommentTableViewCell.swift in Sources */,
 				02A11CA01BB9D4CA0064AE95 /* NewsfeedTableViewController.swift in Sources */,
+				0221BB581C67938A0027EB42 /* ProfileLoadViewController.swift in Sources */,
 				027C340B1C55465200D86F0F /* GatekeeperViewController.swift in Sources */,
 				027C34081C55239800D86F0F /* CurrentUser.swift in Sources */,
 				027C75BF1C509AD1008D6DAE /* LeafDetailTableViewController.swift in Sources */,
