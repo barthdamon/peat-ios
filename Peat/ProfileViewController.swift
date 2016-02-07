@@ -13,7 +13,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
   var sidebarClient: SideMenuClient?
   var changesPresent: Bool = false
   
-  var notCurrentUser: User?
+  var viewing: User?
   
   @IBOutlet weak var usernameLabel: UILabel!
   @IBOutlet weak var avatarImageView: UIImageView!
@@ -30,7 +30,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
       initializeSidebar()
       configureMenuSwipes()
       configureNavBar()
-      if let user = notCurrentUser {
+      if let user = viewing {
         setupUserProfile(user)
       } else {
         CurrentUser.info.fetchProfile(){ (success) in
@@ -77,7 +77,13 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
         if let vc = segue.destinationViewController as? TreeViewController {
           vc.profileDelegate = self
           self.treeController = vc
-          vc.viewing = self.notCurrentUser != nil ? self.notCurrentUser! : CurrentUser.info.model
+          vc.viewing = self.viewing
+        }
+      }
+      
+      if segue.identifier == "leafDrilldown" {
+        if let nav = segue.destinationViewController as? UINavigationController, vc = nav.topViewController as? LeafDetailViewController {
+          vc.viewing = self.viewing
         }
       }
     }

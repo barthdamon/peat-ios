@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FriendsTableViewController: UITableViewController, UITextFieldDelegate, ViewControllerWithMenu {
+class FriendsTableViewController: UITableViewController, UITextFieldDelegate, ViewControllerWithMenu, UIGestureRecognizerDelegate {
   
   enum FriendMode {
     case Search
@@ -250,9 +250,13 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate, Vi
     // Pass the selected object to the new view controller.
     if segue.identifier == "profileForUser" {
       if let vc = segue.destinationViewController as? ProfileViewController {
-        vc.notCurrentUser = self.selectedUser
+        vc.viewing = self.selectedUser
       }
     }
+  }
+  
+  func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    return true
   }
 
 

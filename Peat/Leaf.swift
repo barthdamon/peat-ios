@@ -64,6 +64,9 @@ class Leaf: NSObject, TreeObject {
   var abilityTitleLabel: UILabel?
   var groupingLabel: UILabel?
   
+  //Locally Stored Variables
+  var witnesses: Array<Witness>?
+  
   var media: Array<MediaObject>? {
     return PeatContentStore.sharedStore.treeStore.mediaForLeaf(self)
   }
@@ -184,15 +187,17 @@ class Leaf: NSObject, TreeObject {
   func fetchContents(callback: (Bool) -> ()) {
     if let _ = PeatContentStore.sharedStore.treeStore.mediaForLeaf(self) {callback(true); return}
     if let leafId = leafId {
-      API.get(nil, url: "tree/leaves/\(leafId)"){ (res, err) -> () in
+      API.get(nil, url: "leaves/\(leafId)"){ (res, err) -> () in
         if let e = err {
           print("error: \(e)")
         } else {
           if let json = res as? jsonObject {
             print("LEAF DATA: \(json)")
-            if let witnesses = json["witnesses"] as? Array<jsonObject> {
-              print(witnesses)
-              //add witnesses to store
+            if let jsonWitnesses = json["witnesses"] as? Array<jsonObject> {
+              self.witnesses = Array()
+              for witness in jsonWitnesses {
+                self.witnesses!.append(Witness.initFromJson(witness))
+              }
             }
 
             if let info = json["mediaInfo"] as? jsonObject, mediaJson = info["media"] as? Array<jsonObject> {

@@ -14,7 +14,7 @@ protocol ViewControllerWithMenu {
   func configureNavBar()
 }
 
-class SideMenuClient {
+class SideMenuClient: NSObject, UIGestureRecognizerDelegate {
   
   var clientController: UIViewController!
   var tabBar: UITabBarController?
@@ -48,9 +48,10 @@ class SideMenuClient {
   }
   
   func configureMenuSwipes() {
-    let mainControllerTap = UITapGestureRecognizer(target: self, action: "closeMenu:")
-    mainControllerTap.numberOfTapsRequired = 1
-    mainContainer.addGestureRecognizer(mainControllerTap)
+//    let mainControllerTap = UITapGestureRecognizer(target: self, action: "closeMenu:")
+//    mainControllerTap.numberOfTapsRequired = 1
+//    mainControllerTap.delegate = self
+//    mainContainer.addGestureRecognizer(mainControllerTap)
     
     let rightSwipe = UISwipeGestureRecognizer(target: self, action: "toggleMenu:")
     rightSwipe.direction = .Right
@@ -131,6 +132,10 @@ class SideMenuClient {
         toggleMenu(gestureRecognizer)
       }
     }
+  }
+  
+  func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    return true
   }
   
 }

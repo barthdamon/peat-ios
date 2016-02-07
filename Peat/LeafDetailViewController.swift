@@ -9,6 +9,11 @@
 import Foundation
 import UIKit
 
+enum LeafMode {
+  case Edit
+  case View
+}
+
 class LeafDetailViewController: UIViewController {
   @IBOutlet weak var titleView: UIView!
   @IBOutlet weak var titleEditField: UITextField!
@@ -22,11 +27,21 @@ class LeafDetailViewController: UIViewController {
   }
   var containerTableView: UITableView?
   
+  var mode: LeafMode = .Edit
+  
+  var viewing: User?
+  
   @IBOutlet weak var titleSaveButton: UIButton!
   @IBOutlet weak var uploadLabel: UILabel!
   @IBOutlet weak var witnessLabel: UILabel!
+  @IBOutlet weak var uploadButton: UIButton!
+  
+  
   override func viewDidLoad() {
     super.viewDidLoad()
+    if let _ = self.viewing {
+      mode = .View
+    }
     if let leaf = leaf {
       leaf.fetchContents(){ (success) ->() in
         guard success else {
@@ -35,15 +50,38 @@ class LeafDetailViewController: UIViewController {
         }
         self.configureTitleView()
         self.containerTableView?.reloadData()
+        if let witnesses = leaf.witnesses where self.mode == .View {
+          for witness in witnesses {
+            if witness.witness_Id == CurrentUser.info.model?._id {
+              self.uploadButton.enabled = false
+            }
+          }
+        }
       }
     }
     NSNotificationCenter.defaultCenter().addObserver(self, selector: "newMediaAdded", name: "newMediaPostSuccessful", object: nil)
+    
+    switch mode {
+    case .View:
+      self.uploadButton.setTitle("Witness", forState: .Normal)
+      self.editButton.hidden = true
+      self.editButton.enabled = false
+      self.completionStatusControl.userInteractionEnabled = false
+    case .Edit:
+      break
+    }
   }
+  
   
   func configureTitleView() {
     if let leaf = self.leaf {
       self.leafTitleLabel.text = leaf.title
       self.titleEditField.text = leaf.title
+      if let witnesses = leaf.witnesses {
+        let witnessCount = witnesses.count
+        let lingo = witnessCount == 1 ? "Witness" : "Witnesses"
+        self.witnessLabel.text = "\(witnessCount) \(lingo)"
+      }
     }
   }
   
@@ -51,6 +89,13 @@ class LeafDetailViewController: UIViewController {
     if segue.identifier == "leafDetailEmbed" {
       if let vc = segue.destinationViewController as? LeafDetailTableViewController {
         self.containerTableView = vc.tableView
+      }
+    }
+    
+    if segue.identifier == "witnessPopover" {
+      if let vc = segue.destinationViewController as? WitnessRequestViewController {
+        vc.leaf = self.leaf
+        vc.viewing = self.viewing
       }
     }
   }
@@ -101,12 +146,41 @@ class LeafDetailViewController: UIViewController {
   
   @IBAction func uploadButtonPressed(sender: AnyObject) {
     //open up the ol camera role.....
-    self.performSegueWithIdentifier("showUploadOptions", sender: self)
-    //also pause any media playing here, might already work
+    switch mode {
+    case .Edit:
+      self.performSegueWithIdentifier("showUploadOptions", sender: self)
+      //also pause any media playing here, might already work
+    case .View:
+      //show popover with option to submit witness requestmain
+//      self.performSegueWithIdentifier("witnessPopover", sender: self)
+      sendWitness()
+      break
+    }
+
+  }
+  
+  func sendWitness() {
+    let params = [
+      "leafId" : paramFor(leaf?.leafId),
+      "witnessId" : paramFor(CurrentUser.info.model?._id),
+      "witnessed_Id" : paramFor(viewing?._id),
+    ]
+    PeatSocialMediator.sharedMediator.sendWitnessRequest(params) { (success) -> () in
+      if success {
+        print("SUCECSS, show something")
+      } else {
+        print("FAILURE, still show something")
+      }
+    }
   }
   
   @IBAction func returnButtonPressed(sender: AnyObject) {
     self.dismissViewControllerAnimated(true, completion: nil)
+  }
+  
+  func adaptivePresentationStyleForPresentationController(controller: UIPresentationController!) -> UIModalPresentationStyle {
+    // Return no adaptive presentation style, use default presentation behaviour
+    return .None
   }
   
  }

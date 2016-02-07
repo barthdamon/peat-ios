@@ -93,4 +93,16 @@ class PeatSocialMediator: NSObject {
     }
   }
   
+  func sendWitnessRequest(params: jsonObject, callback: (Bool) -> () ) {
+    API.post(params, authType: .Token, url: "witness/new") { (res, err) -> () in
+      if let e = err {
+        print("Error creating witness request: \(e)")
+        callback(false)
+      } else {
+        print("Witness create success")
+        callback(true)
+      }
+    }
+  }
+  
 }
