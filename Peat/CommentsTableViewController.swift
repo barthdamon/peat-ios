@@ -38,7 +38,7 @@ class CommentsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
       if let comments = media?.comments {
-        return comments.count + 2
+        return comments.count + 1
       } else {
         return 2
       }
@@ -63,7 +63,7 @@ class CommentsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
       var postIndex = 1
       if let comments = media?.comments {
-        postIndex = comments.count + 1
+        postIndex = comments.count
       }
       switch indexPath.row {
       case 0:
