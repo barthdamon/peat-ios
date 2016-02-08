@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		02069E061C114E5C007E18EB /* MediaDescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02069E051C114E5C007E18EB /* MediaDescriptionTableViewCell.swift */; };
 		02069E081C114E68007E18EB /* CommentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02069E071C114E68007E18EB /* CommentsTableViewCell.swift */; };
-		02069E0E1C114F27007E18EB /* CommentsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02069E0D1C114F27007E18EB /* CommentsTableView.swift */; };
 		021C1BF51C4F33B000FDEFED /* LeafView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021C1BF41C4F33B000FDEFED /* LeafView.swift */; };
 		021C900A1BEFF5DD00C79538 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021C90091BEFF5DD00C79538 /* RootViewController.swift */; };
 		021C900C1BEFFF7000C79538 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021C900B1BEFFF7000C79538 /* HomeViewController.swift */; };
@@ -18,6 +17,7 @@
 		0221BB521C6663C00027EB42 /* WitnessRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0221BB511C6663C00027EB42 /* WitnessRequestViewController.swift */; };
 		0221BB541C66FC7C0027EB42 /* Witness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0221BB531C66FC7C0027EB42 /* Witness.swift */; };
 		0221BB581C67938A0027EB42 /* ProfileLoadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0221BB571C67938A0027EB42 /* ProfileLoadViewController.swift */; };
+		0221BB5A1C6804240027EB42 /* CommentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0221BB591C6804240027EB42 /* CommentsTableViewController.swift */; };
 		022AB6911C5C251900F1168E /* LeafGrouping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022AB6901C5C251900F1168E /* LeafGrouping.swift */; };
 		022AB6931C5C313D00F1168E /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022AB6921C5C313D00F1168E /* ColorExtensions.swift */; };
 		022AB6971C5C45AA00F1168E /* LeafConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022AB6961C5C45AA00F1168E /* LeafConnection.swift */; };
@@ -82,7 +82,6 @@
 /* Begin PBXFileReference section */
 		02069E051C114E5C007E18EB /* MediaDescriptionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDescriptionTableViewCell.swift; sourceTree = "<group>"; };
 		02069E071C114E68007E18EB /* CommentsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsTableViewCell.swift; sourceTree = "<group>"; };
-		02069E0D1C114F27007E18EB /* CommentsTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsTableView.swift; sourceTree = "<group>"; };
 		021C1BF41C4F33B000FDEFED /* LeafView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeafView.swift; sourceTree = "<group>"; };
 		021C90091BEFF5DD00C79538 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		021C900B1BEFFF7000C79538 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -91,6 +90,7 @@
 		0221BB511C6663C00027EB42 /* WitnessRequestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WitnessRequestViewController.swift; sourceTree = "<group>"; };
 		0221BB531C66FC7C0027EB42 /* Witness.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Witness.swift; sourceTree = "<group>"; };
 		0221BB571C67938A0027EB42 /* ProfileLoadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileLoadViewController.swift; sourceTree = "<group>"; };
+		0221BB591C6804240027EB42 /* CommentsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsTableViewController.swift; sourceTree = "<group>"; };
 		022AB6901C5C251900F1168E /* LeafGrouping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeafGrouping.swift; sourceTree = "<group>"; };
 		022AB6921C5C313D00F1168E /* ColorExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
 		022AB6961C5C45AA00F1168E /* LeafConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeafConnection.swift; sourceTree = "<group>"; };
@@ -219,7 +219,7 @@
 				02D72E8A1BD0926900EC115E /* FriendsTableViewController.swift */,
 				021C900D1BF0012C00C79538 /* MenuTableViewController.swift */,
 				02A11C9F1BB9D4CA0064AE95 /* NewsfeedTableViewController.swift */,
-				02069E0D1C114F27007E18EB /* CommentsTableView.swift */,
+				0221BB591C6804240027EB42 /* CommentsTableViewController.swift */,
 			);
 			name = TableViews;
 			sourceTree = "<group>";
@@ -539,6 +539,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0221BB5A1C6804240027EB42 /* CommentsTableViewController.swift in Sources */,
 				027C33FE1C532E6100D86F0F /* StringHelpers.swift in Sources */,
 				027E31281BA27875001FCF70 /* APIService.swift in Sources */,
 				02FD6C931BB38C69003A3DDD /* CameraViewController.swift in Sources */,
@@ -550,7 +551,6 @@
 				025D0DB31BD5CACB00462783 /* PeatSocialMediator.swift in Sources */,
 				02A11CA51BB9EDAB0064AE95 /* PeatContentStore.swift in Sources */,
 				02A740F51C4DF944000C080D /* EnumHelpers.swift in Sources */,
-				02069E0E1C114F27007E18EB /* CommentsTableView.swift in Sources */,
 				0239E5BD1BDDA41B00D85C3C /* TreeViewController.swift in Sources */,
 				021C900C1BEFFF7000C79538 /* HomeViewController.swift in Sources */,
 				021C1BF51C4F33B000FDEFED /* LeafView.swift in Sources */,

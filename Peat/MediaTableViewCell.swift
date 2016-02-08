@@ -11,12 +11,22 @@ import MediaPlayer
 import AVFoundation
 
 
-class MediaTableViewCell: UITableViewCell, UITableViewDataSource, UITableViewDelegate {
+class MediaTableViewCell: UITableViewCell {
   
   @IBOutlet weak var mediaView: UIView!
-  @IBOutlet weak var commentTableView: UITableView!
+  @IBOutlet weak var descriptionView: UIView!
+
+  @IBOutlet weak var likeCountButton: UIButton!
+  @IBOutlet weak var commentCountButton: UIButton!
+  
+  @IBOutlet weak var descriptionLabel: UILabel!
+  
+  @IBOutlet weak var commentTextField: UITextField!
+  
+  var tableVC: LeafDetailTableViewController?
   
   var media: MediaObject?
+  var viewing: User?
   
   var videoPath: NSURL?
   var player: PeatAVPlayer?
@@ -45,6 +55,7 @@ class MediaTableViewCell: UITableViewCell, UITableViewDataSource, UITableViewDel
         break
       }
     }
+    configureDescriptionSection()
   }
   
   func configureForImage() {
@@ -60,6 +71,20 @@ class MediaTableViewCell: UITableViewCell, UITableViewDataSource, UITableViewDel
     }
   }
   
+  func configureDescriptionSection() {
+    self.descriptionLabel.text = media?.mediaDescription
+    var likesCount = 0
+    var commentsCount = 0
+    if let likes = media?.likes {
+      likesCount = likes.count
+    }
+    if let comments = media?.comments {
+      commentsCount = comments.count
+    }
+    likeCountButton.setTitle("\(likesCount) Likes", forState: .Normal)
+    commentCountButton.setTitle("\(commentsCount) Comments", forState: .Normal)
+  }
+  
   //MARK: Comment Section
   override func setSelected(selected: Bool, animated: Bool) {
     super.setSelected(selected, animated: animated)
@@ -67,24 +92,35 @@ class MediaTableViewCell: UITableViewCell, UITableViewDataSource, UITableViewDel
     // Configure the view for the selected state
   }
   
-  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 3
+
+  @IBAction func commentCountButtonPressed(sender: AnyObject) {
+    tableVC?.commentsButtonPressed(media)
   }
   
-  func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-    return 1
+  @IBAction func likeCountButtonPressed(sender: AnyObject) {
+    //show other people that have liked
   }
   
-  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-//    
-//    var cell: UITableViewCell? = tableView.dequeueReusableCellWithIdentifier("cellID") as? UITableViewCell
-//    if(cell == nil) {
-//      cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "cellID")
-//    }
-//    cell!.textLabel.text = dataArr[indexPath.row]
-//    return cell!
-    let cell = UITableViewCell()
-    return cell
+  @IBAction func likeButtonPressed(sender: AnyObject) {
+    //send like
+    if let media = media {
+      PeatSocialMediator.sharedMediator.newLike(media, comment: nil) { (success) in
+        guard success else { /*show error*/return }
+        //increase like count
+      }
+    }
+  }
+  
+  @IBAction func postButtonPressed(sender: AnyObject) {
+    //post comment
+    if let text = self.commentTextField.text, media = media {
+      PeatSocialMediator.sharedMediator.newComment(text, media: media) { (success) in
+        guard success else { /*show error*/return }
+        //add a new comment to ui
+        
+      }
+    }
+    
   }
   
 }

@@ -38,6 +38,8 @@ class LeafDetailViewController: UIViewController {
   
   var profileDelegate: ProfileViewController?
   
+  var selectedMediaForComments: MediaObject?
+  
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -97,6 +99,8 @@ class LeafDetailViewController: UIViewController {
     if segue.identifier == "leafDetailEmbed" {
       if let vc = segue.destinationViewController as? LeafDetailTableViewController {
         self.containerTableView = vc.tableView
+        vc.viewing = viewing
+        vc.detailVC = self
       }
     }
     
@@ -104,6 +108,13 @@ class LeafDetailViewController: UIViewController {
       if let vc = segue.destinationViewController as? WitnessRequestViewController {
         vc.leaf = self.leaf
         vc.viewing = self.viewing
+      }
+    }
+    
+    if segue.identifier == "showComments" {
+      if let vc = segue.destinationViewController as? CommentsTableViewController {
+        vc.media = selectedMediaForComments
+        vc.viewing = viewing
       }
     }
   }
@@ -167,6 +178,16 @@ class LeafDetailViewController: UIViewController {
 
   }
   
+  func showCommentsForMedia(media: MediaObject) {
+    self.selectedMediaForComments = media
+    self.performSegueWithIdentifier("showComments", sender: self)
+  }
+  
+  func showLikesForMedia(media: MediaObject) {
+    self.selectedMediaForComments = media
+    self.performSegueWithIdentifier("showLikes", sender: self)
+  }
+  
   func sendWitness() {
     let params = [
       "leafId" : paramFor(leaf?.leafId),
@@ -181,6 +202,7 @@ class LeafDetailViewController: UIViewController {
       }
     }
   }
+
   
   @IBAction func returnButtonPressed(sender: AnyObject) {
     self.dismissViewControllerAnimated(true, completion: nil)

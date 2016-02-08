@@ -20,8 +20,12 @@ class CommentsTableViewCell: UITableViewCell {
 
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         // Configure the view for the selected state
     }
+  
+  func configureWithComment(comment: Comment) {
+    self.userLabel.text = comment.user?.username
+    self.commentLabel.text = comment.text
+  }
 
 }

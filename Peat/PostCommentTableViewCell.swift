@@ -9,6 +9,8 @@
 import UIKit
 
 class PostCommentTableViewCell: UITableViewCell {
+  
+  var media: MediaObject?
 
   @IBOutlet weak var sendButton: UIButton!
   @IBOutlet weak var commentField: UITextField!

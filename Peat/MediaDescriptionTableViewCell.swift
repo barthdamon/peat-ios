@@ -22,5 +22,10 @@ class MediaDescriptionTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
+  
+  func configureWithMediaAndUser(media: MediaObject, user: User) {
+    self.userLabel.text = user.username
+    self.descriptionLabel.text = media.description
+  }
+  
 }

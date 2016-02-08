@@ -1,45 +1,27 @@
 //
-//  LeafDetailTableViewController.swift
+//  CommentsTableViewController.swift
 //  Peat
 //
-//  Created by Matthew Barth on 1/20/16.
+//  Created by Matthew Barth on 2/7/16.
 //  Copyright © 2016 Matthew Barth. All rights reserved.
 //
 
 import UIKit
 
-class LeafDetailTableViewController: UITableViewController {
+class CommentsTableViewController: UITableViewController {
   
-    var leaf: Leaf? {
-      return PeatContentStore.sharedStore.treeStore.selectedLeaf
-    }
-    var activityIndicator: UIActivityIndicatorView?
-    var playerCells: Array<MediaTableViewCell> = []
-  
-    var mediaOnLoad: Array<MediaObject>?
-    var viewing: User?
-  
-  var detailVC: LeafDetailViewController?
+  var media: MediaObject?
+  var viewing: User?
 
     override func viewDidLoad() {
-      super.viewDidLoad()
+        super.viewDidLoad()
+
+        // Uncomment the following line to preserve selection between presentations
+        // self.clearsSelectionOnViewWillAppear = false
+
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-      NSNotificationCenter.defaultCenter().addObserver(self, selector: "newMediaAdded", name: "newMediaPostSuccessful", object: nil)
     }
-  
-  override func viewWillDisappear(animated: Bool) {
-    for cell in playerCells {
-      cell.player = nil
-      cell.mediaView = nil
-      cell.overlayView = nil
-    }
-    super.viewWillDisappear(true)
-  }
-  
-  func newMediaAdded() {
-    self.tableView.reloadData()
-  }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -55,29 +37,72 @@ class LeafDetailTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-      if let leaf = leaf, media = leaf.media {
-        self.mediaOnLoad = media
-//        return media.count
-        return 1
+      if let comments = media?.comments {
+        return comments.count + 2
       } else {
-        return 0
+        return 2
       }
     }
-
+  
+  //  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  //    if let media = media, comments = media.comments {
+  //      if comments.count > 3 {
+  //        return 5
+  //      } else {
+  //        return comments.count + 2
+  //      }
+  //    } else {
+  //      return 2
+  //    }
+  //  }
+  //
+  //  func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+  //    return 1
+  //  }
+  
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-      if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, media = mediaOnLoad {
-          let cellMedia = media[indexPath.row]
-          cell.viewing = viewing
-          cell.tableVC = self
-          cell.configureWithMedia(cellMedia)
-          self.playerCells.append(cell)
-          return cell
-      } else {
-        let cell = UITableViewCell()
-        return cell
+      var postIndex = 1
+      if let comments = media?.comments {
+        postIndex = comments.count + 1
       }
-      
+      switch indexPath.row {
+      case 0:
+        if let cell = tableView.dequeueReusableCellWithIdentifier("descriptionCell") as? MediaDescriptionTableViewCell, media = media {
+          let user = viewing != nil ? viewing! : CurrentUser.info.model!
+          cell.configureWithMediaAndUser(media, user: user)
+          return cell
+        }
+      case postIndex:
+        if let cell = tableView.dequeueReusableCellWithIdentifier("postCommentCell") as? PostCommentTableViewCell {
+          cell.media = media
+          cell.selectionStyle = .None
+          return cell
+        }
+        break
+      default:
+        if let cell = tableView.dequeueReusableCellWithIdentifier("commentCell") as? CommentsTableViewCell {
+          if let media = media, comments = media.comments {
+            cell.configureWithComment(comments[indexPath.row])
+            return cell
+          }
+        }
+      }
+      //default return blank cell
+      let cell = UITableViewCell()
+      return cell
     }
+  
+  
+
+    /*
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+
+        // Configure the cell...
+
+        return cell
+    }
+    */
 
     /*
     // Override to support conditional editing of the table view.
@@ -123,17 +148,5 @@ class LeafDetailTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
-  
-  func commentsButtonPressed(media: MediaObject?) {
-    if let media = media {
-      detailVC?.showCommentsForMedia(media)
-    }
-  }
-  
-  func likesButtonPressed(media: MediaObject?) {
-    if let media = media {
-      detailVC?.showLikesForMedia(media)
-    }
-  }
 
 }
