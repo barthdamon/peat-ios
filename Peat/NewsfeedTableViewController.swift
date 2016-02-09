@@ -27,12 +27,12 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(true)
-    if let mediaObjects = PeatContentStore.sharedStore.mediaObjects {
-      self.mediaObjects = mediaObjects
-      checkForNewsfeedUpdates()
-    } else {
-      queryForMediaData()
-    }
+//    if let mediaObjects = PeatContentStore.sharedStore.mediaObjects {
+//      self.mediaObjects = mediaObjects
+//      checkForNewsfeedUpdates()
+//    } else {
+//      queryForMediaData()
+//    }
   }
   
   func checkForNewsfeedUpdates() {

@@ -13,9 +13,12 @@ class MediaUploadViewController: UIViewController {
   @IBOutlet weak var mediaView: UIView!
   @IBOutlet weak var descriptionTextField: UITextField!
   @IBOutlet weak var locationTextField: UITextField!
+  var store: PeatContentStore? {
+    return leafDetailDelegate?.profileDelegate?.store
+  }
   
   var leaf: Leaf? {
-    return PeatContentStore.sharedStore.treeStore.selectedLeaf
+    return store?.treeStore.selectedLeaf
   }
   
   var overlayView: MediaOverlayView?
@@ -24,7 +27,7 @@ class MediaUploadViewController: UIViewController {
   
   var mediaType: MediaType? {
     didSet {
-      self.mediaObject = MediaObject.initFromUploader(leaf, type: mediaType, thumbnail: image, filePath: videoPath)
+      self.mediaObject = MediaObject.initFromUploader(leaf, type: mediaType, thumbnail: image, filePath: videoPath, store: store)
       self.overlayView = MediaOverlayView(mediaView: mediaView, player: nil, mediaObject: self.mediaObject, delegate: nil)
     }
   }

@@ -22,6 +22,7 @@ protocol TreeDelegate {
   func addGroupingToScrollView(grouping: LeafGrouping)
   func groupingBeingMoved(leaf: LeafGrouping, sender: UIGestureRecognizer)
   func addNewLeafToGrouping(grouping: LeafGrouping, sender: UITapGestureRecognizer)
+  func sharedStore() -> PeatContentStore
 }
 
 class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
@@ -31,6 +32,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   var selectedLeaf: Leaf?
   var changesMade: Bool = false
   var viewing: User?
+  var store: PeatContentStore?
   
   var hoverTimer: NSTimer?
   
@@ -52,6 +54,15 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     // Do any additional setup after loading the view.
     configureScrollView()
     fetchTreeData()
+  }
+  
+  func sharedStore() -> PeatContentStore {
+    if let store = store {
+      return store
+    } else {
+      //should never have to do this...
+      return PeatContentStore()
+    }
   }
   
   func getCurrentActivity() -> String {
@@ -115,7 +126,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
         var hoveredLeaf: Leaf?
       
         //check if hovering over existing grouping
-        if let groupings = PeatContentStore.sharedStore.treeStore.currentGroupings {
+        if let groupings = sharedStore().treeStore.currentGroupings {
           for grouping in groupings {
             if let groupingView = grouping.view {
               if CGRectContainsPoint(groupingView.frame, finger) {
@@ -127,7 +138,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
         }
 
       //Check if hovering ove existing leaf for new grouping being made
-      if let leaves = PeatContentStore.sharedStore.treeStore.currentLeaves {
+      if let leaves = sharedStore().treeStore.currentLeaves {
         for lowerLeaf in leaves {
           if let lowerView = lowerLeaf.view where lowerLeaf != leaf {
             if CGRectContainsPoint(lowerView.frame, finger) {
@@ -167,14 +178,14 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   //find all connections for moving object to update them when they need to be
   func findExistingConnectionsForMoving(object: TreeObject) -> Array<(object: TreeObject, connection: LeafConnection)>? {
     var anchorLeaves: Array<(object: TreeObject, connection: LeafConnection)> = Array()
-    for connection in PeatContentStore.sharedStore.connections {
+    for connection in sharedStore().connections {
       //          var toLeaf: Leaf?
-      for maybeConnected in PeatContentStore.sharedStore.leaves {
+      for maybeConnected in sharedStore().leaves {
         if (connection.toId == maybeConnected.leafId && connection.fromId == object.objectId()) || (connection.fromId == maybeConnected.leafId && connection.toId == object.objectId()) {
           anchorLeaves.append((object: maybeConnected, connection: connection))
         }
       }
-      for maybeConnected in PeatContentStore.sharedStore.groupings {
+      for maybeConnected in sharedStore().groupings {
         if (connection.toId == maybeConnected.groupingId && connection.fromId == object.objectId()) || (connection.fromId == maybeConnected.groupingId && connection.toId == object.objectId()) {
           anchorLeaves.append((object: maybeConnected, connection: connection))
         }
@@ -186,7 +197,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   //This exists becasue connections are created when you start drawing, the to and from are added later
   func findExistingConnectionsForObject(object: TreeObject) -> (object: TreeObject, connection: LeafConnection)? {
     var anchor: (object: TreeObject, connection: LeafConnection)?
-      for connection in PeatContentStore.sharedStore.connections {
+      for connection in sharedStore().connections {
         //          var toLeaf: Leaf?
         if connection.fromId == object.objectId() && connection.toId == nil {
           anchor = (object: object, connection: connection)
@@ -218,7 +229,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       let finger = sender.locationInView(parentView)
       if sender.state == UIGestureRecognizerState.Ended {
         var connected = false
-        for storedLeaf in PeatContentStore.sharedStore.leaves {
+        for storedLeaf in sharedStore().leaves {
           if storedLeaf.leafId != anchor.object.objectId() {
             if let leafView = storedLeaf.view {
               if CGRectContainsPoint(leafView.frame, finger) {
@@ -258,7 +269,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       if let existing = existingConnection {
         existing.connectionLayer = shapeLayer
       } else {
-        PeatContentStore.sharedStore.newConnection(shapeLayer, from: fromObject, to: nil, delegate: self)
+        sharedStore().newConnection(shapeLayer, from: fromObject, to: nil, delegate: self)
       }
       parentView.layer.addSublayer(shapeLayer)
     }
@@ -360,7 +371,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     if let view = grouping.view {
       view.layer.zPosition = -10
       self.treeView.addSubview(view)
-      PeatContentStore.sharedStore.addGroupingToStore(grouping)
+      sharedStore().addGroupingToStore(grouping)
     }
   }
   
@@ -380,19 +391,19 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   func displayLeaves() {
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
       //leaves will have the grouping, just draw the grouping
-      for grouping in PeatContentStore.sharedStore.groupings {
+      for grouping in self.sharedStore().groupings {
         grouping.drawGrouping()
       }
       
-      for leaf in PeatContentStore.sharedStore.leaves {
+      for leaf in self.sharedStore().leaves {
         //if leaf has a groupingId, add leaf to the grouping, not the treeView
         leaf.treeDelegate = self
         leaf.findGrouping()
         leaf.generateBounds()
       }
       
-      for connection in PeatContentStore.sharedStore.connections {
-        PeatContentStore.sharedStore.attachObjectsToConnection(connection)
+      for connection in self.sharedStore().connections {
+        self.sharedStore().attachObjectsToConnection(connection)
         self.drawFreshConnection(connection)
       }
       
@@ -400,7 +411,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   }
 
   func checkForOverlaps(intruder: Leaf) {
-    for leaf in PeatContentStore.sharedStore.leaves {
+    for leaf in sharedStore().leaves {
       if leaf != intruder {
         if let intruderView = intruder.view, leafView = leaf.view {
           if CGRectIntersectsRect(leafView.frame, intruderView.frame) {
@@ -421,7 +432,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   func fetchTreeData() {
     //right now it redraws every time... no harm in that
     //In the future get the data for the selected user and the selected activity
-    PeatContentStore.sharedStore.getTreeData(self, viewing: viewing){ (success) -> () in
+    sharedStore().getTreeData(self, viewing: viewing){ (success) -> () in
       if success {
         self.displayLeaves()
       } else {
@@ -457,7 +468,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   }
   
   func emptyGroupingContainer(grouping: LeafGrouping) {
-    for leaf in PeatContentStore.sharedStore.leaves {
+    for leaf in sharedStore().leaves {
       if leaf.groupingId == grouping.groupingId {
         leaf.groupingId = nil
         leaf.grouping = nil
@@ -470,7 +481,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
         }
       }
     }
-    for connection in PeatContentStore.sharedStore.connections {
+    for connection in sharedStore().connections {
       if connection.fromId == grouping.groupingId || connection.toId == grouping.groupingId {
         connection.changed(.Removed)
       }

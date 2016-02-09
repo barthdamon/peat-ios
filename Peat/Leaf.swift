@@ -68,7 +68,7 @@ class Leaf: NSObject, TreeObject {
   var witnesses: Array<Witness>?
   
   var media: Array<MediaObject>? {
-    return PeatContentStore.sharedStore.treeStore.mediaForLeaf(self)
+    return treeDelegate?.sharedStore().treeStore.mediaForLeaf(self)
   }
   
   //Contents (media, comments, likes, follows)
@@ -185,7 +185,7 @@ class Leaf: NSObject, TreeObject {
   }
   
   func fetchContents(callback: (Bool) -> ()) {
-    if let _ = PeatContentStore.sharedStore.treeStore.mediaForLeaf(self) {callback(true); return}
+    if let _ = treeDelegate?.sharedStore().treeStore.mediaForLeaf(self) {callback(true); return}
     if let leafId = leafId {
       API.get(nil, url: "leaves/\(leafId)"){ (res, err) -> () in
         if let e = err {
@@ -202,7 +202,7 @@ class Leaf: NSObject, TreeObject {
 
             if let info = json["mediaInfo"] as? jsonObject, mediaJson = info["media"] as? Array<jsonObject> {
               for json in mediaJson {
-                PeatContentStore.sharedStore.addMediaToStore(MediaObject.initWithJson(json))
+                self.treeDelegate?.sharedStore().addMediaToStore(MediaObject.initWithJson(json, store: self.treeDelegate?.sharedStore()))
               }
             }
           }
@@ -273,8 +273,8 @@ class Leaf: NSObject, TreeObject {
   }
   
   func findGrouping() {
-    if let groupingId = self.groupingId {
-      for grouping in PeatContentStore.sharedStore.groupings {
+    if let groupingId = self.groupingId, delegate = treeDelegate {
+      for grouping in delegate.sharedStore().groupings {
         if grouping.groupingId == groupingId {
           self.grouping = grouping
         }
@@ -304,7 +304,7 @@ class Leaf: NSObject, TreeObject {
         } else {
           treeDelegate?.addLeafToScrollView(self)
         }
-        PeatContentStore.sharedStore.addLeafToStore(self)
+        treeDelegate?.sharedStore().addLeafToStore(self)
       }
     }
   }

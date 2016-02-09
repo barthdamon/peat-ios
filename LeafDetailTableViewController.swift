@@ -11,8 +11,11 @@ import UIKit
 class LeafDetailTableViewController: UITableViewController {
   
     var leaf: Leaf? {
-      return PeatContentStore.sharedStore.treeStore.selectedLeaf
+      return store?.treeStore.selectedLeaf
     }
+  var store: PeatContentStore? {
+    return detailVC?.profileDelegate?.store
+  }
     var activityIndicator: UIActivityIndicatorView?
     var playerCells: Array<MediaTableViewCell> = []
   

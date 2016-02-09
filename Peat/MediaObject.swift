@@ -35,10 +35,11 @@ class MediaObject: NSObject {
   var likes: Array<Like>?
   
   var API = APIService.sharedService
+  var store: PeatContentStore?
   
-  static func initWithJson(json: jsonObject) -> MediaObject {
+  static func initWithJson(json: jsonObject, store: PeatContentStore?) -> MediaObject {
     let media = MediaObject()
-    
+    media.store = store
     media._id = json["_id"] as? String
     media.user_Id = json["user_Id"] as? String
     media.mediaId = json["mediaId"] as? String
@@ -85,8 +86,9 @@ class MediaObject: NSObject {
     }
   }
   
-  static func initFromUploader(leaf: Leaf?, type: MediaType?, thumbnail: UIImage?, filePath: NSURL?) -> MediaObject {
+  static func initFromUploader(leaf: Leaf?, type: MediaType?, thumbnail: UIImage?, filePath: NSURL?, store: PeatContentStore?) -> MediaObject {
     let media = MediaObject()
+    media.store = store
     media.leafId = leaf?.leafId
     media.mediaType = type
     media.thumbnail = thumbnail
@@ -169,7 +171,7 @@ class MediaObject: NSObject {
         print("Error:\(e)")
       } else {
         print("Server media post successful")
-        PeatContentStore.sharedStore.addMediaToStore(self)
+        self.store?.addMediaToStore(self)
         NSNotificationCenter.defaultCenter().postNotificationName("newMediaPostSuccessful", object: self, userInfo: nil)
       }
     }

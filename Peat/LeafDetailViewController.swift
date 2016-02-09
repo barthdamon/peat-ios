@@ -23,7 +23,7 @@ class LeafDetailViewController: UIViewController {
   @IBOutlet weak var leafTitleLabel: UILabel!
   @IBOutlet weak var returnButton: UIButton!
   var leaf: Leaf? {
-    return PeatContentStore.sharedStore.treeStore.selectedLeaf
+    return profileDelegate?.store.treeStore.selectedLeaf
   }
   var containerTableView: UITableView?
   

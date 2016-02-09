@@ -14,6 +14,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
   var changesPresent: Bool = false
   
   var viewing: User?
+  var store = PeatContentStore()
   
   @IBOutlet weak var usernameLabel: UILabel!
   @IBOutlet weak var avatarImageView: UIImageView!
@@ -46,6 +47,10 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
       }
     }
   
+  func sharedStore() -> PeatContentStore {
+    return store
+  }
+  
   func setupUserProfile(user: User) {
       print("Setting Up User Profile")
       if let first = user.first, last = user.last, username = user.username {
@@ -64,7 +69,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
     }
   
     func drillIntoLeaf(leaf: Leaf) {
-      PeatContentStore.sharedStore.setSelectedLeaf(leaf)
+      store.setSelectedLeaf(leaf)
       self.performSegueWithIdentifier("leafDrilldown", sender: self)
     }
   
@@ -81,6 +86,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
           vc.profileDelegate = self
           self.treeController = vc
           vc.viewing = self.viewing
+          vc.store = store
         }
       }
       
@@ -113,7 +119,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
   }
 
   @IBAction func saveButtonPressed(sender: AnyObject) {
-    PeatContentStore.sharedStore.syncTreeChanges({ (success) in
+    store.syncTreeChanges({ (success) in
       if success {
         alertShow(self, alertText: "Success", alertMessage: "Tree Saved Successfully")
         dispatch_async(dispatch_get_main_queue(), { () -> Void in

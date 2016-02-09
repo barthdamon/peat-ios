@@ -121,12 +121,14 @@ struct TreeStore {
 }
 
 typealias jsonObject = Dictionary<String, AnyObject>
-
+typealias TreeContent = (vc: TreeViewController, store: TreeStore)
 
 //MARK: Content Store
-private let _sharedStore = PeatContentStore()
+//private let _sharedStore = PeatContentStore()
 
 class PeatContentStore: NSObject {
+  
+  var pastStores: Array<TreeContent> = Array()
   
   var API = APIService.sharedService
   var mediaObjects: Array<MediaObject>?
@@ -141,9 +143,23 @@ class PeatContentStore: NSObject {
     return treeStore.currentConnections != nil ? treeStore.currentConnections! : Set()
   }
   
-  class var sharedStore: PeatContentStore {
-    return _sharedStore
-  }
+//  class var sharedStore: PeatContentStore {
+//    return _sharedStore
+//  }
+//  
+//  func saveToStores(vc: TreeViewController) {
+//    for var i = 0; i < pastStores.count; i++ {
+//      if pastStores[i].vc == vc {
+//        pastStores[i].store = treeStore
+//        return
+//      }
+//    }
+//    pastStores.append((vc: vc, store: treeStore))
+//  }
+//  
+//  func setCurrentStore() {
+//    
+//  }
   
   func getTreeData(delegate: TreeDelegate?, viewing: User?, callback: (Bool) -> () ) {
     self.treeStore.activityName = "Snowboarding"
