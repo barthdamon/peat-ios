@@ -23,7 +23,7 @@ class PostCommentTableViewCell: UITableViewCell {
         guard success else { /*show error*/return }
         //add a new comment to ui
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          self.media?.comments?.append(comment)
+          self.media?.newComment(comment)
           self.delegate?.updateCommentCount()
           self.commentField.text = ""
           self.commentField.resignFirstResponder()

@@ -20,7 +20,7 @@ class MediaDrilldownTableViewCell: UITableViewCell {
   
   @IBOutlet weak var commentTextField: UITextField!
   
-  var tableVC: LeafDetailTableViewController?
+  var tableVC: CommentsTableViewController?
   
   var media: MediaObject?
   var viewing: User?
@@ -83,18 +83,6 @@ class MediaDrilldownTableViewCell: UITableViewCell {
     commentCountButton.setTitle("\(commentsCount) Comments", forState: .Normal)
   }
   
-  //MARK: Comment Section
-  override func setSelected(selected: Bool, animated: Bool) {
-    super.setSelected(selected, animated: animated)
-    
-    // Configure the view for the selected state
-  }
-  
-  
-  @IBAction func commentCountButtonPressed(sender: AnyObject) {
-    tableVC?.commentsButtonPressed(media)
-  }
-  
   @IBAction func likeCountButtonPressed(sender: AnyObject) {
     //show other people that have liked
   }
@@ -107,11 +95,16 @@ class MediaDrilldownTableViewCell: UITableViewCell {
         guard success else { /*show error*/return }
         //increase like count
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          self.media?.likes?.append(like)
+          self.media?.newLike(like)
           self.tableVC?.updateCommentCount()
         })
       }
     }
+  }
+  
+  
+  @IBAction func backButtonPressed(sender: AnyObject) {
+    self.tableVC?.navigationController?.popToRootViewControllerAnimated(true)
   }
 
 }

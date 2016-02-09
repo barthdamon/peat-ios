@@ -69,6 +69,22 @@ class MediaObject: NSObject {
     return media
   }
   
+  func newComment(comment: Comment) {
+    if let _ = self.comments {
+      self.comments?.append(comment)
+    } else {
+      self.comments = [comment]
+    }
+  }
+  
+  func newLike(like: Like) {
+    if let _ = self.likes {
+      self.likes?.append(like)
+    } else {
+      self.likes = [like]
+    }
+  }
+  
   static func initFromUploader(leaf: Leaf?, type: MediaType?, thumbnail: UIImage?, filePath: NSURL?) -> MediaObject {
     let media = MediaObject()
     media.leafId = leaf?.leafId
@@ -103,10 +119,6 @@ class MediaObject: NSObject {
       "description": paramFor(mediaDescription),
       "location": paramFor(location)
     ]
-  }
-  
-  func addCommentsToMedia(json: jsonObject) {
-    
   }
   
   func publish() {

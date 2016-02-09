@@ -72,10 +72,10 @@ class MediaTableViewCell: UITableViewCell {
   
   func configureDescriptionSection() {
     self.descriptionLabel.text = media?.mediaDescription
-    updateCommentCount(nil)
+    updateCommentCount()
   }
   
-  func updateCommentCount(comment: Comment?) {
+  func updateCommentCount() {
     var likesCount = 0
     var commentsCount = 0
     if let likes = media?.likes {
@@ -84,9 +84,7 @@ class MediaTableViewCell: UITableViewCell {
     if let comments = media?.comments {
       commentsCount = comments.count
     }
-    if let _ = comment {
-      commentsCount = 1
-    }
+    
     likeCountButton.setTitle("\(likesCount) Likes", forState: .Normal)
     commentCountButton.setTitle("\(commentsCount) Comments", forState: .Normal)
   }
@@ -114,7 +112,7 @@ class MediaTableViewCell: UITableViewCell {
         guard success else { /*show error*/return }
         //increase like count
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          self.media?.likes?.append(like)
+          self.media?.newLike(like)
           self.tableVC?.updateCommentCount()
         })
       }
@@ -129,7 +127,7 @@ class MediaTableViewCell: UITableViewCell {
         guard success else { /*show error*/return }
         //add a new comment to ui
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          self.media?.comments?.append(comment)
+          self.media?.newComment(comment)
           self.tableVC?.updateCommentCount()
           self.commentTextField.text = ""
           self.commentTextField.resignFirstResponder()

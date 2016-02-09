@@ -14,9 +14,13 @@ class CommentsTableViewController: UITableViewController {
   var viewing: User?
   
   var delegate: LeafDetailViewController?
+  var playerCell: MediaDrilldownTableViewCell?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+      
+      self.tableView.estimatedRowHeight = 80
+      self.tableView.rowHeight = UITableViewAutomaticDimension
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -25,13 +29,7 @@ class CommentsTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     // MARK: - Table view data source
-
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
@@ -45,6 +43,10 @@ class CommentsTableViewController: UITableViewController {
         return 2
       }
     }
+  
+  override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    return UITableViewAutomaticDimension
+  }
   
   //  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
   //    if let media = media, comments = media.comments {
@@ -69,9 +71,11 @@ class CommentsTableViewController: UITableViewController {
       }
       switch indexPath.row {
       case 0:
-        if let cell = tableView.dequeueReusableCellWithIdentifier("descriptionCell") as? MediaDescriptionTableViewCell, media = media {
-          let user = viewing != nil ? viewing! : CurrentUser.info.model!
-          cell.configureWithMediaAndUser(media, user: user)
+        if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaDrilldownTableViewCell, media = media {
+          cell.viewing = viewing
+          cell.tableVC = self
+          cell.configureWithMedia(media)
+          self.playerCell = cell
           return cell
         }
       case postIndex:
@@ -95,6 +99,9 @@ class CommentsTableViewController: UITableViewController {
       return cell
     }
   
+  @IBAction func backButtonPressed(sender: AnyObject) {
+    self.dismissViewControllerAnimated(true, completion: nil)
+  }
   
   func updateCommentCount() {
     self.delegate?.updateCommentCount()

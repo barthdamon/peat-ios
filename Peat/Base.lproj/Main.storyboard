@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="yxq-gU-oco">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="yxq-gU-oco">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -1148,7 +1148,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="mediaCell" rowHeight="446" id="RET-x4-QOg" customClass="MediaTableViewCell" customModule="Peat" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="mediaCell" rowHeight="446" id="RET-x4-QOg" customClass="MediaDrilldownTableViewCell" customModule="Peat" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="72" width="600" height="446"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RET-x4-QOg" id="tqx-xp-20j">
@@ -1162,8 +1162,8 @@
                                                 <constraint firstAttribute="width" secondItem="2e7-GU-3UQ" secondAttribute="height" multiplier="16:9" id="U0g-HK-Rhx"/>
                                             </constraints>
                                         </view>
-                                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="66Y-hn-6S6">
-                                            <rect key="frame" x="8" y="345" width="584" height="89"/>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="66Y-hn-6S6">
+                                            <rect key="frame" x="8" y="345" width="584" height="92"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pJT-vv-cmh">
                                                     <rect key="frame" x="8" y="8" width="568" height="21"/>
@@ -1179,7 +1179,7 @@
                                                     </constraints>
                                                     <state key="normal" title="# Likes"/>
                                                     <connections>
-                                                        <action selector="likeCountButtonPressed:" destination="RET-x4-QOg" eventType="touchUpInside" id="sDa-GK-ZO6"/>
+                                                        <action selector="likeCountButtonPressed:" destination="RET-x4-QOg" eventType="touchUpInside" id="8Q1-sB-mAa"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1g9-3d-tSf">
@@ -1189,9 +1189,6 @@
                                                         <constraint firstAttribute="height" constant="30" id="vnt-P0-GTv"/>
                                                     </constraints>
                                                     <state key="normal" title="# Comments"/>
-                                                    <connections>
-                                                        <action selector="commentCountButtonPressed:" destination="RET-x4-QOg" eventType="touchUpInside" id="h54-JC-BYb"/>
-                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gtz-nG-waY">
                                                     <rect key="frame" x="530" y="39" width="46" height="30"/>
@@ -1201,19 +1198,33 @@
                                                     </constraints>
                                                     <state key="normal" title="Like"/>
                                                     <connections>
-                                                        <action selector="likeButtonPressed:" destination="RET-x4-QOg" eventType="touchUpInside" id="DaJ-EA-DPn"/>
+                                                        <action selector="likeButtonPressed:" destination="RET-x4-QOg" eventType="touchUpInside" id="jL6-ye-qBM"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fqz-bi-3CO">
+                                                    <rect key="frame" x="183" y="39" width="48" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="SlF-21-nBg"/>
+                                                        <constraint firstAttribute="width" constant="48" id="dik-zU-7JG"/>
+                                                    </constraints>
+                                                    <state key="normal" title="&lt; Back"/>
+                                                    <connections>
+                                                        <action selector="backButtonPressed:" destination="RET-x4-QOg" eventType="touchUpInside" id="52J-a2-Ltq"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
+                                                <constraint firstItem="fqz-bi-3CO" firstAttribute="top" secondItem="pJT-vv-cmh" secondAttribute="bottom" constant="10" id="3HJ-l6-JjS"/>
                                                 <constraint firstItem="1g9-3d-tSf" firstAttribute="leading" secondItem="wEB-AV-Cag" secondAttribute="trailing" constant="8" id="6xT-Uf-n84"/>
                                                 <constraint firstAttribute="trailing" secondItem="gtz-nG-waY" secondAttribute="trailing" constant="8" id="IOU-44-HxU"/>
+                                                <constraint firstAttribute="height" constant="92" id="QAH-G5-Pco"/>
                                                 <constraint firstItem="gtz-nG-waY" firstAttribute="top" secondItem="pJT-vv-cmh" secondAttribute="bottom" constant="10" id="Tvz-td-ctB"/>
                                                 <constraint firstItem="wEB-AV-Cag" firstAttribute="leading" secondItem="66Y-hn-6S6" secondAttribute="leading" constant="8" id="YZG-pt-qkR"/>
                                                 <constraint firstItem="1g9-3d-tSf" firstAttribute="top" secondItem="pJT-vv-cmh" secondAttribute="bottom" constant="10" id="l2h-I9-KqG"/>
                                                 <constraint firstAttribute="trailing" secondItem="pJT-vv-cmh" secondAttribute="trailing" constant="8" id="lnF-5V-mGV"/>
                                                 <constraint firstItem="pJT-vv-cmh" firstAttribute="top" secondItem="66Y-hn-6S6" secondAttribute="top" constant="8" id="m00-qX-tpu"/>
+                                                <constraint firstItem="fqz-bi-3CO" firstAttribute="leading" secondItem="1g9-3d-tSf" secondAttribute="trailing" constant="8" id="rhO-Is-ucx"/>
                                                 <constraint firstItem="wEB-AV-Cag" firstAttribute="top" secondItem="pJT-vv-cmh" secondAttribute="bottom" constant="10" id="w2G-FJ-Fmk"/>
                                                 <constraint firstItem="pJT-vv-cmh" firstAttribute="leading" secondItem="66Y-hn-6S6" secondAttribute="leading" constant="8" id="xVI-vb-Omm"/>
                                             </constraints>
@@ -1230,11 +1241,11 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="commentCountButton" destination="1g9-3d-tSf" id="qam-UX-Sp1"/>
-                                    <outlet property="descriptionLabel" destination="pJT-vv-cmh" id="8IJ-Nu-XLY"/>
-                                    <outlet property="descriptionView" destination="66Y-hn-6S6" id="l5G-i9-1hF"/>
-                                    <outlet property="likeCountButton" destination="wEB-AV-Cag" id="htT-jS-FWB"/>
-                                    <outlet property="mediaView" destination="2e7-GU-3UQ" id="24h-pd-HAY"/>
+                                    <outlet property="commentCountButton" destination="1g9-3d-tSf" id="JMG-R1-WTJ"/>
+                                    <outlet property="descriptionLabel" destination="pJT-vv-cmh" id="KdS-3I-63t"/>
+                                    <outlet property="descriptionView" destination="66Y-hn-6S6" id="13v-Bt-uSC"/>
+                                    <outlet property="likeCountButton" destination="wEB-AV-Cag" id="yEo-SL-fIG"/>
+                                    <outlet property="mediaView" destination="2e7-GU-3UQ" id="1Y2-Dh-e8y"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="descriptionCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="descriptionCell" rowHeight="78" id="fFE-VA-jJA" customClass="MediaDescriptionTableViewCell" customModule="Peat" customModuleProvider="target">
