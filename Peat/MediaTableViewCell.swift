@@ -72,10 +72,10 @@ class MediaTableViewCell: UITableViewCell {
   
   func configureDescriptionSection() {
     self.descriptionLabel.text = media?.mediaDescription
-    updateCommentCount()
+    updateCommentCount(nil)
   }
   
-  func updateCommentCount() {
+  func updateCommentCount(comment: Comment?) {
     var likesCount = 0
     var commentsCount = 0
     if let likes = media?.likes {
@@ -83,6 +83,9 @@ class MediaTableViewCell: UITableViewCell {
     }
     if let comments = media?.comments {
       commentsCount = comments.count
+    }
+    if let _ = comment {
+      commentsCount = 1
     }
     likeCountButton.setTitle("\(likesCount) Likes", forState: .Normal)
     commentCountButton.setTitle("\(commentsCount) Comments", forState: .Normal)

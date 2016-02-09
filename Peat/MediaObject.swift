@@ -94,14 +94,14 @@ class MediaObject: NSObject {
   
   func params() -> jsonObject {
     return [
-      "mediaId": self.mediaId != nil ? self.mediaId! : "",
-      "leafId": self.leafId != nil ? self.leafId! : "",
+      "mediaId": paramFor(mediaId),
+      "leafId": paramFor(leafId),
       "source": [
-        "url" : self.urlString != nil ? self.urlString! : "",
+        "url" : paramFor(urlString),
         "mediaType" : self.mediaType != nil ? self.mediaType!.rawValue : ""
       ],
-      "description": self.mediaDescription != nil ? self.mediaDescription! : "",
-      "location": self.location != nil ? self.location! : ""
+      "description": paramFor(mediaDescription),
+      "location": paramFor(location)
     ]
   }
   
