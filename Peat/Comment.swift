@@ -31,6 +31,23 @@ class Comment: NSObject {
     }
     return newComment
   }
+  
+  static func newComment(text: String, mediaId: String, user: User) -> Comment {
+    let newComment = Comment()
+    newComment.user = user
+    newComment.text = text
+    newComment.mediaId = mediaId
+    newComment.sender_Id = user._id
+    return newComment
+  }
+  
+  func params() -> jsonObject {
+    return [
+      "sender_Id" : paramFor(sender_Id),
+      "mediaId" : paramFor(mediaId),
+      "text" : paramFor(text)
+    ]
+  }
 
 }
 
@@ -52,4 +69,20 @@ class Like: NSObject {
     return newLike
   }
   
+  static func newLike(user: User, mediaId: String?, comment_Id: String?) -> Like {
+    let newLike = Like()
+    newLike.user = user
+    newLike.user_Id = user._id
+    newLike.mediaId = mediaId
+    newLike.comment_Id = comment_Id
+    return newLike
+  }
+  
+  func params() -> jsonObject {
+    return [
+      "user_Id" : paramFor(user_Id),
+      "mediaId" : paramFor(mediaId),
+      "comment_Id" : paramFor(comment_Id)
+    ]
+  }
 }

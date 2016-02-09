@@ -11,20 +11,26 @@ import UIKit
 class PostCommentTableViewCell: UITableViewCell {
   
   var media: MediaObject?
+  var delegate: CommentsTableViewController?
 
   @IBOutlet weak var sendButton: UIButton!
   @IBOutlet weak var commentField: UITextField!
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
 
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
   @IBAction func sendButtonPressed(sender: AnyObject) {
+    if let text = self.commentField.text, media = media, mediaId = media.mediaId, user = CurrentUser.info.model {
+      let comment = Comment.newComment(text, mediaId: mediaId, user: user)
+      PeatSocialMediator.sharedMediator.newComment(comment) { (success) in
+        guard success else { /*show error*/return }
+        //add a new comment to ui
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+          self.media?.comments?.append(comment)
+          self.delegate?.updateCommentCount()
+          self.commentField.text = ""
+          self.commentField.resignFirstResponder()
+        })
+        //reload table View
+      }
+    }
   }
 
 }

@@ -124,6 +124,12 @@ class LeafDetailTableViewController: UITableViewController {
     }
     */
   
+  func updateCommentCount() {
+    for cell in self.playerCells {
+      cell.updateCommentCount()
+    }
+  }
+  
   func commentsButtonPressed(media: MediaObject?) {
     if let media = media {
       detailVC?.showCommentsForMedia(media)

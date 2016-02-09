@@ -105,11 +105,8 @@ class PeatSocialMediator: NSObject {
     }
   }
   
-  func newLike(media: MediaObject?, comment: Comment?, callback: (Bool) -> ()) {
-    var params = [
-      "mediaId" : media?._id != nil ? media!._id! : "",
-      "comment_Id" : comment?._id != nil ? comment!._id! : ""
-    ]
+  func newLike(like: Like, callback: (Bool) -> ()) {
+    let params = like.params()
     API.post(params, authType: .Token, url: "media/like/new") { (res, err) -> () in
       if let e = err {
         print("Error creating comment: \(e)")
@@ -121,11 +118,8 @@ class PeatSocialMediator: NSObject {
     }
   }
   
-  func newComment(text: String, media: MediaObject, callback: (Bool) -> ()) {
-    var params = [
-      "mediaId" : media.mediaId != nil ? media.mediaId! : "",
-      "text" : text
-    ]
+  func newComment(comment: Comment, callback: (Bool) -> ()) {
+    let params = comment.params()
     API.post(params, authType: .Token, url: "media/comment/new") { (res, err) -> () in
       if let e = err {
         print("Error creating comment: \(e)")

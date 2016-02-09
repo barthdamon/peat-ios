@@ -12,6 +12,8 @@ class CommentsTableViewController: UITableViewController {
   
   var media: MediaObject?
   var viewing: User?
+  
+  var delegate: LeafDetailViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +40,7 @@ class CommentsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
       if let comments = media?.comments {
-        return comments.count + 1
+        return comments.count + 2
       } else {
         return 2
       }
@@ -63,7 +65,7 @@ class CommentsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
       var postIndex = 1
       if let comments = media?.comments {
-        postIndex = comments.count
+        postIndex = comments.count + 1
       }
       switch indexPath.row {
       case 0:
@@ -75,6 +77,7 @@ class CommentsTableViewController: UITableViewController {
       case postIndex:
         if let cell = tableView.dequeueReusableCellWithIdentifier("postCommentCell") as? PostCommentTableViewCell {
           cell.media = media
+          cell.delegate = self
           cell.selectionStyle = .None
           return cell
         }
@@ -82,7 +85,7 @@ class CommentsTableViewController: UITableViewController {
       default:
         if let cell = tableView.dequeueReusableCellWithIdentifier("commentCell") as? CommentsTableViewCell {
           if let media = media, comments = media.comments {
-            cell.configureWithComment(comments[indexPath.row])
+            cell.configureWithComment(comments[indexPath.row - 1])
             return cell
           }
         }
@@ -93,60 +96,9 @@ class CommentsTableViewController: UITableViewController {
     }
   
   
-
-    /*
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+  func updateCommentCount() {
+    self.delegate?.updateCommentCount()
+    self.tableView.reloadData()
+    //update the comment on the playerCell too
+  }
 }

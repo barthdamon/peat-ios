@@ -39,6 +39,7 @@ class LeafDetailViewController: UIViewController {
   var profileDelegate: ProfileViewController?
   
   var selectedMediaForComments: MediaObject?
+  var tableViewVC: LeafDetailTableViewController?
   
   
   override func viewDidLoad() {
@@ -101,6 +102,7 @@ class LeafDetailViewController: UIViewController {
         self.containerTableView = vc.tableView
         vc.viewing = viewing
         vc.detailVC = self
+        self.tableViewVC = vc
       }
     }
     
@@ -203,6 +205,9 @@ class LeafDetailViewController: UIViewController {
     }
   }
 
+  func updateCommentCount() {
+    self.tableViewVC?.updateCommentCount()
+  }
   
   @IBAction func returnButtonPressed(sender: AnyObject) {
     self.dismissViewControllerAnimated(true, completion: nil)

@@ -1,20 +1,18 @@
 //
-//  MediaTableViewCell.swift
+//  MediaDrilldownTableViewCell.swift
 //  Peat
 //
-//  Created by Matthew Barth on 9/28/15.
-//  Copyright © 2015 Matthew Barth. All rights reserved.
+//  Created by Matthew Barth on 2/8/16.
+//  Copyright © 2016 Matthew Barth. All rights reserved.
 //
 
 import UIKit
-import MediaPlayer
-import AVFoundation
 
-class MediaTableViewCell: UITableViewCell {
-  
+class MediaDrilldownTableViewCell: UITableViewCell {
+
   @IBOutlet weak var mediaView: UIView!
   @IBOutlet weak var descriptionView: UIView!
-
+  
   @IBOutlet weak var likeCountButton: UIButton!
   @IBOutlet weak var commentCountButton: UIButton!
   
@@ -31,10 +29,10 @@ class MediaTableViewCell: UITableViewCell {
   var player: PeatAVPlayer?
   var overlayView: MediaOverlayView?
   
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    // Initialization code
+  }
   
   func playSelectedMedia() {
     //when video view cell gets tapped it should play the media.
@@ -54,7 +52,8 @@ class MediaTableViewCell: UITableViewCell {
         break
       }
     }
-    configureDescriptionSection()
+    self.descriptionLabel.text = media.mediaDescription
+    updateCommentCount()
   }
   
   func configureForImage() {
@@ -70,11 +69,6 @@ class MediaTableViewCell: UITableViewCell {
     }
   }
   
-  func configureDescriptionSection() {
-    self.descriptionLabel.text = media?.mediaDescription
-    updateCommentCount()
-  }
-  
   func updateCommentCount() {
     var likesCount = 0
     var commentsCount = 0
@@ -84,6 +78,7 @@ class MediaTableViewCell: UITableViewCell {
     if let comments = media?.comments {
       commentsCount = comments.count
     }
+    
     likeCountButton.setTitle("\(likesCount) Likes", forState: .Normal)
     commentCountButton.setTitle("\(commentsCount) Comments", forState: .Normal)
   }
@@ -95,7 +90,7 @@ class MediaTableViewCell: UITableViewCell {
     // Configure the view for the selected state
   }
   
-
+  
   @IBAction func commentCountButtonPressed(sender: AnyObject) {
     tableVC?.commentsButtonPressed(media)
   }
@@ -105,6 +100,7 @@ class MediaTableViewCell: UITableViewCell {
   }
   
   @IBAction func likeButtonPressed(sender: AnyObject) {
+    //send like
     if let mediaId = media?.mediaId, user = CurrentUser.info.model {
       let like = Like.newLike(user, mediaId: mediaId, comment_Id: nil)
       PeatSocialMediator.sharedMediator.newLike(like) { (success) in
@@ -117,23 +113,5 @@ class MediaTableViewCell: UITableViewCell {
       }
     }
   }
-  
-  @IBAction func postButtonPressed(sender: AnyObject) {
-    //post comment
-    if let text = self.commentTextField.text, mediaId = media?.mediaId, user = CurrentUser.info.model {
-      let comment = Comment.newComment(text, mediaId: mediaId, user: user)
-      PeatSocialMediator.sharedMediator.newComment(comment) { (success) in
-        guard success else { /*show error*/return }
-        //add a new comment to ui
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          self.media?.comments?.append(comment)
-          self.tableVC?.updateCommentCount()
-          self.commentTextField.text = ""
-          self.commentTextField.resignFirstResponder()
-        })
-      }
-    }
-    
-  }
-  
+
 }
