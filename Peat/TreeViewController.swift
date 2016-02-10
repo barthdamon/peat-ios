@@ -230,10 +230,23 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       if sender.state == UIGestureRecognizerState.Ended {
         var connected = false
         for storedLeaf in sharedStore().leaves {
-          if storedLeaf.leafId != anchor.object.objectId() {
+          if storedLeaf.leafId != anchor.object.objectId() && !sharedStore().checkForExistingLeaf(anchor.object, to: storedLeaf)  {
             if let leafView = storedLeaf.view {
               if CGRectContainsPoint(leafView.frame, finger) {
                 anchor.connection.toId = storedLeaf.leafId
+                connected = true
+                //only save when connection to other leaf occurs
+                anchor.connection.changed(.BrandNew)
+                self.profileDelegate?.changesMade()
+              }
+            }
+          }
+        }
+        for storedGrouping in sharedStore().groupings {
+          if storedGrouping.groupingId != anchor.object.objectId() && !sharedStore().checkForExistingLeaf(anchor.object, to: storedGrouping) {
+            if let groupingView = storedGrouping.view {
+              if CGRectContainsPoint(groupingView.frame, finger) {
+                anchor.connection.toId = storedGrouping.groupingId
                 connected = true
                 //only save when connection to other leaf occurs
                 anchor.connection.changed(.BrandNew)

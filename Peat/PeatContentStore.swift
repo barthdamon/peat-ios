@@ -332,6 +332,18 @@ class PeatContentStore: NSObject {
     }
   }
   
+  func checkForExistingLeaf(from: TreeObject, to: TreeObject) -> Bool {
+    var found = false
+    for connection in self.connections {
+      if let fromId = connection.fromId, toId = connection.toId {
+        if (fromId == from.objectId() && toId == to.objectId()) || (fromId == to.objectId() && toId == from.objectId()) {
+          found = true
+        }
+      }
+    }
+    return found
+  }
+  
 }
 
 
