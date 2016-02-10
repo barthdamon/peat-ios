@@ -252,7 +252,7 @@ class LeafDetailViewController: UIViewController {
     
     alert.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (action) -> Void in
       alert.dismissViewControllerAnimated(true, completion: nil)
-      self.saveLeaf()
+      self.toggleEditing(false)
       self.dismissSelf()
     }))
     
