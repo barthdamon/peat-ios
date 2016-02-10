@@ -58,7 +58,9 @@ class MediaTableViewCell: UITableViewCell {
   }
   
   func configureForImage() {
-    self.overlayView = MediaOverlayView(mediaView: self.mediaView, player: nil, mediaObject: self.media, delegate: self)
+    if let mediaView = self.mediaView {
+      self.overlayView = MediaOverlayView(mediaView: mediaView, player: nil, mediaObject: self.media, delegate: self)
+    }
   }
   
   func configureForVideo() {
