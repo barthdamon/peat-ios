@@ -27,7 +27,7 @@ class APIService: NSObject {
   let baseURL = "http://localhost:3000"
   #else
   // PRODUCTION
-  let baseURL = "http://localhost:3000"
+  let baseURL = "https://peat-api.herokuapp.com"
   #endif
   
     var authToken: String? {

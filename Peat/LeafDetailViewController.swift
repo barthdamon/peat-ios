@@ -77,6 +77,12 @@ class LeafDetailViewController: UIViewController {
     }
   }
   
+  func newMediaAdded() {
+    toggleEditing(true)
+    self.tableViewVC?.newMediaAdded()
+  }
+
+  
   
   func configureTitleView() {
     if let leaf = self.leaf {
@@ -119,11 +125,11 @@ class LeafDetailViewController: UIViewController {
         vc.viewing = viewing
       }
     }
-  }
-  
-  func newMediaAdded() {
-    setValuesOnLeaf()
-    saveLeaf()
+    if segue.identifier == "showUploadOptions" {
+      if let vc = segue.destinationViewController as? MediaUploadViewController {
+        vc.leafDetailDelegate = self
+      }
+    }
   }
   
   func saveLeaf() {
@@ -147,13 +153,19 @@ class LeafDetailViewController: UIViewController {
   }
   
   @IBAction func editButtonPressed(sender: AnyObject) {
+    toggleEditing(false)
+  }
+  
+  func toggleEditing(forUpload: Bool) {
     if editButton.titleLabel?.text == "Save" {
-      setValuesOnLeaf()
+    setValuesOnLeaf()
     } else {
-      self.editButton.setTitle("Save", forState: UIControlState.Normal)
-      self.leafTitleLabel.hidden = true
-      self.titleEditField.hidden = false
-      self.titleSaveButton.hidden = false
+    self.editButton.setTitle("Save", forState: UIControlState.Normal)
+      if !forUpload {
+        self.leafTitleLabel.hidden = true
+        self.titleEditField.hidden = false
+        self.titleSaveButton.hidden = false
+      }
     }
   }
   

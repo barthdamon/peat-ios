@@ -36,6 +36,7 @@ class MediaObject: NSObject {
   
   var API = APIService.sharedService
   var store: PeatContentStore?
+  var needsPublishing: Bool = false
   
   static func initWithJson(json: jsonObject, store: PeatContentStore?) -> MediaObject {
     let media = MediaObject()
@@ -88,6 +89,7 @@ class MediaObject: NSObject {
   
   static func initFromUploader(leaf: Leaf?, type: MediaType?, thumbnail: UIImage?, filePath: NSURL?, store: PeatContentStore?) -> MediaObject {
     let media = MediaObject()
+    media.needsPublishing = true
     media.store = store
     media.leafId = leaf?.leafId
     media.mediaType = type

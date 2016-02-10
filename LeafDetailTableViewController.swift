@@ -59,16 +59,16 @@ class LeafDetailTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
       if let leaf = leaf, media = leaf.media {
-        self.mediaOnLoad = media
-//        return media.count
-        return 1
+//        self.mediaOnLoad = media
+        return media.count
+//        return 1
       } else {
         return 0
       }
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-      if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, media = mediaOnLoad {
+      if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, media = leaf?.media {
           let cellMedia = media[indexPath.row]
           cell.viewing = viewing
           cell.tableVC = self

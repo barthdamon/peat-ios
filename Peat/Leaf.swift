@@ -66,6 +66,7 @@ class Leaf: NSObject, TreeObject {
   
   //Locally Stored Variables
   var witnesses: Array<Witness>?
+  var publishing: Bool = false
   
   var media: Array<MediaObject>? {
     return treeDelegate?.sharedStore().treeStore.mediaForLeaf(self)
@@ -136,7 +137,21 @@ class Leaf: NSObject, TreeObject {
     ]
   }
   
+  func saveMedia() {
+    if let medias = self.media {
+      for media in medias {
+        if media.needsPublishing {
+          media.publish()
+          print("FOUND MEDIA THAT NEEDS PUBLISHING")
+          //TODO: have the tree listen to the notification for when leaves are posted. Every time one is posted it goes through its leaves and if any are publishing, it checks somehow if any of their media is still publishing. probably need the media object in the notiication to check with that
+          self.publishing = true
+        }
+      }
+    }
+  }
+  
   func save(callback: (Bool) -> ()) {
+    saveMedia()
     if changeStatus == .BrandNew {
       API.post(self.params(), url: "leaf/new", callback: { (res, err) in
         if let e = err {
