@@ -36,6 +36,7 @@ class MediaTableViewCell: UITableViewCell {
         // Initialization code
     }
   
+  
   func playSelectedMedia() {
     //when video view cell gets tapped it should play the media.
     self.player?.playButtonPressed()
@@ -64,9 +65,9 @@ class MediaTableViewCell: UITableViewCell {
   }
   
   func configureForVideo() {
-    if let media = self.media {
-      self.player = PeatAVPlayer(playerView: self.mediaView, media: media)
-      self.overlayView = MediaOverlayView(mediaView: self.mediaView, player: self.player, mediaObject: self.media, delegate: self)
+    if let media = self.media, mediaView = self.mediaView {
+      self.player = PeatAVPlayer(playerView: mediaView, media: media)
+      self.overlayView = MediaOverlayView(mediaView: mediaView, player: self.player, mediaObject: self.media, delegate: self)
       self.mediaView.userInteractionEnabled = true
       self.overlayView?.userInteractionEnabled = true
     }

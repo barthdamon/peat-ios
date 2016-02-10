@@ -123,6 +123,7 @@ class LeafDetailViewController: UIViewController {
       if let vc = segue.destinationViewController as? CommentsTableViewController {
         vc.media = selectedMediaForComments
         vc.viewing = viewing
+        vc.delegate = self
       }
     }
     if segue.identifier == "showUploadOptions" {
@@ -221,8 +222,50 @@ class LeafDetailViewController: UIViewController {
     self.tableViewVC?.updateCommentCount()
   }
   
-  @IBAction func returnButtonPressed(sender: AnyObject) {
+  func dismissSelf() {
     self.dismissViewControllerAnimated(true, completion: nil)
   }
+  
+  func removeUnsavedChanges() {
+    //TODO: remove any unpublished media items or unsaved changes from the leaf
+  }
+  
+  @IBAction func returnButtonPressed(sender: AnyObject) {
+    var needsSaving = false
+    if let leaf = leaf, medias = leaf.media {
+      for media in medias {
+        if media.needsPublishing {
+          needsSaving = true
+        }
+      }
+    }
+    //TODO: check if there are new mediaObjects. of if there are unsaved changes. if there are prompt a warning...
+    if !needsSaving && self.editButton.titleLabel?.text == "Edit" {
+      dismissSelf()
+    } else {
+      saveAlertShow(self, alertText: "Warning", alertMessage: "You will lose your unsaved leaf changes")
+    }
+  }
+  
+  func saveAlertShow(vc: UIViewController, alertText :String, alertMessage :String) {
+    let alert = UIAlertController(title: alertText, message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
+    
+    alert.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (action) -> Void in
+      alert.dismissViewControllerAnimated(true, completion: nil)
+      self.saveLeaf()
+      self.dismissSelf()
+    }))
+    
+    alert.addAction(UIAlertAction(title: "Continue", style: .Default, handler: { (action) -> Void in
+      alert.dismissViewControllerAnimated(true, completion: nil)
+      self.removeUnsavedChanges()
+      self.dismissSelf()
+    }))
+    //can add another action (maybe cancel, here)
+    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+      vc.presentViewController(alert, animated: true, completion: nil)
+    })
+  }
+
   
  }

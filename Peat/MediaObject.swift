@@ -96,6 +96,12 @@ class MediaObject: NSObject {
     media.thumbnail = thumbnail
     media.filePath = filePath
     media.madeLocal = true
+    var typeExtension = ""
+    if let type = type {
+      typeExtension = type == .Video ? ".mov" : ".img"
+    }
+    let id = generateId()
+    media.mediaId = "\(id)\(typeExtension)"
     return media
   }
   
@@ -149,9 +155,6 @@ class MediaObject: NSObject {
   
   func sendToAWS() {
     if let type = self.mediaType, filePath = self.filePath {
-      let typeExtension = type == .Video ? ".mov" : ".img"
-      let id = generateId()
-      self.mediaId = "\(id)\(typeExtension)"
       if let id = self.mediaId {
         AWSContentHelper.sharedHelper.postMediaFromFactory(filePath, mediaID: id, mediaType: type) { (res, err) in
           if err != nil {

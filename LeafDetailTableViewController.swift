@@ -33,6 +33,7 @@ class LeafDetailTableViewController: UITableViewController {
   
   override func viewWillDisappear(animated: Bool) {
     for cell in playerCells {
+      cell.player?.stopPlaying()
       cell.player = nil
       cell.mediaView = nil
       cell.overlayView = nil
@@ -66,7 +67,14 @@ class LeafDetailTableViewController: UITableViewController {
         return 0
       }
     }
-
+  
+  override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    if let cell = cell as? MediaTableViewCell {
+      cell.player?.stopPlaying()
+      cell.player = nil
+    }
+  }
+  
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
       if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, media = leaf?.media {
           let cellMedia = media[indexPath.row]

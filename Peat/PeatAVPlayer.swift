@@ -12,9 +12,10 @@ import AVFoundation
 import AVKit
 
 
-class PeatAVPlayer: AVPlayerViewController {
+class PeatAVPlayer: NSObject {
   
   //External
+  var playerVC = AVPlayerViewController()
   var playerView: UIView!
   
   //Internal
@@ -27,7 +28,6 @@ class PeatAVPlayer: AVPlayerViewController {
   
   convenience init(playerView: UIView, media: MediaObject) {
     self.init()
-    
     self.playerView = playerView
     self.mediaObject = media
     self.url = media.url
@@ -35,32 +35,40 @@ class PeatAVPlayer: AVPlayerViewController {
   }
   
   func configureMediaPlayer() {
-    showsPlaybackControls = false
-    view.frame = playerView.bounds
-    playerView.addSubview(self.view)
+    playerVC.showsPlaybackControls = false
+    playerVC.view.frame = playerView.bounds
+    playerView.addSubview(playerVC.view)
     prepareMediaData()
   }
   
+  func stopPlaying() {
+    playerVC.player?.pause()
+    playerVC.player = nil
+  }
+  
   func prepareMediaData() {
-    if let url = self.url {
-      let player = AVPlayer(URL: url)
-      self.player = player
-      self.showsPlaybackControls = false
+    var player: AVPlayer?
+    if let filePath = mediaObject?.filePath {
+      player = AVPlayer(URL: filePath)
+    } else if let url = self.url {
+      player = AVPlayer(URL: url)
     }
+    self.playerVC.player = player
+    self.playerVC.showsPlaybackControls = false
   }
   
   func playButtonPressed() {
-    self.player?.play()
-    self.showsPlaybackControls = true
+    self.playerVC.player?.play()
+    self.playerVC.showsPlaybackControls = true
   }
   
   // MARK: - Fullscreen transitions
   func checkForResigningFullScreen() {
-    let playerWidth = self.videoBounds.size.width
-    let playerHeight = self.videoBounds.size.height
+    let playerWidth = self.playerVC.videoBounds.size.width
+    let playerHeight = self.playerVC.videoBounds.size.height
     
-    let viewWidth = self.view.frame.width
-    let viewHeight = self.view.frame.height
+    let viewWidth = self.playerVC.view.frame.width
+    let viewHeight = self.playerVC.view.frame.height
     
     let result = (playerWidth > viewWidth) && (playerHeight > viewHeight)
     

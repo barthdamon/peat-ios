@@ -27,10 +27,11 @@ class MediaUploadViewController: UIViewController {
   var mediaType: MediaType? {
     didSet {
       self.mediaObject = MediaObject.initFromUploader(leaf, type: mediaType, thumbnail: image, filePath: videoPath, store: store)
-      self.overlayView = MediaOverlayView(mediaView: mediaView, player: nil, mediaObject: self.mediaObject, delegate: nil)
+      showNewMedia()
     }
   }
   var mediaObject: MediaObject?
+  var player: PeatAVPlayer?
   var videoPath: NSURL?
   var image: UIImage?
 
@@ -41,6 +42,10 @@ class MediaUploadViewController: UIViewController {
     
       // Do any additional setup after loading the view.
     }
+  
+  override func viewWillDisappear(animated: Bool) {
+    self.player?.stopPlaying()
+  }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -56,6 +61,34 @@ class MediaUploadViewController: UIViewController {
   
   func resignResponder() {
     self.descriptionTextField.resignFirstResponder()
+  }
+  
+  func showNewMedia() {
+    if let type = self.mediaObject?.mediaType {
+      switch type {
+      case .Image:
+        configureForImage()
+      case .Video:
+        configureForVideo()
+      default:
+        break
+      }
+    }
+  }
+  
+  func configureForImage() {
+    if let mediaView = self.mediaView {
+      self.overlayView = MediaOverlayView(mediaView: mediaView, player: nil, mediaObject: self.mediaObject, delegate: self)
+    }
+  }
+  
+  func configureForVideo() {
+    if let media = self.mediaObject, mediaView = self.mediaView {
+      self.player = PeatAVPlayer(playerView: mediaView, media: media)
+      self.overlayView = MediaOverlayView(mediaView: mediaView, player: self.player, mediaObject: self.mediaObject, delegate: self)
+      self.mediaView.userInteractionEnabled = true
+      self.overlayView?.userInteractionEnabled = true
+    }
   }
   
 
@@ -112,6 +145,7 @@ extension MediaUploadViewController: UINavigationControllerDelegate, UIImagePick
         //VIDEO
         self.videoPath = info[UIImagePickerControllerMediaURL] as? NSURL
         self.mediaType = .Video
+        self.mediaObject?.filePath = self.videoPath
         
       } else {
         //IMAGE
