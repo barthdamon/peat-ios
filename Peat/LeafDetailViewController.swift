@@ -64,7 +64,6 @@ class LeafDetailViewController: UIViewController {
         }
       }
     }
-    NSNotificationCenter.defaultCenter().addObserver(self, selector: "newMediaAdded", name: "newMediaPostSuccessful", object: nil)
     
     switch mode {
     case .View:
@@ -159,7 +158,7 @@ class LeafDetailViewController: UIViewController {
   
   func toggleEditing(forUpload: Bool) {
     if editButton.titleLabel?.text == "Save" {
-    setValuesOnLeaf()
+      setValuesOnLeaf()
     } else {
     self.editButton.setTitle("Save", forState: UIControlState.Normal)
       if !forUpload {
@@ -228,7 +227,16 @@ class LeafDetailViewController: UIViewController {
   
   func removeUnsavedChanges() {
     //TODO: remove any unpublished media items or unsaved changes from the leaf
+    if let leaf = self.leaf, leafMedias = leaf.media {
+      for media in leafMedias {
+        if media.needsPublishing {
+          profileDelegate?.store.treeStore.currentMediaObjects?.remove(media)
+        }
+      }
+    }
   }
+  
+
   
   @IBAction func returnButtonPressed(sender: AnyObject) {
     var needsSaving = false
@@ -243,12 +251,16 @@ class LeafDetailViewController: UIViewController {
     if !needsSaving && self.editButton.titleLabel?.text == "Edit" {
       dismissSelf()
     } else {
-      saveAlertShow(self, alertText: "Warning", alertMessage: "You will lose your unsaved leaf changes")
+      saveAlertShow(self, alertText: "Warning", alertMessage: "You have unsaved changes")
     }
   }
   
   func saveAlertShow(vc: UIViewController, alertText :String, alertMessage :String) {
     let alert = UIAlertController(title: alertText, message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
+    
+    alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: { (action) -> Void in
+      alert.dismissViewControllerAnimated(true, completion: nil)
+    }))
     
     alert.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (action) -> Void in
       alert.dismissViewControllerAnimated(true, completion: nil)

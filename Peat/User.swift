@@ -8,6 +8,13 @@
 
 import Foundation
 
+enum UserType: String {
+  case Pro = "pro"
+  case Org = "org"
+  case Sponsor = "sponsor"
+  case Normal = "normal"
+}
+
 class User: NSObject {
   
   //Info
