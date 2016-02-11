@@ -45,7 +45,6 @@ class LeafGrouping: NSObject, TreeObject {
     newGrouping.center = center
     newGrouping.treeDelegate = delegate
     //generate random color
-    newGrouping.rgbColor = UIColor.redColor()
     newGrouping.groupingId = generateId()
     newGrouping.user_Id = CurrentUser.info.model?._id
     newGrouping.activityName = delegate.getCurrentActivity()
@@ -140,7 +139,14 @@ class LeafGrouping: NSObject, TreeObject {
       view = UIView(frame: frame)
       if let view = self.view {
 //        view.backgroundColor = UIColor.fromHex(colorString)
-        
+
+        if let color = self.rgbColor {
+          view.backgroundColor = color
+        } else {
+          let randomColor = UIColor.randomColor()
+          view.backgroundColor = randomColor
+          self.rgbColor = randomColor
+        }
         view.backgroundColor = self.rgbColor != nil ? self.rgbColor : UIColor.randomColor()
         view.layer.cornerRadius = 10
         //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
@@ -202,6 +208,7 @@ class LeafGrouping: NSObject, TreeObject {
   func deleteButtonPressed() {
     self.changeStatus = .Removed
     self.treeDelegate?.removeObjectFromView(self)
+    treeDelegate?.sharedStore().removeConnectionsForObject(self)
   }
 
   

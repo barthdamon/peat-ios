@@ -142,6 +142,7 @@ class Leaf: NSObject, TreeObject {
       for media in medias {
         if media.needsPublishing {
           media.publish()
+          media.needsPublishing = false
           print("FOUND MEDIA THAT NEEDS PUBLISHING")
           //TODO: have the tree listen to the notification for when leaves are posted. Every time one is posted it goes through its leaves and if any are publishing, it checks somehow if any of their media is still publishing. probably need the media object in the notiication to check with that
           self.publishing = true
@@ -285,6 +286,8 @@ class Leaf: NSObject, TreeObject {
   func deleteButtonPressed() {
     self.changeStatus = .Removed
     self.treeDelegate?.removeObjectFromView(self)
+    //remove any connection with its id
+    treeDelegate?.sharedStore().removeConnectionsForObject(self)
   }
   
   func findGrouping() {

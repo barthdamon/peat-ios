@@ -37,6 +37,8 @@ class User: NSObject {
   
   var following: Array<User>?
   
+  
+//MARK: General
   static func userFromProfile(json: jsonObject) -> User {
     let user = User()
     
@@ -100,4 +102,7 @@ class User: NSObject {
   }
   
 }
+
+
+//MARK: Organization Specific
 

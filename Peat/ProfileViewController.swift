@@ -61,6 +61,8 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
         
         user.generateAvatarImage({ (image) -> () in
           dispatch_async(dispatch_get_main_queue(), { () -> Void in
+//            self.avatarImageView.layer.cornerRadius = self.avatarImageView.frame.height / 2
+//            self.avatarImageView.clipsToBounds = true
             self.avatarImageView.image = image
             self.avatarImageView.contentMode = .ScaleAspectFit
           })

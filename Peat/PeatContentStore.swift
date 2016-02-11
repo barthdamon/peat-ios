@@ -344,6 +344,17 @@ class PeatContentStore: NSObject {
     return found
   }
   
+  func removeConnectionsForObject(object: TreeObject) {
+    if let connections = treeStore.currentConnections {
+      connections.forEach({ (connection) -> () in
+        if connection.fromId == object.objectId() || connection.toId == object.objectId() {
+          connection.connectionLayer?.removeFromSuperlayer()
+          treeStore.currentConnections?.remove(connection)
+        }
+      })
+    }
+  }
+  
 }
 
 
