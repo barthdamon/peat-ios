@@ -60,6 +60,7 @@ class Leaf: NSObject, TreeObject {
   var timestamp: Int?
   var leafDescription: String?
   var movingEnabled: Bool = false
+  var tip: String?
   
   var abilityTitleLabel: UILabel?
   var groupingLabel: UILabel?
@@ -93,6 +94,7 @@ class Leaf: NSObject, TreeObject {
     leaf.timestamp = json["timestamp"] as? Int
     leaf.leafDescription = json["description"] as? String
     leaf.title = json["title"] as? String
+    leaf.tip = json["tip"] as? String
     
     if let layout = json["layout"] as? jsonObject {
       leaf.groupingId = layout["groupingId"] as? String
@@ -133,6 +135,7 @@ class Leaf: NSObject, TreeObject {
       ],
       "completionStatus" : self.completionStatus != nil ? self.completionStatus!.rawValue : "",
       "title" : paramFor(title),
+      "tip" : paramFor(tip),
       "description" : paramFor(leafDescription)
     ]
   }

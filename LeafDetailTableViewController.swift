@@ -59,13 +59,14 @@ class LeafDetailTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-      if let leaf = leaf, media = leaf.media {
-//        self.mediaOnLoad = media
-        return media.count
-//        return 1
-      } else {
-        return 0
+      var cellCount = 0
+      if let viewing = viewing where viewing.type == .Organization {
+        cellCount += 1
       }
+      if let leaf = leaf, media = leaf.media {
+        cellCount += media.count
+      }
+      return cellCount
     }
   
   override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -76,18 +77,25 @@ class LeafDetailTableViewController: UITableViewController {
   }
   
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-      if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, media = leaf?.media {
+      if let viewing = viewing, cell = tableView.dequeueReusableCellWithIdentifier("adviceCell", forIndexPath: indexPath) as? TipsTableViewCell
+      where indexPath.row == 0 && viewing.type == .Organization {
+        if let tip = leaf?.tip {
+          cell.configureWithTip(tip)
+        }
+        return cell
+      } else {
+        if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, media = leaf?.media {
           let cellMedia = media[indexPath.row]
           cell.viewing = viewing
           cell.tableVC = self
           cell.configureWithMedia(cellMedia)
           self.playerCells.append(cell)
           return cell
-      } else {
-        let cell = UITableViewCell()
-        return cell
+        } else {
+          let cell = UITableViewCell()
+          return cell
+        }
       }
-      
     }
 
     /*

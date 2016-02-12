@@ -1117,6 +1117,48 @@
                                     <outlet property="mediaView" destination="Fa4-Cm-tTr" id="HY1-a7-HYO"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="adviceCell" rowHeight="289" id="Pmu-xe-2oI" customClass="TipsTableViewCell" customModule="Peat" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="498" width="600" height="289"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Pmu-xe-2oI" id="Tbc-cX-pqN">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="288"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="kfu-GM-xir">
+                                            <rect key="frame" x="8" y="37" width="584" height="243"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        </textView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tips" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EIA-0o-2ak">
+                                            <rect key="frame" x="279" y="8" width="42" height="21"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="CIt-gf-Ec7"/>
+                                                <constraint firstAttribute="width" constant="42" id="oQd-vr-YGt"/>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="42" id="p3y-RZ-ArL"/>
+                                                <constraint firstAttribute="height" constant="21" id="rX4-Ir-yyD"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="kfu-GM-xir" firstAttribute="leading" secondItem="Tbc-cX-pqN" secondAttribute="leadingMargin" id="0P6-a5-D75"/>
+                                        <constraint firstItem="kfu-GM-xir" firstAttribute="bottom" secondItem="Tbc-cX-pqN" secondAttribute="bottomMargin" id="Sru-az-TYL"/>
+                                        <constraint firstItem="kfu-GM-xir" firstAttribute="trailing" secondItem="Tbc-cX-pqN" secondAttribute="trailingMargin" id="kSn-BU-8jq"/>
+                                        <constraint firstItem="EIA-0o-2ak" firstAttribute="top" secondItem="Tbc-cX-pqN" secondAttribute="topMargin" id="kfi-YH-kcS"/>
+                                        <constraint firstItem="kfu-GM-xir" firstAttribute="top" secondItem="EIA-0o-2ak" secondAttribute="bottom" constant="8" id="oea-J8-UJc"/>
+                                        <constraint firstItem="EIA-0o-2ak" firstAttribute="centerX" secondItem="Tbc-cX-pqN" secondAttribute="centerX" id="q0f-ak-ijT"/>
+                                        <constraint firstItem="kfu-GM-xir" firstAttribute="top" secondItem="EIA-0o-2ak" secondAttribute="bottom" constant="8" id="zlS-kQ-HoP"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="tipsTextField" destination="kfu-GM-xir" id="ByP-t6-zii"/>
+                                    <outlet property="tipsTitleLabel" destination="EIA-0o-2ak" id="3cg-9s-AsX"/>
+                                </connections>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="vPg-FK-PxY" id="vSz-vb-XqT"/>

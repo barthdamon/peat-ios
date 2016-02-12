@@ -55,7 +55,11 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
       print("Setting Up User Profile")
       if let first = user.first, last = user.last, username = user.username {
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          self.nameLabel.text = "\(first) \(last)"
+          if user.type == .Single {
+            self.nameLabel.text = "\(first) \(last)"
+          } else {
+            self.nameLabel.hidden = true
+          }
           self.usernameLabel.text = username
         })
         

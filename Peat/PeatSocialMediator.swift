@@ -33,9 +33,9 @@ class PeatSocialMediator: NSObject {
           var friends: Array<User> = []
           for friend in friendJson {
             let newUser = User.userFromProfile(friend)
-            if let pastRelationshipsJson = json["pastRelationships"] as? Array<jsonObject> {
-              newUser.parsePastRelationships(pastRelationshipsJson)
-            }
+//            if let pastRelationshipsJson = json["pastRelationships"] as? Array<jsonObject> {
+//              newUser.parsePastRelationships(pastRelationshipsJson)
+//            }
             friends.append(newUser)
           }
           callback(friends)

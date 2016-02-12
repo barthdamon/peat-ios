@@ -32,6 +32,8 @@
 		025D0DB31BD5CACB00462783 /* PeatSocialMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */; };
 		025D0DB71BD72F6C00462783 /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */; };
 		026325BF1C69786D00A959FE /* MediaDrilldownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026325BE1C69786D00A959FE /* MediaDrilldownTableViewCell.swift */; };
+		0264A6651C6D75560056966A /* Membership.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0264A6641C6D75560056966A /* Membership.swift */; };
+		0264A6671C6D7CBB0056966A /* TipsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0264A6661C6D7CBB0056966A /* TipsTableViewCell.swift */; };
 		027C33FE1C532E6100D86F0F /* StringHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027C33FD1C532E6100D86F0F /* StringHelpers.swift */; };
 		027C34001C53332900D86F0F /* AlertViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027C33FF1C53332900D86F0F /* AlertViews.swift */; };
 		027C34021C53392300D86F0F /* MediaUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027C34011C53392300D86F0F /* MediaUploadViewController.swift */; };
@@ -106,6 +108,8 @@
 		025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatSocialMediator.swift; sourceTree = "<group>"; };
 		025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
 		026325BE1C69786D00A959FE /* MediaDrilldownTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDrilldownTableViewCell.swift; sourceTree = "<group>"; };
+		0264A6641C6D75560056966A /* Membership.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Membership.swift; sourceTree = "<group>"; };
+		0264A6661C6D7CBB0056966A /* TipsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TipsTableViewCell.swift; sourceTree = "<group>"; };
 		027C33FD1C532E6100D86F0F /* StringHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringHelpers.swift; sourceTree = "<group>"; };
 		027C33FF1C53332900D86F0F /* AlertViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertViews.swift; sourceTree = "<group>"; };
 		027C34011C53392300D86F0F /* MediaUploadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaUploadViewController.swift; sourceTree = "<group>"; };
@@ -191,6 +195,7 @@
 				02D0A9171BC349B30018596F /* VideoObject.swift */,
 				02D72E8C1BD0929B00EC115E /* User.swift */,
 				0242313E1C30A18200ED7E1B /* Comment.swift */,
+				0264A6641C6D75560056966A /* Membership.swift */,
 				02EE26951BE181D6006DAE81 /* Leaf.swift */,
 				022AB6901C5C251900F1168E /* LeafGrouping.swift */,
 				024231401C30A58200ED7E1B /* Thread.swift */,
@@ -206,6 +211,7 @@
 				025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */,
 				02069E051C114E5C007E18EB /* MediaDescriptionTableViewCell.swift */,
 				026325BE1C69786D00A959FE /* MediaDrilldownTableViewCell.swift */,
+				0264A6661C6D7CBB0056966A /* TipsTableViewCell.swift */,
 				02069E071C114E68007E18EB /* CommentsTableViewCell.swift */,
 				02A11C9D1BB9D48E0064AE95 /* MediaTableViewCell.swift */,
 				027C75C01C509E51008D6DAE /* PostCommentTableViewCell.swift */,
@@ -544,6 +550,7 @@
 			files = (
 				0221BB5A1C6804240027EB42 /* CommentsTableViewController.swift in Sources */,
 				027C33FE1C532E6100D86F0F /* StringHelpers.swift in Sources */,
+				0264A6671C6D7CBB0056966A /* TipsTableViewCell.swift in Sources */,
 				027E31281BA27875001FCF70 /* APIService.swift in Sources */,
 				02FD6C931BB38C69003A3DDD /* CameraViewController.swift in Sources */,
 				02D11D411C5AFA8C0054E1AC /* FriendRequestTableViewCell.swift in Sources */,
@@ -589,6 +596,7 @@
 				027C34041C55178000D86F0F /* LoginViewController.swift in Sources */,
 				027C34021C53392300D86F0F /* MediaUploadViewController.swift in Sources */,
 				023B03811C150853003497FB /* MediaOverlayView.swift in Sources */,
+				0264A6651C6D75560056966A /* Membership.swift in Sources */,
 				02069E061C114E5C007E18EB /* MediaDescriptionTableViewCell.swift in Sources */,
 				0221BB521C6663C00027EB42 /* WitnessRequestViewController.swift in Sources */,
 				022AB6971C5C45AA00F1168E /* LeafConnection.swift in Sources */,

@@ -9,10 +9,8 @@
 import Foundation
 
 enum UserType: String {
-  case Pro = "pro"
-  case Org = "org"
-  case Sponsor = "sponsor"
-  case Normal = "normal"
+  case Organization = "organization"
+  case Single = "single"
 }
 
 class User: NSObject {
@@ -32,10 +30,12 @@ class User: NSObject {
   //Other
   var avatarImage: UIImage?
   var friends: Array<User>?
-  var unconfirmedFriendship: Friendship?
-  var unconfirmedWitness: NSObject?
+  
+//  var unconfirmedFriendship: Membership?
+  var unconfirmedWitnesses: NSObject?
   
   var following: Array<User>?
+  var type: UserType = .Single
   
   
 //MARK: General
@@ -49,6 +49,9 @@ class User: NSObject {
         user.last = info["last"] as? String
         user.email = info["email"] as? String
         user.username = info["username"] as? String
+        if let type = info["type"] as? String, rawType = UserType(rawValue: type) {
+          user.type = rawType
+        }
       }
       
       //Profile
@@ -58,21 +61,16 @@ class User: NSObject {
         user.contact = profile["contact"] as? String
       }
     
-    
-    //MARK: Parsing specific traits for other users (not found on current user)
-    if let friendshipJson = json["unconfirmedFriendship"] as? jsonObject {
-      user.unconfirmedFriendship = Friendship.friendFromUnconfirmed(friendshipJson)
+    if let memberships = json["memberships"] as? Array<jsonObject> {
+      //type: admin, sponsor: true - keep them the same. a membership can be a sponsorship?
+      //create memberships
     }
     
-    if let witnessJson = json["unconfirmedWitnesses"] as? jsonObject {
-      user.unconfirmedWitness = witnessJson
-    }
+//    if let sponsorships = json["sponsorships"] as? Array<jsonObject> {
+//      
+//    }
     
     return user
-  }
-  
-  func parsePastRelationships(json: Array<jsonObject>) {
-    
   }
   
   func generateAvatarImage(callback: (UIImage) -> ()) {
