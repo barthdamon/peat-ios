@@ -8,6 +8,12 @@
 
 import Foundation
 
+enum MediaPurpose: String {
+  case Attempt = "Attempt"
+  case Completion = "Completion"
+  case Tutorial = "Tutorial"
+}
+
 class MediaObject: NSObject {
   
   //parsed
@@ -25,6 +31,7 @@ class MediaObject: NSObject {
   }
   var urlString: String?
   var mediaType: MediaType?
+  var purpose: MediaPurpose?
   
   //created
   var thumbnail: UIImage?
@@ -48,6 +55,9 @@ class MediaObject: NSObject {
     media.mediaDescription = json["description"] as? String
     media.location = json["location"] as? String
     media.timestamp = json["timestamp"] as? Int
+    if let purpose = json["purpose"] as? String, mediaPurpose = MediaPurpose(rawValue: purpose) {
+      media.purpose = mediaPurpose
+    }
     
     if let info = json["source"] as? jsonObject, url = info["url"] as? String, mediaType = info["mediaType"] as? String {
       media.url = NSURL(string: url)

@@ -12,6 +12,7 @@ import AVFoundation
 
 class MediaTableViewCell: UITableViewCell {
   
+  @IBOutlet weak var purposeLabel: UILabel!
   @IBOutlet weak var mediaView: UIView!
   @IBOutlet weak var descriptionView: UIView!
 
@@ -75,6 +76,9 @@ class MediaTableViewCell: UITableViewCell {
   
   func configureDescriptionSection() {
     self.descriptionLabel.text = media?.mediaDescription
+    if let purpose = media?.purpose {
+      self.purposeLabel.text = purpose.rawValue
+    }
     updateCommentCount()
   }
   

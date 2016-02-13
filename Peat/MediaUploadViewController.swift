@@ -8,8 +8,9 @@
 
 import UIKit
 
-class MediaUploadViewController: UIViewController {
+class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
   
+  @IBOutlet weak var pickerView: UIPickerView!
   @IBOutlet weak var mediaView: UIView!
   @IBOutlet weak var descriptionTextField: UITextField!
   var store: PeatContentStore? {
@@ -21,6 +22,8 @@ class MediaUploadViewController: UIViewController {
   }
   
   var overlayView: MediaOverlayView?
+  var pickerOptions: Array<MediaPurpose> = [MediaPurpose.Completion,MediaPurpose.Attempt,MediaPurpose.Tutorial]
+  var selectedPurpose: MediaPurpose?
   
   var leafDetailDelegate: LeafDetailViewController?
   
@@ -108,6 +111,7 @@ class MediaUploadViewController: UIViewController {
   @IBAction func publishButtonPressed(sender: AnyObject) {
     if let _ = self.mediaObject {
       self.mediaObject?.mediaDescription = self.descriptionTextField.text
+      self.mediaObject?.purpose = self.selectedPurpose
       store?.addMediaToStore(self.mediaObject!)
       self.leafDetailDelegate?.newMediaAdded()
       dismissSelf(true)
@@ -166,5 +170,25 @@ extension MediaUploadViewController: UINavigationControllerDelegate, UIImagePick
     self.dismissViewControllerAnimated(false, completion: {
       self.dismissSelf(false)
     })
+  }
+  
+  
+  
+  //MARK: UIPickerView
+  
+  func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    self.selectedPurpose = pickerOptions[row]
+  }
+  
+  func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    return 1
+  }
+  
+  func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    return 3
+  }
+  
+  func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String {
+    return pickerOptions[row].rawValue
   }
 }

@@ -10,6 +10,7 @@ import UIKit
 
 class MediaDrilldownTableViewCell: UITableViewCell {
 
+  @IBOutlet weak var purposeLabel: UILabel!
   @IBOutlet weak var mediaView: UIView!
   @IBOutlet weak var descriptionView: UIView!
   
@@ -51,6 +52,9 @@ class MediaDrilldownTableViewCell: UITableViewCell {
       default:
         break
       }
+    }
+    if let purpose = media.purpose {
+      self.purposeLabel.text = purpose.rawValue
     }
     self.descriptionLabel.text = media.mediaDescription
     updateCommentCount()

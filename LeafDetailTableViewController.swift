@@ -77,24 +77,16 @@ class LeafDetailTableViewController: UITableViewController {
   }
   
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-      if let viewing = viewing, cell = tableView.dequeueReusableCellWithIdentifier("adviceCell", forIndexPath: indexPath) as? TipsTableViewCell
-      where indexPath.row == 0 && viewing.type == .Organization {
-        if let tip = leaf?.tip {
-          cell.configureWithTip(tip)
-        }
+      if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, media = leaf?.media {
+        let cellMedia = media[indexPath.row]
+        cell.viewing = viewing
+        cell.tableVC = self
+        cell.configureWithMedia(cellMedia)
+        self.playerCells.append(cell)
         return cell
       } else {
-        if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, media = leaf?.media {
-          let cellMedia = media[indexPath.row]
-          cell.viewing = viewing
-          cell.tableVC = self
-          cell.configureWithMedia(cellMedia)
-          self.playerCells.append(cell)
-          return cell
-        } else {
-          let cell = UITableViewCell()
-          return cell
-        }
+        let cell = UITableViewCell()
+        return cell
       }
     }
 
