@@ -81,10 +81,24 @@ class LeafDetailViewController: UIViewController {
     self.tableViewVC?.newMediaAdded()
   }
 
-  
+  func setSelectedCompletion() {
+    var index = 2
+    if let status = leaf?.completionStatus {
+      switch status {
+      case .Completed:
+        index = 0
+      case .Goal:
+        index = 2
+      case .Learning:
+        index = 1
+      }
+    }
+    self.completionStatusControl.selectedSegmentIndex = index
+  }
   
   func configureTitleView() {
     if let leaf = self.leaf {
+      self.setSelectedCompletion()
       self.leafTitleLabel.text = leaf.title
       self.titleEditField.text = leaf.title
       if let witnesses = leaf.witnesses {

@@ -223,6 +223,7 @@ class Leaf: NSObject, TreeObject {
               for json in mediaJson {
                 self.treeDelegate?.sharedStore().addMediaToStore(MediaObject.initWithJson(json, store: self.treeDelegate?.sharedStore()))
               }
+              self.getCompletionStatus()
             }
           }
         }
@@ -348,6 +349,19 @@ class Leaf: NSObject, TreeObject {
     } else {
       return nil
     }
+  }
+  
+  func getCompletionStatus() {
+    var status: CompletionStatus = .Goal
+    media?.forEach({ (media) -> () in
+      if media.purpose == .Attempt && status == .Goal {
+        status = .Learning
+      }
+      if media.purpose == .Completion {
+        status = .Completed
+      }
+    })
+    self.completionStatus = status
   }
   
   func viewForTree() -> UIView? {
