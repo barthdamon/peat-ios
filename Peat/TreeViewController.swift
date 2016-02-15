@@ -37,7 +37,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   var hoverTimer: NSTimer?
   
   var profileDelegate: ProfileViewController?
-  var currentActivity: String = "Snowboarding"
+  var currentActivity: String?
 
   @IBOutlet weak var scrollView: UIScrollView!
   @IBOutlet weak var saveButton: UIButton!
@@ -52,6 +52,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       super.viewDidLoad()
 
     // Do any additional setup after loading the view.
+    
     configureScrollView()
     fetchTreeData()
   }
@@ -66,7 +67,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   }
   
   func getCurrentActivity() -> String {
-    return currentActivity
+    return currentActivity != nil ? currentActivity! : ""
   }
   
   func configureScrollView() {
@@ -445,7 +446,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   func fetchTreeData() {
     //right now it redraws every time... no harm in that
     //In the future get the data for the selected user and the selected activity
-    sharedStore().getTreeData(self, viewing: viewing){ (success) -> () in
+    sharedStore().getTreeData(self, viewing: viewing, activity: self.currentActivity){ (success) -> () in
       if success {
         self.displayLeaves()
       } else {
@@ -501,6 +502,11 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       connection.connectionLayer?.removeFromSuperlayer()
       drawFreshConnection(connection)
     }
+  }
+  
+  func setCurrentActivityTree(activity: String) {
+    self.currentActivity = activity
+    fetchTreeData()
   }
   
   func viewForTree() -> UIView? {

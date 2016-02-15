@@ -178,6 +178,7 @@ extension MediaUploadViewController: UINavigationControllerDelegate, UIImagePick
   
   func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
     self.selectedPurpose = pickerOptions[row]
+    print("purpose selected: \(pickerOptions[row].rawValue)")
   }
   
   func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {

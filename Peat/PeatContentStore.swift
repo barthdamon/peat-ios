@@ -161,8 +161,8 @@ class PeatContentStore: NSObject {
 //    
 //  }
   
-  func getTreeData(delegate: TreeDelegate?, viewing: User?, callback: (Bool) -> () ) {
-    self.treeStore.activityName = "Snowboarding"
+  func getTreeData(delegate: TreeDelegate?, viewing: User?, activity: String?, callback: (Bool) -> () ) {
+    self.treeStore.activityName = activity
     if let activityName = treeStore.activityName, _id = CurrentUser.info.model?._id {
       var viewing_Id = _id
       if let viewing = viewing, _id = viewing._id {

@@ -30,6 +30,7 @@ class User: NSObject {
   //Other
   var avatarImage: UIImage?
   var friends: Array<User>?
+  var primaryActivity: String?
   
 //  var unconfirmedFriendship: Membership?
   var unconfirmedWitnesses: NSObject?
@@ -59,6 +60,7 @@ class User: NSObject {
         user.avatarURLString = profile["avatarUrl"] as? String
         user.summary = profile["summary"] as? String
         user.contact = profile["contact"] as? String
+        user.primaryActivity = profile["primaryActivity"] as? String
       }
     
     if let memberships = json["memberships"] as? Array<jsonObject> {

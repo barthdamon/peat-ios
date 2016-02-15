@@ -458,7 +458,7 @@
                     <connections>
                         <outlet property="avatarImageView" destination="aFy-zm-ufg" id="Oxn-Xt-wJC"/>
                         <outlet property="cancelButton" destination="nEw-ic-wLJ" id="U0S-hJ-PoU"/>
-                        <outlet property="currentAbilityLabel" destination="BTd-ef-NRq" id="nec-Pu-A6g"/>
+                        <outlet property="currentActivityLabel" destination="BTd-ef-NRq" id="nHl-eg-LhQ"/>
                         <outlet property="nameLabel" destination="C6B-Zw-agW" id="LPA-Bp-bd2"/>
                         <outlet property="saveButton" destination="a2R-97-0fD" id="Lnr-cq-yMM"/>
                         <outlet property="usernameLabel" destination="45k-P6-0DR" id="RlK-5A-NS0"/>

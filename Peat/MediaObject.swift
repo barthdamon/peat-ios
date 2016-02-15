@@ -137,7 +137,8 @@ class MediaObject: NSObject {
         "mediaType" : self.mediaType != nil ? self.mediaType!.rawValue : ""
       ],
       "description": paramFor(mediaDescription),
-      "location": paramFor(location)
+      "location": paramFor(location),
+      "purpose" : self.purpose != nil ? self.purpose!.rawValue : ""
     ]
   }
   

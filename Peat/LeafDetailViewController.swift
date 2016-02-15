@@ -72,12 +72,15 @@ class LeafDetailViewController: UIViewController {
       self.editButton.enabled = false
       self.completionStatusControl.userInteractionEnabled = false
     case .Edit:
+      self.completionStatusControl.userInteractionEnabled = false
       break
     }
   }
   
   func newMediaAdded() {
     toggleEditing(true)
+    self.leaf?.getCompletionStatus()
+    self.setSelectedCompletion()
     self.tableViewVC?.newMediaAdded()
   }
 

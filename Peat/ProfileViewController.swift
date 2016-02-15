@@ -21,10 +21,20 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
   @IBOutlet weak var nameLabel: UILabel!
   @IBOutlet weak var saveButton: UIButton!
   @IBOutlet weak var cancelButton: UIButton!
-  @IBOutlet weak var currentAbilityLabel: UILabel!
+
+  @IBOutlet weak var currentActivityLabel: UILabel!
   
   var treeController: TreeViewController?
   var drilldownController: LeafDetailViewController?
+  var currentActivity: String? {
+    didSet {
+      if let activity = currentActivity {
+        self.currentActivityLabel.text = activity
+      } else {
+        self.currentActivityLabel.text = ""
+      }
+    }
+  }
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,14 +63,15 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
   
   func setupUserProfile(user: User) {
       print("Setting Up User Profile")
-      if let first = user.first, last = user.last, username = user.username {
+      if let username = user.username {
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          if user.type == .Single {
+          if let first = user.first, last = user.last where user.type == .Single {
             self.nameLabel.text = "\(first) \(last)"
           } else {
             self.nameLabel.hidden = true
           }
           self.usernameLabel.text = username
+          self.currentActivity = user.primaryActivity
         })
         
         user.generateAvatarImage({ (image) -> () in
@@ -93,6 +104,9 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
           self.treeController = vc
           vc.viewing = self.viewing
           vc.store = store
+          if let activity = currentActivity {
+            vc.setCurrentActivityTree(activity)
+          }
         }
       }
       
