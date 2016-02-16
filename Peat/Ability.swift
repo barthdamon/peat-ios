@@ -18,5 +18,12 @@ class Ability: NSObject {
     newAbility._id = json["_id"] as? String
     return newAbility
   }
+  
+  static func abilityFromLeaf(json: jsonObject) -> Ability {
+    let newAbility = Ability()
+    newAbility.name = json["abilityName"] as? String
+    newAbility._id = json["ability_Id"] as? String
+    return newAbility
+  }
   //dont need params cause ability is mostly server side
 }

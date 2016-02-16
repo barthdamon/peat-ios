@@ -53,13 +53,11 @@ class Leaf: NSObject, TreeObject {
   var treeDelegate: TreeDelegate?
   var view: UIView?
   var deleteButton: UIButton?
-  var ability_Id: String?
   var _id: String?
   var user_Id: String?
   var leafId: String?
   var activityName: String?
   var completionStatus: CompletionStatus?
-  var abilityName: String?
   var timestamp: Int?
   var leafDescription: String?
   var movingEnabled: Bool = false
@@ -90,8 +88,7 @@ class Leaf: NSObject, TreeObject {
     leaf._id = json["_id"] as? String
     leaf.user_Id = json["user_Id"] as? String
     leaf.leafId = json["leafId"] as? String
-    leaf.ability_Id = json["ability_Id"] as? String
-    leaf.abilityName = json["abilityName"] as? String
+    leaf.ability = Ability.abilityFromLeaf(json)
     leaf.activityName = json["activityName"] as? String
     if let status = json["completionStatus"] as? String {
       leaf.completionStatus = CompletionStatus(rawValue: status)
@@ -130,7 +127,7 @@ class Leaf: NSObject, TreeObject {
       "activityName" : paramFor(activityName),
       "leafId" : paramFor(leafId),
       "user_Id" : paramFor(user_Id),
-      "ability_Id" : paramFor(ability_Id),
+      "ability_Id" : self.ability?._id != nil ? self.ability!._id! : "",
       "layout" : [
         "coordinates" : [
           "x" : self.paramCenter?.x != nil ? String(self.paramCenter!.x) : "",
@@ -139,7 +136,7 @@ class Leaf: NSObject, TreeObject {
         "groupingId" : paramFor(paramGroupingId),
       ],
       "completionStatus" : self.completionStatus != nil ? self.completionStatus!.rawValue : "",
-      "abilityName" : paramFor(abilityName),
+      "abilityName" : self.ability?.name != nil ? self.ability!.name! : "",
       "tip" : paramFor(tip),
       "description" : paramFor(leafDescription)
     ]
@@ -149,6 +146,7 @@ class Leaf: NSObject, TreeObject {
     if let medias = self.media {
       for media in medias {
         if media.needsPublishing {
+          media.ability_Id = self.ability?._id
           media.publish()
           media.needsPublishing = false
           print("FOUND MEDIA THAT NEEDS PUBLISHING")
@@ -169,6 +167,10 @@ class Leaf: NSObject, TreeObject {
         } else {
           print("Leaf created: \(res)")
           self.changeStatus = .Unchanged
+          if let json = res as? jsonObject {
+            self.ability?._id = json["ability_Id"] as? String
+          }
+          self.saveMedia()
           callback(true)
         }
       })
@@ -178,7 +180,8 @@ class Leaf: NSObject, TreeObject {
           print("Error updating leaf \(e)")
           callback(false)
         } else {
-          print("Leaf created: \(res)")
+          print("Leaf updated: \(res)")
+          self.saveMedia()
           callback(true)
         }
       })

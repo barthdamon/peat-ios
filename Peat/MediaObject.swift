@@ -105,7 +105,8 @@ class MediaObject: NSObject {
     media.needsPublishing = true
     media.store = store
     media.leafId = leaf?.leafId
-    media.ability_Id = leaf?.ability_Id
+    //careful might not be getting set here... probably have to do on server or generate a local id like he other stuff...
+    media.ability_Id = leaf?.ability?._id
     media.mediaType = type
     media.thumbnail = thumbnail
     media.filePath = filePath

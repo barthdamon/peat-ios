@@ -16,7 +16,7 @@ enum LeafMode {
 
 class LeafDetailViewController: UIViewController, UIPopoverPresentationControllerDelegate {
   @IBOutlet weak var titleView: UIView!
-  @IBOutlet weak var editButton: UIButton!
+  @IBOutlet weak var saveButton: UIButton!
   
   @IBOutlet weak var completionStatusControl: UISegmentedControl!
   @IBOutlet weak var leafTitleLabel: UILabel!
@@ -38,7 +38,8 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     }
   }
   
-  @IBOutlet weak var titleSaveButton: UIButton!
+  
+  @IBOutlet weak var abilityNameEditButton: UIButton!
   @IBOutlet weak var uploadLabel: UILabel!
   @IBOutlet weak var witnessLabel: UILabel!
   @IBOutlet weak var uploadButton: UIButton!
@@ -75,8 +76,8 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     switch mode {
     case .View:
       self.uploadButton.setTitle("Witness", forState: .Normal)
-      self.editButton.hidden = true
-      self.editButton.enabled = false
+      self.abilityNameEditButton.hidden = true
+      self.abilityNameEditButton.enabled = false
       self.completionStatusControl.userInteractionEnabled = false
     case .Edit:
       self.completionStatusControl.userInteractionEnabled = false
@@ -85,7 +86,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   }
   
   func newMediaAdded() {
-    toggleEditing(true)
+    toggleSaveOption(true)
     self.leaf?.getCompletionStatus()
     self.setSelectedCompletion()
     self.tableViewVC?.newMediaAdded()
@@ -109,7 +110,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   func configureTitleView() {
     if let leaf = self.leaf {
       self.setSelectedCompletion()
-      self.leafTitleLabel.text = leaf.abilityName
+      self.leafTitleLabel.text = leaf.ability?.name
       if let witnesses = leaf.witnesses {
         let witnessCount = witnesses.count
         let lingo = witnessCount == 1 ? "Witness" : "Witnesses"
@@ -173,12 +174,13 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   func saveLeaf() {
     self.leaf?.save(){ (success) in
+      self.saveButton.enabled = false
       dispatch_async(dispatch_get_main_queue(), { () -> Void in
         if success {
-          self.editButton.setTitle("Edit", forState: UIControlState.Normal)
+          self.saveButton.hidden = true
 //          alertShow(self, alertText: "Success", alertMessage: "Leaf saved sucessfully")
         } else {
-          self.editButton.setTitle("Edit", forState: UIControlState.Normal)
+          self.saveButton.enabled = true
 //          alertShow(self, alertText: "Error", alertMessage: "Leaf save unsuccessful")
         }
       })
@@ -187,26 +189,30 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   func setValuesOnLeaf() {
     //actually save the values of all of the fields now....
-    self.leaf?.abilityName = self.leafTitleLabel.text
+//    self.leaf?.ability?.abilityName = self.leafTitleLabel.text
+    self.leaf?.ability = selectedAbility
+    saveButton.enabled = false
+    setValuesOnLeaf()
     saveLeaf()
   }
   
-  @IBAction func editButtonPressed(sender: AnyObject) {
-    toggleEditing(false)
+  @IBAction func saveButtonPressed(sender: AnyObject) {
+    toggleSaveOption(false)
   }
   
-  func toggleEditing(forUpload: Bool) {
-    if editButton.titleLabel?.text == "Save" {
+  func toggleSaveOption(forUpload: Bool) {
+    if saveButton.hidden == false && saveButton.enabled == true {
+      saveButton.enabled = false
       setValuesOnLeaf()
     } else {
-      self.performSegueWithIdentifier("abilitySearchSegue", sender: self)
-//    self.editButton.setTitle("Save", forState: UIControlState.Normal)
-//      if !forUpload {
-//        self.leafTitleLabel.hidden = true
-//        self.titleEditField.hidden = false
-//        self.titleSaveButton.hidden = false
-//      }
+      saveButton.hidden = false
+      saveButton.enabled = true
     }
+  }
+  
+  
+  @IBAction func abilityNameEditButtonPressed(sender: AnyObject) {
+    self.performSegueWithIdentifier("abilitySearchSegue", sender: self)
   }
   
 //  @IBAction func textFieldEditDone(sender: AnyObject) {
@@ -288,11 +294,30 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
       }
     }
     //TODO: check if there are new mediaObjects. of if there are unsaved changes. if there are prompt a warning...
-    if !needsSaving && self.editButton.titleLabel?.text == "Edit" {
+    if !needsSaving && !self.saveButton.hidden && !self.saveButton.enabled {
       dismissSelf()
     } else {
       saveAlertShow(self, alertText: "Warning", alertMessage: "You have unsaved changes")
     }
+  }
+  
+  func missingTitleAlertShow(vc: UIViewController, alertText :String, alertMessage :String) {
+    let alert = UIAlertController(title: alertText, message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
+    
+    alert.addAction(UIAlertAction(title: "Don't Save", style: .Default, handler: { (action) -> Void in
+      alert.dismissViewControllerAnimated(true, completion: nil)
+      self.removeUnsavedChanges()
+      self.dismissSelf()
+    }))
+    
+    alert.addAction(UIAlertAction(title: "Okay", style: .Default, handler: { (action) -> Void in
+      alert.dismissViewControllerAnimated(true, completion: nil)
+    }))
+    
+    //can add another action (maybe cancel, here)
+    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+      vc.presentViewController(alert, animated: true, completion: nil)
+    })
   }
   
   func saveAlertShow(vc: UIViewController, alertText :String, alertMessage :String) {
@@ -304,7 +329,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     
     alert.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (action) -> Void in
       alert.dismissViewControllerAnimated(true, completion: nil)
-      self.toggleEditing(false)
+      self.toggleSaveOption(false)
       self.dismissSelf()
     }))
     

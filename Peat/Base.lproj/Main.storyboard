@@ -608,7 +608,7 @@
                                             <constraint firstAttribute="height" constant="43" id="uLM-2f-Y4a"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <state key="normal" title="Edit"/>
+                                        <state key="normal" title="Save"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="41x-lf-L41"/>
@@ -622,7 +622,7 @@
                                             </mask>
                                         </variation>
                                         <connections>
-                                            <action selector="editButtonPressed:" destination="kkl-n5-IFP" eventType="touchUpInside" id="6cx-cH-34x"/>
+                                            <action selector="saveButtonPressed:" destination="kkl-n5-IFP" eventType="touchUpInside" id="61U-2z-KxZ"/>
                                         </connections>
                                     </button>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="2" translatesAutoresizingMaskIntoConstraints="NO" id="Q5X-MM-8wV">
@@ -707,16 +707,16 @@
                                             </mask>
                                         </variation>
                                     </imageView>
-                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mya-cK-EMB">
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mya-cK-EMB">
                                         <rect key="frame" x="126" y="15" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="2v3-YP-Dbg"/>
                                             <constraint firstAttribute="width" constant="30" id="TDB-qg-eVp"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <state key="normal" title="Done"/>
+                                        <state key="normal" title="Edit"/>
                                         <connections>
-                                            <action selector="textFieldEditDone:" destination="kkl-n5-IFP" eventType="touchUpInside" id="NJJ-BV-oH7"/>
+                                            <action selector="abilityNameEditButtonPressed:" destination="kkl-n5-IFP" eventType="touchUpInside" id="XQd-wk-slR"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -844,11 +844,11 @@
                     </view>
                     <navigationItem key="navigationItem" id="erm-nT-lrZ"/>
                     <connections>
+                        <outlet property="abilityNameEditButton" destination="Mya-cK-EMB" id="nRv-HQ-Jrk"/>
                         <outlet property="completionStatusControl" destination="Q5X-MM-8wV" id="xy8-Ec-2qO"/>
-                        <outlet property="editButton" destination="6ka-QB-VpC" id="RaM-pC-8Bi"/>
                         <outlet property="leafTitleLabel" destination="jvp-AS-0ui" id="4Ir-Jm-bh8"/>
                         <outlet property="returnButton" destination="PtF-MT-PdH" id="6mi-BS-hSh"/>
-                        <outlet property="titleSaveButton" destination="Mya-cK-EMB" id="y7C-BG-8Cw"/>
+                        <outlet property="saveButton" destination="6ka-QB-VpC" id="DL9-hD-Ymn"/>
                         <outlet property="titleView" destination="fpa-ML-dh9" id="ksl-wL-w4F"/>
                         <outlet property="uploadButton" destination="hdk-qh-twi" id="lqK-3H-2LX"/>
                         <outlet property="uploadLabel" destination="QNM-Ke-s9P" id="hMY-ch-vut"/>
