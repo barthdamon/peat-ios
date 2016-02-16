@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		02069E061C114E5C007E18EB /* MediaDescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02069E051C114E5C007E18EB /* MediaDescriptionTableViewCell.swift */; };
 		02069E081C114E68007E18EB /* CommentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02069E071C114E68007E18EB /* CommentsTableViewCell.swift */; };
+		020815121C72B1A900B1A2EC /* SearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020815111C72B1A900B1A2EC /* SearchTableViewController.swift */; };
+		020815141C72B2AA00B1A2EC /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020815131C72B2AA00B1A2EC /* SearchTableViewCell.swift */; };
+		020815181C72D50600B1A2EC /* Ability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020815171C72D50600B1A2EC /* Ability.swift */; };
 		021C1BF51C4F33B000FDEFED /* LeafView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021C1BF41C4F33B000FDEFED /* LeafView.swift */; };
 		021C900A1BEFF5DD00C79538 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021C90091BEFF5DD00C79538 /* RootViewController.swift */; };
 		021C900C1BEFFF7000C79538 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021C900B1BEFFF7000C79538 /* HomeViewController.swift */; };
@@ -84,6 +87,9 @@
 /* Begin PBXFileReference section */
 		02069E051C114E5C007E18EB /* MediaDescriptionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDescriptionTableViewCell.swift; sourceTree = "<group>"; };
 		02069E071C114E68007E18EB /* CommentsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsTableViewCell.swift; sourceTree = "<group>"; };
+		020815111C72B1A900B1A2EC /* SearchTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTableViewController.swift; sourceTree = "<group>"; };
+		020815131C72B2AA00B1A2EC /* SearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
+		020815171C72D50600B1A2EC /* Ability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ability.swift; sourceTree = "<group>"; };
 		021C1BF41C4F33B000FDEFED /* LeafView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeafView.swift; sourceTree = "<group>"; };
 		021C90091BEFF5DD00C79538 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		021C900B1BEFFF7000C79538 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -189,6 +195,7 @@
 			children = (
 				02A11CA61BB9EDC50064AE95 /* MediaObject.swift */,
 				02D0A9191BC349C10018596F /* PhotoObject.swift */,
+				020815171C72D50600B1A2EC /* Ability.swift */,
 				022AB6961C5C45AA00F1168E /* LeafConnection.swift */,
 				02D0A9171BC349B30018596F /* VideoObject.swift */,
 				02D72E8C1BD0929B00EC115E /* User.swift */,
@@ -207,6 +214,7 @@
 			isa = PBXGroup;
 			children = (
 				025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */,
+				020815131C72B2AA00B1A2EC /* SearchTableViewCell.swift */,
 				02069E051C114E5C007E18EB /* MediaDescriptionTableViewCell.swift */,
 				026325BE1C69786D00A959FE /* MediaDrilldownTableViewCell.swift */,
 				02069E071C114E68007E18EB /* CommentsTableViewCell.swift */,
@@ -223,6 +231,7 @@
 			children = (
 				027C75BE1C509AD1008D6DAE /* LeafDetailTableViewController.swift */,
 				02D72E8A1BD0926900EC115E /* FriendsTableViewController.swift */,
+				020815111C72B1A900B1A2EC /* SearchTableViewController.swift */,
 				021C900D1BF0012C00C79538 /* MenuTableViewController.swift */,
 				02A11C9F1BB9D4CA0064AE95 /* NewsfeedTableViewController.swift */,
 				0221BB591C6804240027EB42 /* CommentsTableViewController.swift */,
@@ -581,13 +590,16 @@
 				027C34081C55239800D86F0F /* CurrentUser.swift in Sources */,
 				027C75BF1C509AD1008D6DAE /* LeafDetailTableViewController.swift in Sources */,
 				02D0A9181BC349B30018596F /* VideoObject.swift in Sources */,
+				020815181C72D50600B1A2EC /* Ability.swift in Sources */,
 				021C900A1BEFF5DD00C79538 /* RootViewController.swift in Sources */,
 				02917C141BEC27A90060999A /* LeafDetailViewController.swift in Sources */,
 				027C34001C53332900D86F0F /* AlertViews.swift in Sources */,
+				020815141C72B2AA00B1A2EC /* SearchTableViewCell.swift in Sources */,
 				021C90101BF0135B00C79538 /* SideMenuClient.swift in Sources */,
 				02D0A91A1BC349C10018596F /* PhotoObject.swift in Sources */,
 				02A11C9E1BB9D48E0064AE95 /* MediaTableViewCell.swift in Sources */,
 				02A11CA91BB9F1670064AE95 /* AWSContentHelper.swift in Sources */,
+				020815121C72B1A900B1A2EC /* SearchTableViewController.swift in Sources */,
 				021C900E1BF0012C00C79538 /* MenuTableViewController.swift in Sources */,
 				027C34041C55178000D86F0F /* LoginViewController.swift in Sources */,
 				027C34021C53392300D86F0F /* MediaUploadViewController.swift in Sources */,

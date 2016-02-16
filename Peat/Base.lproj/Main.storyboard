@@ -271,7 +271,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ExM-vm-3dM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1727" y="-39"/>
+            <point key="canvasLocation" x="1713" y="-67"/>
         </scene>
         <!--Profile-->
         <scene sceneID="Nxn-rB-ji3">
@@ -527,7 +527,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dvk-KG-aDs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3323" y="880"/>
+            <point key="canvasLocation" x="3876" y="624"/>
         </scene>
         <!--Leaf Detail View Controller-->
         <scene sceneID="idj-eu-psZ">
@@ -707,16 +707,7 @@
                                             </mask>
                                         </variation>
                                     </imageView>
-                                    <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IGK-h9-3FG">
-                                        <rect key="frame" x="8" y="15" width="119" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="0fh-63-1ec"/>
-                                            <constraint firstAttribute="width" constant="119" id="haT-9T-BAH"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mya-cK-EMB">
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mya-cK-EMB">
                                         <rect key="frame" x="126" y="15" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="2v3-YP-Dbg"/>
@@ -741,7 +732,6 @@
                                     <constraint firstItem="6ka-QB-VpC" firstAttribute="width" secondItem="hdk-qh-twi" secondAttribute="width" id="5rc-gV-R5E"/>
                                     <constraint firstItem="PtF-MT-PdH" firstAttribute="top" secondItem="fpa-ML-dh9" secondAttribute="top" id="777-iQ-Gvk"/>
                                     <constraint firstItem="jvp-AS-0ui" firstAttribute="centerX" secondItem="fpa-ML-dh9" secondAttribute="centerX" id="8gm-MK-HDT"/>
-                                    <constraint firstItem="IGK-h9-3FG" firstAttribute="leading" secondItem="fpa-ML-dh9" secondAttribute="leading" constant="8" id="9hK-g7-ZEN"/>
                                     <constraint firstAttribute="bottom" secondItem="6ka-QB-VpC" secondAttribute="bottom" constant="6" id="AqE-s0-XpL"/>
                                     <constraint firstItem="jvp-AS-0ui" firstAttribute="top" secondItem="fpa-ML-dh9" secondAttribute="top" constant="8" id="BLD-9y-Vi2"/>
                                     <constraint firstItem="Q5X-MM-8wV" firstAttribute="centerX" secondItem="fpa-ML-dh9" secondAttribute="centerX" id="CZH-GF-UbD"/>
@@ -780,7 +770,6 @@
                                     <constraint firstAttribute="trailing" secondItem="hdk-qh-twi" secondAttribute="trailing" constant="8" id="iLA-LR-3mv"/>
                                     <constraint firstItem="hdk-qh-twi" firstAttribute="leading" secondItem="6ka-QB-VpC" secondAttribute="trailing" constant="8" id="jkq-wl-eHB"/>
                                     <constraint firstAttribute="bottom" secondItem="Q5X-MM-8wV" secondAttribute="bottom" constant="12" id="kWG-uO-rLN"/>
-                                    <constraint firstItem="Mya-cK-EMB" firstAttribute="leading" secondItem="IGK-h9-3FG" secondAttribute="trailing" constant="-1" id="lPe-IL-ldv"/>
                                     <constraint firstItem="jvp-AS-0ui" firstAttribute="top" secondItem="fpa-ML-dh9" secondAttribute="top" constant="8" id="mOA-4S-czE"/>
                                     <constraint firstItem="6ka-QB-VpC" firstAttribute="top" secondItem="hdk-qh-twi" secondAttribute="bottom" constant="16" id="p66-MX-iwP"/>
                                     <constraint firstItem="QNM-Ke-s9P" firstAttribute="leading" secondItem="fpa-ML-dh9" secondAttribute="leading" constant="8" id="pPH-PF-w3G"/>
@@ -789,7 +778,6 @@
                                     <constraint firstItem="Q5X-MM-8wV" firstAttribute="top" secondItem="jvp-AS-0ui" secondAttribute="bottom" constant="3" id="toO-md-Uei"/>
                                     <constraint firstItem="jvp-AS-0ui" firstAttribute="leading" secondItem="fpa-ML-dh9" secondAttribute="leading" constant="8" id="uBc-bC-Phv"/>
                                     <constraint firstItem="Q5X-MM-8wV" firstAttribute="leading" secondItem="fpa-ML-dh9" secondAttribute="leading" constant="8" id="ut8-eI-fpd"/>
-                                    <constraint firstItem="IGK-h9-3FG" firstAttribute="top" secondItem="fpa-ML-dh9" secondAttribute="top" constant="15" id="viQ-FN-efW"/>
                                     <constraint firstAttribute="trailing" secondItem="zuw-Vh-fco" secondAttribute="trailing" constant="8" id="wcX-ve-wS2"/>
                                     <constraint firstAttribute="trailing" secondItem="6ka-QB-VpC" secondAttribute="trailing" constant="8" id="wri-l4-DJt"/>
                                     <constraint firstItem="jvp-AS-0ui" firstAttribute="leading" secondItem="fpa-ML-dh9" secondAttribute="leading" constant="8" id="xWh-7V-YUW"/>
@@ -860,20 +848,16 @@
                         <outlet property="editButton" destination="6ka-QB-VpC" id="RaM-pC-8Bi"/>
                         <outlet property="leafTitleLabel" destination="jvp-AS-0ui" id="4Ir-Jm-bh8"/>
                         <outlet property="returnButton" destination="PtF-MT-PdH" id="6mi-BS-hSh"/>
-                        <outlet property="titleEditField" destination="IGK-h9-3FG" id="YUP-o1-Pvq"/>
                         <outlet property="titleSaveButton" destination="Mya-cK-EMB" id="y7C-BG-8Cw"/>
                         <outlet property="titleView" destination="fpa-ML-dh9" id="ksl-wL-w4F"/>
                         <outlet property="uploadButton" destination="hdk-qh-twi" id="lqK-3H-2LX"/>
                         <outlet property="uploadLabel" destination="QNM-Ke-s9P" id="hMY-ch-vut"/>
                         <outlet property="witnessLabel" destination="zuw-Vh-fco" id="cNE-NE-6I1"/>
                         <segue destination="DQ0-yx-8xZ" kind="show" identifier="showUploadOptions" id="sPE-RS-xmR"/>
-                        <segue destination="iod-Ub-mmN" kind="popoverPresentation" identifier="witnessPopover" popoverAnchorView="fpa-ML-dh9" id="rxP-FT-vP0">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                            <popoverPassthroughViews>
-                                <view reference="DyZ-E1-wvN"/>
-                            </popoverPassthroughViews>
-                        </segue>
                         <segue destination="O9B-qi-3k4" kind="show" identifier="showComments" id="cDy-da-yv2"/>
+                        <segue destination="RHu-bK-AcA" kind="popoverPresentation" identifier="abilitySearchSegue" popoverAnchorView="fpa-ML-dh9" id="UUr-P0-chC">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BMv-Fn-Ou9" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1459,7 +1443,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n9M-8E-Cop" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2484" y="747.5"/>
+            <point key="canvasLocation" x="2516" y="747.5"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="gZe-Hg-52X">
@@ -2044,6 +2028,52 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7m8-7g-Xy7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-427" y="-458"/>
+        </scene>
+        <!--Ability Search Popover-->
+        <scene sceneID="SJS-Io-HFy">
+            <objects>
+                <tableViewController id="RHu-bK-AcA" userLabel="Ability Search Popover" customClass="SearchTableViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="y5U-Ta-eww">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="separatorColor" red="0.1843137255" green="0.1843137255" blue="0.1843137255" alpha="1" colorSpace="calibratedRGB"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="abilityCell" textLabel="9Ed-ic-JaV" rowHeight="30" style="IBUITableViewCellStyleDefault" id="0HQ-r4-oFa">
+                                <rect key="frame" x="0.0" y="50" width="600" height="30"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0HQ-r4-oFa" id="S0a-kn-p8u">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="29"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9Ed-ic-JaV">
+                                            <rect key="frame" x="15" y="0.0" width="570" height="29"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="RHu-bK-AcA" id="pGP-mi-PfB"/>
+                            <outlet property="delegate" destination="RHu-bK-AcA" id="XKg-tb-KJ5"/>
+                        </connections>
+                    </tableView>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
+                    <navigationItem key="navigationItem" id="e4p-qr-Lk9"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="200"/>
+                    <connections>
+                        <outlet property="view" destination="y5U-Ta-eww" id="w7G-WE-3MC"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KY4-US-VNh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3223" y="867"/>
         </scene>
     </scenes>
     <resources>

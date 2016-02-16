@@ -14,9 +14,8 @@ enum LeafMode {
   case View
 }
 
-class LeafDetailViewController: UIViewController {
+class LeafDetailViewController: UIViewController, UIPopoverPresentationControllerDelegate {
   @IBOutlet weak var titleView: UIView!
-  @IBOutlet weak var titleEditField: UITextField!
   @IBOutlet weak var editButton: UIButton!
   
   @IBOutlet weak var completionStatusControl: UISegmentedControl!
@@ -30,6 +29,14 @@ class LeafDetailViewController: UIViewController {
   var mode: LeafMode = .Edit
   
   var viewing: User?
+  
+  var selectedAbility: Ability? {
+    didSet{
+      if let name = selectedAbility?.name {
+        self.leafTitleLabel.text = name
+      }
+    }
+  }
   
   @IBOutlet weak var titleSaveButton: UIButton!
   @IBOutlet weak var uploadLabel: UILabel!
@@ -102,8 +109,7 @@ class LeafDetailViewController: UIViewController {
   func configureTitleView() {
     if let leaf = self.leaf {
       self.setSelectedCompletion()
-      self.leafTitleLabel.text = leaf.title
-      self.titleEditField.text = leaf.title
+      self.leafTitleLabel.text = leaf.abilityName
       if let witnesses = leaf.witnesses {
         let witnessCount = witnesses.count
         let lingo = witnessCount == 1 ? "Witness" : "Witnesses"
@@ -128,6 +134,18 @@ class LeafDetailViewController: UIViewController {
       }
     }
     
+    if segue.identifier == "abilitySearchSegue" {
+      if let vc = segue.destinationViewController as? SearchTableViewController {
+        let popover = vc.popoverPresentationController
+        popover?.delegate = self
+        vc.popoverPresentationController?.delegate = self
+//        vc.popoverPresentationController?.sourceView = self.view
+//        vc.popoverPresentationController?.sourceRect = CGRectMake(100,100,0,0)
+        vc.preferredContentSize = CGSize(width: self.view.frame.width, height: 200)
+        vc.leafDetailVC = self
+      }
+    }
+    
     if segue.identifier == "witnessPopover" {
       if let vc = segue.destinationViewController as? WitnessRequestViewController {
         vc.leaf = self.leaf
@@ -149,6 +167,10 @@ class LeafDetailViewController: UIViewController {
     }
   }
   
+  func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+    return .None
+  }
+  
   func saveLeaf() {
     self.leaf?.save(){ (success) in
       dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -165,7 +187,7 @@ class LeafDetailViewController: UIViewController {
   
   func setValuesOnLeaf() {
     //actually save the values of all of the fields now....
-    self.leaf?.title = self.leafTitleLabel.text
+    self.leaf?.abilityName = self.leafTitleLabel.text
     saveLeaf()
   }
   
@@ -177,22 +199,23 @@ class LeafDetailViewController: UIViewController {
     if editButton.titleLabel?.text == "Save" {
       setValuesOnLeaf()
     } else {
-    self.editButton.setTitle("Save", forState: UIControlState.Normal)
-      if !forUpload {
-        self.leafTitleLabel.hidden = true
-        self.titleEditField.hidden = false
-        self.titleSaveButton.hidden = false
-      }
+      self.performSegueWithIdentifier("abilitySearchSegue", sender: self)
+//    self.editButton.setTitle("Save", forState: UIControlState.Normal)
+//      if !forUpload {
+//        self.leafTitleLabel.hidden = true
+//        self.titleEditField.hidden = false
+//        self.titleSaveButton.hidden = false
+//      }
     }
   }
   
-  @IBAction func textFieldEditDone(sender: AnyObject) {
-    titleEditField.resignFirstResponder()
-    self.leafTitleLabel.text = self.titleEditField.text
-    self.titleEditField.hidden = true
-    self.titleSaveButton.hidden = true
-    self.leafTitleLabel.hidden = false
-  }
+//  @IBAction func textFieldEditDone(sender: AnyObject) {
+//    titleEditField.resignFirstResponder()
+//    self.leafTitleLabel.text = self.titleEditField.text
+//    self.titleEditField.hidden = true
+//    self.titleSaveButton.hidden = true
+//    self.leafTitleLabel.hidden = false
+//  }
   
   @IBAction func uploadButtonPressed(sender: AnyObject) {
     //open up the ol camera role.....

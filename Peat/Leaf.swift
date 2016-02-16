@@ -47,16 +47,19 @@ class Leaf: NSObject, TreeObject {
     return grouping?.groupingId
   }
   
+  var ability: Ability?
+  
   // Leaf
   var treeDelegate: TreeDelegate?
   var view: UIView?
   var deleteButton: UIButton?
+  var ability_Id: String?
   var _id: String?
   var user_Id: String?
   var leafId: String?
   var activityName: String?
   var completionStatus: CompletionStatus?
-  var title: String?
+  var abilityName: String?
   var timestamp: Int?
   var leafDescription: String?
   var movingEnabled: Bool = false
@@ -87,13 +90,14 @@ class Leaf: NSObject, TreeObject {
     leaf._id = json["_id"] as? String
     leaf.user_Id = json["user_Id"] as? String
     leaf.leafId = json["leafId"] as? String
+    leaf.ability_Id = json["ability_Id"] as? String
+    leaf.abilityName = json["abilityName"] as? String
     leaf.activityName = json["activityName"] as? String
     if let status = json["completionStatus"] as? String {
       leaf.completionStatus = CompletionStatus(rawValue: status)
     }
     leaf.timestamp = json["timestamp"] as? Int
     leaf.leafDescription = json["description"] as? String
-    leaf.title = json["title"] as? String
     leaf.tip = json["tip"] as? String
     
     if let layout = json["layout"] as? jsonObject {
@@ -126,6 +130,7 @@ class Leaf: NSObject, TreeObject {
       "activityName" : paramFor(activityName),
       "leafId" : paramFor(leafId),
       "user_Id" : paramFor(user_Id),
+      "ability_Id" : paramFor(ability_Id),
       "layout" : [
         "coordinates" : [
           "x" : self.paramCenter?.x != nil ? String(self.paramCenter!.x) : "",
@@ -134,7 +139,7 @@ class Leaf: NSObject, TreeObject {
         "groupingId" : paramFor(paramGroupingId),
       ],
       "completionStatus" : self.completionStatus != nil ? self.completionStatus!.rawValue : "",
-      "title" : paramFor(title),
+      "abilityName" : paramFor(abilityName),
       "tip" : paramFor(tip),
       "description" : paramFor(leafDescription)
     ]

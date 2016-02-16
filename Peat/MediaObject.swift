@@ -21,6 +21,7 @@ class MediaObject: NSObject {
   var user_Id: String?
   var mediaId: String?
   var leafId: String?
+  var ability_Id: String?
   var mediaDescription: String?
   var location: String?
   var timestamp: Int?
@@ -50,8 +51,10 @@ class MediaObject: NSObject {
     media.store = store
     media._id = json["_id"] as? String
     media.user_Id = json["user_Id"] as? String
+    media.ability_Id = json["ability_Id"] as? String
     media.mediaId = json["mediaId"] as? String
     media.leafId = json["leafId"] as? String
+    
     media.mediaDescription = json["description"] as? String
     media.location = json["location"] as? String
     media.timestamp = json["timestamp"] as? Int
@@ -102,6 +105,7 @@ class MediaObject: NSObject {
     media.needsPublishing = true
     media.store = store
     media.leafId = leaf?.leafId
+    media.ability_Id = leaf?.ability_Id
     media.mediaType = type
     media.thumbnail = thumbnail
     media.filePath = filePath

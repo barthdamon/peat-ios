@@ -231,6 +231,24 @@ class PeatContentStore: NSObject {
     }
   }
   
+  func searchForAbilities(activity: String, abilityTerm: String, callback: (Array<Ability>?) -> () ) {
+    API.get(nil, authType: .Token, url: "/abilities/\(activity)/\(abilityTerm)") { (res, err) -> () in
+      if let e = err {
+        print("Error searching abilites: \(e)")
+        callback(nil)
+      } else {
+        if let json = res as? jsonObject, abilityJson = json["abilities"] as? Array<jsonObject> {
+          var abilities: Array<Ability> = []
+          for ability in abilityJson {
+            abilities.append(Ability.abilityFromJson(ability))
+          }
+          print("Abilities found: \(abilities)")
+          callback(abilities)
+        }
+      }
+    }
+  }
+  
   
   //MARK: Helpers
   func leafWithId(leafId: String) -> Leaf? {
