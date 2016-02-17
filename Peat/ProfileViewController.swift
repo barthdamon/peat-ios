@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController, ViewControllerWithMenu {
+class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopoverPresentationControllerDelegate {
 
   var sidebarClient: SideMenuClient?
   var changesPresent: Bool = false
@@ -26,14 +26,19 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
   
   var treeController: TreeViewController?
   var drilldownController: LeafDetailViewController?
-  var currentActivity: String? {
+  var currentActivity: Activity? {
     didSet {
-      if let activity = currentActivity {
-        self.currentActivityLabel.text = activity
+      if let activity = currentActivity, name = activity.name {
+        self.currentActivityLabel.text = name
       } else {
         self.currentActivityLabel.text = ""
       }
     }
+  }
+  
+  func reinitializeTreeController() {
+    treeController?.currentActivity = currentActivity
+    treeController?.fetchTreeData()
   }
   
     override func viewDidLoad() {
@@ -71,7 +76,9 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
             self.nameLabel.hidden = true
           }
           self.usernameLabel.text = username
-          self.currentActivity = user.primaryActivity
+          if let activities = user.activeActivities {
+            self.currentActivity = activities[0]
+          }
         })
         
         user.generateAvatarImage({ (image) -> () in
@@ -117,7 +124,24 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
           self.drilldownController = vc
         }
       }
+      
+      if segue.identifier == "activitySelectionPopoverSegue" {
+        if let vc = segue.destinationViewController as? ActivitySelectionTableViewController {
+          vc.profileVC = self
+          let popover = vc.popoverPresentationController
+          popover?.delegate = self
+          vc.popoverPresentationController?.delegate = self
+          //        vc.popoverPresentationController?.sourceView = self.view
+          //        vc.popoverPresentationController?.sourceRect = CGRectMake(100,100,0,0)
+          vc.preferredContentSize = CGSize(width: self.view.frame.width, height: 200)
+        }
+      }
+      
     }
+  
+  func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+    return .None
+  }
   
   func changesMade() {
     self.saveButton.hidden = false
@@ -151,6 +175,11 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu {
         alertShow(self, alertText: "Error", alertMessage: "Tree Save Unsuccessful")
       }
     })
+  }
+  
+  @IBAction func activitySelectButtonPressed(sender: AnyObject) {
+    //show activity popover
+    self.performSegueWithIdentifier("activitySelectionPopoverSegue", sender: self)
   }
   
   @IBAction func cancelButtonPressed(sender: AnyObject) {

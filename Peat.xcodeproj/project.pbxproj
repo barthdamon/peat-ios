@@ -12,6 +12,8 @@
 		020815121C72B1A900B1A2EC /* SearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020815111C72B1A900B1A2EC /* SearchTableViewController.swift */; };
 		020815141C72B2AA00B1A2EC /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020815131C72B2AA00B1A2EC /* SearchTableViewCell.swift */; };
 		020815181C72D50600B1A2EC /* Ability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020815171C72D50600B1A2EC /* Ability.swift */; };
+		020815371C738FEA00B1A2EC /* ActivitySelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020815361C738FEA00B1A2EC /* ActivitySelectionTableViewController.swift */; };
+		020815541C73CDDE00B1A2EC /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020815531C73CDDE00B1A2EC /* Activity.swift */; };
 		021C1BF51C4F33B000FDEFED /* LeafView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021C1BF41C4F33B000FDEFED /* LeafView.swift */; };
 		021C900A1BEFF5DD00C79538 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021C90091BEFF5DD00C79538 /* RootViewController.swift */; };
 		021C900C1BEFFF7000C79538 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021C900B1BEFFF7000C79538 /* HomeViewController.swift */; };
@@ -90,6 +92,8 @@
 		020815111C72B1A900B1A2EC /* SearchTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTableViewController.swift; sourceTree = "<group>"; };
 		020815131C72B2AA00B1A2EC /* SearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		020815171C72D50600B1A2EC /* Ability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ability.swift; sourceTree = "<group>"; };
+		020815361C738FEA00B1A2EC /* ActivitySelectionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivitySelectionTableViewController.swift; sourceTree = "<group>"; };
+		020815531C73CDDE00B1A2EC /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		021C1BF41C4F33B000FDEFED /* LeafView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeafView.swift; sourceTree = "<group>"; };
 		021C90091BEFF5DD00C79538 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		021C900B1BEFFF7000C79538 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -202,6 +206,7 @@
 				0242313E1C30A18200ED7E1B /* Comment.swift */,
 				0264A6641C6D75560056966A /* Membership.swift */,
 				02EE26951BE181D6006DAE81 /* Leaf.swift */,
+				020815531C73CDDE00B1A2EC /* Activity.swift */,
 				022AB6901C5C251900F1168E /* LeafGrouping.swift */,
 				024231401C30A58200ED7E1B /* Thread.swift */,
 				0221BB531C66FC7C0027EB42 /* Witness.swift */,
@@ -229,6 +234,7 @@
 		025D0DB91BD72F8900462783 /* TableViews */ = {
 			isa = PBXGroup;
 			children = (
+				020815361C738FEA00B1A2EC /* ActivitySelectionTableViewController.swift */,
 				027C75BE1C509AD1008D6DAE /* LeafDetailTableViewController.swift */,
 				02D72E8A1BD0926900EC115E /* FriendsTableViewController.swift */,
 				020815111C72B1A900B1A2EC /* SearchTableViewController.swift */,
@@ -557,6 +563,7 @@
 				0221BB5A1C6804240027EB42 /* CommentsTableViewController.swift in Sources */,
 				027C33FE1C532E6100D86F0F /* StringHelpers.swift in Sources */,
 				027E31281BA27875001FCF70 /* APIService.swift in Sources */,
+				020815371C738FEA00B1A2EC /* ActivitySelectionTableViewController.swift in Sources */,
 				02FD6C931BB38C69003A3DDD /* CameraViewController.swift in Sources */,
 				02D11D411C5AFA8C0054E1AC /* FriendRequestTableViewCell.swift in Sources */,
 				02D72E8B1BD0926900EC115E /* FriendsTableViewController.swift in Sources */,
@@ -612,6 +619,7 @@
 				02B469B31BFE9BF100704269 /* SocketService.swift in Sources */,
 				025D0DB71BD72F6C00462783 /* FriendTableViewCell.swift in Sources */,
 				023B03841C1515FC003497FB /* PeatAVPlayer.swift in Sources */,
+				020815541C73CDDE00B1A2EC /* Activity.swift in Sources */,
 				0221BB541C66FC7C0027EB42 /* Witness.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

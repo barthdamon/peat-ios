@@ -58,7 +58,10 @@ class APIService: NSObject {
   
   //MARK: Private Methods
   private func request(type: String, params: [ String : AnyObject ]?, authType: HTTPRequestAuthType, url: String, callback: APICallback) {
-    let request = NSMutableURLRequest(URL: NSURL(string: apiURL + authType.rawValue + url)!)
+    var request = NSMutableURLRequest()
+    if let url = NSURL(string: apiURL + authType.rawValue + url) {
+      request = NSMutableURLRequest(URL: url)
+    }
     let session = NSURLSession.sharedSession()
     request.HTTPMethod = type
     

@@ -47,7 +47,9 @@ class LeafGrouping: NSObject, TreeObject {
     //generate random color
     newGrouping.groupingId = generateId()
     newGrouping.user_Id = CurrentUser.info.model?._id
-    newGrouping.activityName = delegate.getCurrentActivity()
+    if let activity = delegate.getCurrentActivity(), name = activity.name {
+      newGrouping.activityName = name
+    }
     
     return newGrouping
   }

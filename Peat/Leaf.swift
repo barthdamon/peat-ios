@@ -113,7 +113,9 @@ class Leaf: NSObject, TreeObject {
     newLeaf.changeStatus = .BrandNew
     newLeaf.leafId = generateId()
     newLeaf.user_Id = CurrentUser.info.model?._id
-    newLeaf.activityName = delegate.getCurrentActivity()
+    if let activity = delegate.getCurrentActivity(), name = activity.name {
+      newLeaf.activityName = name
+    }
     return newLeaf
   }
   

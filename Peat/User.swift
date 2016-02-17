@@ -26,11 +26,11 @@ class User: NSObject {
   var avatarURLString: String?
   var summary: String?
   var contact: String?
+  var activeActivities: Array<Activity>?
   
   //Other
   var avatarImage: UIImage?
   var friends: Array<User>?
-  var primaryActivity: String?
   
 //  var unconfirmedFriendship: Membership?
   var unconfirmedWitnesses: NSObject?
@@ -60,7 +60,13 @@ class User: NSObject {
         user.avatarURLString = profile["avatarUrl"] as? String
         user.summary = profile["summary"] as? String
         user.contact = profile["contact"] as? String
-        user.primaryActivity = profile["primaryActivity"] as? String
+        if let activities = profile["activeActivityNames"] as? Array<String> {
+          user.activeActivities = []
+          for activity in activities {
+            user.activeActivities!.append(Activity.activityFromName(activity))
+          }
+          //if you need to go get the actual activity model, but you dont need to yet so dont
+        }
       }
     
     if let memberships = json["memberships"] as? Array<jsonObject> {

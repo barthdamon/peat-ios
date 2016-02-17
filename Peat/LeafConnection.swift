@@ -37,7 +37,10 @@ class LeafConnection: NSObject {
     newConnection.fromObject = from
     newConnection.toObject = to
     newConnection.connectionLayer = layer
-    newConnection.activityName = delegate.getCurrentActivity()
+    if let activity = delegate.getCurrentActivity(), name = activity.name {
+      newConnection.activityName = name
+    }
+
     return newConnection
   }
   

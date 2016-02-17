@@ -232,7 +232,7 @@ class PeatContentStore: NSObject {
   }
   
   func searchForAbilities(activity: String, abilityTerm: String, callback: (Array<Ability>?) -> () ) {
-    API.get(nil, authType: .Token, url: "/abilities/\(activity)/\(abilityTerm)") { (res, err) -> () in
+    API.get(nil, authType: .Token, url: "abilities/\(activity)/\(abilityTerm)") { (res, err) -> () in
       if let e = err {
         print("Error searching abilites: \(e)")
         callback(nil)
@@ -244,6 +244,24 @@ class PeatContentStore: NSObject {
           }
           print("Abilities found: \(abilities)")
           callback(abilities)
+        }
+      }
+    }
+  }
+  
+  func searchForActivities(user: User, activityTerm: String, callback: (Array<Activity>?) -> () ) {
+    API.get(nil, authType: .Token, url: "activities/\(user._id)/\(activityTerm)") { (res, err) -> () in
+      if let e = err {
+        print("Error searching abilites: \(e)")
+        callback(nil)
+      } else {
+        if let json = res as? jsonObject, activityJson = json["activities"] as? Array<jsonObject> {
+          var activities: Array<Activity> = []
+          for activity in activityJson {
+            activities.append(Activity.activityFromJson(activity))
+          }
+          print("Activities found: \(activities)")
+          callback(activities)
         }
       }
     }

@@ -40,9 +40,12 @@ class SearchTableViewController: UITableViewController, UITextFieldDelegate {
     }
 
   func textFieldDidChange(textField: UITextField) {
-    if let text = textField.text, vc = leafDetailVC, delegate = vc.profileDelegate, activity = delegate.currentActivity {
+    //for when you want to gray out activities that already exist
+//    let user = leafDetailVC?.mode == .Edit ? CurrentUser.info.model : leafDetailVC?.viewing
+//    if let user = user {
+    if let text = textField.text, vc = leafDetailVC, delegate = vc.profileDelegate, activity = delegate.currentActivity, name = activity.name {
       if text != "" {
-        vc.profileDelegate?.store.searchForAbilities(activity, abilityTerm: text, callback: { (abilities) -> () in
+        vc.profileDelegate?.store.searchForAbilities(name, abilityTerm: text, callback: { (abilities) -> () in
           if let abilities = abilities {
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
               self.matchingAbilities = abilities
