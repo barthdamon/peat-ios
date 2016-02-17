@@ -192,7 +192,8 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
 //    self.leaf?.ability?.abilityName = self.leafTitleLabel.text
     self.leaf?.ability = selectedAbility
     saveButton.enabled = false
-    setValuesOnLeaf()
+    self.leaf?.changed(.Updated)
+//    setValuesOnLeaf()
     saveLeaf()
   }
   
@@ -287,6 +288,9 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   @IBAction func returnButtonPressed(sender: AnyObject) {
     var needsSaving = false
     if let leaf = leaf, medias = leaf.media {
+      if leaf.changeStatus != .Unchanged {
+        needsSaving = true
+      }
       for media in medias {
         if media.needsPublishing {
           needsSaving = true
@@ -294,7 +298,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
       }
     }
     //TODO: check if there are new mediaObjects. of if there are unsaved changes. if there are prompt a warning...
-    if !needsSaving && !self.saveButton.hidden && !self.saveButton.enabled {
+    if !needsSaving {
       dismissSelf()
     } else {
       saveAlertShow(self, alertText: "Warning", alertMessage: "You have unsaved changes")

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Ability: NSObject {
+@objc class Ability: NSObject {
   var name: String?
   var _id: String?
   

@@ -23,7 +23,11 @@ struct TreeStore {
   
   var currentMediaObjects: Set<MediaObject>?
   var selectedLeaf: Leaf?
-  var activityName: String?
+  var currentActivity: Activity? {
+    didSet {
+      resetStore()
+    }
+  }
   
   var comments: Set<Comment>?
   
@@ -63,7 +67,7 @@ struct TreeStore {
     var removedGroupings: Array<jsonObject> = []
     var newGroupings: Array<jsonObject> = []
     
-    if let name = self.activityName {
+    if let name = self.currentActivity?.name {
       
       if let leaves = currentLeaves {
         for leaf in leaves {
@@ -161,9 +165,9 @@ class PeatContentStore: NSObject {
 //    
 //  }
   
-  func getTreeData(delegate: TreeDelegate?, viewing: User?, activity: String?, callback: (Bool) -> () ) {
-    self.treeStore.activityName = activity
-    if let activityName = treeStore.activityName, _id = CurrentUser.info.model?._id {
+  func getTreeData(delegate: TreeDelegate?, viewing: User?, activity: Activity?, callback: (Bool) -> () ) {
+    self.treeStore.currentActivity = activity
+    if let activityName = treeStore.currentActivity?.name, _id = CurrentUser.info.model?._id {
       var viewing_Id = _id
       if let viewing = viewing, _id = viewing._id {
         viewing_Id = _id
@@ -204,7 +208,7 @@ class PeatContentStore: NSObject {
   
   func syncTreeChanges(callback: (Bool) -> ()) {
 
-    if let name = treeStore.activityName {
+    if let name = treeStore.currentActivity?.name {
       API.put(treeStore.treeParams(), authType: .Token, url: "tree/\(name)/update"){ (res, err) -> () in
         if let e = err {
           print("Error:\(e)")
@@ -231,8 +235,10 @@ class PeatContentStore: NSObject {
     }
   }
   
-  func searchForAbilities(activity: String, abilityTerm: String, callback: (Array<Ability>?) -> () ) {
-    API.get(nil, authType: .Token, url: "abilities/\(activity)/\(abilityTerm)") { (res, err) -> () in
+  func searchForAbilities(activityName: String, abilityTerm: String, callback: (Array<Ability>?) -> () ) {
+    let url = "abilities/\(activityName)/\(abilityTerm)"
+    print("URL: FOR ABILITY: \(url)")
+    API.get(nil, authType: .Token, url: "abilities/\(activityName)/\(abilityTerm)") { (res, err) -> () in
       if let e = err {
         print("Error searching abilites: \(e)")
         callback(nil)
@@ -250,7 +256,7 @@ class PeatContentStore: NSObject {
   }
   
   func searchForActivities(user: User, activityTerm: String, callback: (Array<Activity>?) -> () ) {
-    API.get(nil, authType: .Token, url: "activities/\(user._id)/\(activityTerm)") { (res, err) -> () in
+    API.get(nil, authType: .Token, url: "activities/\(activityTerm)") { (res, err) -> () in
       if let e = err {
         print("Error searching abilites: \(e)")
         callback(nil)

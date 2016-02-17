@@ -183,6 +183,7 @@ class Leaf: NSObject, TreeObject {
           callback(false)
         } else {
           print("Leaf updated: \(res)")
+          self.changeStatus = .Unchanged
           self.saveMedia()
           callback(true)
         }

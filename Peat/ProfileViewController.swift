@@ -30,15 +30,11 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
     didSet {
       if let activity = currentActivity, name = activity.name {
         self.currentActivityLabel.text = name
+        self.store.treeStore.currentActivity = currentActivity
       } else {
         self.currentActivityLabel.text = ""
       }
     }
-  }
-  
-  func reinitializeTreeController() {
-    treeController?.currentActivity = currentActivity
-    treeController?.fetchTreeData()
   }
   
     override func viewDidLoad() {
@@ -48,22 +44,32 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
       configureMenuSwipes()
       configureNavBar()
       if let user = viewing {
-        setupUserProfile(user)
-        treeController?.fetchTreeData()
+        setupForUser(user)
       } else {
         CurrentUser.info.fetchProfile(){ (success) in
           if success {
             if let user = CurrentUser.info.model {
-              self.setupUserProfile(user)
-              self.treeController?.fetchTreeData()
+              self.setupForUser(user)
             }
           }
         }
       }
     }
   
+  func setupForUser(user: User) {
+    if let activities = user.activeActivities {
+      self.currentActivity = activities[0]
+    }
+    self.setupUserProfile(user)
+    self.treeController?.fetchTreeData()
+  }
+  
   func sharedStore() -> PeatContentStore {
     return store
+  }
+  
+  func reinitializeTreeController() {
+    treeController?.fetchTreeData()
   }
   
   func setupUserProfile(user: User) {
@@ -76,9 +82,6 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
             self.nameLabel.hidden = true
           }
           self.usernameLabel.text = username
-          if let activities = user.activeActivities {
-            self.currentActivity = activities[0]
-          }
         })
         
         user.generateAvatarImage({ (image) -> () in
@@ -111,9 +114,10 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
           self.treeController = vc
           vc.viewing = self.viewing
           vc.store = store
-          if let activity = currentActivity {
-            vc.setCurrentActivityTree(activity)
-          }
+          vc.fetchTreeData()
+//          if let activity = currentActivity {
+//            vc.setCurrentActivityTree(activity)
+//          }
         }
       }
       
