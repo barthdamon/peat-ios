@@ -447,6 +447,9 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
 
   func fetchTreeData() {
     //right now it redraws every time... no harm in that
+    for view in self.treeView.subviews {
+      view.removeFromSuperview()
+    }
     //In the future get the data for the selected user and the selected activity
     if let activity = self.currentActivity {
       sharedStore().getTreeData(self, viewing: viewing, activity: activity){ (success) -> () in
