@@ -144,23 +144,39 @@ class Leaf: NSObject, TreeObject {
     ]
   }
   
-  func saveMedia() {
+  func saveMedia(callback: (Bool) -> ()) {
     if let medias = self.media {
       for media in medias {
         if media.needsPublishing {
           media.ability_Id = self.ability?._id
-          media.publish()
-          media.needsPublishing = false
+          media.publish(callback)
           print("FOUND MEDIA THAT NEEDS PUBLISHING")
           //TODO: have the tree listen to the notification for when leaves are posted. Every time one is posted it goes through its leaves and if any are publishing, it checks somehow if any of their media is still publishing. probably need the media object in the notiication to check with that
           self.publishing = true
+        } else {
+          //doesnt need to be published
+          callback(true)
         }
       }
+    } else {
+      //no media to save
+      callback(true)
     }
   }
   
   func save(callback: (Bool) -> ()) {
-    saveMedia()
+    saveMedia() { (success) in
+      if success {
+        self.saveToServer(callback)
+      } else {
+        callback(false)
+        print("Error posting media to server")
+        //deal with error
+      }
+    }
+  }
+  
+  func saveToServer(callback: (Bool) -> ()) {
     if changeStatus == .BrandNew {
       API.post(self.params(), url: "leaf/new", callback: { (res, err) in
         if let e = err {
@@ -172,7 +188,6 @@ class Leaf: NSObject, TreeObject {
           if let json = res as? jsonObject {
             self.ability?._id = json["ability_Id"] as? String
           }
-          self.saveMedia()
           callback(true)
         }
       })
@@ -184,7 +199,6 @@ class Leaf: NSObject, TreeObject {
         } else {
           print("Leaf updated: \(res)")
           self.changeStatus = .Unchanged
-          self.saveMedia()
           callback(true)
         }
       })

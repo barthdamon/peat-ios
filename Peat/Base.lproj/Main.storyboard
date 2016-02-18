@@ -1156,8 +1156,10 @@
                                     <outlet property="commentTextField" destination="xSn-0b-iTt" id="mg5-pH-ZFT"/>
                                     <outlet property="descriptionLabel" destination="h0s-RG-whn" id="tGF-AN-7zC"/>
                                     <outlet property="descriptionView" destination="h6p-VX-DDN" id="Ere-cz-mqV"/>
+                                    <outlet property="likeButton" destination="mJO-hA-OT0" id="fq2-4w-LcT"/>
                                     <outlet property="likeCountButton" destination="v6Z-9H-0Y7" id="MH3-WR-eTe"/>
                                     <outlet property="mediaView" destination="Fa4-Cm-tTr" id="HY1-a7-HYO"/>
+                                    <outlet property="postButton" destination="3I1-2W-9mj" id="3o7-C6-sZU"/>
                                     <outlet property="purposeLabel" destination="vtW-vV-MK1" id="zVb-LJ-9Zw"/>
                                 </connections>
                             </tableViewCell>

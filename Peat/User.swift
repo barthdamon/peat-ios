@@ -61,19 +61,19 @@ class User: NSObject {
         if let type = info["type"] as? String, rawType = UserType(rawValue: type) {
           user.type = rawType
         }
-      }
       
-      //Profile
-      if let profile = json["profile"] as? jsonObject {
-        user.avatarURLString = profile["avatarUrl"] as? String
-        user.summary = profile["summary"] as? String
-        user.contact = profile["contact"] as? String
-        if let activities = profile["activeActivityNames"] as? Array<String> {
-          user.activeActivities = []
-          for activity in activities {
-            user.activeActivities!.append(Activity.activityFromName(activity))
+        //Profile
+        if let profile = info["profile"] as? jsonObject {
+          user.avatarURLString = profile["avatarUrl"] as? String
+          user.summary = profile["summary"] as? String
+          user.contact = profile["contact"] as? String
+          if let activities = profile["activeActivityNames"] as? Array<String> {
+            user.activeActivities = []
+            for activity in activities {
+              user.activeActivities!.append(Activity.activityFromName(activity))
+            }
+            //if you need to go get the actual activity model, but you dont need to yet so dont
           }
-          //if you need to go get the actual activity model, but you dont need to yet so dont
         }
       }
     

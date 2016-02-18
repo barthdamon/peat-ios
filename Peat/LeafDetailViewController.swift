@@ -173,14 +173,16 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   }
   
   func saveLeaf() {
+    self.saveButton.enabled = false
     self.leaf?.save(){ (success) in
-      self.saveButton.enabled = false
       dispatch_async(dispatch_get_main_queue(), { () -> Void in
         if success {
-          self.saveButton.hidden = true
+          NSNotificationCenter.defaultCenter().postNotificationName("leafMediaPublished", object: self, userInfo: nil)
+          self.toggleSaveOption(false)
 //          alertShow(self, alertText: "Success", alertMessage: "Leaf saved sucessfully")
         } else {
-          self.saveButton.enabled = true
+          alertShow(self, alertText: "Error Saving Leaf", alertMessage: "Okay")
+          self.toggleSaveOption(true)
 //          alertShow(self, alertText: "Error", alertMessage: "Leaf save unsuccessful")
         }
       })
@@ -188,24 +190,26 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   }
   
   func setValuesOnLeaf() {
-    //actually save the values of all of the fields now....
-//    self.leaf?.ability?.abilityName = self.leafTitleLabel.text
-    self.leaf?.ability = selectedAbility
-    saveButton.enabled = false
-    self.leaf?.changed(.Updated)
-//    setValuesOnLeaf()
-    saveLeaf()
+    if let leaf = self.leaf {
+      leaf.ability = selectedAbility
+      leaf.changed(.Updated)
+      if leaf.ability != nil {
+        saveLeaf()
+      } else {
+        alertShow(self, alertText: "Unable to Save", alertMessage: "Please add Ability Title")
+      }
+    }
   }
   
   @IBAction func saveButtonPressed(sender: AnyObject) {
-    toggleSaveOption(false)
+    setValuesOnLeaf()
   }
   
-  func toggleSaveOption(forUpload: Bool) {
-    if saveButton.hidden == false && saveButton.enabled == true {
+  func toggleSaveOption(needsSave: Bool) {
+    if saveButton.hidden == false && !needsSave {
       saveButton.enabled = false
-      setValuesOnLeaf()
-    } else {
+      saveButton.hidden = true
+    } else  {
       saveButton.hidden = false
       saveButton.enabled = true
     }
@@ -305,6 +309,10 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     }
   }
   
+  
+  
+  
+  //MARK: Helpers
   func missingTitleAlertShow(vc: UIViewController, alertText :String, alertMessage :String) {
     let alert = UIAlertController(title: alertText, message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
     
@@ -333,7 +341,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     
     alert.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (action) -> Void in
       alert.dismissViewControllerAnimated(true, completion: nil)
-      self.toggleSaveOption(false)
+      self.setValuesOnLeaf()
       self.dismissSelf()
     }))
     

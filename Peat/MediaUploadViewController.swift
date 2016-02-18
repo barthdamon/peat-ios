@@ -23,7 +23,7 @@ class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPicke
   
   var overlayView: MediaOverlayView?
   var pickerOptions: Array<MediaPurpose> = [MediaPurpose.Completion,MediaPurpose.Attempt,MediaPurpose.Tutorial]
-  var selectedPurpose: MediaPurpose?
+  var selectedPurpose: MediaPurpose = .Completion
   
   var leafDetailDelegate: LeafDetailViewController?
   

@@ -164,13 +164,13 @@ class MediaObject: NSObject {
     ]
   }
   
-  func publish() {
+  func publish(callback: (Bool) -> ()) {
     if let mediaType = self.mediaType {
-      mediaType == .Image ? bundleImageFile() : sendToAWS()
+      mediaType == .Image ? bundleImageFile(callback) : sendToAWS(callback)
     }
   }
   
-  func bundleImageFile() {
+  func bundleImageFile(callback: (Bool) -> ()) {
     //write the image data somewhere you can upload from (documents directory)
     if let image = self.thumbnail {
       let fileManager = NSFileManager.defaultManager()
@@ -182,20 +182,21 @@ class MediaObject: NSObject {
       //get url of where image was just saved
       let urlPaths = NSURL(fileURLWithPath: paths)
       self.filePath = urlPaths.URLByAppendingPathComponent("SaveFile.png")
-      sendToAWS()
+      sendToAWS(callback)
     }
   }
   
-  func sendToAWS() {
+  func sendToAWS(callback: (Bool) -> ()) {
     if let type = self.mediaType, filePath = self.filePath {
       if let id = self.mediaId {
         AWSContentHelper.sharedHelper.postMediaFromFactory(filePath, mediaID: id, mediaType: type) { (res, err) in
           if err != nil {
             print(err)
+            callback(false)
           } else {
             if let mediaId = self.mediaId, url = NSURL(string: "https://s3.amazonaws.com/peat-assets/\(mediaId)") {
               self.url = url
-              self.sendToServer()
+              self.sendToServer(callback)
             }
           }
         }
@@ -203,13 +204,16 @@ class MediaObject: NSObject {
     }
   }
   
-  func sendToServer() {
+  func sendToServer(callback: (Bool) -> ()) {
     API.post(self.params(), authType: HTTPRequestAuthType.Token, url: "media") { (res, err) -> () in
       if let e = err {
         print("Error:\(e)")
+        callback(false)
       } else {
         print("Server media post successful")
+        self.needsPublishing = false
         self.store?.addMediaToStore(self)
+        callback(true)
         NSNotificationCenter.defaultCenter().postNotificationName("newMediaPostSuccessful", object: self, userInfo: nil)
       }
     }

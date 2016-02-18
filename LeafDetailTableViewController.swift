@@ -46,6 +46,7 @@ class LeafDetailTableViewController: UITableViewController {
     override func viewDidLoad() {
       super.viewDidLoad()
       setMode()
+      self.tableView.clipsToBounds = true
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "newMediaAdded", name: "newMediaPostSuccessful", object: nil)
@@ -53,6 +54,17 @@ class LeafDetailTableViewController: UITableViewController {
         getLeafFeed()
       }
     }
+  
+  func fixTableViewInsets() {
+    let zContentInsets = UIEdgeInsetsZero
+    self.tableView.contentInset = zContentInsets
+    self.tableView.scrollIndicatorInsets = zContentInsets
+  }
+  
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    fixTableViewInsets()
+  }
   
   override func viewWillDisappear(animated: Bool) {
     for cell in playerCells {
@@ -108,8 +120,13 @@ class LeafDetailTableViewController: UITableViewController {
       return 1
     }
   
+  override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    return 50
+  }
+  
   override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView, media = self.mediaObjects {
+      headerView.frame = CGRectMake(0,0,tableView.frame.width, 50)
       let currentObject = media[section]
       let primaryUser = viewing != nil ? viewing : CurrentUser.info.model
       headerView.configureForMedia(currentObject, primaryUser: primaryUser)

@@ -16,6 +16,8 @@ class MediaTableViewCell: UITableViewCell {
   @IBOutlet weak var mediaView: UIView!
   @IBOutlet weak var descriptionView: UIView!
 
+  @IBOutlet weak var likeButton: UIButton!
+  @IBOutlet weak var postButton: UIButton!
   @IBOutlet weak var likeCountButton: UIButton!
   @IBOutlet weak var commentCountButton: UIButton!
   
@@ -57,6 +59,7 @@ class MediaTableViewCell: UITableViewCell {
       }
     }
     configureDescriptionSection()
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "mediaSaved", name: "leafMediaPublished", object: nil)
   }
   
   func configureForImage() {
@@ -75,11 +78,32 @@ class MediaTableViewCell: UITableViewCell {
   }
   
   func configureDescriptionSection() {
-    self.descriptionLabel.text = media?.mediaDescription
-    if let purpose = media?.purpose {
-      self.purposeLabel.text = purpose.rawValue
+    if let media = media {
+      self.descriptionLabel.text = media.mediaDescription
+      if let purpose = media.purpose {
+        self.purposeLabel.text = purpose.rawValue
+      }
+      updateCommentCount()
+      if media.needsPublishing {
+        toggleCommentSection(false)
+      }
     }
-    updateCommentCount()
+  }
+  
+  func mediaSaved() {
+    if let media = self.media {
+      if !media.needsPublishing {
+        toggleCommentSection(true)
+      }
+    }
+  }
+  
+  func toggleCommentSection(enabled: Bool) {
+    likeCountButton.enabled = enabled
+    commentCountButton.enabled = enabled
+    postButton.enabled = enabled
+    likeButton.enabled = enabled
+    commentTextField.userInteractionEnabled = enabled
   }
   
   func updateCommentCount() {
