@@ -208,12 +208,23 @@ class PeatContentStore: NSObject {
   
   func syncTreeChanges(callback: (Bool) -> ()) {
 
-    if let name = treeStore.currentActivity?.name {
+    if let activity = treeStore.currentActivity, name = activity.name {
       API.put(treeStore.treeParams(), authType: .Token, url: "tree/\(name)/update"){ (res, err) -> () in
         if let e = err {
           print("Error:\(e)")
           callback(false)
         } else {
+          if let activities = CurrentUser.info.model?.activeActivities {
+            var found = false
+            for activity in activities {
+              if activity.name == self.treeStore.currentActivity?.name {
+                found = true
+              }
+            }
+            if !found {
+              CurrentUser.info.model?.newActiveActivity(activity)
+            }
+          }
           self.resetTreeChanges()
           callback(true)
         }
@@ -268,6 +279,26 @@ class PeatContentStore: NSObject {
           }
           print("Activities found: \(activities)")
           callback(activities)
+        }
+      }
+    }
+  }
+  
+  func getLeafFeed(leaf: Leaf, callback: (Array<MediaObject>?) -> () ) {
+    if let abilityName = leaf.ability?.name, activityName = treeStore.currentActivity?.name {
+      API.get(nil, authType: .Token, url: "news/leaf/\(activityName)/\(abilityName)") { (res, err) -> () in
+        if let e = err {
+          print("Error searching abilites: \(e)")
+          callback(nil)
+        } else {
+          if let json = res as? jsonObject, mediaJson = json["media"] as? Array<jsonObject> {
+            var mediaObjects: Array<MediaObject> = []
+            for media in mediaJson {
+              mediaObjects.append(MediaObject.initWithJson(media, store: self))
+            }
+            print("Media Objects found: \(mediaObjects)")
+            callback(mediaObjects)
+          }
         }
       }
     }

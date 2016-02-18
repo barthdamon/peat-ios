@@ -34,6 +34,9 @@
 		023B03841C1515FC003497FB /* PeatAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023B03831C1515FC003497FB /* PeatAVPlayer.swift */; };
 		0242313F1C30A18200ED7E1B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0242313E1C30A18200ED7E1B /* Comment.swift */; };
 		024231411C30A58200ED7E1B /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024231401C30A58200ED7E1B /* Thread.swift */; };
+		024F82891C754E1000C107CB /* MediaCellHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 024F82881C754E1000C107CB /* MediaCellHeader.xib */; };
+		024F828B1C754EBE00C107CB /* MediaCellHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024F828A1C754EBE00C107CB /* MediaCellHeaderView.swift */; };
+		024F828D1C757F8600C107CB /* ArrayBounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024F828C1C757F8600C107CB /* ArrayBounds.swift */; };
 		025D0DB31BD5CACB00462783 /* PeatSocialMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */; };
 		025D0DB71BD72F6C00462783 /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */; };
 		026325BF1C69786D00A959FE /* MediaDrilldownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026325BE1C69786D00A959FE /* MediaDrilldownTableViewCell.swift */; };
@@ -114,6 +117,9 @@
 		023B03831C1515FC003497FB /* PeatAVPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatAVPlayer.swift; sourceTree = "<group>"; };
 		0242313E1C30A18200ED7E1B /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		024231401C30A58200ED7E1B /* Thread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
+		024F82881C754E1000C107CB /* MediaCellHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaCellHeader.xib; sourceTree = "<group>"; };
+		024F828A1C754EBE00C107CB /* MediaCellHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaCellHeaderView.swift; sourceTree = "<group>"; };
+		024F828C1C757F8600C107CB /* ArrayBounds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayBounds.swift; sourceTree = "<group>"; };
 		025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatSocialMediator.swift; sourceTree = "<group>"; };
 		025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
 		026325BE1C69786D00A959FE /* MediaDrilldownTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDrilldownTableViewCell.swift; sourceTree = "<group>"; };
@@ -250,6 +256,7 @@
 			children = (
 				027E310B1BA2780D001FCF70 /* Main.storyboard */,
 				027E31101BA2780D001FCF70 /* LaunchScreen.xib */,
+				024F82881C754E1000C107CB /* MediaCellHeader.xib */,
 			);
 			name = Interface;
 			sourceTree = "<group>";
@@ -258,6 +265,7 @@
 			isa = PBXGroup;
 			children = (
 				021C1BF41C4F33B000FDEFED /* LeafView.swift */,
+				024F828A1C754EBE00C107CB /* MediaCellHeaderView.swift */,
 				0221BB511C6663C00027EB42 /* WitnessRequestViewController.swift */,
 				023B03801C150853003497FB /* MediaOverlayView.swift */,
 			);
@@ -347,6 +355,7 @@
 				027C33FF1C53332900D86F0F /* AlertViews.swift */,
 				022AB6921C5C313D00F1168E /* ColorExtensions.swift */,
 				0296A8C41C603BA10074D1F1 /* UIColor+Random.swift */,
+				024F828C1C757F8600C107CB /* ArrayBounds.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -493,6 +502,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				027E310D1BA2780D001FCF70 /* Main.storyboard in Resources */,
+				024F82891C754E1000C107CB /* MediaCellHeader.xib in Resources */,
 				027E31121BA2780D001FCF70 /* LaunchScreen.xib in Resources */,
 				027E310F1BA2780D001FCF70 /* Images.xcassets in Resources */,
 			);
@@ -580,8 +590,10 @@
 				0234BEFB1C59CBB40008BA89 /* Friendship.swift in Sources */,
 				0239E5811BDBEF5C00D85C3C /* ProfileViewController.swift in Sources */,
 				022AB6911C5C251900F1168E /* LeafGrouping.swift in Sources */,
+				024F828D1C757F8600C107CB /* ArrayBounds.swift in Sources */,
 				02A11CA71BB9EDC50064AE95 /* MediaObject.swift in Sources */,
 				024231411C30A58200ED7E1B /* Thread.swift in Sources */,
+				024F828B1C754EBE00C107CB /* MediaCellHeaderView.swift in Sources */,
 				027C340D1C5562A800D86F0F /* AuthViewController.swift in Sources */,
 				02D72E8D1BD0929B00EC115E /* User.swift in Sources */,
 				02069E081C114E68007E18EB /* CommentsTableViewCell.swift in Sources */,

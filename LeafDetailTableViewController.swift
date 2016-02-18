@@ -8,27 +8,50 @@
 
 import UIKit
 
+enum LeafFeedMode {
+  case Feed
+  case Set
+}
+
 class LeafDetailTableViewController: UITableViewController {
+  
+    var API = APIService.sharedService
   
     var leaf: Leaf? {
       return store?.treeStore.selectedLeaf
     }
-  var store: PeatContentStore? {
-    return detailVC?.profileDelegate?.store
-  }
+    var store: PeatContentStore? {
+      return detailVC?.profileDelegate?.store
+    }
     var activityIndicator: UIActivityIndicatorView?
     var playerCells: Array<MediaTableViewCell> = []
   
-    var mediaOnLoad: Array<MediaObject>?
     var viewing: User?
   
-  var detailVC: LeafDetailViewController?
+    var detailVC: LeafDetailViewController?
+  
+    var mode: LeafFeedMode = .Set
+    
+    var leafFeedMedia: Array<MediaObject>?
+      
+    var mediaObjects: Array<MediaObject>? {
+      switch mode {
+      case .Set:
+        return leaf?.media
+      case .Feed:
+        return leafFeedMedia
+      }
+    }
 
     override func viewDidLoad() {
       super.viewDidLoad()
+      setMode()
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "newMediaAdded", name: "newMediaPostSuccessful", object: nil)
+      if viewing == nil {
+        getLeafFeed()
+      }
     }
   
   override func viewWillDisappear(animated: Bool) {
@@ -39,6 +62,29 @@ class LeafDetailTableViewController: UITableViewController {
       cell.overlayView = nil
     }
     super.viewWillDisappear(true)
+  }
+  
+  func setMode() {
+    if let status = leaf?.completionStatus {
+      switch status {
+      case .Completed:
+        mode = .Set
+      case .Goal, .Learning:
+        mode = .Feed
+      }
+    }
+    self.tableView.reloadData()
+  }
+  
+  func getLeafFeed() {
+    if let leaf = leaf {
+      store?.getLeafFeed(leaf) { (mediaObjects) in
+        if let objects = mediaObjects {
+          self.leafFeedMedia = objects
+          self.tableView.reloadData()
+        }
+      }
+    }
   }
   
   func newMediaAdded() {
@@ -54,20 +100,24 @@ class LeafDetailTableViewController: UITableViewController {
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+      return mediaObjects != nil ? mediaObjects!.count : 0
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-      var cellCount = 0
-      if let viewing = viewing where viewing.type == .Organization {
-        cellCount += 1
-      }
-      if let leaf = leaf, media = leaf.media {
-        cellCount += media.count
-      }
-      return cellCount
+      return 1
     }
+  
+  override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView, media = self.mediaObjects {
+      let currentObject = media[section]
+      let primaryUser = viewing != nil ? viewing : CurrentUser.info.model
+      headerView.configureForMedia(currentObject, primaryUser: primaryUser)
+      return headerView
+    } else {
+      return nil
+    }
+  }
   
   override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
     if let cell = cell as? MediaTableViewCell {
@@ -77,8 +127,8 @@ class LeafDetailTableViewController: UITableViewController {
   }
   
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-      if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, media = leaf?.media {
-        let cellMedia = media[indexPath.row]
+      if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, mediaObjects = mediaObjects {
+        let cellMedia = mediaObjects[indexPath.section]
         cell.viewing = viewing
         cell.tableVC = self
         cell.configureWithMedia(cellMedia)

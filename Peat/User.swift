@@ -27,6 +27,12 @@ class User: NSObject {
   var summary: String?
   var contact: String?
   var activeActivities: Array<Activity>?
+  var activeActivityNames: Array<String>? {
+    if let activities = activeActivities {
+      return activities.map({paramFor($0.name)})
+    }
+    return nil
+  }
   
   //Other
   var avatarImage: UIImage?
@@ -37,6 +43,8 @@ class User: NSObject {
   
   var following: Array<User>?
   var type: UserType = .Single
+  
+  var API = APIService.sharedService
   
   
 //MARK: General
@@ -104,6 +112,65 @@ class User: NSObject {
           callback(false)
         }
       })
+    }
+  }
+  
+  func newActiveActivity(activity: Activity) {
+    if let _ = self.activeActivities {
+      activeActivities!.append(activity)
+    } else {
+      self.activeActivities = [activity]
+    }
+    updateUser()
+  }
+  
+  
+  
+  
+  //MARK: Profile Updates
+  
+  func userParams() -> jsonObject {
+    return [
+      "userInfo" : [
+        "first" : paramFor(first),
+        "last" : paramFor(last),
+        "username" : paramFor(username),
+        "email" : paramFor(email),
+        "type" : self.type.rawValue
+      ]
+    ]
+  }
+  
+  func profileParams() -> jsonObject {
+    return [
+      "profile" : [
+        "summary" : paramFor(summary),
+        "avatarURL" : paramFor(avatarURLString),
+        "contact" : paramFor(contact),
+        "activeActivityNames" : activeActivityNames != nil ? activeActivityNames! : []
+      ]
+    ]
+  }
+  
+  func updateProfile() {
+    let params = self.profileParams()
+    API.put(params, authType: .Token, url: "profile/update") { (res, err) -> () in
+      if let e = err {
+        print("error updating user profile: \(e)")
+      } else {
+        print("user profile update successful")
+      }
+    }
+  }
+  
+  func updateUser() {
+    let params = self.userParams()
+    API.put(params, authType: .Token, url: "user/update") { (res, err) -> () in
+      if let e = err {
+        print("error updating user: \(e)")
+      } else {
+        print("user update successful")
+      }
     }
   }
   

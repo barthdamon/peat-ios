@@ -18,7 +18,8 @@ class MediaObject: NSObject {
   
   //parsed
   var _id: String?
-  var user_Id: String?
+  var taggedUser_Ids: Array<String>?
+  var uploaderUser_Id: String?
   var mediaId: String?
   var leafId: String?
   var ability_Id: String?
@@ -33,6 +34,9 @@ class MediaObject: NSObject {
   var urlString: String?
   var mediaType: MediaType?
   var purpose: MediaPurpose?
+  
+  var taggedUsers: Array<User>?
+  var uploaderUser: User?
   
   //created
   var thumbnail: UIImage?
@@ -50,7 +54,8 @@ class MediaObject: NSObject {
     let media = MediaObject()
     media.store = store
     media._id = json["_id"] as? String
-    media.user_Id = json["user_Id"] as? String
+    media.taggedUser_Ids = json["taggedUser_Ids"] as? Array<String>
+    media.uploaderUser_Id = json["uploaderUser_Id"] as? String
     media.ability_Id = json["ability_Id"] as? String
     media.mediaId = json["mediaId"] as? String
     media.leafId = json["leafId"] as? String
@@ -60,6 +65,17 @@ class MediaObject: NSObject {
     media.timestamp = json["timestamp"] as? Int
     if let purpose = json["purpose"] as? String, mediaPurpose = MediaPurpose(rawValue: purpose) {
       media.purpose = mediaPurpose
+    }
+    
+    if let taggedUserInfos = json["taggedUserInfos"] as? Array<jsonObject> {
+      media.taggedUsers = Array()
+      for info in taggedUserInfos {
+        media.taggedUsers!.append(User.userFromProfile(info))
+      }
+    }
+    
+    if let uploaderUserInfo = json["uploaderUserInfo"] as? jsonObject {
+      media.uploaderUser = User.userFromProfile(uploaderUserInfo)
     }
     
     if let info = json["source"] as? jsonObject, url = info["url"] as? String, mediaType = info["mediaType"] as? String {
@@ -104,6 +120,7 @@ class MediaObject: NSObject {
     let media = MediaObject()
     media.needsPublishing = true
     media.store = store
+    media.uploaderUser_Id = CurrentUser.info.model?._id
     media.leafId = leaf?.leafId
     //careful might not be getting set here... probably have to do on server or generate a local id like he other stuff...
     media.ability_Id = leaf?.ability?._id
