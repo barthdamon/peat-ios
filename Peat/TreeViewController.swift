@@ -68,6 +68,11 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     }
   }
   
+  func toggleActive(active: Bool) {
+    self.treeView.userInteractionEnabled = active
+    self.scrollView.userInteractionEnabled = active
+  }
+  
   func getCurrentActivity() -> Activity? {
     return currentActivity
   }

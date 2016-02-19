@@ -31,6 +31,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
       if let activity = currentActivity, name = activity.name {
         self.currentActivityLabel.text = name
         self.store.treeStore.currentActivity = currentActivity
+        self.treeController?.toggleActive(true)
       } else {
         self.currentActivityLabel.text = ""
       }
@@ -57,8 +58,15 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
     }
   
   func setupForUser(user: User) {
-    if let activities = user.activeActivities {
-      self.currentActivity = activities[0]
+    do {
+      if let activities = user.activeActivities {
+        self.currentActivity = try activities.lookup(UInt(0))
+      }
+    }
+    catch {
+      self.currentActivity = nil
+      //hide the tree until the current activity gets set
+      self.treeController?.toggleActive(false)
     }
     self.setupUserProfile(user)
     self.treeController?.fetchTreeData()
