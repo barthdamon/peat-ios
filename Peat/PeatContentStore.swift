@@ -207,24 +207,13 @@ class PeatContentStore: NSObject {
   }
   
   func syncTreeChanges(callback: (Bool) -> ()) {
-
     if let activity = treeStore.currentActivity, name = activity.name {
       API.put(treeStore.treeParams(), authType: .Token, url: "tree/\(name)/update"){ (res, err) -> () in
         if let e = err {
           print("Error:\(e)")
           callback(false)
         } else {
-          if let activities = CurrentUser.info.model?.activeActivities {
-            var found = false
-            for activity in activities {
-              if activity.name == self.treeStore.currentActivity?.name {
-                found = true
-              }
-            }
-            if !found {
-              CurrentUser.info.model?.newActiveActivity(activity)
-            }
-          }
+          CurrentUser.info.model?.newActiveActivity(activity)
           self.resetTreeChanges()
           callback(true)
         }

@@ -30,13 +30,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   var viewing: User?
   
-  var selectedAbility: Ability? {
-    didSet{
-      if let name = selectedAbility?.name {
-        self.leafTitleLabel.text = name
-      }
-    }
-  }
+  var selectedAbility: Ability?
   
   
   @IBOutlet weak var abilityNameEditButton: UIButton!
@@ -82,6 +76,28 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     case .Edit:
       self.completionStatusControl.userInteractionEnabled = false
       break
+    }
+  }
+  
+  func selectedAbility(ability: Ability) {
+    //check to make sure ability isn't already on the tree
+    if let name = ability.name {
+      var exists = false
+      if let leaves = profileDelegate?.store.treeStore.currentLeaves {
+        leaves.forEach({ (leaf) -> () in
+          if let leafAbilityName = leaf.ability?.name {
+            if leafAbilityName == name {
+              exists = true
+            }
+          }
+        })
+      }
+      if !exists {
+        self.selectedAbility = ability
+        self.leafTitleLabel.text = name
+      } else {
+        alertShow(self, alertText: "Duplicate Ability", alertMessage: "Please select another ability")
+      }
     }
   }
   
@@ -291,13 +307,18 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   @IBAction func returnButtonPressed(sender: AnyObject) {
     var needsSaving = false
-    if let leaf = leaf, medias = leaf.media {
+    if let leaf = leaf {
       if leaf.changeStatus != .Unchanged {
         needsSaving = true
       }
-      for media in medias {
-        if media.needsPublishing {
-          needsSaving = true
+      if leaf.ability == nil || leaf.ability?.name == nil {
+        needsSaving = true
+      }
+      if let medias = leaf.media {
+        for media in medias {
+          if media.needsPublishing {
+            needsSaving = true
+          }
         }
       }
     }

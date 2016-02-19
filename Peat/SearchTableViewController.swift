@@ -58,12 +58,13 @@ class SearchTableViewController: UITableViewController, UITextFieldDelegate {
   }
   
   func textFieldShouldReturn(textField: UITextField) -> Bool {
+    var selectedAbility: Ability?
     if let text = textField.text where text != "" {
       var foundMatch = false
       if let abilities = matchingAbilities {
         for ability in abilities {
           if text == ability.name {
-            leafDetailVC?.selectedAbility = ability
+            selectedAbility = ability
             foundMatch = true
           }
         }
@@ -71,10 +72,14 @@ class SearchTableViewController: UITableViewController, UITextFieldDelegate {
       if !foundMatch {
         let newAbility = Ability()
         newAbility.name = text
-        leafDetailVC?.selectedAbility = newAbility
+        selectedAbility = newAbility
       }
     }
-    self.dismissViewControllerAnimated(true, completion: nil)
+    self.dismissViewControllerAnimated(true) { () -> Void in
+      if let selected = selectedAbility {
+        self.leafDetailVC?.selectedAbility(selected)
+      }
+    }
     return true
   }
 
@@ -101,9 +106,15 @@ class SearchTableViewController: UITableViewController, UITextFieldDelegate {
 
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     if let abilities = self.matchingAbilities {
-      let selectedAbility = abilities[indexPath.row]
-      self.leafDetailVC?.selectedAbility = selectedAbility
-      self.dismissViewControllerAnimated(true, completion: nil)
+      do {
+        let selectedAbility = try abilities.lookup(UInt(indexPath.row))
+        self.dismissViewControllerAnimated(true, completion: { () -> Void in
+          self.leafDetailVC?.selectedAbility(selectedAbility)
+        })
+      }
+      catch {
+        print("Ability not found for selection")
+      }
     }
   }
 

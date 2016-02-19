@@ -116,12 +116,20 @@ class User: NSObject {
   }
   
   func newActiveActivity(activity: Activity) {
-    if let _ = self.activeActivities {
-      activeActivities!.append(activity)
+    if let activities = self.activeActivities {
+      var found = false
+      for activeActivity in activities {
+        if activity.name == activeActivity.name {
+          found = true
+        }
+      }
+      if !found {
+        activeActivities!.append(activity)
+      }
     } else {
       self.activeActivities = [activity]
     }
-    updateUser()
+    updateProfile()
   }
   
   
@@ -154,6 +162,7 @@ class User: NSObject {
   
   func updateProfile() {
     let params = self.profileParams()
+    print("Profile Update params: \(params)")
     API.put(params, authType: .Token, url: "profile/update") { (res, err) -> () in
       if let e = err {
         print("error updating user profile: \(e)")
