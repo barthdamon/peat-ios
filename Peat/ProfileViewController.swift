@@ -149,7 +149,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
   
   func changesMade() {
     self.saveButton.hidden = false
-    self.cancelButton.hidden = true
+    self.cancelButton.hidden = false
   }
 
   
@@ -167,18 +167,34 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
   }
 
   @IBAction func saveButtonPressed(sender: AnyObject) {
-    store.syncTreeChanges({ (success) in
-      if success {
-        alertShow(self, alertText: "Success", alertMessage: "Tree Saved Successfully")
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          self.saveButton.hidden = true
-          self.cancelButton.hidden = true
-          self.changesPresent = false
-        })
-      } else {
-        alertShow(self, alertText: "Error", alertMessage: "Tree Save Unsuccessful")
+    if !checkForNewLeaves() {
+      store.syncTreeChanges({ (success) in
+        if success {
+          alertShow(self, alertText: "Success", alertMessage: "Tree Saved Successfully")
+          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.saveButton.hidden = true
+            self.cancelButton.hidden = true
+            self.changesPresent = false
+          })
+        } else {
+          alertShow(self, alertText: "Error", alertMessage: "Tree Save Unsuccessful")
+        }
+      })
+    } else {
+      alertShow(self, alertText: "Unable To Save Tree", alertMessage: "Please add ability names to any new abilities")
+    }
+  }
+  
+  func checkForNewLeaves() -> Bool {
+    var brandNewFound = false
+    if let leaves = store.treeStore.currentLeaves {
+      for leaf in leaves {
+        if leaf.changeStatus == .BrandNew {
+          brandNewFound = true
+        }
       }
-    })
+    }
+    return brandNewFound
   }
   
   @IBAction func activitySelectButtonPressed(sender: AnyObject) {
@@ -187,6 +203,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
   }
   
   @IBAction func cancelButtonPressed(sender: AnyObject) {
+    store.treeStore.resetStore()
     treeController?.fetchTreeData()
     self.changesPresent = false
     self.cancelButton.hidden = true

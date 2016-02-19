@@ -103,6 +103,7 @@ class SearchTableViewController: UITableViewController, UITextFieldDelegate {
     if let abilities = self.matchingAbilities {
       let selectedAbility = abilities[indexPath.row]
       self.leafDetailVC?.selectedAbility = selectedAbility
+      self.dismissViewControllerAnimated(true, completion: nil)
     }
   }
 

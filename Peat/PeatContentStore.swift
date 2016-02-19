@@ -113,7 +113,7 @@ struct TreeStore {
           }
         }
       }
-      
+      //NOTE: there should never be any New Leaves sent
       let params: jsonObject = ["activityName" : name, "updatedLeaves" : updatedLeaves, "removedLeaves" : removedLeaves, "newLeaves" : newLeaves, "updatedConnections" : updatedConnections, "removedConnections": removedConnections, "newConnections" : newConnections, "updatedGroupings" : updatedGroupings, "removedGroupings": removedGroupings, "newGroupings" : newGroupings]
       print("PARAMS FOR TREE SAVE: \(params)")
       return params
