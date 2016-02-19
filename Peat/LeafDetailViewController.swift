@@ -207,7 +207,9 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   func setValuesOnLeaf() {
     if let leaf = self.leaf {
-      leaf.ability = selectedAbility
+      if let ability = selectedAbility {
+        leaf.ability = ability
+      }
       leaf.changed(.Updated)
       if leaf.ability != nil {
         saveLeaf()
