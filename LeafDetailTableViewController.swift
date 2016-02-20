@@ -14,7 +14,7 @@ enum LeafFeedMode {
   case None
 }
 
-class LeafDetailTableViewController: UITableViewController {
+class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
   
     var API = APIService.sharedService
   
@@ -156,7 +156,7 @@ class LeafDetailTableViewController: UITableViewController {
       if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, mediaObjects = mediaObjects {
         let cellMedia = mediaObjects[indexPath.section]
         cell.viewing = viewing
-        cell.tableVC = self
+        cell.delegate = self
         cell.configureWithMedia(cellMedia)
         self.playerCells.append(cell)
         return cell

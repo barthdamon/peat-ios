@@ -7,13 +7,17 @@
 //
 
 import UIKit
-import AWSCore
-import AWSS3
 
-class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu {
+class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu, TableViewForMedia {
   
     var mediaObjects: Array<MediaObject>?
     var sidebarClient: SideMenuClient?
+    var playerCells: Array<MediaTableViewCell> = []
+    var selectedMediaForComments: MediaObject?
+  
+    var activityFilter: Activity?
+  
+    var API = APIService.sharedService
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +27,7 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
       initializeSidebar()
       configureNavBar()
       configureMenuSwipes()
+      getNewsfeed()
     }
   
   override func viewWillAppear(animated: Bool) {
@@ -49,46 +54,81 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
 //    }
   }
   
-  func queryForMediaData() {
-//    PeatContentStore.sharedStore.initializeNewsfeed() { (res, err) -> () in
-//      if err != nil {
-//        print("error initializing newsfeed")
-//      } else {
-//        print("Store fetched Successfuly: \(res)")
-//        if let mediaObjects = res as? Array<MediaObject> {
-//          self.configureMedia(mediaObjects)
-//        }
-//      }
-//    }
-  }
-  
-  func configureMedia(mediaObjects: Array<MediaObject>) {
-    self.mediaObjects  = mediaObjects
-    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-      self.tableView.reloadData()
-    })
+  func getNewsfeed() {
+    var url = "news/all"
+    if let name = activityFilter?.name {
+      url = "news/\(name)"
+    }
+    API.get(nil, authType: .Token, url: url) { (res, err) -> () in
+      if let e = err {
+        print("Error fetching newsfeed \(e)")
+      } else {
+        print("RES: \(res)")
+        if let json = res as? jsonObject, newsfeed = json["newsfeed"] as? jsonObject,
+          mediaObjectJson = newsfeed["media"] as? Array<jsonObject> {
+            self.mediaObjects = Array()
+            mediaObjectJson.forEach({ (object) -> () in
+              self.mediaObjects!.append(MediaObject.initWithJson(object, store: nil))
+            })
+            self.tableView.reloadData()
+        }
+      }
+    }
   }
 
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
+      return self.mediaObjects != nil ? self.mediaObjects!.count : 0
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-      return self.mediaObjects != nil ? self.mediaObjects!.count : 0
+      return 1
     }
   
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> MediaTableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as! MediaTableViewCell
-        if let mediaObjects = self.mediaObjects {
-          let object = mediaObjects[indexPath.row]
-          cell.configureWithMedia(object)
-        }
-        return cell
+  override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    return 50
+  }
+  
+  override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView, media = self.mediaObjects {
+      headerView.frame = CGRectMake(0,0,tableView.frame.width, 50)
+      let currentObject = media[section]
+      let primaryUser = CurrentUser.info.model
+      headerView.configureForMedia(currentObject, primaryUser: primaryUser)
+      return headerView
+    } else {
+      return nil
     }
+  }
+  
+  override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, mediaObjects = mediaObjects {
+      let cellMedia = mediaObjects[indexPath.section]
+      cell.delegate = self
+      cell.configureWithMedia(cellMedia)
+      self.playerCells.append(cell)
+      return cell
+    } else {
+      let cell = UITableViewCell()
+      return cell
+    }
+  }
+  
+  //MARK: Table View For Media Delegate Methods
+  func updateCommentCount() {
+    for cell in self.playerCells {
+      cell.updateCommentCount()
+    }
+  }
+  
+  func commentsButtonPressed(media: MediaObject?) {
+    if let media = media {
+      self.selectedMediaForComments = media
+      self.performSegueWithIdentifier("showComments", sender: self)
+    }
+  }
+  
   
     //MARK: Sidebar
     func initializeSidebar() {
@@ -102,51 +142,5 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
     func configureMenuSwipes() {
       sidebarClient?.configureMenuSwipes()
     }
-
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

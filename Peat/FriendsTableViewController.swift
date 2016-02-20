@@ -78,14 +78,17 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate, Vi
       switch mode {
       case .List:
         let cell = tableView.dequeueReusableCellWithIdentifier("friendCell", forIndexPath: indexPath) as! FriendTableViewCell
-        if let friend = self.friends?[indexPath.row] {
-          if let username = friend.username, first = friend.first, last = friend.last {
-            cell.usernameLabel.text = username
-            cell.nameLabel.text = "\(first) \(last)"
-            cell.friend = friend
-//            friend.generateAvatarImage({ (image) -> () in
-//              cell.avatarImageView.image = image
-//            })
+        if let friends = self.friends {
+          do {
+            let friend = try friends.lookup(UInt(indexPath.row))
+            if let username = friend.username, first = friend.first, last = friend.last {
+              cell.usernameLabel.text = username
+              cell.nameLabel.text = "\(first) \(last)"
+              cell.friend = friend
+            }
+          }
+          catch {
+            print("Friend not found")
           }
         } else {
           cell.usernameLabel.text = "No Friends Found"

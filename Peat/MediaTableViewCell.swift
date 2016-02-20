@@ -10,6 +10,13 @@ import UIKit
 import MediaPlayer
 import AVFoundation
 
+protocol TableViewForMedia {
+  //takes you to the media drilldown controller
+  func commentsButtonPressed(media: MediaObject?)
+  //updates the comments/likes on the mediaCell: can be done from either the cell or the drilldown
+  func updateCommentCount()
+}
+
 class MediaTableViewCell: UITableViewCell {
   
   @IBOutlet weak var purposeLabel: UILabel!
@@ -25,7 +32,7 @@ class MediaTableViewCell: UITableViewCell {
   
   @IBOutlet weak var commentTextField: UITextField!
   
-  var tableVC: LeafDetailTableViewController?
+  var delegate: TableViewForMedia?
   
   var media: MediaObject?
   var viewing: User?
@@ -129,7 +136,7 @@ class MediaTableViewCell: UITableViewCell {
   
 
   @IBAction func commentCountButtonPressed(sender: AnyObject) {
-    tableVC?.commentsButtonPressed(media)
+    delegate?.commentsButtonPressed(media)
   }
   
   @IBAction func likeCountButtonPressed(sender: AnyObject) {
@@ -144,7 +151,7 @@ class MediaTableViewCell: UITableViewCell {
         //increase like count
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
           self.media?.newLike(like)
-          self.tableVC?.updateCommentCount()
+          self.delegate?.updateCommentCount()
         })
       }
     }
@@ -159,7 +166,7 @@ class MediaTableViewCell: UITableViewCell {
         //add a new comment to ui
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
           self.media?.newComment(comment)
-          self.tableVC?.updateCommentCount()
+          self.delegate?.updateCommentCount()
           self.commentTextField.text = ""
           self.commentTextField.resignFirstResponder()
         })
