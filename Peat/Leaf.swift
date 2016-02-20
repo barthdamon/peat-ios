@@ -124,6 +124,16 @@ class Leaf: NSObject, TreeObject {
     guard changeStatus == .BrandNew && status == .Updated else { changeStatus = status; return}
   }
   
+  func setAbilityOnLeaf(ability: Ability) {
+    self.ability = ability
+    if let abilityName = ability.name, activityName = self.activityName {
+      self.media?.forEach({ (object) -> () in
+        object.activityName = activityName
+        object.abilityName = abilityName
+      })
+    }
+  }
+  
   func params() -> jsonObject {
     return [
       "activityName" : paramFor(activityName),
@@ -148,7 +158,6 @@ class Leaf: NSObject, TreeObject {
     if let medias = self.media {
       for media in medias {
         if media.needsPublishing {
-          media.ability_Id = self.ability?._id
           media.publish(callback)
           print("FOUND MEDIA THAT NEEDS PUBLISHING")
           //TODO: have the tree listen to the notification for when leaves are posted. Every time one is posted it goes through its leaves and if any are publishing, it checks somehow if any of their media is still publishing. probably need the media object in the notiication to check with that

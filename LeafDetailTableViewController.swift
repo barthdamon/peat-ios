@@ -11,6 +11,7 @@ import UIKit
 enum LeafFeedMode {
   case Feed
   case Set
+  case None
 }
 
 class LeafDetailTableViewController: UITableViewController {
@@ -40,19 +41,17 @@ class LeafDetailTableViewController: UITableViewController {
         return leaf?.media
       case .Feed:
         return leafFeedMedia
+      case .None:
+        return nil
       }
     }
 
     override func viewDidLoad() {
       super.viewDidLoad()
-      setMode()
       self.tableView.clipsToBounds = true
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "newMediaAdded", name: "newMediaPostSuccessful", object: nil)
-      if viewing == nil {
-        getLeafFeed()
-      }
     }
   
   func fixTableViewInsets() {
@@ -81,11 +80,16 @@ class LeafDetailTableViewController: UITableViewController {
       switch status {
       case .Completed:
         mode = .Set
-      case .Goal, .Learning:
+        self.tableView.reloadData()
+      case .Goal, .Learning where viewing == nil:
         mode = .Feed
+        getLeafFeed()
+      default:
+        mode = .None
+        self.tableView.reloadData()
       }
+      self.detailVC?.modeSet(self.mode)
     }
-    self.tableView.reloadData()
   }
   
   func getLeafFeed() {
@@ -94,12 +98,17 @@ class LeafDetailTableViewController: UITableViewController {
         if let objects = mediaObjects {
           self.leafFeedMedia = objects
           self.tableView.reloadData()
+        } else {
+          self.mode = .None
+          self.tableView.reloadData()
+          print("No Media to show for feed")
         }
       }
     }
   }
   
   func newMediaAdded() {
+    self.mode = .Set
     self.tableView.reloadData()
   }
 

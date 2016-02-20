@@ -280,13 +280,16 @@ class PeatContentStore: NSObject {
           print("Error searching abilites: \(e)")
           callback(nil)
         } else {
-          if let json = res as? jsonObject, mediaJson = json["media"] as? Array<jsonObject> {
+          print("RES: \(res)")
+          if let json = res as? jsonObject, feed = json["leafFeed"] as? jsonObject, mediaJson = feed["media"] as? Array<jsonObject> {
             var mediaObjects: Array<MediaObject> = []
             for media in mediaJson {
               mediaObjects.append(MediaObject.initWithJson(media, store: self))
             }
             print("Media Objects found: \(mediaObjects)")
             callback(mediaObjects)
+          } else {
+            callback(nil)
           }
         }
       }

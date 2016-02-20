@@ -22,7 +22,8 @@ class MediaObject: NSObject {
   var uploaderUser_Id: String?
   var mediaId: String?
   var leafId: String?
-  var ability_Id: String?
+  var abilityName: String?
+  var activityName: String?
   var mediaDescription: String?
   var location: String?
   var timestamp: Int?
@@ -56,7 +57,8 @@ class MediaObject: NSObject {
     media._id = json["_id"] as? String
     media.taggedUser_Ids = json["taggedUser_Ids"] as? Array<String>
     media.uploaderUser_Id = json["uploaderUser_Id"] as? String
-    media.ability_Id = json["ability_Id"] as? String
+    media.abilityName = json["abilityName"] as? String
+    media.activityName = json["activityName"] as? String
     media.mediaId = json["mediaId"] as? String
     media.leafId = json["leafId"] as? String
     
@@ -123,7 +125,8 @@ class MediaObject: NSObject {
     media.uploaderUser_Id = CurrentUser.info.model?._id
     media.leafId = leaf?.leafId
     //careful might not be getting set here... probably have to do on server or generate a local id like he other stuff...
-    media.ability_Id = leaf?.ability?._id
+    media.abilityName = leaf?.ability?.name
+    media.activityName = leaf?.activityName
     media.mediaType = type
     media.thumbnail = thumbnail
     media.filePath = filePath
@@ -154,6 +157,8 @@ class MediaObject: NSObject {
     return [
       "mediaId": paramFor(mediaId),
       "leafId": paramFor(leafId),
+      "abilityName": paramFor(abilityName),
+      "activityName": paramFor(activityName),
       "source": [
         "url" : paramFor(urlString),
         "mediaType" : self.mediaType != nil ? self.mediaType!.rawValue : ""

@@ -32,6 +32,9 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   var selectedAbility: Ability?
   
+  @IBOutlet weak var leafFeedSelectionView: UIView!
+  @IBOutlet weak var leafFeedMeButton: UIButton!
+  @IBOutlet weak var leafFeedNewsButton: UIButton!
   
   @IBOutlet weak var abilityNameEditButton: UIButton!
   @IBOutlet weak var uploadLabel: UILabel!
@@ -49,6 +52,8 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     if let _ = self.viewing {
       mode = .View
     }
+    self.leafFeedMeButton.enabled = false
+    self.leafFeedNewsButton.enabled = false
     if let leaf = leaf {
       leaf.fetchContents(){ (success) ->() in
         guard success else {
@@ -56,7 +61,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
           return
         }
         self.configureTitleView()
-        self.containerTableView?.reloadData()
+        self.tableViewVC?.setMode()
         if let witnesses = leaf.witnesses where self.mode == .View {
           for witness in witnesses {
             if witness.witness_Id == CurrentUser.info.model?._id {
@@ -105,6 +110,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     toggleSaveOption(true)
     self.leaf?.getCompletionStatus()
     self.setSelectedCompletion()
+    self.modeSet(.Set)
     self.tableViewVC?.newMediaAdded()
   }
 
@@ -208,7 +214,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   func setValuesOnLeaf() {
     if let leaf = self.leaf {
       if let ability = selectedAbility {
-        leaf.ability = ability
+        leaf.setAbilityOnLeaf(ability)
       }
       leaf.changed(.Updated)
       if leaf.ability != nil {
@@ -332,7 +338,37 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     }
   }
   
+  func toggleButtons(feedActive feedActive: Bool) {
+    self.leafFeedNewsButton.enabled = !feedActive
+    self.leafFeedMeButton.enabled = feedActive
+    self.leafFeedMeButton.backgroundColor = feedActive ? UIColor.clearColor() : UIColor.greenColor()
+    self.leafFeedNewsButton.backgroundColor = feedActive ? UIColor.greenColor() : UIColor.clearColor()
+  }
   
+  func modeSet(mode: LeafFeedMode) {
+    if mode == .Set {
+      toggleButtons(feedActive: false)
+    } else {
+      toggleButtons(feedActive: true)
+    }
+  }
+  
+  func setMode(mode: LeafFeedMode) {
+    self.tableViewVC?.mode = mode
+    self.tableViewVC?.getLeafFeed()
+    self.tableViewVC?.tableView.reloadData()
+  }
+  
+  @IBAction func leafFeedMeButtonPressed(sender: AnyObject) {
+    setMode(.Set)
+    //check to make sure you can press the Me Button.... and need tochange fro me to "User" for other people.
+    toggleButtons(feedActive: false)
+  }
+  
+  @IBAction func leafFeedNewsButtonPressed(sender: AnyObject) {
+    setMode(.Feed)
+    toggleButtons(feedActive: true)
+  }
   
   
   //MARK: Helpers

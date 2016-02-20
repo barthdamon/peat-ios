@@ -579,7 +579,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="105"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AbilityTitle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jvp-AS-0ui">
-                                        <rect key="frame" x="8" y="8" width="119" height="43"/>
+                                        <rect key="frame" x="8" y="2" width="119" height="43"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="43" id="lau-I4-Kd4"/>
                                         </constraints>
@@ -653,18 +653,6 @@
                                             <action selector="saveButtonPressed:" destination="kkl-n5-IFP" eventType="touchUpInside" id="61U-2z-KxZ"/>
                                         </connections>
                                     </button>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="2" translatesAutoresizingMaskIntoConstraints="NO" id="Q5X-MM-8wV">
-                                        <rect key="frame" x="8" y="52" width="220" height="29"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="220" id="KMO-NW-SsM"/>
-                                            <constraint firstAttribute="height" constant="28" id="yhy-1D-SeD"/>
-                                        </constraints>
-                                        <segments>
-                                            <segment title="Completed"/>
-                                            <segment title="Learning"/>
-                                            <segment title="Goal"/>
-                                        </segments>
-                                    </segmentedControl>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PtF-MT-PdH">
                                         <rect key="frame" x="249" y="0.0" width="102" height="32"/>
                                         <constraints>
@@ -689,7 +677,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5 Witnesses" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zuw-Vh-fco">
-                                        <rect key="frame" x="522" y="60" width="70" height="15"/>
+                                        <rect key="frame" x="522" y="55" width="70" height="15"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="0ad-8C-6Sp"/>
                                             <constraint firstAttribute="height" constant="15" id="f6z-rW-JmC"/>
@@ -704,7 +692,7 @@
                                         </variation>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3 Uploads" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QNM-Ke-s9P">
-                                        <rect key="frame" x="522" y="84" width="58" height="13"/>
+                                        <rect key="frame" x="522" y="79" width="58" height="18"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -747,6 +735,51 @@
                                             <action selector="abilityNameEditButtonPressed:" destination="kkl-n5-IFP" eventType="touchUpInside" id="XQd-wk-slR"/>
                                         </connections>
                                     </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VkY-2l-ZNs">
+                                        <rect key="frame" x="250" y="78" width="100" height="27"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKv-Sn-yJ4">
+                                                <rect key="frame" x="0.0" y="0.0" width="50" height="27"/>
+                                                <state key="normal" title="Me"/>
+                                                <connections>
+                                                    <action selector="leafFeedMeButtonPressed:" destination="kkl-n5-IFP" eventType="touchUpInside" id="cdQ-CW-RNe"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mvl-Ky-XIA">
+                                                <rect key="frame" x="50" y="0.0" width="50" height="27"/>
+                                                <state key="normal" title="Feed"/>
+                                                <connections>
+                                                    <action selector="leafFeedNewsButtonPressed:" destination="kkl-n5-IFP" eventType="touchUpInside" id="Ses-1o-Rb7"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="1bE-Q0-9yf"/>
+                                            <constraint firstItem="mvl-Ky-XIA" firstAttribute="leading" secondItem="WKv-Sn-yJ4" secondAttribute="trailing" id="3Eo-Fi-6gW"/>
+                                            <constraint firstItem="WKv-Sn-yJ4" firstAttribute="leading" secondItem="VkY-2l-ZNs" secondAttribute="leading" id="GxF-uf-dAT"/>
+                                            <constraint firstAttribute="bottom" secondItem="WKv-Sn-yJ4" secondAttribute="bottom" id="JpC-a1-RhZ"/>
+                                            <constraint firstItem="WKv-Sn-yJ4" firstAttribute="width" secondItem="mvl-Ky-XIA" secondAttribute="width" id="PBc-08-0Gu"/>
+                                            <constraint firstAttribute="trailing" secondItem="mvl-Ky-XIA" secondAttribute="trailing" id="Utu-KK-3yp"/>
+                                            <constraint firstItem="WKv-Sn-yJ4" firstAttribute="top" secondItem="VkY-2l-ZNs" secondAttribute="top" id="VMa-Ju-wWh"/>
+                                            <constraint firstAttribute="bottom" secondItem="mvl-Ky-XIA" secondAttribute="bottom" id="dYH-4f-sSh"/>
+                                            <constraint firstAttribute="height" constant="27" id="enh-Yy-LhF"/>
+                                            <constraint firstItem="mvl-Ky-XIA" firstAttribute="leading" secondItem="WKv-Sn-yJ4" secondAttribute="trailing" id="iCS-Sz-oD4"/>
+                                            <constraint firstItem="mvl-Ky-XIA" firstAttribute="top" secondItem="VkY-2l-ZNs" secondAttribute="top" id="q29-B3-677"/>
+                                        </constraints>
+                                    </view>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="2" translatesAutoresizingMaskIntoConstraints="NO" id="Q5X-MM-8wV">
+                                        <rect key="frame" x="8" y="47" width="220" height="29"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="220" id="KMO-NW-SsM"/>
+                                            <constraint firstAttribute="height" constant="28" id="yhy-1D-SeD"/>
+                                        </constraints>
+                                        <segments>
+                                            <segment title="Completed"/>
+                                            <segment title="Learning"/>
+                                            <segment title="Goal"/>
+                                        </segments>
+                                    </segmentedControl>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -755,13 +788,14 @@
                                     <constraint firstAttribute="trailing" secondItem="6ka-QB-VpC" secondAttribute="trailing" constant="8" id="2td-90-1bO"/>
                                     <constraint firstAttribute="trailing" secondItem="zuw-Vh-fco" secondAttribute="trailing" constant="8" id="3Bc-t4-7WK"/>
                                     <constraint firstItem="Mya-cK-EMB" firstAttribute="top" secondItem="fpa-ML-dh9" secondAttribute="top" constant="15" id="3x0-zm-lD5"/>
+                                    <constraint firstItem="VkY-2l-ZNs" firstAttribute="centerX" secondItem="fpa-ML-dh9" secondAttribute="centerX" id="4Bj-Wz-tC9"/>
                                     <constraint firstAttribute="height" constant="105" id="4ww-nL-H7b"/>
                                     <constraint firstItem="zuw-Vh-fco" firstAttribute="top" secondItem="6ka-QB-VpC" secondAttribute="bottom" constant="9" id="5an-2y-ypr"/>
                                     <constraint firstItem="6ka-QB-VpC" firstAttribute="width" secondItem="hdk-qh-twi" secondAttribute="width" id="5rc-gV-R5E"/>
                                     <constraint firstItem="PtF-MT-PdH" firstAttribute="top" secondItem="fpa-ML-dh9" secondAttribute="top" id="777-iQ-Gvk"/>
                                     <constraint firstItem="jvp-AS-0ui" firstAttribute="centerX" secondItem="fpa-ML-dh9" secondAttribute="centerX" id="8gm-MK-HDT"/>
                                     <constraint firstAttribute="bottom" secondItem="6ka-QB-VpC" secondAttribute="bottom" constant="6" id="AqE-s0-XpL"/>
-                                    <constraint firstItem="jvp-AS-0ui" firstAttribute="top" secondItem="fpa-ML-dh9" secondAttribute="top" constant="8" id="BLD-9y-Vi2"/>
+                                    <constraint firstItem="jvp-AS-0ui" firstAttribute="top" secondItem="fpa-ML-dh9" secondAttribute="top" constant="2" id="BLD-9y-Vi2"/>
                                     <constraint firstItem="Q5X-MM-8wV" firstAttribute="centerX" secondItem="fpa-ML-dh9" secondAttribute="centerX" id="CZH-GF-UbD"/>
                                     <constraint firstAttribute="trailing" secondItem="hdk-qh-twi" secondAttribute="trailing" constant="8" id="EKr-Uw-7TS"/>
                                     <constraint firstItem="Q5X-MM-8wV" firstAttribute="width" secondItem="jvp-AS-0ui" secondAttribute="width" id="Ewf-mA-D6h"/>
@@ -771,7 +805,7 @@
                                     <constraint firstAttribute="bottom" secondItem="iiU-og-E51" secondAttribute="bottom" constant="18" id="IaS-QG-uHv"/>
                                     <constraint firstAttribute="bottom" secondItem="rUb-XN-LLq" secondAttribute="bottom" constant="4" id="J6k-gQ-LdI"/>
                                     <constraint firstItem="PtF-MT-PdH" firstAttribute="centerX" secondItem="fpa-ML-dh9" secondAttribute="centerX" id="JFu-50-JP9"/>
-                                    <constraint firstItem="Q5X-MM-8wV" firstAttribute="top" secondItem="jvp-AS-0ui" secondAttribute="bottom" constant="1" id="KIN-1Z-qEv"/>
+                                    <constraint firstItem="Q5X-MM-8wV" firstAttribute="top" secondItem="jvp-AS-0ui" secondAttribute="bottom" constant="2" id="KIN-1Z-qEv"/>
                                     <constraint firstAttribute="trailing" secondItem="QNM-Ke-s9P" secondAttribute="trailing" constant="20" id="KOi-Ov-48o"/>
                                     <constraint firstItem="zuw-Vh-fco" firstAttribute="leading" secondItem="iiU-og-E51" secondAttribute="trailing" id="LH5-Ta-eYV"/>
                                     <constraint firstItem="iiU-og-E51" firstAttribute="top" secondItem="fpa-ML-dh9" secondAttribute="top" constant="49" id="Llx-ZT-fqt"/>
@@ -784,6 +818,7 @@
                                     <constraint firstItem="QNM-Ke-s9P" firstAttribute="top" secondItem="zuw-Vh-fco" secondAttribute="bottom" constant="9" id="U4h-S7-qqz"/>
                                     <constraint firstAttribute="bottom" secondItem="6ka-QB-VpC" secondAttribute="bottom" constant="8" id="XKk-id-IYg"/>
                                     <constraint firstAttribute="trailing" secondItem="6ka-QB-VpC" secondAttribute="trailing" constant="8" id="ZNM-0K-mKt"/>
+                                    <constraint firstAttribute="bottom" secondItem="VkY-2l-ZNs" secondAttribute="bottom" id="Zc0-iQ-U6E"/>
                                     <constraint firstAttribute="trailing" secondItem="hdk-qh-twi" secondAttribute="trailing" constant="8" id="bir-hm-vbq"/>
                                     <constraint firstItem="zuw-Vh-fco" firstAttribute="baseline" secondItem="Q5X-MM-8wV" secondAttribute="baseline" id="dUE-rK-JJ9"/>
                                     <constraint firstAttribute="bottom" secondItem="QNM-Ke-s9P" secondAttribute="bottom" id="dcL-Wx-Uxt"/>
@@ -875,6 +910,9 @@
                     <connections>
                         <outlet property="abilityNameEditButton" destination="Mya-cK-EMB" id="nRv-HQ-Jrk"/>
                         <outlet property="completionStatusControl" destination="Q5X-MM-8wV" id="xy8-Ec-2qO"/>
+                        <outlet property="leafFeedMeButton" destination="WKv-Sn-yJ4" id="wBB-lH-D2o"/>
+                        <outlet property="leafFeedNewsButton" destination="mvl-Ky-XIA" id="krn-ly-0uU"/>
+                        <outlet property="leafFeedSelectionView" destination="VkY-2l-ZNs" id="0vp-0q-E9S"/>
                         <outlet property="leafTitleLabel" destination="jvp-AS-0ui" id="4Ir-Jm-bh8"/>
                         <outlet property="returnButton" destination="PtF-MT-PdH" id="6mi-BS-hSh"/>
                         <outlet property="saveButton" destination="6ka-QB-VpC" id="DL9-hD-Ymn"/>
