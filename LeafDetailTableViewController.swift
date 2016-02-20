@@ -136,9 +136,14 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
   override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView, media = self.mediaObjects {
       headerView.frame = CGRectMake(0,0,tableView.frame.width, 50)
-      let currentObject = media[section]
-      let primaryUser = viewing != nil ? viewing : CurrentUser.info.model
-      headerView.configureForMedia(currentObject, primaryUser: primaryUser)
+      do {
+        let currentObject = try media.lookup(UInt(section))
+        let primaryUser = viewing != nil ? viewing : CurrentUser.info.model
+        headerView.configureForMedia(currentObject, primaryUser: primaryUser)
+      }
+      catch {
+        print("Error making header view")
+      }
       return headerView
     } else {
       return nil

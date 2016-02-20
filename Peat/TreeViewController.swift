@@ -455,6 +455,17 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     for view in self.treeView.subviews {
       view.removeFromSuperview()
     }
+    if let sublayers = self.treeView.layer.sublayers {
+      for layer in sublayers {
+        layer.removeFromSuperlayer()
+      }
+    }
+    
+//    if let connections = self.store?.treeStore.currentConnections {
+//      connections.forEach({ (connection) -> () in
+//        connection.connectionLayer?.removeFromSuperlayer()
+//      })
+//    }
     //In the future get the data for the selected user and the selected activity
     if let activity = self.currentActivity {
       sharedStore().getTreeData(self, viewing: viewing, activity: activity){ (success) -> () in
