@@ -26,7 +26,14 @@ class MediaObject: NSObject {
   var activityName: String?
   var mediaDescription: String?
   var location: String?
-  var timestamp: Int?
+  
+  var datePosted: FormattedDate?
+  var timestamp: Double? {
+    didSet {
+      datePosted = FormattedDate.dateFromTimestamp(timestamp!)
+    }
+  }
+  
   var url: NSURL? {
     didSet {
       self.urlString = String(url!)
@@ -64,7 +71,7 @@ class MediaObject: NSObject {
     
     media.mediaDescription = json["description"] as? String
     media.location = json["location"] as? String
-    media.timestamp = json["timestamp"] as? Int
+    media.timestamp = json["timestamp"] as? Double
     if let purpose = json["purpose"] as? String, mediaPurpose = MediaPurpose(rawValue: purpose) {
       media.purpose = mediaPurpose
     }
@@ -124,6 +131,7 @@ class MediaObject: NSObject {
     media.store = store
     media.uploaderUser_Id = CurrentUser.info.model?._id
     media.leafId = leaf?.leafId
+    //TODO: get tags
     //careful might not be getting set here... probably have to do on server or generate a local id like he other stuff...
     media.abilityName = leaf?.ability?.name
     media.activityName = leaf?.activityName
@@ -157,6 +165,8 @@ class MediaObject: NSObject {
     return [
       "mediaId": paramFor(mediaId),
       "leafId": paramFor(leafId),
+      "uploaderUser_Id": paramFor(uploaderUser_Id),
+      "taggedUser_Ids": [paramFor(uploaderUser_Id)],
       "abilityName": paramFor(abilityName),
       "activityName": paramFor(activityName),
       "source": [

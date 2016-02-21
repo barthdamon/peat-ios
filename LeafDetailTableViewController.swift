@@ -133,13 +133,24 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
     return 50
   }
   
+  override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    return 350
+  }
+  
   override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView, media = self.mediaObjects {
       headerView.frame = CGRectMake(0,0,tableView.frame.width, 50)
       do {
         let currentObject = try media.lookup(UInt(section))
         let primaryUser = viewing != nil ? viewing : CurrentUser.info.model
-        headerView.configureForMedia(currentObject, primaryUser: primaryUser)
+        switch mode {
+        case .Feed:
+          headerView.configureForLeafFeed(currentObject)
+        case .Set:
+          headerView.configureForUserLeaf(currentObject, primaryUser: primaryUser)
+        default:
+          break
+        }
       }
       catch {
         print("Error making header view")

@@ -56,30 +56,42 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
   
   func getNewsfeed() {
     var url = "news/all"
-    if let name = activityFilter?.name {
-      url = "news/\(name)"
-    }
+//    if let name = activityFilter?.name {
+//      url = "news/\(name)"
+//    }
     API.get(nil, authType: .Token, url: url) { (res, err) -> () in
       if let e = err {
         print("Error fetching newsfeed \(e)")
       } else {
         print("RES: \(res)")
-        if let json = res as? jsonObject, newsfeed = json["newsfeed"] as? jsonObject,
-          mediaObjectJson = newsfeed["media"] as? Array<jsonObject> {
+        if let json = res as? jsonObject {
+          if let newsfeed = json["newsfeed"] as? jsonObject,
+            mediaObjectJson = newsfeed["media"] as? Array<jsonObject> {
             self.mediaObjects = Array()
             mediaObjectJson.forEach({ (object) -> () in
               self.mediaObjects!.append(MediaObject.initWithJson(object, store: nil))
             })
-            self.tableView.reloadData()
+          }
+          if let following = json["following"] as? Array<jsonObject> {
+            CurrentUser.info.model?.addFollowing(following)
+          }
+          self.reload()
         }
       }
     }
   }
 
     // MARK: - Table view data source
+  
+  func reload() {
+    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+      self.tableView.reloadData()
+    })
+  }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-      return self.mediaObjects != nil ? self.mediaObjects!.count : 0
+      let count = self.mediaObjects != nil ? self.mediaObjects!.count : 0
+      return count
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -90,12 +102,15 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
     return 50
   }
   
+  override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    return 350
+  }
+  
   override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView, media = self.mediaObjects {
       headerView.frame = CGRectMake(0,0,tableView.frame.width, 50)
       let currentObject = media[section]
-      let primaryUser = CurrentUser.info.model
-      headerView.configureForMedia(currentObject, primaryUser: primaryUser)
+      headerView.configureForNewsfeed(currentObject)
       return headerView
     } else {
       return nil

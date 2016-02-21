@@ -37,11 +37,8 @@ class User: NSObject {
   //Other
   var avatarImage: UIImage?
   var friends: Array<User>?
-  
-//  var unconfirmedFriendship: Membership?
-  var unconfirmedWitnesses: NSObject?
-  
   var following: Array<User>?
+  var unconfirmedWitnesses: NSObject?
   var type: UserType = .Single
   
   var API = APIService.sharedService
@@ -102,11 +99,20 @@ class User: NSObject {
     }
   }
   
-  func initializeFriendsList(callback: (Bool) -> ()) {
+  func addFollowing(followingJson: Array<jsonObject>) {
+    self.following = []
+    for follow in followingJson {
+      let newUser = User.userFromProfile(follow)
+      self.following!.append(newUser)
+    }
+
+  }
+  
+  func initializeFollowingList(callback: (Bool) -> ()) {
     if let _id = self._id {
-      PeatSocialMediator.sharedMediator.getFriends(forUser_Id: _id, callback: { (friends) -> () in
-        if let friends = friends {
-          self.friends = friends
+      PeatSocialMediator.sharedMediator.getFollowing(forUser_Id: _id, callback: { (following) -> () in
+        if let following = following {
+          self.following = following
           callback(true)
         } else {
           callback(false)

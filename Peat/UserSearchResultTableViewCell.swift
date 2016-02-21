@@ -33,7 +33,7 @@ class UserSearchResultTableViewCell: UITableViewCell {
 
   @IBAction func addButtonPressed(sender: AnyObject) {
     if let user = user, id = user._id {
-      PeatSocialMediator.sharedMediator.createFriendRequest(id, callback: { (success) -> () in
+      PeatSocialMediator.sharedMediator.createFollow(id, callback: { (success) -> () in
         if success {
           dispatch_async(dispatch_get_main_queue(), { () -> Void in
             self.addButton.backgroundColor = UIColor.greenColor()

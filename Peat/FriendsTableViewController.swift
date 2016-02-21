@@ -18,7 +18,7 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate, Vi
   var selectedUser: User?
   var foundUsers: Array<User>?
   var friends: Array<User>? {
-    return CurrentUser.info.model?.friends
+    return CurrentUser.info.model?.following
   }
   var searchField: UITextField?
   var mode: FriendMode = .List
@@ -37,7 +37,7 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate, Vi
       configureMenuSwipes()
       configureSearchBar()
       
-      CurrentUser.info.model?.initializeFriendsList({ (success) -> () in
+      CurrentUser.info.model?.initializeFollowingList({ (success) -> () in
         if success {
           dispatch_async(dispatch_get_main_queue(), { () -> Void in
             self.tableView.reloadData()
@@ -48,11 +48,6 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate, Vi
       })
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "showProfileForUser:", name: "userSelected", object: nil)
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "showSearchResults", name: "recievedSearchResults", object: nil)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     // MARK: - Table view data source

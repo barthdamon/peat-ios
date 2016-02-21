@@ -172,7 +172,7 @@ class PeatContentStore: NSObject {
       if let viewing = viewing, _id = viewing._id {
         viewing_Id = _id
       }
-      API.get(nil, authType: .Token, url: "tree/\(activityName)/\(viewing_Id)"){ (res, err) -> () in
+      API.get(nil, authType: .Token, url: urlEncoded("tree/\(activityName)/\(viewing_Id)")){ (res, err) -> () in
         if let e = err {
           print("Error:\(e)")
           callback(false)
@@ -238,7 +238,7 @@ class PeatContentStore: NSObject {
   func searchForAbilities(activityName: String, abilityTerm: String, callback: (Array<Ability>?) -> () ) {
     let url = "abilities/\(activityName)/\(abilityTerm)"
     print("URL: FOR ABILITY: \(url)")
-    API.get(nil, authType: .Token, url: "abilities/\(activityName)/\(abilityTerm)") { (res, err) -> () in
+    API.get(nil, authType: .Token, url: urlEncoded("abilities/\(activityName)/\(abilityTerm)")) { (res, err) -> () in
       if let e = err {
         print("Error searching abilites: \(e)")
         callback(nil)
@@ -256,7 +256,7 @@ class PeatContentStore: NSObject {
   }
   
   func searchForActivities(user: User, activityTerm: String, callback: (Array<Activity>?) -> () ) {
-    API.get(nil, authType: .Token, url: "activities/\(activityTerm)") { (res, err) -> () in
+    API.get(nil, authType: .Token, url: urlEncoded("activities/\(activityTerm)")) { (res, err) -> () in
       if let e = err {
         print("Error searching abilites: \(e)")
         callback(nil)
@@ -275,7 +275,7 @@ class PeatContentStore: NSObject {
   
   func getLeafFeed(leaf: Leaf, callback: (Array<MediaObject>?) -> () ) {
     if let abilityName = leaf.ability?.name, activityName = treeStore.currentActivity?.name {
-      API.get(nil, authType: .Token, url: "news/leaf/\(activityName)/\(abilityName)") { (res, err) -> () in
+      API.get(nil, authType: .Token, url: urlEncoded("news/leaf/\(activityName)/\(abilityName)")) { (res, err) -> () in
         if let e = err {
           print("Error searching abilites: \(e)")
           callback(nil)

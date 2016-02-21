@@ -22,23 +22,23 @@ class PeatSocialMediator: NSObject {
   
   var userSearchResults: Array<User>?
   
-  //MARK: Friends List
-  func getFriends(forUser_Id forUser_Id: String, callback: (Array<User>?) ->()) {
-    API.get(nil, url: "friends/\(forUser_Id)") { (res, err) -> () in
+  //MARK: Following List
+  func getFollowing(forUser_Id forUser_Id: String, callback: (Array<User>?) ->()) {
+    API.get(nil, url: urlEncoded("follow/\(forUser_Id)")) { (res, err) -> () in
       if let e = err {
-        print("Error fetching friends: \(e)")
+        print("Error fetching following: \(e)")
         callback(nil)
       } else {
-        if let json = res as? jsonObject, friendJson = json["friends"] as? Array<jsonObject> {
-          var friends: Array<User> = []
-          for friend in friendJson {
-            let newUser = User.userFromProfile(friend)
+        if let json = res as? jsonObject, followJson = json["following"] as? Array<jsonObject> {
+          var following: Array<User> = []
+          for follow in followJson {
+            let newUser = User.userFromProfile(follow)
 //            if let pastRelationshipsJson = json["pastRelationships"] as? Array<jsonObject> {
 //              newUser.parsePastRelationships(pastRelationshipsJson)
 //            }
-            friends.append(newUser)
+            following.append(newUser)
           }
-          callback(friends)
+          callback(following)
         }
       }
     }
@@ -48,7 +48,7 @@ class PeatSocialMediator: NSObject {
   func searchUsers(searchTerm: String, callback: (Array<jsonObject>?) -> ()) {
     self.userSearchResults?.removeAll()
     self.userSearchResults = Array()
-    API.get(nil, url: "users/search/\(searchTerm)") { (res, err) -> () in
+    API.get(nil, url: urlEncoded("users/search/\(searchTerm)")) { (res, err) -> () in
       if let e = err {
         print("Error fetching users: \(e)")
         callback(nil)
@@ -64,6 +64,21 @@ class PeatSocialMediator: NSObject {
     API.post(nil, authType: .Token, url: "friends/\(id)"){ (res, err) in
       if let e = err {
         print("Error creating friend request \(e)")
+        callback(false)
+      } else {
+        callback(true)
+      }
+    }
+  }
+  
+  func createFollow(id: String, callback: (Bool) -> ()) {
+    let params = [
+      "following_Id" : id
+    ]
+    
+    API.post(params, authType: .Token, url: "follow/new"){ (res, err) in
+      if let e = err {
+        print("Error creating follow request \(e)")
         callback(false)
       } else {
         callback(true)
