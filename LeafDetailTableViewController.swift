@@ -26,6 +26,7 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
     }
     var activityIndicator: UIActivityIndicatorView?
     var playerCells: Array<MediaTableViewCell> = []
+    var headerViews: Array<MediaCellHeaderView> = []
   
     var viewing: User?
   
@@ -34,7 +35,7 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
     var mode: LeafFeedMode = .Set
     
     var leafFeedMedia: Array<MediaObject>?
-      
+  
     var mediaObjects: Array<MediaObject>? {
       switch mode {
       case .Set:
@@ -65,6 +66,14 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
     fixTableViewInsets()
   }
   
+  func reload() {
+    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+      self.playerCells = Array()
+      self.headerViews = Array()
+      self.reload()
+    })
+  }
+  
   override func viewWillDisappear(animated: Bool) {
     for cell in playerCells {
       cell.player?.stopPlaying()
@@ -80,13 +89,13 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
       switch status {
       case .Completed:
         mode = .Set
-        self.tableView.reloadData()
+        self.reload()
       case .Goal, .Learning where viewing == nil:
         mode = .Feed
         getLeafFeed()
       default:
         mode = .None
-        self.tableView.reloadData()
+        self.reload()
       }
       self.detailVC?.modeSet(self.mode)
     }
@@ -97,10 +106,10 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
       store?.getLeafFeed(leaf) { (mediaObjects) in
         if let objects = mediaObjects {
           self.leafFeedMedia = objects
-          self.tableView.reloadData()
+          self.reload()
         } else {
           self.mode = .None
-          self.tableView.reloadData()
+          self.reload()
           print("No Media to show for feed")
         }
       }
@@ -109,7 +118,7 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
   
   func newMediaAdded() {
     self.mode = .Set
-    self.tableView.reloadData()
+    self.reload()
   }
 
     override func didReceiveMemoryWarning() {
@@ -155,6 +164,7 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
       catch {
         print("Error making header view")
       }
+      self.headerViews.append(headerView)
       return headerView
     } else {
       return nil
@@ -234,8 +244,14 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
   }
   
   func commentsButtonPressed(media: MediaObject?) {
-    if let media = media {
-      detailVC?.showCommentsForMedia(media)
+    if let media = media, id = media.mediaId {
+      for headerView in headerViews {
+        if let headerId = headerView.media?.mediaId {
+          if id == headerId {
+            detailVC?.showCommentsForMedia(media, headerView: headerView)
+          }
+        }
+      }
     }
   }
   

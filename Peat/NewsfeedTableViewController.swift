@@ -8,19 +8,22 @@
 
 import UIKit
 
-class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu, TableViewForMedia {
+class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu, TableViewForMedia, CommentDetailDelegate {
   
     var mediaObjects: Array<MediaObject>?
     var sidebarClient: SideMenuClient?
     var playerCells: Array<MediaTableViewCell> = []
+  
     var selectedMediaForComments: MediaObject?
+    var selectedHeaderViewForComments: MediaCellHeaderView?
+    var headerViews: Array<MediaCellHeaderView> = []
   
     var activityFilter: Activity?
   
     var API = APIService.sharedService
   
     override func viewDidLoad() {
-        super.viewDidLoad()
+      super.viewDidLoad()
       self.tableView.allowsSelection = false
 //      NSNotificationCenter.defaultCenter().addObserver(self, selector: "configureMedia", name: "mediaObjectsPopulated", object: nil)
       
@@ -84,6 +87,8 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
     // MARK: - Table view data source
   
   func reload() {
+    self.headerViews = Array()
+    self.playerCells = Array()
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
       self.tableView.reloadData()
     })
@@ -111,6 +116,7 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
       headerView.frame = CGRectMake(0,0,tableView.frame.width, 50)
       let currentObject = media[section]
       headerView.configureForNewsfeed(currentObject)
+      self.headerViews.append(headerView)
       return headerView
     } else {
       return nil
@@ -138,11 +144,31 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
   }
   
   func commentsButtonPressed(media: MediaObject?) {
-    if let media = media {
+    if let media = media, id = media.mediaId {
       self.selectedMediaForComments = media
+      for headerView in headerViews {
+        if let headerId = headerView.media?.mediaId {
+          if id == headerId {
+            self.selectedHeaderViewForComments = headerView
+          }
+        }
+      }
       self.performSegueWithIdentifier("showComments", sender: self)
     }
   }
+  
+  //MARK: Navigation
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if segue.identifier == "showComments" {
+      if let vc = segue.destinationViewController as? CommentsTableViewController {
+        vc.media = selectedMediaForComments
+        vc.viewing = nil
+        vc.delegate = self
+        vc.headerView = self.selectedHeaderViewForComments
+      }
+    }
+  }
+
   
   
     //MARK: Sidebar

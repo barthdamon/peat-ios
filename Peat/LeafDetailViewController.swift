@@ -14,7 +14,7 @@ enum LeafMode {
   case View
 }
 
-class LeafDetailViewController: UIViewController, UIPopoverPresentationControllerDelegate {
+class LeafDetailViewController: UIViewController, UIPopoverPresentationControllerDelegate, CommentDetailDelegate {
   @IBOutlet weak var titleView: UIView!
   @IBOutlet weak var saveButton: UIButton!
   
@@ -44,6 +44,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   var profileDelegate: ProfileViewController?
   
   var selectedMediaForComments: MediaObject?
+  var selectedHeaderViewForComments: MediaCellHeaderView?
   var tableViewVC: LeafDetailTableViewController?
   
   
@@ -181,6 +182,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
         vc.media = selectedMediaForComments
         vc.viewing = viewing
         vc.delegate = self
+        vc.headerView = self.selectedHeaderViewForComments
       }
     }
     if segue.identifier == "showUploadOptions" {
@@ -267,8 +269,9 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
 
   }
   
-  func showCommentsForMedia(media: MediaObject) {
+  func showCommentsForMedia(media: MediaObject, headerView: MediaCellHeaderView) {
     self.selectedMediaForComments = media
+    self.selectedHeaderViewForComments = headerView
     self.performSegueWithIdentifier("showComments", sender: self)
   }
   

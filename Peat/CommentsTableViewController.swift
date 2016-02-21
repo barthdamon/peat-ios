@@ -8,13 +8,18 @@
 
 import UIKit
 
+protocol CommentDetailDelegate {
+  func updateCommentCount()
+}
+
 class CommentsTableViewController: UITableViewController {
   
   var media: MediaObject?
   var viewing: User?
   
-  var delegate: LeafDetailViewController?
+  var delegate: CommentDetailDelegate?
   var playerCell: MediaDrilldownTableViewCell?
+  var headerView: MediaCellHeaderView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +33,14 @@ class CommentsTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
+  
+  override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    return headerView
+  }
+  
+  override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    return 50
+  }
 
     // MARK: - Table view data source
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
