@@ -8,8 +8,9 @@
 
 import UIKit
 
-protocol CommentDetailDelegate {
+@objc protocol CommentDetailDelegate {
   func updateCommentCount()
+  optional func createHeaderForMedia(currentObject: MediaObject) -> MediaCellHeaderView?
 }
 
 class CommentsTableViewController: UITableViewController {
@@ -41,6 +42,10 @@ class CommentsTableViewController: UITableViewController {
   override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
     return 50
   }
+  
+  override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    return UITableViewAutomaticDimension
+  }
 
     // MARK: - Table view data source
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -56,10 +61,6 @@ class CommentsTableViewController: UITableViewController {
         return 2
       }
     }
-  
-  override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-    return UITableViewAutomaticDimension
-  }
   
   //  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
   //    if let media = media, comments = media.comments {

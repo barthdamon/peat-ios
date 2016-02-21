@@ -270,6 +270,12 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   }
   
   func showCommentsForMedia(media: MediaObject, headerView: MediaCellHeaderView) {
+//    func commentsButtonPressed(media: MediaObject?) {
+//      if let media = media {
+//        self.selectedHeaderViewForComments = createHeaderForMedia(media)
+//        self.performSegueWithIdentifier("showComments", sender: self)
+//      }
+//    }
     self.selectedMediaForComments = media
     self.selectedHeaderViewForComments = headerView
     self.performSegueWithIdentifier("showComments", sender: self)

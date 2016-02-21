@@ -26,7 +26,6 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
     }
     var activityIndicator: UIActivityIndicatorView?
     var playerCells: Array<MediaTableViewCell> = []
-    var headerViews: Array<MediaCellHeaderView> = []
   
     var viewing: User?
   
@@ -69,7 +68,6 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
   func reload() {
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
       self.playerCells = Array()
-      self.headerViews = Array()
       self.reload()
     })
   }
@@ -147,24 +145,30 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
   }
   
   override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView, media = self.mediaObjects {
-      headerView.frame = CGRectMake(0,0,tableView.frame.width, 50)
+    if let media = self.mediaObjects {
       do {
         let currentObject = try media.lookup(UInt(section))
-        let primaryUser = viewing != nil ? viewing : CurrentUser.info.model
-        switch mode {
-        case .Feed:
-          headerView.configureForLeafFeed(currentObject)
-        case .Set:
-          headerView.configureForUserLeaf(currentObject, primaryUser: primaryUser)
-        default:
-          break
-        }
+        return createHeaderForMedia(currentObject)
       }
       catch {
         print("Error making header view")
       }
-      self.headerViews.append(headerView)
+    }
+    return nil
+  }
+  
+  func createHeaderForMedia(currentObject: MediaObject) -> MediaCellHeaderView? {
+    if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView {
+      headerView.frame = CGRectMake(0,0,tableView.frame.width, 50)
+      let primaryUser = viewing != nil ? viewing : CurrentUser.info.model
+      switch mode {
+      case .Feed:
+        headerView.configureForLeafFeed(currentObject)
+      case .Set:
+        headerView.configureForUserLeaf(currentObject, primaryUser: primaryUser)
+      default:
+        break
+      }
       return headerView
     } else {
       return nil
@@ -244,14 +248,8 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
   }
   
   func commentsButtonPressed(media: MediaObject?) {
-    if let media = media, id = media.mediaId {
-      for headerView in headerViews {
-        if let headerId = headerView.media?.mediaId {
-          if id == headerId {
-            detailVC?.showCommentsForMedia(media, headerView: headerView)
-          }
-        }
-      }
+    if let media = media, headerView = createHeaderForMedia(media) {
+      detailVC?.showCommentsForMedia(media, headerView: headerView)
     }
   }
   

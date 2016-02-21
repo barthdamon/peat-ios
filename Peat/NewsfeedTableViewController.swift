@@ -16,7 +16,6 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
   
     var selectedMediaForComments: MediaObject?
     var selectedHeaderViewForComments: MediaCellHeaderView?
-    var headerViews: Array<MediaCellHeaderView> = []
   
     var activityFilter: Activity?
   
@@ -87,7 +86,6 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
     // MARK: - Table view data source
   
   func reload() {
-    self.headerViews = Array()
     self.playerCells = Array()
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
       self.tableView.reloadData()
@@ -112,11 +110,22 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
   }
   
   override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView, media = self.mediaObjects {
+    if let media = self.mediaObjects {
+      do {
+        let currentObject = try media.lookup(UInt(section))
+        return createHeaderForMedia(currentObject)
+      }
+      catch {
+        print("Error making header view")
+      }
+    }
+    return nil
+  }
+  
+  func createHeaderForMedia(currentObject: MediaObject) -> MediaCellHeaderView? {
+    if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView {
       headerView.frame = CGRectMake(0,0,tableView.frame.width, 50)
-      let currentObject = media[section]
       headerView.configureForNewsfeed(currentObject)
-      self.headerViews.append(headerView)
       return headerView
     } else {
       return nil
@@ -144,15 +153,9 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
   }
   
   func commentsButtonPressed(media: MediaObject?) {
-    if let media = media, id = media.mediaId {
+    if let media = media {
       self.selectedMediaForComments = media
-      for headerView in headerViews {
-        if let headerId = headerView.media?.mediaId {
-          if id == headerId {
-            self.selectedHeaderViewForComments = headerView
-          }
-        }
-      }
+      self.selectedHeaderViewForComments = createHeaderForMedia(media)
       self.performSegueWithIdentifier("showComments", sender: self)
     }
   }
@@ -164,7 +167,9 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
         vc.media = selectedMediaForComments
         vc.viewing = nil
         vc.delegate = self
-        vc.headerView = self.selectedHeaderViewForComments
+        if let newHeader = self.selectedHeaderViewForComments {
+          vc.headerView = newHeader
+        }
       }
     }
   }
