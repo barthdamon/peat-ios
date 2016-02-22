@@ -52,6 +52,7 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "newMediaAdded", name: "newMediaPostSuccessful", object: nil)
+      setMode()
     }
   
   func fixTableViewInsets() {
@@ -68,7 +69,7 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
   func reload() {
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
       self.playerCells = Array()
-      self.reload()
+      self.tableView.reloadData()
     })
   }
   
