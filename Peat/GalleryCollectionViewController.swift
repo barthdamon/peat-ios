@@ -38,6 +38,10 @@ class GalleryCollectionViewController: UICollectionViewController {
     // Do any additional setup after loading the view.
   }
   
+  override func viewDidAppear(animated: Bool) {
+    initializeGallery()
+  }
+  
   func reload() {
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
       self.collectionView?.reloadData()

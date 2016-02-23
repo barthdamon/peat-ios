@@ -2206,10 +2206,10 @@
             </objects>
             <point key="canvasLocation" x="1003" y="-730"/>
         </scene>
-        <!--Collection View Controller-->
+        <!--Gallery Collection View Controller-->
         <scene sceneID="rma-be-rqX">
             <objects>
-                <collectionViewController id="R6i-Xh-cGl" sceneMemberID="viewController">
+                <collectionViewController id="R6i-Xh-cGl" customClass="GalleryCollectionViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="poA-AX-Ipa">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

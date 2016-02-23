@@ -39,11 +39,12 @@ class Gallery: NSObject {
   }
   
   func initializeGallery(user_Id: String, callback: (Bool) ->()) {
-    API.get(nil, authType: .Token, url: "") { (res, err) -> () in
+    API.get(nil, authType: .Token, url: "gallery/\(user_Id)") { (res, err) -> () in
       if let e = err {
         print("error getting gallery: \(e)")
         callback(false)
       } else {
+        print("Gallery Recieved")
         if let json = res as? jsonObject {
           self.initFromJson(json)
         }
@@ -60,8 +61,8 @@ class Gallery: NSObject {
 //        self.activityTags!.append(ActivityTag.initFromJson(json))
 //      })
 //    }
-    
-    if let mediaObjectJson = json["mediaInfo"] as? Array<jsonObject> {
+    print("GALLERY JSON: \(json)")
+    if let info = json["mediaInfo"] as? jsonObject, mediaObjectJson = info["media"] as? Array<jsonObject> {
       self.mediaObjects = []
       mediaObjectJson.forEach({ (mediaJson) -> () in
         self.mediaObjects!.append(MediaObject.initWithJson(json, store: nil))

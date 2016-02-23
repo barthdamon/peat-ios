@@ -177,7 +177,7 @@ class PeatContentStore: NSObject {
           callback(false)
         } else {
           if let json = res as? Dictionary<String, AnyObject> {
-            print("TREE DATA: \(json)")
+//            print("TREE DATA: \(json)")
             if let leaves = json["leaves"] as? Array<jsonObject> {
               //reset the store, data for new tree incoming
               self.treeStore.resetStore()

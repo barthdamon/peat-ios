@@ -29,7 +29,9 @@ class MediaObject: NSObject {
   var datePosted: FormattedDate?
   var timestamp: Double? {
     didSet {
-      datePosted = FormattedDate.dateFromTimestamp(timestamp!)
+      if let timestamp = timestamp {
+        datePosted = FormattedDate.dateFromTimestamp(timestamp)
+      }
     }
   }
   
@@ -219,7 +221,7 @@ class MediaObject: NSObject {
   }
   
   func sendToServer(callback: (Bool) -> ()) {
-    API.post(self.params(), authType: HTTPRequestAuthType.Token, url: "media") { (res, err) -> () in
+    API.post(self.params(), authType: HTTPRequestAuthType.Token, url: "gallery/media") { (res, err) -> () in
       if let e = err {
         print("Error:\(e)")
         callback(false)

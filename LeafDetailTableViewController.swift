@@ -52,7 +52,7 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
       self.tableView.clipsToBounds = true
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-      NSNotificationCenter.defaultCenter().addObserver(self, selector: "newMediaAdded", name: "newMediaPostSuccessful", object: nil)
+//      NSNotificationCenter.defaultCenter().addObserver(self, selector: "newMediaAdded", name: "newMediaPostSuccessful", object: nil)
       setMode()
     }
   
@@ -111,11 +111,6 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
       }
     }
   }
-  
-//  func newMediaAdded() {
-//    self.mode = .Uploads
-//    self.reload()
-//  }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

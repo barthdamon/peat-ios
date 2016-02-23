@@ -44,18 +44,6 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
       initializeSidebar()
       configureMenuSwipes()
       configureNavBar()
-      if let user = viewing {
-        setupForUser(user)
-      } else {
-        CurrentUser.info.fetchProfile(){ (success) in
-          if success {
-            if let user = CurrentUser.info.model {
-              self.store = CurrentUser.info.store
-              self.setupForUser(user)
-            }
-          }
-        }
-      }
     }
   
   func setupForUser(user: User) {
@@ -106,7 +94,20 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
     }
   
 
-  
+  func prepareProfile() {
+    if let user = viewing {
+      setupForUser(user)
+    } else {
+      self.store = CurrentUser.info.store
+      CurrentUser.info.fetchProfile(){ (success) in
+        if success {
+          if let user = CurrentUser.info.model {
+            self.setupForUser(user)
+          }
+        }
+      }
+    }
+  }
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -115,6 +116,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
         // Pass the selected object to the new view controller.
       if segue.identifier == "treeViewEmbed" {
         if let vc = segue.destinationViewController as? TreeViewController {
+          prepareProfile()
           vc.profileDelegate = self
           self.treeController = vc
           vc.viewing = self.viewing

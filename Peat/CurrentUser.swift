@@ -101,7 +101,7 @@ class CurrentUser: NSObject {
         callback(false)
       } else {
         if let json = res as? jsonObject, userData = json["userData"] as? jsonObject {
-          print("PROFILE RESPONSE: \(json)")
+//          print("PROFILE RESPONSE: \(json)")
           self.model = User.userFromProfile(userData)
           callback(true)
         } else {

@@ -106,9 +106,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   func newMediaAdded() {
     toggleSaveOption(true)
-    if let leaf = self.leaf {
-      self.leaf?.getCompletionStatus()
-    }
+    self.leaf?.getCompletionStatus()
     self.setSelectedCompletion()
     self.tableViewVC?.setMode()
 //    self.tableViewVC?.newMediaAdded()
