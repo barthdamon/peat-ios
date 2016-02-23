@@ -25,18 +25,17 @@ class ActivityTag: NSObject {
 
 class Gallery: NSObject {
   var user_Id: String?
+  //unused:
   var activityTags: Array<ActivityTag>?
   
-  var API = APIService.sharedService
+  var mediaObjects: Array<MediaObject>?
   
-  func initFromJson(json: jsonObject) {
-    self.user_Id = json["user_Id"] as? String
-    if let activityTagJson = json["activityTags"] as? Array<jsonObject> {
-      self.activityTags = []
-      activityTagJson.forEach({ (activity) -> () in
-        self.activityTags!.append(ActivityTag.initFromJson(json))
-      })
-    }
+  var API = APIService.sharedService
+  var store: PeatContentStore?
+  
+  convenience init(store: PeatContentStore) {
+    self.init()
+    self.store = store
   }
   
   func initializeGallery(user_Id: String, callback: (Bool) ->()) {
@@ -50,6 +49,25 @@ class Gallery: NSObject {
         }
       }
     }
+  }
+  
+  func initFromJson(json: jsonObject) {
+    
+    self.user_Id = json["user_Id"] as? String
+//    if let activityTagJson = json["activityTags"] as? Array<jsonObject> {
+//      self.activityTags = []
+//      activityTagJson.forEach({ (activity) -> () in
+//        self.activityTags!.append(ActivityTag.initFromJson(json))
+//      })
+//    }
+    
+    if let mediaObjectJson = json["mediaInfo"] as? Array<jsonObject> {
+      self.mediaObjects = []
+      mediaObjectJson.forEach({ (mediaJson) -> () in
+        self.mediaObjects!.append(MediaObject.initWithJson(json, store: nil))
+      })
+    }
+    
   }
   
   

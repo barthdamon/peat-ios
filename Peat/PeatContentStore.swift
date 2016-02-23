@@ -131,12 +131,11 @@ typealias TreeContent = (vc: TreeViewController, store: TreeStore)
 //private let _sharedStore = PeatContentStore()
 
 class PeatContentStore: NSObject {
-  
-  var pastStores: Array<TreeContent> = Array()
-  
   var API = APIService.sharedService
-  var mediaObjects: Array<MediaObject>?
+  
+  var gallery = Gallery()
   var treeStore = TreeStore()
+  
   var leaves: Set<Leaf> {
     return treeStore.currentLeaves != nil ? treeStore.currentLeaves! : Set()
   }
@@ -273,7 +272,7 @@ class PeatContentStore: NSObject {
     }
   }
   
-  func getLeafFeed(leaf: Leaf, callback: (Array<MediaObject>?) -> () ) {
+  func getLeafFeed(leaf: Leaf, callback: (Dictionary<String, AnyObject>?) -> () ) {
     if let abilityName = leaf.ability?.name, activityName = treeStore.currentActivity?.name {
       API.get(nil, authType: .Token, url: urlEncoded("news/leaf/\(activityName)/\(abilityName)")) { (res, err) -> () in
         if let e = err {
@@ -281,13 +280,20 @@ class PeatContentStore: NSObject {
           callback(nil)
         } else {
           print("RES: \(res)")
-          if let json = res as? jsonObject, feed = json["leafFeed"] as? jsonObject, mediaJson = feed["media"] as? Array<jsonObject> {
-            var mediaObjects: Array<MediaObject> = []
-            for media in mediaJson {
-              mediaObjects.append(MediaObject.initWithJson(media, store: self))
+          var leafFeed: Array<MediaObject> = []
+          var leafTutorials: Array<MediaObject> = []
+          if let json = res as? jsonObject {
+            if let feed = json["leafFeed"] as? jsonObject, mediaJson = feed["media"] as? Array<jsonObject> {
+              for media in mediaJson {
+                leafFeed.append(MediaObject.initWithJson(media, store: self))
+              }
             }
-            print("Media Objects found: \(mediaObjects)")
-            callback(mediaObjects)
+            if let tutorials = json["leafTutorials"] as? jsonObject, mediaJson = tutorials["media"] as? Array<jsonObject> {
+              for media in mediaJson {
+                leafTutorials.append(MediaObject.initWithJson(media, store: self))
+              }
+            }
+            callback(["leafFeed": leafFeed, "leafTutorials": leafTutorials])
           } else {
             callback(nil)
           }

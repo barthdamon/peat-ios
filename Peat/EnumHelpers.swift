@@ -9,8 +9,7 @@
 import Foundation
 
 enum CompletionStatus: String {
-  case Completed = "Completed"
-  case Learning = "Learning"
+  case Uploaded = "Uploaded"
   case Goal = "Goal"
 }
 

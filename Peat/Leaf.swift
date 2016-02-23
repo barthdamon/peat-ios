@@ -387,14 +387,13 @@ class Leaf: NSObject, TreeObject {
   
   func getCompletionStatus() {
     var status: CompletionStatus = .Goal
-    media?.forEach({ (media) -> () in
-      if media.purpose == .Attempt && status == .Goal {
-        status = .Learning
-      }
-      if media.purpose == .Completion {
-        status = .Completed
-      }
-    })
+    if let media = self.media {
+      media.forEach({ (media) -> () in
+        if media.purpose == .Attempt || media.purpose == .Tutorial {
+          status = .Uploaded
+        }
+      })
+    }
     self.completionStatus = status
   }
   

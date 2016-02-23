@@ -18,7 +18,8 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   @IBOutlet weak var titleView: UIView!
   @IBOutlet weak var saveButton: UIButton!
   
-  @IBOutlet weak var completionStatusControl: UISegmentedControl!
+  @IBOutlet weak var completionStatusLabel: UILabel!
+
   @IBOutlet weak var leafTitleLabel: UILabel!
   @IBOutlet weak var returnButton: UIButton!
   var leaf: Leaf? {
@@ -32,9 +33,8 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   var selectedAbility: Ability?
   
-  @IBOutlet weak var leafFeedSelectionView: UIView!
-  @IBOutlet weak var leafFeedMeButton: UIButton!
-  @IBOutlet weak var leafFeedNewsButton: UIButton!
+  @IBOutlet weak var feedSelectionPicker: UISegmentedControl!
+
   
   @IBOutlet weak var abilityNameEditButton: UIButton!
   @IBOutlet weak var uploadLabel: UILabel!
@@ -50,11 +50,10 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.feedSelectionPicker.addTarget(self, action: "feedSelectionChanged:", forControlEvents: .ValueChanged)
     if let _ = self.viewing {
       mode = .View
     }
-    self.leafFeedMeButton.enabled = false
-    self.leafFeedNewsButton.enabled = false
     if let leaf = leaf {
       leaf.fetchContents(){ (success) ->() in
         guard success else {
@@ -78,9 +77,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
       self.uploadButton.setTitle("Witness", forState: .Normal)
       self.abilityNameEditButton.hidden = true
       self.abilityNameEditButton.enabled = false
-      self.completionStatusControl.userInteractionEnabled = false
     case .Edit:
-      self.completionStatusControl.userInteractionEnabled = false
       break
     }
   }
@@ -109,25 +106,18 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   func newMediaAdded() {
     toggleSaveOption(true)
-    self.leaf?.getCompletionStatus()
+    if let leaf = self.leaf {
+      self.leaf?.getCompletionStatus()
+    }
     self.setSelectedCompletion()
-    self.modeSet(.Set)
-    self.tableViewVC?.newMediaAdded()
+    self.tableViewVC?.setMode()
+//    self.tableViewVC?.newMediaAdded()
   }
 
   func setSelectedCompletion() {
-    var index = 2
     if let status = leaf?.completionStatus {
-      switch status {
-      case .Completed:
-        index = 0
-      case .Goal:
-        index = 2
-      case .Learning:
-        index = 1
-      }
+      self.completionStatusLabel.text = status.rawValue
     }
-    self.completionStatusControl.selectedSegmentIndex = index
   }
   
   func configureTitleView() {
@@ -347,18 +337,11 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     }
   }
   
-  func toggleButtons(feedActive feedActive: Bool) {
-    self.leafFeedNewsButton.enabled = !feedActive
-    self.leafFeedMeButton.enabled = feedActive
-    self.leafFeedMeButton.backgroundColor = feedActive ? UIColor.clearColor() : UIColor.greenColor()
-    self.leafFeedNewsButton.backgroundColor = feedActive ? UIColor.greenColor() : UIColor.clearColor()
-  }
-  
   func modeSet(mode: LeafFeedMode) {
-    if mode == .Set {
-      toggleButtons(feedActive: false)
+    if mode == .Uploads {
+      self.feedSelectionPicker.selectedSegmentIndex = 0
     } else {
-      toggleButtons(feedActive: true)
+      self.feedSelectionPicker.selectedSegmentIndex = 1
     }
   }
   
@@ -368,15 +351,10 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     self.tableViewVC?.tableView.reloadData()
   }
   
-  @IBAction func leafFeedMeButtonPressed(sender: AnyObject) {
-    setMode(.Set)
-    //check to make sure you can press the Me Button.... and need tochange fro me to "User" for other people.
-    toggleButtons(feedActive: false)
-  }
   
-  @IBAction func leafFeedNewsButtonPressed(sender: AnyObject) {
-    setMode(.Feed)
-    toggleButtons(feedActive: true)
+  func feedSelectionChanged(sender: UISegmentedControl) {
+    let index = sender.selectedSegmentIndex
+    if index == 0 { setMode(.Uploads) } else if index == 1 { setMode(.Feed) } else if index == 2 { setMode(.Tutorials) }
   }
   
   

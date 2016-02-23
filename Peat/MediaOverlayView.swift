@@ -114,30 +114,31 @@ class MediaOverlayView: UIView {
         
         self.addSubview(thumbnailView)
         
-        let playButtonContainerSize: CGFloat = 70
-        
-        let playButtonContainer = UIView(frame: CGRectMake(0, 0, playButtonContainerSize, playButtonContainerSize))
-        playButtonContainer.layer.cornerRadius = playButtonContainerSize/2;
-        playButtonContainer.layer.masksToBounds = true
-        playButtonContainer.backgroundColor = UIColor.whiteColor()
-        playButtonContainer.alpha = 0.3
-        playButtonContainer.center = thumbnailView.center
-        
-        let playButton = UIImageView(image: self.playButtonIcon)
-        
-        playButton.center = playButtonContainer.center
-        playButton.alpha = 0.6
-        
-        self.addSubview(playButtonContainer)
-        self.addSubview(playButton)
-        self.overlayButton = playButton
-        
-        self.gestureRecognizers?.removeAll()
-        let tap = UITapGestureRecognizer(target: self, action: "playButtonPressed")
-        tap.numberOfTapsRequired = 1
-        tap.numberOfTouchesRequired = 1
-        self.addGestureRecognizer(tap)
-        
+        if self.player != nil {
+          let playButtonContainerSize: CGFloat = 70
+          
+          let playButtonContainer = UIView(frame: CGRectMake(0, 0, playButtonContainerSize, playButtonContainerSize))
+          playButtonContainer.layer.cornerRadius = playButtonContainerSize/2;
+          playButtonContainer.layer.masksToBounds = true
+          playButtonContainer.backgroundColor = UIColor.whiteColor()
+          playButtonContainer.alpha = 0.3
+          playButtonContainer.center = thumbnailView.center
+          
+          let playButton = UIImageView(image: self.playButtonIcon)
+          
+          playButton.center = playButtonContainer.center
+          playButton.alpha = 0.6
+          
+          self.addSubview(playButtonContainer)
+          self.addSubview(playButton)
+          self.overlayButton = playButton
+          
+          self.gestureRecognizers?.removeAll()
+          let tap = UITapGestureRecognizer(target: self, action: "playButtonPressed")
+          tap.numberOfTapsRequired = 1
+          tap.numberOfTouchesRequired = 1
+          self.addGestureRecognizer(tap)
+        }
         self.mediaView.addSubview(self)
       })
   }

@@ -9,9 +9,9 @@
 import UIKit
 
 enum LeafFeedMode {
+  case Uploads
   case Feed
-  case Set
-  case None
+  case Tutorials
 }
 
 class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
@@ -31,18 +31,19 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
   
     var detailVC: LeafDetailViewController?
   
-    var mode: LeafFeedMode = .Set
+    var mode: LeafFeedMode = .Uploads
     
     var leafFeedMedia: Array<MediaObject>?
+    var tutorialFeedMedia: Array<MediaObject>?
   
     var mediaObjects: Array<MediaObject>? {
       switch mode {
-      case .Set:
+      case .Uploads:
         return leaf?.media
       case .Feed:
         return leafFeedMedia
-      case .None:
-        return nil
+      case .Tutorials:
+        return tutorialFeedMedia
       }
     }
 
@@ -86,14 +87,11 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
   func setMode() {
     if let status = leaf?.completionStatus {
       switch status {
-      case .Completed:
-        mode = .Set
+      case .Uploaded:
+        mode = .Uploads
         self.reload()
-      case .Goal, .Learning where viewing == nil:
-        mode = .Feed
-        getLeafFeed()
       default:
-        mode = .None
+        mode = .Feed
         self.reload()
       }
       self.detailVC?.modeSet(self.mode)
@@ -102,12 +100,11 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
   
   func getLeafFeed() {
     if let leaf = leaf {
-      store?.getLeafFeed(leaf) { (mediaObjects) in
-        if let objects = mediaObjects {
-          self.leafFeedMedia = objects
-          self.reload()
+      store?.getLeafFeed(leaf) { (objects) in
+        if let objects = objects {
+            self.leafFeedMedia = objects["leafFeed"] as? Array<MediaObject>
+            self.tutorialFeedMedia = objects["tutorialFeed"] as? Array<MediaObject>
         } else {
-          self.mode = .None
           self.reload()
           print("No Media to show for feed")
         }
@@ -115,10 +112,10 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
     }
   }
   
-  func newMediaAdded() {
-    self.mode = .Set
-    self.reload()
-  }
+//  func newMediaAdded() {
+//    self.mode = .Uploads
+//    self.reload()
+//  }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -163,12 +160,10 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
       headerView.frame = CGRectMake(0,0,tableView.frame.width, 50)
       let primaryUser = viewing != nil ? viewing : CurrentUser.info.model
       switch mode {
-      case .Feed:
+      case .Feed, .Tutorials:
         headerView.configureForLeafFeed(currentObject)
-      case .Set:
+      case .Uploads:
         headerView.configureForUserLeaf(currentObject, primaryUser: primaryUser)
-      default:
-        break
       }
       return headerView
     } else {

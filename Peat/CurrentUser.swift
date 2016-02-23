@@ -21,6 +21,7 @@ class CurrentUser: NSObject {
     return _info
   }
   
+  var store = PeatContentStore()
   var API = APIService.sharedService
   
   var model: User?

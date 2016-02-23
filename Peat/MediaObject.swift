@@ -10,7 +10,6 @@ import Foundation
 
 enum MediaPurpose: String {
   case Attempt = "Attempt"
-  case Completion = "Completion"
   case Tutorial = "Tutorial"
 }
 

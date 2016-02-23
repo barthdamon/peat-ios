@@ -50,6 +50,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
         CurrentUser.info.fetchProfile(){ (success) in
           if success {
             if let user = CurrentUser.info.model {
+              self.store = CurrentUser.info.store
               self.setupForUser(user)
             }
           }
@@ -70,10 +71,6 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
     }
     self.setupUserProfile(user)
     self.treeController?.fetchTreeData()
-  }
-  
-  func sharedStore() -> PeatContentStore {
-    return store
   }
   
   func reinitializeTreeController() {

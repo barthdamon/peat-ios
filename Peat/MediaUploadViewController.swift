@@ -22,8 +22,8 @@ class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPicke
   }
   
   var overlayView: MediaOverlayView?
-  var pickerOptions: Array<MediaPurpose> = [MediaPurpose.Completion,MediaPurpose.Attempt,MediaPurpose.Tutorial]
-  var selectedPurpose: MediaPurpose = .Completion
+  var pickerOptions: Array<MediaPurpose> = [MediaPurpose.Attempt,MediaPurpose.Tutorial]
+  var selectedPurpose: MediaPurpose = .Attempt
   
   var leafDetailDelegate: LeafDetailViewController?
   
@@ -186,7 +186,7 @@ extension MediaUploadViewController: UINavigationControllerDelegate, UIImagePick
   }
   
   func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    return 3
+    return 2
   }
   
   func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String {

@@ -9,13 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Peat/CommentsTableViewController.swift"
-            timestampString = "477786463.39277"
+            filePath = "Peat/MediaUploadViewController.swift"
+            timestampString = "477891231.166939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "91"
-            endingLineNumber = "91"
-            landmarkName = "tableView(_:cellForRowAtIndexPath:)"
+            startingLineNumber = "114"
+            endingLineNumber = "114"
+            landmarkName = "publishButtonPressed(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -25,13 +25,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LeafDetailTableViewController.swift"
-            timestampString = "477802001.588619"
+            filePath = "Peat/LeafDetailViewController.swift"
+            timestampString = "477894857.985507"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "91"
-            endingLineNumber = "91"
-            landmarkName = "setMode()"
+            startingLineNumber = "110"
+            endingLineNumber = "110"
+            landmarkName = "newMediaAdded()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -41,13 +41,109 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LeafDetailTableViewController.swift"
-            timestampString = "477802022.527101"
+            filePath = "Peat/Leaf.swift"
+            timestampString = "477894916.556599"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "132"
-            endingLineNumber = "132"
-            landmarkName = "numberOfSectionsInTableView(_:)"
+            startingLineNumber = "391"
+            endingLineNumber = "391"
+            landmarkName = "getCompletionStatus()"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Peat.Leaf.getCompletionStatus (Peat.Leaf)() -&gt; ()"
+                  moduleName = "Peat"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/MattBarth/Desktop/development/peat/peat-ios/Peat/Leaf.swift"
+                  timestampString = "477895480.658463"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "391"
+                  endingLineNumber = "391"
+                  offsetFromSymbolStart = "124">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Peat.Leaf.(getCompletionStatus (Peat.Leaf) -&gt; () -&gt; ()).(closure #1)"
+                  moduleName = "Peat"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/MattBarth/Desktop/development/peat/peat-ios/Peat/Leaf.swift"
+                  timestampString = "477895480.658729"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "392"
+                  endingLineNumber = "392"
+                  offsetFromSymbolStart = "23">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Peat/Leaf.swift"
+            timestampString = "477895236.384829"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "389"
+            endingLineNumber = "389"
+            landmarkName = "getCompletionStatus()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Peat/PeatContentStore.swift"
+            timestampString = "477895408.236084"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
+            landmarkName = "mediaForLeaf(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Peat/PeatContentStore.swift"
+            timestampString = "477895463.9257"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "341"
+            endingLineNumber = "341"
+            landmarkName = "addMediaToStore(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Peat/PeatContentStore.swift"
+            timestampString = "477895473.287034"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "345"
+            endingLineNumber = "345"
+            landmarkName = "addMediaToStore(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
