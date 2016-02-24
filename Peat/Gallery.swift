@@ -47,6 +47,7 @@ class Gallery: NSObject {
         print("Gallery Recieved")
         if let json = res as? jsonObject {
           self.initFromJson(json)
+          callback(true)
         }
       }
     }
@@ -65,7 +66,7 @@ class Gallery: NSObject {
     if let info = json["mediaInfo"] as? jsonObject, mediaObjectJson = info["media"] as? Array<jsonObject> {
       self.mediaObjects = []
       mediaObjectJson.forEach({ (mediaJson) -> () in
-        self.mediaObjects!.append(MediaObject.initWithJson(json, store: nil))
+        self.mediaObjects!.append(MediaObject.initWithJson(mediaJson, store: nil))
       })
     }
     

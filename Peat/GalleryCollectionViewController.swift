@@ -15,22 +15,26 @@ class GalleryCollectionViewController: UICollectionViewController {
   
   var viewing: User?
   var store = PeatContentStore()
+  var sidebarClient: SideMenuClient?
   
   var mediaCollectionCells: Array<MediaCollectionViewCell>?
   
   var mediaObjects: Array<MediaObject>? {
     return store.gallery.mediaObjects
   }
+  var selectedMediaObject: MediaObject?
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    
+    initializeSidebar()
+    configureMenuSwipes()
+    configureNavBar()
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = false
     
     // Register cell classes
-    self.collectionView!.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+//    self.collectionView!.registerClass(MediaCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
     if let _ = self.viewing {
     } else {
       self.store = CurrentUser.info.store
@@ -86,18 +90,18 @@ class GalleryCollectionViewController: UICollectionViewController {
   
   override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
     // #warning Incomplete implementation, return the number of sections
-    return 0
+    return 1
   }
   
   
   override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     // #warning Incomplete implementation, return the number of items
-    return 0
+    return mediaObjects != nil ? mediaObjects!.count : 0
   }
   
   override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-    let cell = UICollectionViewCell()
-    if let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as? MediaCollectionViewCell, mediaObjects = mediaObjects {
+    let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! MediaCollectionViewCell
+    if let mediaObjects = mediaObjects {
       do {
         let media = try mediaObjects.lookup(UInt(indexPath.row))
         cell.configureWithMedia(media)
@@ -112,6 +116,16 @@ class GalleryCollectionViewController: UICollectionViewController {
   }
   
   // MARK: UICollectionViewDelegate
+  
+  override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    do {
+      self.selectedMediaObject = try mediaObjects?.lookup(UInt(indexPath.row))
+      self.performSegueWithIdentifier("showMediaDrilldownDetail", sender: self)
+    }
+    catch {
+      print("Media not found for selected Cell")
+    }
+  }
   
   /*
   // Uncomment this method to specify if the specified item should be highlighted during tracking
@@ -141,5 +155,41 @@ class GalleryCollectionViewController: UICollectionViewController {
   
   }
   */
+  
+  //MARK: Navigation
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if segue.identifier == "showMediaDrilldownDetail" {
+      if let vc = segue.destinationViewController as? CommentsTableViewController, media = selectedMediaObject {
+        vc.media = media
+        vc.viewing = nil
+        if let newHeader = createHeaderForMedia(media) {
+          vc.headerView = newHeader
+        }
+      }
+    }
+  }
+  
+  func createHeaderForMedia(currentObject: MediaObject) -> MediaCellHeaderView? {
+    if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView, view = self.view {
+      headerView.frame = CGRectMake(0,0,view.frame.width, 50)
+      headerView.configureForNewsfeed(currentObject)
+      return headerView
+    } else {
+      return nil
+    }
+  }
+  
+  //MARK: Sidebar
+  func initializeSidebar() {
+    self.sidebarClient = SideMenuClient(clientController: self, tabBar: self.tabBarController)
+  }
+  
+  func configureNavBar() {
+    sidebarClient?.configureNavBar()
+  }
+  
+  func configureMenuSwipes() {
+    sidebarClient?.configureMenuSwipes()
+  }
   
 }

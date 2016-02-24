@@ -23,7 +23,7 @@ class MediaCollectionViewCell: UICollectionViewCell {
     }
     
     if let date = media.datePosted?.shortString {
-      self.uploadedOnTextLabel.text = "Posted on \(date) by"
+      self.uploadedOnTextLabel.text = "\(date) by"
     }
     
     self.mediaOverlayView = MediaOverlayView(mediaView: mediaView, player: nil, mediaObject: media, delegate: self)
