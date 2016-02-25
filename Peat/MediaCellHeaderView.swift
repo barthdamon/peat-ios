@@ -15,6 +15,10 @@ class MediaCellHeaderView: UIView {
   @IBOutlet weak var subtitleUsernameButton: UIButton!
   @IBOutlet weak var userThumbnailView: UIImageView!
   
+  
+  
+  
+  
   var media: MediaObject?
   var primaryUser: User?
   

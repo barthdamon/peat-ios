@@ -10,8 +10,13 @@ import UIKit
 
 private let reuseIdentifier = "MediaCollectionViewCell"
 
+enum GallerySelectionMode {
+  case Upload
+  case View
+}
 
-class GalleryCollectionViewController: UICollectionViewController {
+
+class GalleryCollectionViewController: UICollectionViewController, MediaUploadDelegate {
   
   var viewing: User?
   var store = PeatContentStore()
@@ -19,10 +24,13 @@ class GalleryCollectionViewController: UICollectionViewController {
   
   var mediaCollectionCells: Array<MediaCollectionViewCell>?
   
+  var mode: GallerySelectionMode = .View
+  
   var mediaObjects: Array<MediaObject>? {
     return store.gallery.mediaObjects
   }
   var selectedMediaObject: MediaObject?
+  var mediaUploadController: MediaUploadViewController?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -38,12 +46,17 @@ class GalleryCollectionViewController: UICollectionViewController {
     if let _ = self.viewing {
     } else {
       self.store = CurrentUser.info.store
+      let recognizer = UITapGestureRecognizer(target: self, action: "collectionViewDoubleTapped:")
+      recognizer.numberOfTapsRequired = 2
+      recognizer.numberOfTouchesRequired = 1
+      self.collectionView?.addGestureRecognizer(recognizer)
     }
+    initializeGallery()
     // Do any additional setup after loading the view.
   }
   
   override func viewDidAppear(animated: Bool) {
-    initializeGallery()
+    reload()
   }
   
   func reload() {
@@ -71,9 +84,18 @@ class GalleryCollectionViewController: UICollectionViewController {
     })
   }
   
+  func addMediaToGallery() {
+    self.performSegueWithIdentifier("showMediaUpload", sender: self)
+  }
   
+  func newMediaAdded() {
+    let store = self.store
+    self.reload()
+  }
   
-  
+  func getStore() -> PeatContentStore? {
+    return self.store
+  }
   
   
   /*
@@ -120,7 +142,15 @@ class GalleryCollectionViewController: UICollectionViewController {
   override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
     do {
       self.selectedMediaObject = try mediaObjects?.lookup(UInt(indexPath.row))
-      self.performSegueWithIdentifier("showMediaDrilldownDetail", sender: self)
+      switch mode {
+      case .View:
+        self.performSegueWithIdentifier("showMediaDrilldownDetail", sender: self)
+      case .Upload:
+        if let controller = mediaUploadController, object = selectedMediaObject {
+          controller.mediaFromGallery(object)
+          self.navigationController?.popViewControllerAnimated(true)
+        }
+      }
     }
     catch {
       print("Media not found for selected Cell")
@@ -161,10 +191,16 @@ class GalleryCollectionViewController: UICollectionViewController {
     if segue.identifier == "showMediaDrilldownDetail" {
       if let vc = segue.destinationViewController as? CommentsTableViewController, media = selectedMediaObject {
         vc.media = media
-        vc.viewing = nil
+        vc.viewing = self.viewing
         if let newHeader = createHeaderForMedia(media) {
           vc.headerView = newHeader
         }
+      }
+    }
+    
+    if segue.identifier == "showMediaUpload" {
+      if let vc = segue.destinationViewController as? MediaUploadViewController {
+        vc.delegate = self
       }
     }
   }
@@ -177,6 +213,10 @@ class GalleryCollectionViewController: UICollectionViewController {
     } else {
       return nil
     }
+  }
+  
+  func collectionViewDoubleTapped(sender: UIGestureRecognizer) {
+    self.addMediaToGallery()
   }
   
   //MARK: Sidebar

@@ -8,13 +8,18 @@
 
 import UIKit
 
+protocol MediaUploadDelegate {
+  func newMediaAdded()
+  func getStore() -> PeatContentStore?
+}
+
 class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
   
   @IBOutlet weak var pickerView: UIPickerView!
   @IBOutlet weak var mediaView: UIView!
   @IBOutlet weak var descriptionTextField: UITextField!
   var store: PeatContentStore? {
-    return leafDetailDelegate?.profileDelegate?.store
+    return delegate?.getStore()
   }
   
   var leaf: Leaf? {
@@ -25,7 +30,7 @@ class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPicke
   var pickerOptions: Array<MediaPurpose> = [MediaPurpose.Attempt,MediaPurpose.Tutorial]
   var selectedPurpose: MediaPurpose = .Attempt
   
-  var leafDetailDelegate: LeafDetailViewController?
+  var delegate: MediaUploadDelegate?
   
   var mediaType: MediaType? {
     didSet {
@@ -37,12 +42,17 @@ class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPicke
   var player: PeatAVPlayer?
   var videoPath: NSURL?
   var image: UIImage?
+  
+  var uploadFromGallery = false
 
     override func viewDidLoad() {
       super.viewDidLoad()
-      displayCameraControl()
       addListeners()
-    
+      if uploadFromGallery {
+        displayGalleryOptions()
+      } else {
+        displayCameraControl()
+      }
       // Do any additional setup after loading the view.
     }
   
@@ -79,6 +89,14 @@ class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPicke
     }
   }
   
+  func mediaFromGallery(media: MediaObject) {
+    self.mediaObject = media
+    if let leaf = self.leaf {
+      media.setMediaToLeaf(leaf)
+    }
+    showNewMedia()
+  }
+  
   func configureForImage() {
     if let mediaView = self.mediaView {
       self.overlayView = MediaOverlayView(mediaView: mediaView, player: nil, mediaObject: self.mediaObject, delegate: self)
@@ -95,25 +113,39 @@ class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPicke
   }
   
 
-    /*
+  
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//        // Get the new view controller using segue.destinationViewController.
+//        // Pass the selected object to the new view controller.
+//      if segue.identifier == "showGallery" {
+//        if let vc = segue.destinationViewController as? GalleryCollectionViewController {
+//          
+//        }
+//      }
+//    }
+
   func dismissSelf(animated: Bool) {
     self.navigationController?.popToRootViewControllerAnimated(animated)
   }
+  
+  func displayGalleryOptions() {
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    let galleryVC = storyboard.instantiateViewControllerWithIdentifier("GalleryCollectionViewController") as! GalleryCollectionViewController
+    galleryVC.mode = .Upload
+    galleryVC.mediaUploadController = self
+    self.navigationController?.pushViewController(galleryVC, animated: true)
+//    self.performSegueWithIdentifier("showGallery", sender: self)
+  }
 
   @IBAction func publishButtonPressed(sender: AnyObject) {
-    if let _ = self.mediaObject {
+    if let object = self.mediaObject {
       self.mediaObject?.mediaDescription = self.descriptionTextField.text
       self.mediaObject?.purpose = self.selectedPurpose
       store?.addMediaToStore(self.mediaObject!)
-      self.leafDetailDelegate?.newMediaAdded()
+      self.delegate?.newMediaAdded()
       dismissSelf(true)
     }
 //    self.mediaObject?.publish()
@@ -122,6 +154,27 @@ class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPicke
   @IBAction func cancelButtonPressed(sender: AnyObject) {
     dismissSelf(false)
   }
+  
+  //MARK: UIPickerView
+  
+  func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    self.selectedPurpose = pickerOptions[row]
+    print("purpose selected: \(pickerOptions[row].rawValue)")
+  }
+  
+  func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    return 1
+  }
+  
+  func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    return 2
+  }
+  
+  func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String {
+    return pickerOptions[row].rawValue
+  }
+  
+  //MARK: Upload Options
   
 }
 
@@ -170,26 +223,5 @@ extension MediaUploadViewController: UINavigationControllerDelegate, UIImagePick
     self.dismissViewControllerAnimated(false, completion: {
       self.dismissSelf(false)
     })
-  }
-  
-  
-  
-  //MARK: UIPickerView
-  
-  func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-    self.selectedPurpose = pickerOptions[row]
-    print("purpose selected: \(pickerOptions[row].rawValue)")
-  }
-  
-  func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-    return 1
-  }
-  
-  func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    return 2
-  }
-  
-  func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String {
-    return pickerOptions[row].rawValue
   }
 }

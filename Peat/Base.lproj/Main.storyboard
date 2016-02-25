@@ -647,7 +647,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dvk-KG-aDs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3850" y="959"/>
+            <point key="canvasLocation" x="3796" y="744"/>
         </scene>
         <!--Leaf Detail View Controller-->
         <scene sceneID="idj-eu-psZ">
@@ -1035,7 +1035,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4LS-el-nOx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2472" y="1405"/>
+            <point key="canvasLocation" x="2486" y="1364"/>
         </scene>
         <!--Media Upload View Controller-->
         <scene sceneID="lGU-PJ-0cU">
@@ -1049,14 +1049,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uy4-CB-DvL">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uy4-CB-DvL">
                                 <rect key="frame" x="8" y="8" width="584" height="329"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="uy4-CB-DvL" secondAttribute="height" multiplier="16:9" id="cSo-Pf-M1z"/>
                                 </constraints>
                             </view>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Description" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="atO-XS-hhb">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Description" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="atO-XS-hhb">
                                 <rect key="frame" x="8" y="353" width="584" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="VjA-mz-cdr"/>
@@ -1064,7 +1064,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cu7-oW-ZOa">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cu7-oW-ZOa">
                                 <rect key="frame" x="95" y="508" width="185" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="185" id="EaR-a2-vnb"/>
@@ -1079,7 +1079,7 @@
                                     <action selector="cancelButtonPressed:" destination="DQ0-yx-8xZ" eventType="touchUpInside" id="w9C-K2-wtk"/>
                                 </connections>
                             </button>
-                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mBG-iR-z2I">
+                            <pickerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mBG-iR-z2I">
                                 <rect key="frame" x="8" y="391" width="584" height="109"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="109" id="d4j-V9-gFK"/>
@@ -1089,7 +1089,7 @@
                                     <outlet property="delegate" destination="DQ0-yx-8xZ" id="3jb-KO-TXV"/>
                                 </connections>
                             </pickerView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="swW-DH-Xzo">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="swW-DH-Xzo">
                                 <rect key="frame" x="320" y="508" width="185" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="185" id="32l-Xl-Zp9"/>
@@ -1148,11 +1148,14 @@
                         <outlet property="descriptionTextField" destination="atO-XS-hhb" id="HAW-ti-N8t"/>
                         <outlet property="mediaView" destination="uy4-CB-DvL" id="AZn-GI-QxN"/>
                         <outlet property="pickerView" destination="mBG-iR-z2I" id="Lrw-oT-33e"/>
+                        <segue destination="I8Z-rz-Zf8" kind="popoverPresentation" popoverAnchorView="uy4-CB-DvL" id="XI9-8e-M4F">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7lF-ac-hDM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3950" y="1364"/>
+            <point key="canvasLocation" x="3947" y="1317.5"/>
         </scene>
         <!--Leaf Detail Table View Controller-->
         <scene sceneID="P6j-hL-yTx">
@@ -2193,13 +2196,13 @@
         <scene sceneID="H9P-Qa-BCq">
             <objects>
                 <navigationController id="sJd-Pl-bcv" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Gallery" id="PSq-iB-Eeh"/>
+                    <tabBarItem key="tabBarItem" title="Gallery" image="up-arrow" id="PSq-iB-Eeh"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="k61-qK-Sh0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="R6i-Xh-cGl" kind="relationship" relationship="rootViewController" id="ri6-Xj-yKH"/>
+                        <segue destination="R6i-Xh-cGl" kind="relationship" relationship="rootViewController" id="4bs-a1-pwM"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Se7-MG-hxB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2209,7 +2212,7 @@
         <!--Gallery Collection View Controller-->
         <scene sceneID="rma-be-rqX">
             <objects>
-                <collectionViewController id="R6i-Xh-cGl" customClass="GalleryCollectionViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController restorationIdentifier="GalleryCollectionViewController" storyboardIdentifier="GalleryCollectionViewController" id="R6i-Xh-cGl" customClass="GalleryCollectionViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="poA-AX-Ipa">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2331,11 +2334,12 @@
                     <navigationItem key="navigationItem" id="veW-zc-bDL"/>
                     <connections>
                         <segue destination="O9B-qi-3k4" kind="show" identifier="showMediaDrilldownDetail" id="Quj-bb-thA"/>
+                        <segue destination="DQ0-yx-8xZ" kind="show" identifier="showMediaUpload" id="GWI-Dl-6Eo"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dXi-8J-D1g" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1741" y="-736"/>
+            <point key="canvasLocation" x="1743" y="-736"/>
         </scene>
         <!--Ability Search Popover-->
         <scene sceneID="SJS-Io-HFy">
@@ -2429,6 +2433,52 @@
             </objects>
             <point key="canvasLocation" x="2453" y="326"/>
         </scene>
+        <!--Ability Search Popover-->
+        <scene sceneID="A2U-CF-2cM">
+            <objects>
+                <tableViewController id="I8Z-rz-Zf8" userLabel="Ability Search Popover" customClass="SearchTableViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="UYt-Qv-g6X">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="separatorColor" red="0.1843137255" green="0.1843137255" blue="0.1843137255" alpha="1" colorSpace="calibratedRGB"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="abilityCell" textLabel="L4u-x7-8eP" rowHeight="30" style="IBUITableViewCellStyleDefault" id="ahO-36-eDN">
+                                <rect key="frame" x="0.0" y="50" width="600" height="30"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ahO-36-eDN" id="HlE-0i-Sej">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="29"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="L4u-x7-8eP">
+                                            <rect key="frame" x="15" y="0.0" width="570" height="29"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="I8Z-rz-Zf8" id="7hm-xp-dNo"/>
+                            <outlet property="delegate" destination="I8Z-rz-Zf8" id="gdM-9a-wNN"/>
+                        </connections>
+                    </tableView>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
+                    <navigationItem key="navigationItem" id="UUf-ef-Aff"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="200"/>
+                    <connections>
+                        <outlet property="view" destination="UYt-Qv-g6X" id="qka-Sz-aGE"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IeG-6L-gfG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4380" y="804"/>
+        </scene>
     </scenes>
     <resources>
         <image name="camera" width="32" height="32"/>
@@ -2441,6 +2491,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="TiI-T8-EkV"/>
-        <segue reference="8qt-6g-62q"/>
+        <segue reference="Quj-bb-thA"/>
+        <segue reference="GWI-Dl-6Eo"/>
     </inferredMetricsTieBreakers>
 </document>

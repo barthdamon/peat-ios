@@ -343,6 +343,8 @@ class PeatContentStore: NSObject {
       self.treeStore.currentMediaObjects = Set()
     }
     self.treeStore.currentMediaObjects!.insert(media)
+    //adds to the gallery objects as well
+    self.gallery.saveMediaToGallery(media)
   }
   
   func addConnection(connection: LeafConnection) {

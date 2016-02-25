@@ -14,7 +14,7 @@ enum LeafMode {
   case View
 }
 
-class LeafDetailViewController: UIViewController, UIPopoverPresentationControllerDelegate, CommentDetailDelegate {
+class LeafDetailViewController: UIViewController, UIPopoverPresentationControllerDelegate, CommentDetailDelegate, MediaUploadDelegate {
   @IBOutlet weak var titleView: UIView!
   @IBOutlet weak var saveButton: UIButton!
   
@@ -46,6 +46,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   var selectedMediaForComments: MediaObject?
   var selectedHeaderViewForComments: MediaCellHeaderView?
   var tableViewVC: LeafDetailTableViewController?
+  var uploadFromGallery = false
   
   
   override func viewDidLoad() {
@@ -80,6 +81,10 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     case .Edit:
       break
     }
+  }
+  
+  func getStore() -> PeatContentStore? {
+    return profileDelegate?.store
   }
   
   func selectedAbility(ability: Ability) {
@@ -175,7 +180,14 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     }
     if segue.identifier == "showUploadOptions" {
       if let vc = segue.destinationViewController as? MediaUploadViewController {
-        vc.leafDetailDelegate = self
+        vc.delegate = self
+        if uploadFromGallery {
+          vc.uploadFromGallery = true
+          vc.displayGalleryOptions()
+        } else {
+          vc.uploadFromGallery = false
+          vc.displayCameraControl()
+        }
       }
     }
   }
@@ -246,7 +258,8 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     //open up the ol camera role.....
     switch mode {
     case .Edit:
-      self.performSegueWithIdentifier("showUploadOptions", sender: self)
+      self.uploadOptionsShow(self, alertText: "Upload Options", alertMessage: "Select from the following upload options:")
+//      self.performSegueWithIdentifier("showUploadOptions", sender: self)
       //also pause any media playing here, might already work
     case .View:
       //show popover with option to submit witness requestmain
@@ -368,6 +381,27 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     
     alert.addAction(UIAlertAction(title: "Okay", style: .Default, handler: { (action) -> Void in
       alert.dismissViewControllerAnimated(true, completion: nil)
+    }))
+    
+    //can add another action (maybe cancel, here)
+    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+      vc.presentViewController(alert, animated: true, completion: nil)
+    })
+  }
+  
+  func uploadOptionsShow(vc: UIViewController, alertText :String, alertMessage :String) {
+    let alert = UIAlertController(title: alertText, message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
+    
+    alert.addAction(UIAlertAction(title: "Upload From Device", style: .Default, handler: { (action) -> Void in
+      alert.dismissViewControllerAnimated(true, completion: nil)
+      self.uploadFromGallery = false
+      self.performSegueWithIdentifier("showUploadOptions", sender: self)
+    }))
+    
+    alert.addAction(UIAlertAction(title: "Upload From Gallery", style: .Default, handler: { (action) -> Void in
+      alert.dismissViewControllerAnimated(true, completion: nil)
+      self.uploadFromGallery = true
+      self.performSegueWithIdentifier("showUploadOptions", sender: self)
     }))
     
     //can add another action (maybe cancel, here)

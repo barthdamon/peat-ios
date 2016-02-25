@@ -149,6 +149,14 @@ class MediaObject: NSObject {
     return media
   }
   
+  func setMediaToLeaf(leaf: Leaf?) {
+    self.abilityName = leaf?.ability?.name
+    self.activityName = leaf?.activityName
+    self.leafId = leaf?.leafId
+    //need a way to update leaves FUCK ME GOD DAMNET THIS IS FUCKING STUPID
+    leaf?.changed(.Updated)
+  }
+  
   func generateThumbnail(media: MediaObject, callback: (UIImage?, NSError?) -> () ) {
     if let url = media.url {
       if let thumbnail = media.thumbnail {
