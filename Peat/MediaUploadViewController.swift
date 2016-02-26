@@ -13,9 +13,9 @@ protocol MediaUploadDelegate {
   func getStore() -> PeatContentStore?
 }
 
-class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class MediaUploadViewController: UIViewController, UIPopoverPresentationControllerDelegate, MediaTagUserDelegate {
   
-  @IBOutlet weak var pickerView: UIPickerView!
+  @IBOutlet weak var purposeSelector: UISegmentedControl!
   @IBOutlet weak var mediaView: UIView!
   @IBOutlet weak var descriptionTextField: UITextField!
   var store: PeatContentStore? {
@@ -26,8 +26,6 @@ class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPicke
     return store?.treeStore.selectedLeaf
   }
   
-  var overlayView: MediaOverlayView?
-  var pickerOptions: Array<MediaPurpose> = [MediaPurpose.Attempt,MediaPurpose.Tutorial]
   var selectedPurpose: MediaPurpose = .Attempt
   
   var delegate: MediaUploadDelegate?
@@ -42,11 +40,13 @@ class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPicke
   var player: PeatAVPlayer?
   var videoPath: NSURL?
   var image: UIImage?
+  var overlayView: MediaOverlayView?
   
   var uploadFromGallery = false
 
     override func viewDidLoad() {
       super.viewDidLoad()
+      self.purposeSelector.addTarget(self, action: "newPurposeSelected:", forControlEvents: .ValueChanged)
       addListeners()
       if uploadFromGallery {
         displayGalleryOptions()
@@ -117,15 +117,31 @@ class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPicke
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        // Get the new view controller using segue.destinationViewController.
-//        // Pass the selected object to the new view controller.
-//      if segue.identifier == "showGallery" {
-//        if let vc = segue.destinationViewController as? GalleryCollectionViewController {
-//          
-//        }
-//      }
-//    }
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+      if segue.identifier == "tagUserSegue" {
+        if let vc = segue.destinationViewController as? TagUserTableViewController {
+          vc.mediaTagDelegate = self
+          let popover = vc.popoverPresentationController
+          popover?.delegate = self
+          vc.popoverPresentationController?.delegate = self
+          //        vc.popoverPresentationController?.sourceView = self.view
+          //        vc.popoverPresentationController?.sourceRect = CGRectMake(100,100,0,0)
+          vc.preferredContentSize = CGSize(width: self.view.frame.width, height: 200)
+        }
+      }
+    }
+  
+  func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+    return .None
+  }
+  
+  func userAdded(user: User) {
+    self.mediaObject?.tagUserOnMedia(user)
+    //do something to show the user has been tagged
+    //perhaps a list of the users tagged or something?
+  }
 
   func dismissSelf(animated: Bool) {
     self.navigationController?.popToRootViewControllerAnimated(animated)
@@ -141,7 +157,7 @@ class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPicke
   }
 
   @IBAction func publishButtonPressed(sender: AnyObject) {
-    if let object = self.mediaObject {
+    if let _ = self.mediaObject {
       self.mediaObject?.mediaDescription = self.descriptionTextField.text
       self.mediaObject?.purpose = self.selectedPurpose
       store?.addMediaToStore(self.mediaObject!)
@@ -151,30 +167,19 @@ class MediaUploadViewController: UIViewController, UIPickerViewDelegate, UIPicke
 //    self.mediaObject?.publish()
   }
   
+  @IBAction func tagOthersButtonPressed(sender: AnyObject) {
+    //tag the other
+    self.performSegueWithIdentifier("tagUserSegue", sender: self)
+  }
+  
   @IBAction func cancelButtonPressed(sender: AnyObject) {
     dismissSelf(false)
   }
   
-  //MARK: UIPickerView
-  
-  func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-    self.selectedPurpose = pickerOptions[row]
-    print("purpose selected: \(pickerOptions[row].rawValue)")
+  func newPurposeSelected(sender: UISegmentedControl) {
+    let index = sender.selectedSegmentIndex
+    self.selectedPurpose = index == 0 ? .Attempt : .Tutorial
   }
-  
-  func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-    return 1
-  }
-  
-  func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    return 2
-  }
-  
-  func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String {
-    return pickerOptions[row].rawValue
-  }
-  
-  //MARK: Upload Options
   
 }
 

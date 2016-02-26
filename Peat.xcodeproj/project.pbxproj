@@ -39,6 +39,8 @@
 		024F828D1C757F8600C107CB /* ArrayBounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024F828C1C757F8600C107CB /* ArrayBounds.swift */; };
 		025D0DB31BD5CACB00462783 /* PeatSocialMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */; };
 		025D0DB71BD72F6C00462783 /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */; };
+		0262B2F21C7FC4DB007E8EC6 /* TagUserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0262B2F11C7FC4DB007E8EC6 /* TagUserTableViewController.swift */; };
+		0262B2F61C7FCB01007E8EC6 /* TagUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0262B2F51C7FCB01007E8EC6 /* TagUserTableViewCell.swift */; };
 		026325BF1C69786D00A959FE /* MediaDrilldownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026325BE1C69786D00A959FE /* MediaDrilldownTableViewCell.swift */; };
 		0264A6651C6D75560056966A /* Membership.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0264A6641C6D75560056966A /* Membership.swift */; };
 		026CF67B1C7A03420066888E /* Follow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026CF67A1C7A03420066888E /* Follow.swift */; };
@@ -128,6 +130,8 @@
 		024F828C1C757F8600C107CB /* ArrayBounds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayBounds.swift; sourceTree = "<group>"; };
 		025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeatSocialMediator.swift; sourceTree = "<group>"; };
 		025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
+		0262B2F11C7FC4DB007E8EC6 /* TagUserTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagUserTableViewController.swift; sourceTree = "<group>"; };
+		0262B2F51C7FCB01007E8EC6 /* TagUserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagUserTableViewCell.swift; sourceTree = "<group>"; };
 		026325BE1C69786D00A959FE /* MediaDrilldownTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDrilldownTableViewCell.swift; sourceTree = "<group>"; };
 		0264A6641C6D75560056966A /* Membership.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Membership.swift; sourceTree = "<group>"; };
 		026CF67A1C7A03420066888E /* Follow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Follow.swift; sourceTree = "<group>"; };
@@ -239,6 +243,7 @@
 			isa = PBXGroup;
 			children = (
 				025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */,
+				0262B2F51C7FCB01007E8EC6 /* TagUserTableViewCell.swift */,
 				026CF6841C7B40040066888E /* MediaCollectionViewCell.swift */,
 				020815131C72B2AA00B1A2EC /* SearchTableViewCell.swift */,
 				02069E051C114E5C007E18EB /* MediaDescriptionTableViewCell.swift */,
@@ -256,6 +261,7 @@
 			isa = PBXGroup;
 			children = (
 				020815361C738FEA00B1A2EC /* ActivitySelectionTableViewController.swift */,
+				0262B2F11C7FC4DB007E8EC6 /* TagUserTableViewController.swift */,
 				027C75BE1C509AD1008D6DAE /* LeafDetailTableViewController.swift */,
 				02D72E8A1BD0926900EC115E /* FriendsTableViewController.swift */,
 				020815111C72B1A900B1A2EC /* SearchTableViewController.swift */,
@@ -622,6 +628,7 @@
 				023355C81BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift in Sources */,
 				02EE26961BE181D6006DAE81 /* Leaf.swift in Sources */,
 				026325BF1C69786D00A959FE /* MediaDrilldownTableViewCell.swift in Sources */,
+				0262B2F21C7FC4DB007E8EC6 /* TagUserTableViewController.swift in Sources */,
 				02F2DA691C16875C00CA1328 /* UIImageExtension.swift in Sources */,
 				027C75C11C509E51008D6DAE /* PostCommentTableViewCell.swift in Sources */,
 				02A11CA01BB9D4CA0064AE95 /* NewsfeedTableViewController.swift in Sources */,
@@ -644,6 +651,7 @@
 				02A11CA91BB9F1670064AE95 /* AWSContentHelper.swift in Sources */,
 				020815121C72B1A900B1A2EC /* SearchTableViewController.swift in Sources */,
 				021C900E1BF0012C00C79538 /* MenuTableViewController.swift in Sources */,
+				0262B2F61C7FCB01007E8EC6 /* TagUserTableViewCell.swift in Sources */,
 				027C34041C55178000D86F0F /* LoginViewController.swift in Sources */,
 				027C34021C53392300D86F0F /* MediaUploadViewController.swift in Sources */,
 				023B03811C150853003497FB /* MediaOverlayView.swift in Sources */,

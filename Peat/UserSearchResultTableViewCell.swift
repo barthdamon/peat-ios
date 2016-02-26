@@ -11,7 +11,9 @@ import UIKit
 class UserSearchResultTableViewCell: UITableViewCell {
   
   var user: User?
+  var delegate: TagUserDelegate?
 
+  @IBOutlet weak var tagButton: UIButton!
   @IBOutlet weak var avatarImageView: UIImageView!
   @IBOutlet weak var addButton: UIButton!
   @IBOutlet weak var usernameLabel: UILabel!
@@ -30,6 +32,11 @@ class UserSearchResultTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+  
+  @IBAction func tagButtonPressed(sender: AnyObject) {
+    //i dunno fucking tell the delegate
+//    self.delegate?.uploadingForUser(user)
+  }
 
   @IBAction func addButtonPressed(sender: AnyObject) {
     if let user = user, id = user._id {

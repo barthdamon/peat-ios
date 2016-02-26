@@ -228,6 +228,23 @@ class MediaObject: NSObject {
     }
   }
   
+  func tagUserOnMedia(user: User) {
+    if let _ = self.taggedUsers {
+    } else {
+      self.taggedUsers = Array()
+    }
+    
+    if let _ = self.taggedUser_Ids {
+    } else {
+      self.taggedUser_Ids = Array()
+    }
+    
+    self.taggedUsers!.append(user)
+    if let id = user._id {
+      self.taggedUser_Ids!.append(id)
+    }
+  }
+  
   func sendToServer(callback: (Bool) -> ()) {
     API.post(self.params(), authType: HTTPRequestAuthType.Token, url: "gallery/media") { (res, err) -> () in
       if let e = err {
