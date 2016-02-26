@@ -66,6 +66,10 @@ class RootViewController: UIViewController {
     globalMainContainer = mainViewContainer
   }
   
+  func editProfileSelected() {
+    
+  }
+  
 
     /*
     // MARK: - Navigation

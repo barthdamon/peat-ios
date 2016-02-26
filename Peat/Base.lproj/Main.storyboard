@@ -1957,6 +1957,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="p2l-tm-r2G"/>
+                    <connections>
+                        <segue destination="muZ-Rk-ORA" kind="show" identifier="showEditProfile" id="b4D-H3-JWP"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Z6-M4-h2P" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2225,6 +2228,49 @@
             </objects>
             <point key="canvasLocation" x="-427" y="-458"/>
         </scene>
+        <!--Table View Controller-->
+        <scene sceneID="JCf-ke-JIk">
+            <objects>
+                <tableViewController id="muZ-Rk-ORA" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="131" sectionHeaderHeight="28" sectionFooterHeight="28" id="k1l-zN-K5s">
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="131" id="sdn-wC-idM" customClass="EditAvatarTableViewCell" customModule="Peat" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="72" width="300" height="131"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sdn-wC-idM" id="Na8-no-9GS">
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="130"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="laH-Vk-b4c">
+                                            <rect key="frame" x="14" y="0.0" width="167" height="130"/>
+                                        </imageView>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mAm-NH-cyQ">
+                                            <rect key="frame" x="210" y="50" width="63" height="30"/>
+                                            <state key="normal" title="Change"/>
+                                            <connections>
+                                                <action selector="chooseButtonPressed:" destination="sdn-wC-idM" eventType="touchUpInside" id="oVW-ch-bxG"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="avatarImageView" destination="laH-Vk-b4c" id="sbJ-4B-DIX"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="muZ-Rk-ORA" id="g0m-Oi-gIj"/>
+                            <outlet property="delegate" destination="muZ-Rk-ORA" id="Jsu-kq-UB9"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PwN-jH-4WM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-240" y="1956"/>
+        </scene>
         <!--Gallery-->
         <scene sceneID="H9P-Qa-BCq">
             <objects>
@@ -2469,7 +2515,7 @@
         <!--Ability Search Popover-->
         <scene sceneID="A2U-CF-2cM">
             <objects>
-                <tableViewController storyboardIdentifier="Tag User Table" id="I8Z-rz-Zf8" userLabel="Ability Search Popover" customClass="TagUserTableViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="Tag User Table" useStoryboardIdentifierAsRestorationIdentifier="YES" id="I8Z-rz-Zf8" userLabel="Ability Search Popover" customClass="TagUserTableViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="UYt-Qv-g6X">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

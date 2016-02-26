@@ -41,6 +41,8 @@
 		025D0DB71BD72F6C00462783 /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */; };
 		0262B2F21C7FC4DB007E8EC6 /* TagUserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0262B2F11C7FC4DB007E8EC6 /* TagUserTableViewController.swift */; };
 		0262B2F61C7FCB01007E8EC6 /* TagUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0262B2F51C7FCB01007E8EC6 /* TagUserTableViewCell.swift */; };
+		0262B2FA1C7FD8EC007E8EC6 /* EditProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0262B2F91C7FD8EC007E8EC6 /* EditProfileTableViewController.swift */; };
+		0262B2FC1C7FD9C5007E8EC6 /* EditAvatarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0262B2FB1C7FD9C5007E8EC6 /* EditAvatarTableViewCell.swift */; };
 		026325BF1C69786D00A959FE /* MediaDrilldownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026325BE1C69786D00A959FE /* MediaDrilldownTableViewCell.swift */; };
 		0264A6651C6D75560056966A /* Membership.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0264A6641C6D75560056966A /* Membership.swift */; };
 		026CF67B1C7A03420066888E /* Follow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026CF67A1C7A03420066888E /* Follow.swift */; };
@@ -132,6 +134,8 @@
 		025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
 		0262B2F11C7FC4DB007E8EC6 /* TagUserTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagUserTableViewController.swift; sourceTree = "<group>"; };
 		0262B2F51C7FCB01007E8EC6 /* TagUserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagUserTableViewCell.swift; sourceTree = "<group>"; };
+		0262B2F91C7FD8EC007E8EC6 /* EditProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileTableViewController.swift; sourceTree = "<group>"; };
+		0262B2FB1C7FD9C5007E8EC6 /* EditAvatarTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditAvatarTableViewCell.swift; sourceTree = "<group>"; };
 		026325BE1C69786D00A959FE /* MediaDrilldownTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDrilldownTableViewCell.swift; sourceTree = "<group>"; };
 		0264A6641C6D75560056966A /* Membership.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Membership.swift; sourceTree = "<group>"; };
 		026CF67A1C7A03420066888E /* Follow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Follow.swift; sourceTree = "<group>"; };
@@ -242,6 +246,7 @@
 		025D0DB81BD72F7200462783 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				0262B2FB1C7FD9C5007E8EC6 /* EditAvatarTableViewCell.swift */,
 				025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */,
 				0262B2F51C7FCB01007E8EC6 /* TagUserTableViewCell.swift */,
 				026CF6841C7B40040066888E /* MediaCollectionViewCell.swift */,
@@ -264,6 +269,7 @@
 				0262B2F11C7FC4DB007E8EC6 /* TagUserTableViewController.swift */,
 				027C75BE1C509AD1008D6DAE /* LeafDetailTableViewController.swift */,
 				02D72E8A1BD0926900EC115E /* FriendsTableViewController.swift */,
+				0262B2F91C7FD8EC007E8EC6 /* EditProfileTableViewController.swift */,
 				020815111C72B1A900B1A2EC /* SearchTableViewController.swift */,
 				021C900D1BF0012C00C79538 /* MenuTableViewController.swift */,
 				02A11C9F1BB9D4CA0064AE95 /* NewsfeedTableViewController.swift */,
@@ -599,6 +605,7 @@
 				027C33FE1C532E6100D86F0F /* StringHelpers.swift in Sources */,
 				027E31281BA27875001FCF70 /* APIService.swift in Sources */,
 				020815371C738FEA00B1A2EC /* ActivitySelectionTableViewController.swift in Sources */,
+				0262B2FA1C7FD8EC007E8EC6 /* EditProfileTableViewController.swift in Sources */,
 				026CF67D1C7A3B1B0066888E /* DateFormatter.swift in Sources */,
 				02FD6C931BB38C69003A3DDD /* CameraViewController.swift in Sources */,
 				02D11D411C5AFA8C0054E1AC /* FriendRequestTableViewCell.swift in Sources */,
@@ -652,6 +659,7 @@
 				020815121C72B1A900B1A2EC /* SearchTableViewController.swift in Sources */,
 				021C900E1BF0012C00C79538 /* MenuTableViewController.swift in Sources */,
 				0262B2F61C7FCB01007E8EC6 /* TagUserTableViewCell.swift in Sources */,
+				0262B2FC1C7FD9C5007E8EC6 /* EditAvatarTableViewCell.swift in Sources */,
 				027C34041C55178000D86F0F /* LoginViewController.swift in Sources */,
 				027C34021C53392300D86F0F /* MediaUploadViewController.swift in Sources */,
 				023B03811C150853003497FB /* MediaOverlayView.swift in Sources */,

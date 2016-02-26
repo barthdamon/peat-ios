@@ -19,7 +19,7 @@ class MenuTableViewController: UITableViewController {
   var API = APIService.sharedService
   var mode: MenuMode = .Notification
   
-  var settingsNavItems: Array<String> = ["Log Out"]
+  var settingsNavItems: Array<String> = ["Log Out", "Edit Profile"]
 //  var notificationItems: Array<String> = ["Example Notification"]
   
   var requestUsers: Array<User>?
@@ -163,8 +163,10 @@ class MenuTableViewController: UITableViewController {
         NSNotificationCenter.defaultCenter().postNotificationName("userSelected", object: nil, userInfo: nil)
       }
     case .Settings:
-        if settingsNavItems[indexPath.row] == "Log Out" {
-          CurrentUser.info.logOut()
+      if settingsNavItems[indexPath.row] == "Log Out" {
+        CurrentUser.info.logOut()
+      } else {
+        self.performSegueWithIdentifier("showEditProfile", sender: self)
       }
     }
   }

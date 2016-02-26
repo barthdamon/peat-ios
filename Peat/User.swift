@@ -36,6 +36,7 @@ class User: NSObject {
   
   //Other
   var avatarImage: UIImage?
+  var doesNeedAvatarPost: Bool = false
   var friends: Array<User>?
   var following: Array<User>?
   var unconfirmedWitnesses: NSObject?
@@ -167,6 +168,9 @@ class User: NSObject {
   }
   
   func updateProfile() {
+    if doesNeedAvatarPost {
+      
+    }
     let params = self.profileParams()
     print("Profile Update params: \(params)")
     API.put(params, authType: .Token, url: "profile/update") { (res, err) -> () in
@@ -176,6 +180,11 @@ class User: NSObject {
         print("user profile update successful")
       }
     }
+  }
+  
+  func postAvatarImage() {
+    // so make an object, post it, save the url to the user. then when saving on the server first post the new media, then update the user profile with the new url, and then remove the media with the url of the old profile avatar url
+    let avatarImage = MediaObject()
   }
   
   func updateUser() {
