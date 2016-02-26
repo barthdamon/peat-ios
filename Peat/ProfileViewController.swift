@@ -41,10 +41,15 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
     override func viewDidLoad() {
         super.viewDidLoad()
       
+      NSNotificationCenter.defaultCenter().addObserver(self, selector: "updatedAvatar", name: "userAvatarUpdated", object: nil)
       initializeSidebar()
       configureMenuSwipes()
       configureNavBar()
     }
+  
+  func updatedAvatar() {
+    self.avatarImageView.image = CurrentUser.info.model?.avatarImage
+  }
   
   func setupForUser(user: User) {
     do {

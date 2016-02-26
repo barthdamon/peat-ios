@@ -36,7 +36,8 @@ class User: NSObject {
   
   //Other
   var avatarImage: UIImage?
-  var doesNeedAvatarPost: Bool = false
+  var newAvatarImage: UIImage?
+  var avatarFilePath: NSURL?
   var friends: Array<User>?
   var following: Array<User>?
   var unconfirmedWitnesses: NSObject?
@@ -136,7 +137,9 @@ class User: NSObject {
     } else {
       self.activeActivities = [activity]
     }
-    updateProfile()
+    updateProfile() { (success) in
+      print("profile updated with new activity")
+    }
   }
   
   
@@ -167,24 +170,45 @@ class User: NSObject {
     ]
   }
   
-  func updateProfile() {
-    if doesNeedAvatarPost {
-      
-    }
-    let params = self.profileParams()
-    print("Profile Update params: \(params)")
-    API.put(params, authType: .Token, url: "profile/update") { (res, err) -> () in
-      if let e = err {
-        print("error updating user profile: \(e)")
-      } else {
-        print("user profile update successful")
+  func updateProfile(callback: (Bool) -> ()) {
+    func readyForProfileUpdate() {
+      let params = self.profileParams()
+      print("Profile Update params: \(params)")
+      API.put(params, authType: .Token, url: "profile/update") { (res, err) -> () in
+        if let e = err {
+          print("error updating user profile: \(e)")
+          callback(false)
+        } else {
+          print("user profile update successful")
+          callback(true)
+        }
       }
     }
+    if let _ = newAvatarImage {
+      postAvatarImage({ (success) -> () in
+        //remember need the url of the new image
+        //set the urlString as the new avatarURL
+        if success {
+          readyForProfileUpdate()
+        } else {
+          callback(false)
+        }
+      })
+    } else {
+      readyForProfileUpdate()
+    }
+
   }
   
-  func postAvatarImage() {
+  func postAvatarImage(callback: (Bool) -> ()) {
+    //need the filepath damnet
     // so make an object, post it, save the url to the user. then when saving on the server first post the new media, then update the user profile with the new url, and then remove the media with the url of the old profile avatar url
-    let avatarImage = MediaObject()
+    let avatarObject = MediaObject.initFromUploader(nil, type: .Image, thumbnail: newAvatarImage, filePath: nil, store: nil)
+    avatarObject.publish { (success) -> () in
+      //make sure to set the url string
+      self.avatarURLString = avatarObject.urlString
+      callback(success)
+    }
   }
   
   func updateUser() {

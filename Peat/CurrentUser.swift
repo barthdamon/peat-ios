@@ -113,8 +113,7 @@ class CurrentUser: NSObject {
   
   func addAvatarImage(image: UIImage) {
     //save the image, then put it on the thing
-    self.model?.avatarImage = image
-    self.model?.doesNeedAvatarPost = true
+    self.model?.newAvatarImage = image
   }
   
   func isFriend(user: User) -> Bool {

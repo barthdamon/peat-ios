@@ -2228,36 +2228,83 @@
             </objects>
             <point key="canvasLocation" x="-427" y="-458"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Edit Profile Table View Controller-->
         <scene sceneID="JCf-ke-JIk">
             <objects>
-                <tableViewController id="muZ-Rk-ORA" sceneMemberID="viewController">
+                <tableViewController id="muZ-Rk-ORA" customClass="EditProfileTableViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="131" sectionHeaderHeight="28" sectionFooterHeight="28" id="k1l-zN-K5s">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="131" id="sdn-wC-idM" customClass="EditAvatarTableViewCell" customModule="Peat" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="editAvatarCell" rowHeight="131" id="sdn-wC-idM" customClass="EditAvatarTableViewCell" customModule="Peat" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="72" width="300" height="131"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sdn-wC-idM" id="Na8-no-9GS">
                                     <rect key="frame" x="0.0" y="0.0" width="300" height="130"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="laH-Vk-b4c">
-                                            <rect key="frame" x="14" y="0.0" width="167" height="130"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="laH-Vk-b4c">
+                                            <rect key="frame" x="0.0" y="0.0" width="167" height="130"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" secondItem="laH-Vk-b4c" secondAttribute="height" multiplier="167:130" id="a3n-7K-GD4"/>
+                                            </constraints>
                                         </imageView>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mAm-NH-cyQ">
-                                            <rect key="frame" x="210" y="50" width="63" height="30"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mAm-NH-cyQ">
+                                            <rect key="frame" x="175" y="50" width="63" height="30"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="63" id="IUD-1f-Mwl"/>
+                                                <constraint firstAttribute="height" constant="30" id="pwh-X2-9W3"/>
+                                            </constraints>
                                             <state key="normal" title="Change"/>
                                             <connections>
                                                 <action selector="chooseButtonPressed:" destination="sdn-wC-idM" eventType="touchUpInside" id="oVW-ch-bxG"/>
                                             </connections>
                                         </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xLl-a8-H9c">
+                                            <rect key="frame" x="175" y="88" width="63" height="30"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="63" id="4K3-a2-P6g"/>
+                                                <constraint firstAttribute="height" constant="30" id="r1R-0p-wWL"/>
+                                            </constraints>
+                                            <state key="normal" title="Save"/>
+                                            <connections>
+                                                <action selector="saveButtonPressed:" destination="sdn-wC-idM" eventType="touchUpInside" id="55S-9Z-9by"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e5P-y3-8Ew">
+                                            <rect key="frame" x="175" y="12" width="63" height="30"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="30" id="5k9-Yx-mA7"/>
+                                                <constraint firstAttribute="width" constant="63" id="6EG-F2-yn8"/>
+                                            </constraints>
+                                            <state key="normal" title="Cancel"/>
+                                            <connections>
+                                                <action selector="cancelButtonPressed:" destination="sdn-wC-idM" eventType="touchUpInside" id="O19-Zi-6S9"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailingMargin" secondItem="xLl-a8-H9c" secondAttribute="trailing" constant="54" id="35J-Yy-o1s"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="laH-Vk-b4c" secondAttribute="bottom" constant="-8" id="5EK-Yn-b3V"/>
+                                        <constraint firstItem="laH-Vk-b4c" firstAttribute="top" secondItem="Na8-no-9GS" secondAttribute="topMargin" constant="-8" id="5Gq-fC-sdk"/>
+                                        <constraint firstItem="e5P-y3-8Ew" firstAttribute="leading" secondItem="laH-Vk-b4c" secondAttribute="trailing" constant="8" id="6e2-pe-79l"/>
+                                        <constraint firstItem="mAm-NH-cyQ" firstAttribute="top" secondItem="e5P-y3-8Ew" secondAttribute="bottom" constant="8" id="LmQ-V0-kSN"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="mAm-NH-cyQ" secondAttribute="trailing" constant="54" id="VIs-UB-vYH"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="xLl-a8-H9c" secondAttribute="bottom" constant="4" id="aEN-Ju-UzH"/>
+                                        <constraint firstItem="xLl-a8-H9c" firstAttribute="top" secondItem="mAm-NH-cyQ" secondAttribute="bottom" constant="8" id="fih-HM-DZb"/>
+                                        <constraint firstItem="mAm-NH-cyQ" firstAttribute="top" secondItem="e5P-y3-8Ew" secondAttribute="bottom" constant="8" id="i8t-G9-0NU"/>
+                                        <constraint firstItem="xLl-a8-H9c" firstAttribute="leading" secondItem="laH-Vk-b4c" secondAttribute="trailing" constant="8" id="mhV-LS-Hie"/>
+                                        <constraint firstItem="laH-Vk-b4c" firstAttribute="leading" secondItem="Na8-no-9GS" secondAttribute="leadingMargin" constant="-8" id="mpD-L5-QcW"/>
+                                        <constraint firstItem="mAm-NH-cyQ" firstAttribute="leading" secondItem="laH-Vk-b4c" secondAttribute="trailing" constant="8" id="sUM-Ft-2v7"/>
+                                        <constraint firstItem="e5P-y3-8Ew" firstAttribute="top" secondItem="Na8-no-9GS" secondAttribute="topMargin" constant="4" id="vpI-VI-wd2"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="e5P-y3-8Ew" secondAttribute="trailing" constant="54" id="zVI-gA-tpm"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="avatarImageView" destination="laH-Vk-b4c" id="sbJ-4B-DIX"/>
+                                    <outlet property="cancelButton" destination="e5P-y3-8Ew" id="GP7-hr-9Gj"/>
+                                    <outlet property="saveButton" destination="xLl-a8-H9c" id="ojl-W7-4J4"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
