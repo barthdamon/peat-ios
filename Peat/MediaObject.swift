@@ -175,7 +175,7 @@ class MediaObject: NSObject {
       "mediaId": paramFor(mediaId),
       "leafId": paramFor(leafId),
       "uploaderUser_Id": paramFor(uploaderUser_Id),
-      "taggedUser_Ids": [paramFor(uploaderUser_Id)],
+      "taggedUser_Ids": taggedUser_Ids != nil ? taggedUser_Ids! : [],
       "abilityName": paramFor(abilityName),
       "activityName": paramFor(activityName),
       "source": [

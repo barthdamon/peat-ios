@@ -123,6 +123,7 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
       if segue.identifier == "tagUserSegue" {
         if let vc = segue.destinationViewController as? TagUserTableViewController {
           vc.mediaTagDelegate = self
+          vc.user = CurrentUser.info.model
           let popover = vc.popoverPresentationController
           popover?.delegate = self
           vc.popoverPresentationController?.delegate = self

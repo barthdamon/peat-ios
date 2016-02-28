@@ -86,7 +86,7 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("searchResultCell", forIndexPath: indexPath) as! TagUserTableViewCell
+    let cell = tableView.dequeueReusableCellWithIdentifier("tagUserCell", forIndexPath: indexPath) as! TagUserTableViewCell
     if self.foundUsers?.count > 0 {
       if let user = self.foundUsers?[indexPath.row] {
         cell.configureWithUser(user)
@@ -103,6 +103,8 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
       do {
         let selectedUser = try users.lookup(UInt(indexPath.row))
         self.mediaTagDelegate?.userAdded(selectedUser)
+        print("User added")
+        self.dismissViewControllerAnimated(true, completion: nil)
       }
       catch {
         print("User not found")
