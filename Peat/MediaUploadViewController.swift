@@ -15,6 +15,7 @@ protocol MediaUploadDelegate {
 
 class MediaUploadViewController: UIViewController, UIPopoverPresentationControllerDelegate, MediaTagUserDelegate {
   
+  @IBOutlet weak var tagOthersButton: UIButton!
   @IBOutlet weak var purposeSelector: UISegmentedControl!
   @IBOutlet weak var mediaView: UIView!
   @IBOutlet weak var descriptionTextField: UITextField!
@@ -33,6 +34,9 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
   var mediaType: MediaType? {
     didSet {
       self.mediaObject = MediaObject.initFromUploader(leaf, type: mediaType, thumbnail: image, filePath: videoPath, store: store)
+      if let user = CurrentUser.info.model {
+        self.userAdded(user)
+      }
       showNewMedia()
     }
   }
@@ -124,6 +128,7 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
         if let vc = segue.destinationViewController as? TagUserTableViewController {
           vc.mediaTagDelegate = self
           vc.user = CurrentUser.info.model
+          vc.media = self.mediaObject
           let popover = vc.popoverPresentationController
           popover?.delegate = self
           vc.popoverPresentationController?.delegate = self
@@ -140,6 +145,11 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
   
   func userAdded(user: User) {
     self.mediaObject?.tagUserOnMedia(user)
+    var count = 0
+    if let tagged = self.mediaObject?.taggedUsers {
+      count += tagged.count
+    }
+    self.tagOthersButton.setTitle("\(count) Tagged", forState: .Normal)
     //do something to show the user has been tagged
     //perhaps a list of the users tagged or something?
   }
@@ -171,6 +181,17 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
   @IBAction func tagOthersButtonPressed(sender: AnyObject) {
     //tag the other
     self.performSegueWithIdentifier("tagUserSegue", sender: self)
+  }
+  
+  func userIsTagged(user: User) -> Bool {
+    if let tagged = self.mediaObject?.taggedUsers {
+      for taggedUser in tagged {
+        if taggedUser._id == user._id {
+          return true
+        }
+      }
+    }
+    return false
   }
   
   @IBAction func cancelButtonPressed(sender: AnyObject) {

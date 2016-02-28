@@ -8,6 +8,11 @@
 
 import UIKit
 
+protocol MediaHeaderCellDelegate {
+  func showTaggedUsers(users: Array<User>)
+  func showUploaderUser(user: User)
+}
+
 class MediaCellHeaderView: UIView {
 
   @IBOutlet weak var usernameButton: UIButton!
@@ -16,11 +21,14 @@ class MediaCellHeaderView: UIView {
   @IBOutlet weak var userThumbnailView: UIImageView!
   
   
-  
-  
-  
   var media: MediaObject?
   var primaryUser: User?
+  
+  var delegate: MediaHeaderCellDelegate?
+  
+  
+  var taggedUsers: Array<User>?
+  var uploaderUser: User?
   
   func configureForUserLeaf(media: MediaObject, primaryUser: User?) {
     self.primaryUser = primaryUser
@@ -28,7 +36,18 @@ class MediaCellHeaderView: UIView {
     
     //Looking at a users leaf:
     if let primaryUser = primaryUser, name = primaryUser.username {
-      self.usernameButton.setTitle(name, forState: .Normal)
+      self.taggedUsers = []
+      self.taggedUsers!.append(primaryUser)
+      var otherNames = "\(name)"
+      if let tagged = media.taggedUsers {
+        tagged.forEach({ (user) -> () in
+          self.taggedUsers!.append(user)
+          if let taggedName = user.username {
+            otherNames = "otherNames, \(taggedName)"
+          }
+        })
+      }
+      self.usernameButton.setTitle(otherNames, forState: .Normal)
     }
     
     if let uploaderUser = media.uploaderUser, username = uploaderUser.username,
@@ -122,11 +141,17 @@ class MediaCellHeaderView: UIView {
   }
   
   @IBAction func usernameButtonPressed(sender: AnyObject) {
-    //show the users profile
+    if let users = self.taggedUsers {
+      self.delegate?.showTaggedUsers(users)
+      //show the list of all tagged users
+    }
   }
   
   @IBAction func subtitleUsernameButtonPressed(sender: AnyObject) {
-    //show the users profile
+    if let user = self.uploaderUser {
+      self.delegate?.showUploaderUser(user)
+    }
+    //show the uplaoder use profile
   }
 
 }

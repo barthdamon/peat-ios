@@ -84,9 +84,11 @@
                         <constraint firstItem="Ypb-Sf-AX7" firstAttribute="top" secondItem="epb-I5-aka" secondAttribute="top" id="fqX-NA-c0i"/>
                         <constraint firstItem="pLY-5o-512" firstAttribute="leading" secondItem="Ypb-Sf-AX7" secondAttribute="trailing" constant="8" id="stA-qe-qGX"/>
                         <constraint firstItem="fVt-ZL-fv4" firstAttribute="top" secondItem="epb-I5-aka" secondAttribute="top" constant="8" id="vVF-qd-boy"/>
+                        <constraint firstItem="fVt-ZL-fv4" firstAttribute="leading" secondItem="Ypb-Sf-AX7" secondAttribute="trailing" constant="8" id="wfc-oY-4dR"/>
                     </constraints>
                     <variation key="default">
                         <mask key="constraints">
+                            <exclude reference="ZYh-LV-C7A"/>
                             <exclude reference="D8O-uR-YWU"/>
                         </mask>
                     </variation>

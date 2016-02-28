@@ -14,7 +14,7 @@ enum LeafFeedMode {
   case Tutorials
 }
 
-class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
+class LeafDetailTableViewController: UITableViewController, TableViewForMedia, MediaHeaderCellDelegate {
   
     var API = APIService.sharedService
   
@@ -46,6 +46,9 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
         return tutorialFeedMedia
       }
     }
+  
+  var uploaderUserForShow: User?
+  var taggedUsersForShow: Array<User>?
 
     override func viewDidLoad() {
       super.viewDidLoad()
@@ -249,5 +252,19 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia {
       detailVC?.showLikesForMedia(media)
     }
   }
+  
+  
+  //MARK: MediaHeaderCellDelegate
+  
+  func showTaggedUsers(users: Array<User>) {
+    self.taggedUsersForShow = users
+    self.performSegueWithIdentifier("showTaggedUsersSegue", sender: self)
+  }
+  
+  func showUploaderUser(user: User) {
+    self.uploaderUserForShow = user
+    self.performSegueWithIdentifier("showUserGallery", sender: self)
+  }
 
 }
+

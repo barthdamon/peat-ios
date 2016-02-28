@@ -255,7 +255,7 @@ class Leaf: NSObject, TreeObject {
 
             if let info = json["mediaInfo"] as? jsonObject, mediaJson = info["media"] as? Array<jsonObject> {
               for json in mediaJson {
-                self.treeDelegate?.sharedStore().addMediaToStore(MediaObject.initWithJson(json, store: self.treeDelegate?.sharedStore()))
+                self.treeDelegate?.sharedStore().addMediaToStore(MediaObject.initWithJson(json, store: self.treeDelegate?.sharedStore()), publishImmediately: false)
               }
               self.getCompletionStatus()
             }

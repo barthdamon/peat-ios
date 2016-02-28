@@ -14,6 +14,7 @@ protocol TagUserDelegate {
 
 protocol MediaTagUserDelegate {
   func userAdded(user: User)
+  func userIsTagged(user: User) -> Bool
 }
 
 class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
@@ -25,12 +26,18 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
   var mediaTagDelegate: MediaTagUserDelegate?
   
   var foundUsers: Array<User>?
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        configureTextField()
-
+  var media: MediaObject?
+  
+  var taggingEnabled = true
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    configureTextField()
+    if user != CurrentUser.info.model {
+      self.taggingEnabled = false
     }
+    self.foundUsers = media?.taggedUsers
+  }
   
   func configureTextField() {
     let textField = UITextField(frame: CGRectMake(0,0,self.view.frame.width, 40))
@@ -64,22 +71,24 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
               self.showSearchResults()
             }
           }
+        } else {
+          self.foundUsers = self.media?.taggedUsers
         }
       }
     }
   }
-
-    // MARK: - Table view data source
-
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
-
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-      return self.foundUsers != nil ? self.foundUsers!.count : 0
-    }
+  
+  // MARK: - Table view data source
+  
+  override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    // #warning Incomplete implementation, return the number of sections
+    return 1
+  }
+  
+  override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    // #warning Incomplete implementation, return the number of rows
+    return self.foundUsers != nil ? self.foundUsers!.count : 0
+  }
   
   override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     return 56
@@ -90,6 +99,11 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
     if self.foundUsers?.count > 0 {
       if let user = self.foundUsers?[indexPath.row] {
         cell.configureWithUser(user)
+        if let delegate = mediaTagDelegate {
+          if delegate.userIsTagged(user) {
+            cell.backgroundColor = UIColor.lightGrayColor()
+          }
+        }
         return cell
       }
     } else {
@@ -111,5 +125,5 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
       }
     }
   }
-
+  
 }

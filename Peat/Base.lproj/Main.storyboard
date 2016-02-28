@@ -1033,6 +1033,8 @@
                         <segue destination="RHu-bK-AcA" kind="popoverPresentation" identifier="abilitySearchSegue" popoverAnchorView="fpa-ML-dh9" id="UUr-P0-chC">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
+                        <segue destination="u9J-yl-I1T" kind="show" identifier="showProfileForUser" id="zDr-Ws-xWt"/>
+                        <segue destination="R6i-Xh-cGl" kind="show" identifier="showGalleryForUser" id="VQb-N0-lHt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BMv-Fn-Ou9" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1108,17 +1110,6 @@
                                     <segment title="Tutorial"/>
                                 </segments>
                             </segmentedControl>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xAD-8d-YXR">
-                                <rect key="frame" x="516" y="435" width="76" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="Oav-BY-p7s"/>
-                                    <constraint firstAttribute="width" constant="76" id="t7l-kY-DF2"/>
-                                </constraints>
-                                <state key="normal" title="Tag Others"/>
-                                <connections>
-                                    <action selector="tagOthersButtonPressed:" destination="DQ0-yx-8xZ" eventType="touchUpInside" id="2i0-AK-8iy"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="swW-DH-Xzo">
                                 <rect key="frame" x="320" y="476" width="185" height="30"/>
                                 <constraints>
@@ -1135,16 +1126,28 @@
                                     <action selector="publishButtonPressed:" destination="DQ0-yx-8xZ" eventType="touchUpInside" id="7BQ-6D-jLQ"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ADX-hn-ORV">
+                                <rect key="frame" x="527" y="434" width="65" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="65" id="lhE-XY-g6r"/>
+                                </constraints>
+                                <state key="normal" title="# Tagged"/>
+                                <connections>
+                                    <action selector="tagOthersButtonPressed:" destination="DQ0-yx-8xZ" eventType="touchUpInside" id="wSn-qz-F8c"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="atO-XS-hhb" firstAttribute="top" secondItem="uy4-CB-DvL" secondAttribute="bottom" constant="16" id="0eB-1I-4vp"/>
+                            <constraint firstItem="ADX-hn-ORV" firstAttribute="top" secondItem="atO-XS-hhb" secondAttribute="bottom" constant="7" id="0l3-2P-T2L"/>
+                            <constraint firstItem="swW-DH-Xzo" firstAttribute="top" secondItem="ADX-hn-ORV" secondAttribute="bottom" constant="12" id="3eD-rL-RMZ"/>
                             <constraint firstAttribute="trailing" secondItem="uy4-CB-DvL" secondAttribute="trailing" constant="8" id="47b-Au-JuM"/>
                             <constraint firstItem="swW-DH-Xzo" firstAttribute="width" secondItem="Cu7-oW-ZOa" secondAttribute="width" id="4VX-xO-6Yn"/>
                             <constraint firstAttribute="trailing" secondItem="atO-XS-hhb" secondAttribute="trailing" constant="8" id="4Yb-JT-5Zl"/>
                             <constraint firstItem="uy4-CB-DvL" firstAttribute="width" secondItem="uy4-CB-DvL" secondAttribute="height" multiplier="16:9" id="5N0-KQ-Tep"/>
                             <constraint firstAttribute="trailingMargin" secondItem="uy4-CB-DvL" secondAttribute="trailing" constant="-12" id="5uV-dV-kge"/>
-                            <constraint firstItem="xAD-8d-YXR" firstAttribute="top" secondItem="atO-XS-hhb" secondAttribute="bottom" constant="8" id="9hq-Mn-aO6"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ADX-hn-ORV" secondAttribute="trailing" constant="-12" id="6cg-8r-r1N"/>
                             <constraint firstItem="swW-DH-Xzo" firstAttribute="leading" secondItem="Cu7-oW-ZOa" secondAttribute="trailing" constant="40" id="AlD-rJ-6DZ"/>
                             <constraint firstItem="atO-XS-hhb" firstAttribute="top" secondItem="uy4-CB-DvL" secondAttribute="bottom" constant="16" id="KTQ-kU-xz3"/>
                             <constraint firstItem="Cu7-oW-ZOa" firstAttribute="top" secondItem="atO-XS-hhb" secondAttribute="bottom" constant="25" id="KaI-UY-06l"/>
@@ -1152,11 +1155,11 @@
                             <constraint firstItem="swW-DH-Xzo" firstAttribute="height" secondItem="Cu7-oW-ZOa" secondAttribute="height" id="OOZ-88-Yjh"/>
                             <constraint firstItem="uy4-CB-DvL" firstAttribute="leading" secondItem="Rwb-d6-RRM" secondAttribute="leading" constant="8" id="RNo-uB-gMN"/>
                             <constraint firstItem="Cu7-oW-ZOa" firstAttribute="top" secondItem="XUF-gQ-jQD" secondAttribute="bottom" constant="13" id="U9l-nT-7a6"/>
+                            <constraint firstItem="ADX-hn-ORV" firstAttribute="top" secondItem="atO-XS-hhb" secondAttribute="bottom" constant="7" id="Usa-HF-70t"/>
                             <constraint firstItem="atO-XS-hhb" firstAttribute="top" secondItem="uy4-CB-DvL" secondAttribute="bottom" constant="16" id="VhH-ma-Rtr"/>
                             <constraint firstItem="Cu7-oW-ZOa" firstAttribute="leading" secondItem="Rwb-d6-RRM" secondAttribute="leadingMargin" constant="75" id="W1O-pO-sZy"/>
                             <constraint firstAttribute="trailingMargin" secondItem="swW-DH-Xzo" secondAttribute="trailing" constant="75" id="ZFt-Sw-vfq"/>
                             <constraint firstItem="XUF-gQ-jQD" firstAttribute="leading" secondItem="Rwb-d6-RRM" secondAttribute="leadingMargin" constant="-12" id="ZNJ-hx-09a"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="xAD-8d-YXR" secondAttribute="trailing" constant="-12" id="d6q-oN-6Bz"/>
                             <constraint firstItem="XUF-gQ-jQD" firstAttribute="top" secondItem="atO-XS-hhb" secondAttribute="bottom" constant="8" id="ggH-iZ-kGZ"/>
                             <constraint firstItem="uy4-CB-DvL" firstAttribute="top" secondItem="vMd-y3-7Sp" secondAttribute="bottom" constant="8" id="jjl-dk-sLT"/>
                             <constraint firstItem="uy4-CB-DvL" firstAttribute="leading" secondItem="Rwb-d6-RRM" secondAttribute="leadingMargin" constant="-12" id="lII-DL-bBg"/>
@@ -1173,7 +1176,9 @@
                                 <exclude reference="KTQ-kU-xz3"/>
                                 <exclude reference="VhH-ma-Rtr"/>
                                 <exclude reference="KaI-UY-06l"/>
+                                <exclude reference="3eD-rL-RMZ"/>
                                 <exclude reference="zbv-lD-D67"/>
+                                <exclude reference="Usa-HF-70t"/>
                             </mask>
                         </variation>
                     </view>
@@ -1181,6 +1186,7 @@
                         <outlet property="descriptionTextField" destination="atO-XS-hhb" id="HAW-ti-N8t"/>
                         <outlet property="mediaView" destination="uy4-CB-DvL" id="AZn-GI-QxN"/>
                         <outlet property="purposeSelector" destination="XUF-gQ-jQD" id="wNy-4q-fc5"/>
+                        <outlet property="tagOthersButton" destination="ADX-hn-ORV" id="3gg-VX-eEg"/>
                         <segue destination="I8Z-rz-Zf8" kind="popoverPresentation" identifier="tagUserSegue" popoverAnchorView="uy4-CB-DvL" id="XI9-8e-M4F">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
@@ -1350,7 +1356,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="FRr-5D-c7T">
-                                <rect key="frame" x="0.0" y="72" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FRr-5D-c7T" id="PQ0-0y-zoI">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1358,7 +1364,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="mediaCell" rowHeight="446" id="RET-x4-QOg" customClass="MediaDrilldownTableViewCell" customModule="Peat" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="116" width="600" height="446"/>
+                                <rect key="frame" x="0.0" y="72" width="600" height="446"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RET-x4-QOg" id="tqx-xp-20j">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="445"/>
@@ -1471,7 +1477,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="descriptionCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="descriptionCell" rowHeight="78" id="fFE-VA-jJA" customClass="MediaDescriptionTableViewCell" customModule="Peat" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="562" width="600" height="78"/>
+                                <rect key="frame" x="0.0" y="518" width="600" height="78"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fFE-VA-jJA" id="yaw-TN-cdv">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="77"/>
@@ -1519,7 +1525,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="commentCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="commentCell" id="ENO-cT-Zbc" customClass="CommentsTableViewCell" customModule="Peat" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="640" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="596" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ENO-cT-Zbc" id="Htd-WV-TX2">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1555,7 +1561,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="postCommentCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="postCommentCell" id="XKr-7c-QYV" customClass="PostCommentTableViewCell" customModule="Peat" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="684" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="640" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XKr-7c-QYV" id="nXK-nW-QDv">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -2350,7 +2356,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="MediaCollectionViewCell" reuseIdentifier="MediaCollectionViewCell" id="xkG-x8-54A" customClass="MediaCollectionViewCell" customModule="Peat" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="44" width="171" height="96"/>
+                                <rect key="frame" x="0.0" y="0.0" width="171" height="96"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="171" height="96"/>
@@ -2465,7 +2471,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dXi-8J-D1g" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1743" y="-736"/>
+            <point key="canvasLocation" x="1751" y="-1070"/>
         </scene>
         <!--Ability Search Popover-->
         <scene sceneID="SJS-Io-HFy">
@@ -2654,7 +2660,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IeG-6L-gfG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4380" y="804"/>
+            <point key="canvasLocation" x="4412" y="781"/>
         </scene>
     </scenes>
     <resources>
@@ -2667,8 +2673,9 @@
         <image name="up-arrow" width="46" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="TiI-T8-EkV"/>
-        <segue reference="Quj-bb-thA"/>
-        <segue reference="GWI-Dl-6Eo"/>
+        <segue reference="zDr-Ws-xWt"/>
+        <segue reference="sPE-RS-xmR"/>
+        <segue reference="cDy-da-yv2"/>
+        <segue reference="VQb-N0-lHt"/>
     </inferredMetricsTieBreakers>
 </document>
