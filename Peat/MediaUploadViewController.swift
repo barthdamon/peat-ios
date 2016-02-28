@@ -161,7 +161,7 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
     if let _ = self.mediaObject {
       self.mediaObject?.mediaDescription = self.descriptionTextField.text
       self.mediaObject?.purpose = self.selectedPurpose
-      store?.addMediaToStore(self.mediaObject!)
+      store?.addMediaToStore(self.mediaObject!, publishImmediately: false)
       self.delegate?.newMediaAdded()
       dismissSelf(true)
     }

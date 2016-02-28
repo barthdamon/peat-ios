@@ -253,7 +253,7 @@ class MediaObject: NSObject {
       } else {
         print("Server media post successful")
         self.needsPublishing = false
-        self.store?.addMediaToStore(self)
+        self.store?.addMediaToStore(self, publishImmediately: true)
         callback(true)
         NSNotificationCenter.defaultCenter().postNotificationName("newMediaPostSuccessful", object: self, userInfo: nil)
       }

@@ -73,13 +73,13 @@ class Gallery: NSObject {
   }
   
   //this is only called when uploaded from the gallery. Uploading on the tree will upload to gallery on its own
-  func saveMediaToGallery(media: MediaObject) {
+  func saveMediaToGallery(media: MediaObject, publishImmediately: Bool) {
     if media.needsPublishing {
       if let _ = self.mediaObjects {
       } else {
         self.mediaObjects = Array()
       }
-      if !self.mediaObjects!.contains(media) {
+      if !self.mediaObjects!.contains(media) && publishImmediately {
         self.mediaObjects!.append(media)
         //post to server
         media.publish { (success) -> () in
