@@ -28,13 +28,15 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
   var foundUsers: Array<User>?
   var media: MediaObject?
   
-  var taggingEnabled = true
+  var taggingEnabled = false
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    configureTextField()
-    if user != CurrentUser.info.model {
-      self.taggingEnabled = false
+    if let uploader = media?.uploaderUser {
+      if uploader == CurrentUser.info.model {
+        self.taggingEnabled = true
+        configureTextField()
+      }
     }
     self.foundUsers = media?.taggedUsers
   }
@@ -113,17 +115,24 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
   }
   
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    if let users = self.foundUsers {
-      do {
-        let selectedUser = try users.lookup(UInt(indexPath.row))
-        self.mediaTagDelegate?.userAdded(selectedUser)
-        print("User added")
-        self.dismissViewControllerAnimated(true, completion: nil)
+    if taggingEnabled {
+      if let users = self.foundUsers {
+        do {
+          let selectedUser = try users.lookup(UInt(indexPath.row))
+          if let delegate = mediaTagDelegate where !delegate.userIsTagged(selectedUser) {
+            delegate.userAdded(selectedUser)
+            print("User added")
+          }
+          self.dismissViewControllerAnimated(true, completion: nil)
+        }
+        catch {
+          print("User not found")
+        }
       }
-      catch {
-        print("User not found")
-      }
+    } else {
+      //perform segue showing the profile of the person tagged....
     }
+
   }
   
 }

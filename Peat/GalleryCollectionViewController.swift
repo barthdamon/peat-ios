@@ -16,7 +16,7 @@ enum GallerySelectionMode {
 }
 
 
-class GalleryCollectionViewController: UICollectionViewController, MediaUploadDelegate {
+class GalleryCollectionViewController: UICollectionViewController, MediaUploadDelegate, MediaHeaderCellDelegate {
   
   var viewing: User?
   var store = PeatContentStore()
@@ -208,16 +208,36 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
   func createHeaderForMedia(currentObject: MediaObject) -> MediaCellHeaderView? {
     if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView, view = self.view {
       headerView.frame = CGRectMake(0,0,view.frame.width, 50)
-      headerView.configureForNewsfeed(currentObject)
+      headerView.configureForMedia(currentObject, primaryUser: nil, delegate: self)
       return headerView
     } else {
       return nil
     }
   }
   
+  func showTaggedUsers(users: Array<User>, media: MediaObject) {
+    //show the users
+  }
+  
+  func showUploaderUser(user: User, media: MediaObject) {
+    //show the users profile
+  }
+  
+  func userAdded(user: User) {
+    //somehow show the user is added on the appropriate cell.....
+  }
+  
+  func userIsTagged(user: User) -> Bool {
+    //somehow get the tagged users here
+    return false
+  }
+  
+  
+  
   func collectionViewDoubleTapped(sender: UIGestureRecognizer) {
     self.addMediaToGallery()
   }
+  
   
   //MARK: Sidebar
   func initializeSidebar() {

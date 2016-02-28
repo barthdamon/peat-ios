@@ -9,8 +9,8 @@
 import UIKit
 
 protocol MediaHeaderCellDelegate {
-  func showTaggedUsers(users: Array<User>)
-  func showUploaderUser(user: User)
+  func showTaggedUsers(users: Array<User>, media: MediaObject)
+  func showUploaderUser(user: User, media: MediaObject)
 }
 
 class MediaCellHeaderView: UIView {
@@ -30,102 +30,28 @@ class MediaCellHeaderView: UIView {
   var taggedUsers: Array<User>?
   var uploaderUser: User?
   
-  func configureForUserLeaf(media: MediaObject, primaryUser: User?) {
+  func configureForMedia(media: MediaObject, primaryUser: User?, delegate: MediaHeaderCellDelegate) {
     self.primaryUser = primaryUser
     self.media = media
+    self.delegate = delegate
     
     //Looking at a users leaf:
+    self.taggedUsers = []
+    var otherNames = ""
     if let primaryUser = primaryUser, name = primaryUser.username {
-      self.taggedUsers = []
       self.taggedUsers!.append(primaryUser)
-      var otherNames = "\(name)"
-      if let tagged = media.taggedUsers {
-        tagged.forEach({ (user) -> () in
-          self.taggedUsers!.append(user)
-          if let taggedName = user.username {
-            otherNames = "otherNames, \(taggedName)"
-          }
-        })
-      }
-      self.usernameButton.setTitle(otherNames, forState: .Normal)
+      otherNames = "\(name)"
     }
-    
-    if let uploaderUser = media.uploaderUser, username = uploaderUser.username,
-      datePosted = media.datePosted {
-        subtitleTextLabel.text = "\(datePosted.shortString) by"
-        subtitleUsernameButton.setTitle(username, forState: .Normal)
-    }
-    
-    //check for if there is a userOnLeaf
-    self.primaryUser?.generateAvatarImage({ (image) -> () in
-      dispatch_async(dispatch_get_main_queue(), { () -> Void in
-        self.userThumbnailView.image = image
-      })
-    })
-  }
-  
-  func configureForLeafFeed(media: MediaObject) {
-    self.media = media
-    
-    if let taggedUsers = media.taggedUsers {
-      do {
-        //TODO, make a list of all the users that user is following
-        let main = try taggedUsers.lookup(UInt(0))
-        self.primaryUser = main
-        if let name = main.username {
-          self.usernameButton.setTitle(name, forState: .Normal)
+    if let tagged = media.taggedUsers {
+      tagged.forEach({ (user) -> () in
+        self.taggedUsers!.append(user)
+        if let taggedName = user.username {
+          otherNames = "otherNames, \(taggedName)"
         }
-      }
-      catch {
-        print("tagged user not found")
-      }
-    } else {
-      self.usernameButton.setTitle("", forState: .Normal)
-      self.usernameButton.enabled = false
+      })
+    self.usernameButton.setTitle(otherNames, forState: .Normal)
     }
     
-    if let uploaderUser = media.uploaderUser, username = uploaderUser.username,
-      datePosted = media.datePosted {
-        subtitleTextLabel.text = "\(datePosted.shortString) by"
-        subtitleUsernameButton.setTitle(username, forState: .Normal)
-    }
-    
-    //check for if there is a userOnLeaf
-    self.primaryUser?.generateAvatarImage({ (image) -> () in
-      dispatch_async(dispatch_get_main_queue(), { () -> Void in
-        self.userThumbnailView.image = image
-      })
-    })
-  }
-  
-  func configureForNewsfeed(media: MediaObject) {
-    self.media = media
-  
-    if let taggedUsers = media.taggedUsers, following = CurrentUser.info.model?.following {
-      var taggedFollowing: Array<User> = []
-      taggedUsers.forEach({ (user) -> () in
-        following.forEach({ (follow) -> () in
-          if let user_Id = user._id, follow_Id = follow._id where user_Id == follow_Id {
-            taggedFollowing.append(user)
-          }
-        })
-      })
-      do {
-        //TODO, make a list of all the users that user is following
-        let main = try taggedFollowing.lookup(UInt(0))
-        self.primaryUser = main
-        if let name = main.username {
-          self.usernameButton.setTitle(name, forState: .Normal)
-        }
-      }
-      catch {
-        print("followed user not found")
-      }
-    } else {
-      self.usernameButton.setTitle("", forState: .Normal)
-      self.usernameButton.enabled = false
-    }
-
     if let uploaderUser = media.uploaderUser, username = uploaderUser.username,
       datePosted = media.datePosted {
         subtitleTextLabel.text = "\(datePosted.shortString) by"
@@ -141,15 +67,15 @@ class MediaCellHeaderView: UIView {
   }
   
   @IBAction func usernameButtonPressed(sender: AnyObject) {
-    if let users = self.taggedUsers {
-      self.delegate?.showTaggedUsers(users)
+    if let users = self.taggedUsers, media = self.media {
+      self.delegate?.showTaggedUsers(users, media: media)
       //show the list of all tagged users
     }
   }
   
   @IBAction func subtitleUsernameButtonPressed(sender: AnyObject) {
-    if let user = self.uploaderUser {
-      self.delegate?.showUploaderUser(user)
+    if let user = self.uploaderUser, media = self.media {
+      self.delegate?.showUploaderUser(user, media: media)
     }
     //show the uplaoder use profile
   }

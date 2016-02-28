@@ -14,50 +14,51 @@ enum LeafFeedMode {
   case Tutorials
 }
 
-class LeafDetailTableViewController: UITableViewController, TableViewForMedia, MediaHeaderCellDelegate {
+class LeafDetailTableViewController: UITableViewController, TableViewForMedia, MediaHeaderCellDelegate, MediaTagUserDelegate, UIPopoverPresentationControllerDelegate {
   
-    var API = APIService.sharedService
+  var API = APIService.sharedService
   
-    var leaf: Leaf? {
-      return store?.treeStore.selectedLeaf
+  var leaf: Leaf? {
+    return store?.treeStore.selectedLeaf
+  }
+  var store: PeatContentStore? {
+    return detailVC?.profileDelegate?.store
+  }
+  var activityIndicator: UIActivityIndicatorView?
+  var playerCells: Array<MediaTableViewCell> = []
+  
+  var viewing: User?
+  
+  var detailVC: LeafDetailViewController?
+  
+  var mode: LeafFeedMode = .Uploads
+  
+  var leafFeedMedia: Array<MediaObject>?
+  var tutorialFeedMedia: Array<MediaObject>?
+  
+  var mediaObjects: Array<MediaObject>? {
+    switch mode {
+    case .Uploads:
+      return leaf?.media
+    case .Feed:
+      return leafFeedMedia
+    case .Tutorials:
+      return tutorialFeedMedia
     }
-    var store: PeatContentStore? {
-      return detailVC?.profileDelegate?.store
-    }
-    var activityIndicator: UIActivityIndicatorView?
-    var playerCells: Array<MediaTableViewCell> = []
-  
-    var viewing: User?
-  
-    var detailVC: LeafDetailViewController?
-  
-    var mode: LeafFeedMode = .Uploads
-    
-    var leafFeedMedia: Array<MediaObject>?
-    var tutorialFeedMedia: Array<MediaObject>?
-  
-    var mediaObjects: Array<MediaObject>? {
-      switch mode {
-      case .Uploads:
-        return leaf?.media
-      case .Feed:
-        return leafFeedMedia
-      case .Tutorials:
-        return tutorialFeedMedia
-      }
-    }
+  }
   
   var uploaderUserForShow: User?
   var taggedUsersForShow: Array<User>?
-
-    override func viewDidLoad() {
-      super.viewDidLoad()
-      self.tableView.clipsToBounds = true
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-//      NSNotificationCenter.defaultCenter().addObserver(self, selector: "newMediaAdded", name: "newMediaPostSuccessful", object: nil)
-      setMode()
-    }
+  var mediaForTagged: MediaObject?
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    self.tableView.clipsToBounds = true
+    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+    // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    //      NSNotificationCenter.defaultCenter().addObserver(self, selector: "newMediaAdded", name: "newMediaPostSuccessful", object: nil)
+    setMode()
+  }
   
   func fixTableViewInsets() {
     let zContentInsets = UIEdgeInsetsZero
@@ -105,8 +106,8 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia, M
     if let leaf = leaf {
       store?.getLeafFeed(leaf) { (objects) in
         if let objects = objects {
-            self.leafFeedMedia = objects["leafFeed"] as? Array<MediaObject>
-            self.tutorialFeedMedia = objects["tutorialFeed"] as? Array<MediaObject>
+          self.leafFeedMedia = objects["leafFeed"] as? Array<MediaObject>
+          self.tutorialFeedMedia = objects["tutorialFeed"] as? Array<MediaObject>
         } else {
           self.reload()
           print("No Media to show for feed")
@@ -114,23 +115,23 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia, M
       }
     }
   }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    // MARK: - Table view data source
-
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-      return mediaObjects != nil ? mediaObjects!.count : 0
-    }
-
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-      return 1
-    }
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
+  
+  // MARK: - Table view data source
+  
+  override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    // #warning Incomplete implementation, return the number of sections
+    return mediaObjects != nil ? mediaObjects!.count : 0
+  }
+  
+  override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    // #warning Incomplete implementation, return the number of rows
+    return 1
+  }
   
   override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
     return 50
@@ -159,9 +160,9 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia, M
       let primaryUser = viewing != nil ? viewing : CurrentUser.info.model
       switch mode {
       case .Feed, .Tutorials:
-        headerView.configureForLeafFeed(currentObject)
+        headerView.configureForMedia(currentObject, primaryUser: nil, delegate: self)
       case .Uploads:
-        headerView.configureForUserLeaf(currentObject, primaryUser: primaryUser)
+        headerView.configureForMedia(currentObject, primaryUser: primaryUser, delegate: self)
       }
       return headerView
     } else {
@@ -176,64 +177,75 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia, M
     }
   }
   
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-      if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, mediaObjects = mediaObjects {
-        let cellMedia = mediaObjects[indexPath.section]
-        cell.viewing = viewing
-        cell.delegate = self
-        cell.configureWithMedia(cellMedia)
-        self.playerCells.append(cell)
-        return cell
-      } else {
-        let cell = UITableViewCell()
-        return cell
+  override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaTableViewCell, mediaObjects = mediaObjects {
+      let cellMedia = mediaObjects[indexPath.section]
+      cell.viewing = viewing
+      cell.delegate = self
+      cell.configureWithMedia(cellMedia)
+      self.playerCells.append(cell)
+      return cell
+    } else {
+      let cell = UITableViewCell()
+      return cell
+    }
+  }
+  
+  /*
+  // Override to support conditional editing of the table view.
+  override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+  // Return false if you do not want the specified item to be editable.
+  return true
+  }
+  */
+  
+  /*
+  // Override to support editing the table view.
+  override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+  if editingStyle == .Delete {
+  // Delete the row from the data source
+  tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+  } else if editingStyle == .Insert {
+  // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+  }
+  }
+  */
+  
+  /*
+  // Override to support rearranging the table view.
+  override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
+  
+  }
+  */
+  
+  /*
+  // Override to support conditional rearranging of the table view.
+  override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+  // Return false if you do not want the item to be re-orderable.
+  return true
+  }
+  */
+  
+  
+  // MARK: - Navigation
+  
+  // In a storyboard-based application, you will often want to do a little preparation before navigation
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if segue.identifier == "showTaggedSegue" {
+      if let vc = segue.destinationViewController as? TagUserTableViewController {
+        vc.mediaTagDelegate = self
+        vc.user = CurrentUser.info.model
+        vc.media = self.mediaForTagged
+//        let popover = vc.popoverPresentationController
+//        popover?.delegate = self
+//        vc.popoverPresentationController?.delegate = self
+//        //        vc.popoverPresentationController?.sourceView = self.view
+//        //        vc.popoverPresentationController?.sourceRect = CGRectMake(100,100,0,0)
+//        vc.preferredContentSize = CGSize(width: self.view.frame.width, height: 200)
       }
     }
+  }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
   
   func updateCommentCount() {
     for cell in self.playerCells {
@@ -253,18 +265,33 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia, M
     }
   }
   
+  func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+    return .None
+  }
+  
+  
+  func userAdded(user: User) {
+    //somehow show the user is added on the appropriate cell.....
+  }
+  
+  func userIsTagged(user: User) -> Bool {
+    //somehow get the tagged users here
+    return false
+  }
+  
   
   //MARK: MediaHeaderCellDelegate
   
-  func showTaggedUsers(users: Array<User>) {
+  func showTaggedUsers(users: Array<User>, media: MediaObject) {
     self.taggedUsersForShow = users
-    self.performSegueWithIdentifier("showTaggedUsersSegue", sender: self)
+    self.mediaForTagged = media
+    self.performSegueWithIdentifier("showTaggedSegue", sender: self)
   }
   
-  func showUploaderUser(user: User) {
+  func showUploaderUser(user: User, media: MediaObject) {
     self.uploaderUserForShow = user
     self.performSegueWithIdentifier("showUserGallery", sender: self)
   }
-
+  
 }
 

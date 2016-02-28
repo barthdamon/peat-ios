@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu, TableViewForMedia, CommentDetailDelegate {
+class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu, TableViewForMedia, CommentDetailDelegate, MediaHeaderCellDelegate {
   
     var mediaObjects: Array<MediaObject>?
     var sidebarClient: SideMenuClient?
@@ -125,7 +125,7 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
   func createHeaderForMedia(currentObject: MediaObject) -> MediaCellHeaderView? {
     if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView {
       headerView.frame = CGRectMake(0,0,tableView.frame.width, 50)
-      headerView.configureForNewsfeed(currentObject)
+      headerView.configureForMedia(currentObject, primaryUser: nil, delegate: self)
       return headerView
     } else {
       return nil
@@ -174,6 +174,24 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
     }
   }
 
+  
+  func showTaggedUsers(users: Array<User>, media: MediaObject) {
+    //show the users
+  }
+  
+  func showUploaderUser(user: User, media: MediaObject) {
+    //show the users profile
+  }
+  
+  func userAdded(user: User) {
+    //somehow show the user is added on the appropriate cell.....
+  }
+  
+  func userIsTagged(user: User) -> Bool {
+    //somehow get the tagged users here
+    return false
+  }
+  
   
   
     //MARK: Sidebar
