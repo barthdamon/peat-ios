@@ -129,7 +129,7 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
           }
         } else {
           userForProfile = selectedUser
-          self.performSegueWithIdentifier("showGalleryForUser", sender: self)
+          self.performSegueWithIdentifier("showProfileForUser", sender: self)
 //            mediaTagDelegate?.showUserProfile(selectedUser)
             //perform segue showing the profile of the person tagged....
         }

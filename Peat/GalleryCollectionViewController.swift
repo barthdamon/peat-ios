@@ -60,10 +60,10 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
   }
   
   func setForStackedView() {
-    self.navigationController?.navigationBarHidden = false
-    print("self.navigationContrlller: \(self.navigationController)")
-    let backButton = UIBarButtonItem(barButtonSystemItem: .PageCurl, target: self, action: "dismissSelf")
-    self.navigationItem.leftBarButtonItem = backButton
+//    self.navigationController?.navigationBarHidden = false
+//    print("self.navigationContrlller: \(self.navigationController)")
+//    let backButton = UIBarButtonItem(barButtonSystemItem: .PageCurl, target: self, action: "dismissSelf")
+//    self.navigationItem.leftBarButtonItem = backButton
     stacked = true
 //    stacked = true
   }

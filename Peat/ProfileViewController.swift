@@ -51,15 +51,19 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
       }
     }
   
+  override func viewDidAppear(animated: Bool) {
+    configureMenuSwipes()
+  }
+  
   func dismissSelf() {
     self.navigationController?.popViewControllerAnimated(true)
   }
   
   func setForStackedView() {
-    self.navigationController?.navigationBarHidden = false
-    print("self.navigationContrlller: \(self.navigationController)")
-    let backButton = UIBarButtonItem(barButtonSystemItem: .PageCurl, target: self, action: "dismissSelf")
-    self.navigationItem.leftBarButtonItem = backButton
+//    self.navigationController?.navigationBarHidden = false
+//    print("self.navigationContrlller: \(self.navigationController)")
+//    let backButton = UIBarButtonItem(barButtonSystemItem: .PageCurl, target: self, action: "dismissSelf")
+//    self.navigationItem.leftBarButtonItem = backButton
     stacked = true
 //    let navBar = UINavigationBar(frame: CGRectMake(0,0,self.view.frame.width, 64.0))
 //    let backItem = UIBarButtonItem(barButtonSystemItem: .PageCurl, target: self, action: "dismissSelf")
@@ -153,10 +157,16 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
       }
       
       if segue.identifier == "leafDrilldown" {
-        if let nav = segue.destinationViewController as? UINavigationController, vc = nav.topViewController as? LeafDetailViewController {
+ //       if let nav = segue.destinationViewController as? UINavigationController, vc = nav.topViewController as? LeafDetailViewController {
+        if let vc = segue.destinationViewController as? LeafDetailViewController {
           vc.viewing = self.viewing
           vc.profileDelegate = self
           self.drilldownController = vc
+          if let recs = globalMainContainer?.gestureRecognizers {
+            for rec in recs {
+              globalMainContainer?.removeGestureRecognizer(rec)
+            }
+          }
         }
       }
       

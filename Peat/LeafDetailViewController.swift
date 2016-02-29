@@ -87,7 +87,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(true)
-    self.navigationController?.navigationBarHidden = true
+//    self.navigationController?.navigationBarHidden = true
   }
   
   func getStore() -> PeatContentStore? {
@@ -328,7 +328,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   }
   
   func dismissSelf() {
-    self.dismissViewControllerAnimated(true, completion: nil)
+    self.navigationController?.popViewControllerAnimated(true)
   }
   
   func removeUnsavedChanges() {
@@ -396,7 +396,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   func showUploaderGallery(user: User) {
     self.userForProfile = user
-    self.performSegueWithIdentifier("showUserProfile", sender: self)
+    self.performSegueWithIdentifier("showGalleryForUser", sender: self)
   }
   
   
