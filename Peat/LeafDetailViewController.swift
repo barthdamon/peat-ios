@@ -180,6 +180,14 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     if segue.identifier == "userForProfile" {
       if let vc = segue.destinationViewController as? ProfileViewController {
         vc.viewing = userForProfile
+        vc.setForStackedView()
+      }
+    }
+    
+    if segue.identifier == "showGalleryForUser" {
+      if let vc = segue.destinationViewController as? GalleryCollectionViewController {
+        vc.viewing = userForProfile
+        vc.setForStackedView()
       }
     }
     
@@ -382,6 +390,11 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   }
   
   func showUserProfile(user: User) {
+    self.userForProfile = user
+    self.performSegueWithIdentifier("showUserProfile", sender: self)
+  }
+  
+  func showUploaderGallery(user: User) {
     self.userForProfile = user
     self.performSegueWithIdentifier("showUserProfile", sender: self)
   }

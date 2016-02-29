@@ -33,6 +33,7 @@ class MediaCellHeaderView: UIView {
   func configureForMedia(media: MediaObject, primaryUser: User?, delegate: MediaHeaderCellDelegate) {
     self.primaryUser = primaryUser
     self.media = media
+    self.uploaderUser = media.uploaderUser
     self.delegate = delegate
     
     //Looking at a users leaf:

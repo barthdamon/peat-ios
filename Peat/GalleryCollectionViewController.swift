@@ -32,12 +32,16 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
   var selectedMediaObject: MediaObject?
   var mediaUploadController: MediaUploadViewController?
   
+  var stacked = false
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    initializeSidebar()
-    configureMenuSwipes()
-    configureNavBar()
+    if !stacked {
+      initializeSidebar()
+      configureMenuSwipes()
+      configureNavBar()
+    }
+
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = false
     
@@ -53,6 +57,15 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
     }
     initializeGallery()
     // Do any additional setup after loading the view.
+  }
+  
+  func setForStackedView() {
+    self.navigationController?.navigationBarHidden = false
+    print("self.navigationContrlller: \(self.navigationController)")
+    let backButton = UIBarButtonItem(barButtonSystemItem: .PageCurl, target: self, action: "dismissSelf")
+    self.navigationItem.leftBarButtonItem = backButton
+    stacked = true
+//    stacked = true
   }
   
   override func viewDidAppear(animated: Bool) {
@@ -231,7 +244,6 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
     //somehow get the tagged users here
     return false
   }
-  
   
   
   func collectionViewDoubleTapped(sender: UIGestureRecognizer) {

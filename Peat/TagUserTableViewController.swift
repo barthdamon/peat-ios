@@ -30,6 +30,7 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
   var media: MediaObject?
   
   var taggingEnabled = false
+  var userForProfile: User?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -127,13 +128,31 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
             self.dismissViewControllerAnimated(true, completion: nil)
           }
         } else {
-          self.navigationController?.popViewControllerAnimated(true)
-            mediaTagDelegate?.showUserProfile(selectedUser)
+          userForProfile = selectedUser
+          self.performSegueWithIdentifier("showGalleryForUser", sender: self)
+//            mediaTagDelegate?.showUserProfile(selectedUser)
             //perform segue showing the profile of the person tagged....
         }
       }
       catch {
         print("User not found")
+      }
+    }
+  }
+  
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if segue.identifier == "showProfileForUser" {
+      if let vc = segue.destinationViewController as? ProfileViewController {
+        vc.viewing = self.userForProfile
+        vc.setForStackedView()
+      }
+    }
+    
+    if segue.identifier == "showGalleryForUser" {
+      if let vc = segue.destinationViewController as? GalleryCollectionViewController {
+        vc.viewing = self.userForProfile
+        vc.setForStackedView()
       }
     }
   }

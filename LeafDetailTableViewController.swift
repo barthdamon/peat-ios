@@ -244,6 +244,13 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia, M
 //        vc.preferredContentSize = CGSize(width: self.view.frame.width, height: 200)
       }
     }
+    
+//    if segue.identifier == "showUserGallery" {
+//      if let vc = segue.destinationViewController as? GalleryCollectionViewController {
+//        vc.viewing = uploaderUserForShow
+//        vc.setViewForStacked()
+//      }
+//    }
   }
 
   
@@ -279,22 +286,32 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia, M
     return false
   }
   
+  //not used
   func showUserProfile(user: User) {
     self.detailVC?.showUserProfile(user)
+  }
+  
+  //trying to use
+  func showUploaderGallery(user: User) {
+    self.detailVC?.showUploaderGallery(user)
   }
   
   
   //MARK: MediaHeaderCellDelegate
   
+  //USED
   func showTaggedUsers(users: Array<User>, media: MediaObject) {
     self.taggedUsersForShow = users
     self.mediaForTagged = media
     self.performSegueWithIdentifier("showTaggedSegue", sender: self)
   }
   
+  //half used
   func showUploaderUser(user: User, media: MediaObject) {
-    self.uploaderUserForShow = user
-    self.performSegueWithIdentifier("showUserGallery", sender: self)
+    showUploaderGallery(user)
+//    self.detailVC?.showUploaderGallery()
+//    self.uploaderUserForShow = user
+//    self.performSegueWithIdentifier("showUserGallery", sender: self)
   }
   
 }

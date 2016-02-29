@@ -16,6 +16,8 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
   var viewing: User?
   var store = PeatContentStore()
   
+  var stacked = false
+  
   @IBOutlet weak var usernameLabel: UILabel!
   @IBOutlet weak var avatarImageView: UIImageView!
   @IBOutlet weak var nameLabel: UILabel!
@@ -42,10 +44,27 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
         super.viewDidLoad()
       
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "updatedAvatar", name: "userAvatarUpdated", object: nil)
-      initializeSidebar()
-      configureMenuSwipes()
-      configureNavBar()
+      if !stacked {
+        initializeSidebar()
+        configureMenuSwipes()
+        configureNavBar()
+      }
     }
+  
+  func dismissSelf() {
+    self.navigationController?.popViewControllerAnimated(true)
+  }
+  
+  func setForStackedView() {
+    self.navigationController?.navigationBarHidden = false
+    print("self.navigationContrlller: \(self.navigationController)")
+    let backButton = UIBarButtonItem(barButtonSystemItem: .PageCurl, target: self, action: "dismissSelf")
+    self.navigationItem.leftBarButtonItem = backButton
+    stacked = true
+//    let navBar = UINavigationBar(frame: CGRectMake(0,0,self.view.frame.width, 64.0))
+//    let backItem = UIBarButtonItem(barButtonSystemItem: .PageCurl, target: self, action: "dismissSelf")
+//    self.view.addSubview(navBar)
+  }
   
   func updatedAvatar() {
     self.avatarImageView.image = CurrentUser.info.model?.avatarImage
