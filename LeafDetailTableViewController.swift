@@ -279,6 +279,10 @@ class LeafDetailTableViewController: UITableViewController, TableViewForMedia, M
     return false
   }
   
+  func showUserProfile(user: User) {
+    self.detailVC?.showUserProfile(user)
+  }
+  
   
   //MARK: MediaHeaderCellDelegate
   

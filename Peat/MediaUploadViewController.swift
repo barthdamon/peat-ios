@@ -19,6 +19,8 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
   @IBOutlet weak var purposeSelector: UISegmentedControl!
   @IBOutlet weak var mediaView: UIView!
   @IBOutlet weak var descriptionTextField: UITextField!
+  
+  var userForProfile: User?
   var store: PeatContentStore? {
     return delegate?.getStore()
   }
@@ -137,6 +139,12 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
           vc.preferredContentSize = CGSize(width: self.view.frame.width, height: 200)
         }
       }
+      
+      if segue.identifier == "profileFromUploader" {
+        if let vc = segue.destinationViewController as? ProfileViewController {
+          vc.viewing = self.userForProfile
+        }
+      }
     }
   
   func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
@@ -192,6 +200,11 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
       }
     }
     return false
+  }
+  
+  func showUserProfile(user: User) {
+    self.userForProfile = user
+    self.performSegueWithIdentifier("profileFromUploader", sender: self)
   }
   
   @IBAction func cancelButtonPressed(sender: AnyObject) {

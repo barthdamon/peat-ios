@@ -33,6 +33,8 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   var selectedAbility: Ability?
   
+  var userForProfile: User?
+  
   @IBOutlet weak var feedSelectionPicker: UISegmentedControl!
 
   
@@ -81,6 +83,11 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
     case .Edit:
       break
     }
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(true)
+    self.navigationController?.navigationBarHidden = true
   }
   
   func getStore() -> PeatContentStore? {
@@ -167,6 +174,12 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
       if let vc = segue.destinationViewController as? WitnessRequestViewController {
         vc.leaf = self.leaf
         vc.viewing = self.viewing
+      }
+    }
+    
+    if segue.identifier == "userForProfile" {
+      if let vc = segue.destinationViewController as? ProfileViewController {
+        vc.viewing = userForProfile
       }
     }
     
@@ -366,6 +379,11 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   func feedSelectionChanged(sender: UISegmentedControl) {
     let index = sender.selectedSegmentIndex
     if index == 0 { setMode(.Uploads) } else if index == 1 { setMode(.Feed) } else if index == 2 { setMode(.Tutorials) }
+  }
+  
+  func showUserProfile(user: User) {
+    self.userForProfile = user
+    self.performSegueWithIdentifier("showUserProfile", sender: self)
   }
   
   

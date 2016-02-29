@@ -12,9 +12,10 @@ protocol TagUserDelegate {
   func getStore() -> PeatContentStore
 }
 
-protocol MediaTagUserDelegate {
+@objc protocol MediaTagUserDelegate {
   func userAdded(user: User)
   func userIsTagged(user: User) -> Bool
+  func showUserProfile(user: User)
 }
 
 class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
@@ -39,6 +40,7 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
       }
     }
     self.foundUsers = media?.taggedUsers
+    self.navigationController?.navigationBarHidden = false
   }
   
   func configureTextField() {
@@ -115,24 +117,25 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
   }
   
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    if taggingEnabled {
-      if let users = self.foundUsers {
-        do {
-          let selectedUser = try users.lookup(UInt(indexPath.row))
+    if let users = self.foundUsers {
+      do {
+        let selectedUser = try users.lookup(UInt(indexPath.row))
+        if taggingEnabled {
           if let delegate = mediaTagDelegate where !delegate.userIsTagged(selectedUser) {
             delegate.userAdded(selectedUser)
             print("User added")
+            self.dismissViewControllerAnimated(true, completion: nil)
           }
-          self.dismissViewControllerAnimated(true, completion: nil)
-        }
-        catch {
-          print("User not found")
+        } else {
+          self.navigationController?.popViewControllerAnimated(true)
+            mediaTagDelegate?.showUserProfile(selectedUser)
+            //perform segue showing the profile of the person tagged....
         }
       }
-    } else {
-      //perform segue showing the profile of the person tagged....
+      catch {
+        print("User not found")
+      }
     }
-
   }
   
 }

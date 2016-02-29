@@ -1033,13 +1033,13 @@
                         <segue destination="RHu-bK-AcA" kind="popoverPresentation" identifier="abilitySearchSegue" popoverAnchorView="fpa-ML-dh9" id="UUr-P0-chC">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
-                        <segue destination="u9J-yl-I1T" kind="show" identifier="showProfileForUser" id="zDr-Ws-xWt"/>
+                        <segue destination="u9J-yl-I1T" kind="show" identifier="showUserProfile" id="zDr-Ws-xWt"/>
                         <segue destination="R6i-Xh-cGl" kind="show" identifier="showGalleryForUser" id="VQb-N0-lHt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BMv-Fn-Ou9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3122" y="1584"/>
+            <point key="canvasLocation" x="3230" y="1608"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ZnZ-qD-w9f">
@@ -1055,7 +1055,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4LS-el-nOx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2486" y="1364"/>
+            <point key="canvasLocation" x="2390" y="1590"/>
         </scene>
         <!--Media Upload View Controller-->
         <scene sceneID="lGU-PJ-0cU">
@@ -1190,11 +1190,12 @@
                         <segue destination="I8Z-rz-Zf8" kind="popoverPresentation" identifier="tagUserSegue" popoverAnchorView="uy4-CB-DvL" id="XI9-8e-M4F">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
+                        <segue destination="u9J-yl-I1T" kind="show" identifier="profileFromUploader" id="A5n-oq-uhN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7lF-ac-hDM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3947" y="1317"/>
+            <point key="canvasLocation" x="3835" y="863"/>
         </scene>
         <!--Leaf Detail Table View Controller-->
         <scene sceneID="P6j-hL-yTx">
@@ -2520,7 +2521,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KY4-US-VNh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3223" y="867"/>
+            <point key="canvasLocation" x="3309" y="1071"/>
         </scene>
         <!--Activity Selection Popover-->
         <scene sceneID="fk7-SI-WvP">
@@ -2573,7 +2574,7 @@
             <objects>
                 <tableViewController storyboardIdentifier="Tag User Table" useStoryboardIdentifierAsRestorationIdentifier="YES" id="I8Z-rz-Zf8" userLabel="Ability Search Popover" customClass="TagUserTableViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="UYt-Qv-g6X">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="200"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="separatorColor" red="0.1843137255" green="0.1843137255" blue="0.1843137255" alpha="1" colorSpace="calibratedRGB"/>
@@ -2656,14 +2657,14 @@
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" id="UUf-ef-Aff"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="600" height="200"/>
+                    <size key="freeformSize" width="600" height="600"/>
                     <connections>
                         <outlet property="view" destination="UYt-Qv-g6X" id="qka-Sz-aGE"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IeG-6L-gfG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4296" y="1917"/>
+            <point key="canvasLocation" x="4233" y="2116"/>
         </scene>
     </scenes>
     <resources>
@@ -2680,6 +2681,6 @@
         <segue reference="sPE-RS-xmR"/>
         <segue reference="cDy-da-yv2"/>
         <segue reference="VQb-N0-lHt"/>
-        <segue reference="Uc3-jM-PHz"/>
+        <segue reference="XI9-8e-M4F"/>
     </inferredMetricsTieBreakers>
 </document>
