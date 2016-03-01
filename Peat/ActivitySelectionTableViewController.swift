@@ -14,6 +14,7 @@ class ActivitySelectionTableViewController: UITableViewController, UITextFieldDe
     var profileVC: ProfileViewController? {
       didSet {
         if let viewing = profileVC!.viewing {
+          self.viewing = viewing
           user = viewing
         } else {
           user = CurrentUser.info.model
@@ -21,6 +22,7 @@ class ActivitySelectionTableViewController: UITableViewController, UITextFieldDe
       }
     }
   
+    var viewing: User?
     var user: User?
   
     var matchingActivities: Array<Activity>?
@@ -28,7 +30,9 @@ class ActivitySelectionTableViewController: UITableViewController, UITextFieldDe
     override func viewDidLoad() {
       super.viewDidLoad()
       setDefaultActivities()
-      configureTextField()
+      if self.viewing == nil {
+        configureTextField()
+      }
     }
     
     func configureTextField() {
