@@ -49,6 +49,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   var selectedHeaderViewForComments: MediaCellHeaderView?
   var tableViewVC: LeafDetailTableViewController?
   var uploadFromGallery = false
+  var isShowingForGallery = false
   
   
   override func viewDidLoad() {
@@ -177,17 +178,12 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
       }
     }
     
-    if segue.identifier == "userForProfile" {
+    if segue.identifier == "showUserProfile" {
       if let vc = segue.destinationViewController as? ProfileViewController {
         vc.viewing = userForProfile
         vc.setForStackedView()
-      }
-    }
-    
-    if segue.identifier == "showGalleryForUser" {
-      if let vc = segue.destinationViewController as? GalleryCollectionViewController {
-        vc.viewing = userForProfile
-        vc.setForStackedView()
+        vc.isShowingForGallery = isShowingForGallery
+        isShowingForGallery = false
       }
     }
     
@@ -396,7 +392,8 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   func showUploaderGallery(user: User) {
     self.userForProfile = user
-    self.performSegueWithIdentifier("showGalleryForUser", sender: self)
+    self.isShowingForGallery = true
+    self.performSegueWithIdentifier("showUserProfile", sender: self)
   }
   
   

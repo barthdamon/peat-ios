@@ -17,6 +17,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
   var store = PeatContentStore()
   
   var stacked = false
+  var isShowingForGallery = false
   
   @IBOutlet weak var profileModeSelector: UISegmentedControl!
   @IBOutlet weak var usernameLabel: UILabel!
@@ -154,6 +155,10 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
           vc.viewing = self.viewing
           vc.store = store
           vc.fetchTreeData()
+          if isShowingForGallery {
+            self.profileModeSelector.selectedSegmentIndex = 1
+            vc.showGallery(viewing)
+          }
 //          if let activity = currentActivity {
 //            vc.setCurrentActivityTree(activity)
 //          }
