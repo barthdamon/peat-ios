@@ -163,7 +163,7 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
   }
 
   func dismissSelf(animated: Bool) {
-    self.navigationController?.popToRootViewControllerAnimated(animated)
+    self.navigationController?.popViewControllerAnimated(true)
   }
   
   func displayGalleryOptions() {
@@ -225,6 +225,8 @@ extension MediaUploadViewController: UINavigationControllerDelegate, UIImagePick
     imagePickerController.delegate = self
     imagePickerController.allowsEditing = true
     imagePickerController.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+    imagePickerController.videoQuality = .TypeMedium
+    imagePickerController.videoMaximumDuration = 60
     
     //Allows for video and images:
     if let availableMediaTypes = UIImagePickerController.availableMediaTypesForSourceType(imagePickerController.sourceType) {

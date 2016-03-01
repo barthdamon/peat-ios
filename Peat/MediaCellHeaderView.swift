@@ -39,15 +39,19 @@ class MediaCellHeaderView: UIView {
     //Looking at a users leaf:
     self.taggedUsers = []
     var otherNames = ""
-    if let primaryUser = primaryUser, name = primaryUser.username {
-      self.taggedUsers!.append(primaryUser)
-      otherNames = "\(name)"
-    }
+//    if let primaryUser = primaryUser, name = primaryUser.username {
+//      self.taggedUsers!.append(primaryUser)
+//      otherNames = "\(name)"
+//    }
     if let tagged = media.taggedUsers {
       tagged.forEach({ (user) -> () in
         self.taggedUsers!.append(user)
         if let taggedName = user.username {
-          otherNames = "otherNames, \(taggedName)"
+          if otherNames != "" {
+            otherNames = "\(otherNames), \(taggedName)"
+          } else {
+            otherNames = "\(taggedName)"
+          }
         }
       })
     self.usernameButton.setTitle(otherNames, forState: .Normal)

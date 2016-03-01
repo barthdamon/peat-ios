@@ -135,14 +135,6 @@ extension EditProfileTableViewController: UINavigationControllerDelegate, UIImag
   func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
     // dismiss the image picker controller window
     self.dismissViewControllerAnimated(true, completion: {
-      //Determine if Video or Image Data
-      //      if (info[UIImagePickerControllerEditedImage] == nil && info[UIImagePickerControllerOriginalImage] == nil) {
-      //        //VIDEO
-      //        self.videoPath = info[UIImagePickerControllerMediaURL] as? NSURL
-      //        self.mediaType = .Video
-      //        self.mediaObject?.filePath = self.videoPath
-      //
-      //      } else {
       //upload the image, then put that mediaId as the avatar image
       if picker.allowsEditing {
         self.image = info[UIImagePickerControllerEditedImage] as? UIImage

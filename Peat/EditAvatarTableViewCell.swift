@@ -26,7 +26,6 @@ class EditAvatarTableViewCell: UITableViewCell, EditProfileCell  {
   }
   
   func configureForCurrentUser() {
-    toggleSaveAndCancel()
     CurrentUser.info.model?.generateAvatarImage({ (image) -> () in
       dispatch_async(dispatch_get_main_queue(), { () -> Void in
         self.avatarImageView.image = image

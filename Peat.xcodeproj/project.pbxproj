@@ -75,6 +75,7 @@
 		02A11CA91BB9F1670064AE95 /* AWSContentHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A11CA81BB9F1670064AE95 /* AWSContentHelper.swift */; };
 		02A740F51C4DF944000C080D /* EnumHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A740F41C4DF944000C080D /* EnumHelpers.swift */; };
 		02A740F71C4E0044000C080D /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A740F61C4E0044000C080D /* Protocols.swift */; };
+		02AF90131C85C94E0041841E /* EditProfileFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF90121C85C94E0041841E /* EditProfileFieldTableViewCell.swift */; };
 		02B469B31BFE9BF100704269 /* SocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B469B21BFE9BF100704269 /* SocketService.swift */; };
 		02D0A9181BC349B30018596F /* VideoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D0A9171BC349B30018596F /* VideoObject.swift */; };
 		02D0A91A1BC349C10018596F /* PhotoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D0A9191BC349C10018596F /* PhotoObject.swift */; };
@@ -172,6 +173,7 @@
 		02A11CA81BB9F1670064AE95 /* AWSContentHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWSContentHelper.swift; sourceTree = "<group>"; };
 		02A740F41C4DF944000C080D /* EnumHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumHelpers.swift; sourceTree = "<group>"; };
 		02A740F61C4E0044000C080D /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
+		02AF90121C85C94E0041841E /* EditProfileFieldTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileFieldTableViewCell.swift; sourceTree = "<group>"; };
 		02B469B21BFE9BF100704269 /* SocketService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketService.swift; sourceTree = "<group>"; };
 		02D0A9171BC349B30018596F /* VideoObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoObject.swift; sourceTree = "<group>"; };
 		02D0A9191BC349C10018596F /* PhotoObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoObject.swift; sourceTree = "<group>"; };
@@ -247,6 +249,7 @@
 			isa = PBXGroup;
 			children = (
 				0262B2FB1C7FD9C5007E8EC6 /* EditAvatarTableViewCell.swift */,
+				02AF90121C85C94E0041841E /* EditProfileFieldTableViewCell.swift */,
 				025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */,
 				0262B2F51C7FCB01007E8EC6 /* TagUserTableViewCell.swift */,
 				026CF6841C7B40040066888E /* MediaCollectionViewCell.swift */,
@@ -666,6 +669,7 @@
 				0264A6651C6D75560056966A /* Membership.swift in Sources */,
 				02069E061C114E5C007E18EB /* MediaDescriptionTableViewCell.swift in Sources */,
 				0221BB521C6663C00027EB42 /* WitnessRequestViewController.swift in Sources */,
+				02AF90131C85C94E0041841E /* EditProfileFieldTableViewCell.swift in Sources */,
 				022AB6971C5C45AA00F1168E /* LeafConnection.swift in Sources */,
 				027E31081BA2780C001FCF70 /* AppDelegate.swift in Sources */,
 				02B469B31BFE9BF100704269 /* SocketService.swift in Sources */,

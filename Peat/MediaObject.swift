@@ -131,6 +131,7 @@ class MediaObject: NSObject {
     media.needsPublishing = true
     media.store = store
     media.uploaderUser_Id = CurrentUser.info.model?._id
+    media.uploaderUser = CurrentUser.info.model
     media.leafId = leaf?.leafId
     //TODO: get tags
     //careful might not be getting set here... probably have to do on server or generate a local id like he other stuff...
