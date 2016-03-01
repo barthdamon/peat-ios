@@ -394,16 +394,16 @@
                         <viewControllerLayoutGuide type="bottom" id="btH-gG-Au2"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="euq-lC-XqI">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="800"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="47O-cN-NNd">
+                            <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="47O-cN-NNd">
                                 <rect key="frame" x="0.0" y="139" width="600" height="661"/>
                                 <connections>
-                                    <segue destination="YFs-rt-r2Z" kind="embed" identifier="treeViewEmbed" id="Dvf-dE-u2k"/>
+                                    <segue destination="8Wm-v7-XxR" kind="embed" identifier="treeViewEmbed" id="ESj-QS-anu"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J1F-o6-7ir">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J1F-o6-7ir">
                                 <rect key="frame" x="0.0" y="44" width="600" height="96"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="keQ-L3-CPY">
@@ -669,6 +669,7 @@
                         <outlet property="cancelButton" destination="nEw-ic-wLJ" id="U0S-hJ-PoU"/>
                         <outlet property="currentActivityLabel" destination="BTd-ef-NRq" id="nHl-eg-LhQ"/>
                         <outlet property="nameLabel" destination="C6B-Zw-agW" id="LPA-Bp-bd2"/>
+                        <outlet property="profileModeSelector" destination="xoU-wo-OkR" id="wZ3-az-149"/>
                         <outlet property="saveButton" destination="a2R-97-0fD" id="Lnr-cq-yMM"/>
                         <outlet property="usernameLabel" destination="45k-P6-0DR" id="RlK-5A-NS0"/>
                         <segue destination="kz6-cr-0po" kind="popoverPresentation" identifier="activitySelectionPopoverSegue" popoverAnchorView="J1F-o6-7ir" id="Eyf-Jf-xqa">
@@ -679,7 +680,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Nm-tX-4HO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1729" y="905"/>
+            <point key="canvasLocation" x="1671" y="843"/>
         </scene>
         <!--Leaf Detail View Controller-->
         <scene sceneID="idj-eu-psZ">
@@ -690,16 +691,16 @@
                         <viewControllerLayoutGuide type="bottom" id="YQ0-W4-SGz"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="DyZ-E1-wvN">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="800"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EyS-0T-H8w">
+                            <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EyS-0T-H8w">
                                 <rect key="frame" x="0.0" y="149" width="600" height="602"/>
                                 <connections>
                                     <segue destination="vPg-FK-PxY" kind="embed" identifier="leafDetailEmbed" id="An4-8O-VqM"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fpa-ML-dh9">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fpa-ML-dh9">
                                 <rect key="frame" x="0.0" y="44" width="600" height="105"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AbilityTitle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jvp-AS-0ui">
@@ -1358,7 +1359,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="FRr-5D-c7T">
-                                <rect key="frame" x="0.0" y="72" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FRr-5D-c7T" id="PQ0-0y-zoI">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1366,7 +1367,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="mediaCell" rowHeight="446" id="RET-x4-QOg" customClass="MediaDrilldownTableViewCell" customModule="Peat" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="116" width="600" height="446"/>
+                                <rect key="frame" x="0.0" y="72" width="600" height="446"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RET-x4-QOg" id="tqx-xp-20j">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="445"/>
@@ -1479,7 +1480,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="descriptionCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="descriptionCell" rowHeight="78" id="fFE-VA-jJA" customClass="MediaDescriptionTableViewCell" customModule="Peat" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="562" width="600" height="78"/>
+                                <rect key="frame" x="0.0" y="518" width="600" height="78"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fFE-VA-jJA" id="yaw-TN-cdv">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="77"/>
@@ -1527,7 +1528,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="commentCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="commentCell" id="ENO-cT-Zbc" customClass="CommentsTableViewCell" customModule="Peat" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="640" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="596" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ENO-cT-Zbc" id="Htd-WV-TX2">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1563,7 +1564,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="postCommentCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="postCommentCell" id="XKr-7c-QYV" customClass="PostCommentTableViewCell" customModule="Peat" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="684" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="640" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XKr-7c-QYV" id="nXK-nW-QDv">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -1614,6 +1615,22 @@
             </objects>
             <point key="canvasLocation" x="2640" y="2609"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="7a2-Id-5lX">
+            <objects>
+                <navigationController navigationBarHidden="YES" id="8Wm-v7-XxR" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Yo6-Od-C2l">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="YFs-rt-r2Z" kind="relationship" relationship="rootViewController" id="DBM-O6-wc7"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UHj-tK-1N4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2288" y="830.5"/>
+        </scene>
         <!--Tree View Controller-->
         <scene sceneID="ah9-Av-MOg">
             <objects>
@@ -1623,10 +1640,10 @@
                         <viewControllerLayoutGuide type="bottom" id="M88-kD-GVu"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ZNB-Fu-P7j">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="661"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v4h-pO-cxz">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="v4h-pO-cxz">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="661"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </scrollView>
@@ -1646,7 +1663,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n9M-8E-Cop" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2478" y="759.5"/>
+            <point key="canvasLocation" x="2958" y="830"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="gZe-Hg-52X">
@@ -2348,7 +2365,7 @@
             <objects>
                 <collectionViewController restorationIdentifier="GalleryCollectionViewController" storyboardIdentifier="GalleryCollectionViewController" id="R6i-Xh-cGl" customClass="GalleryCollectionViewController" customModule="Peat" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="poA-AX-Ipa">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="800"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="QKI-ls-jii">
                             <size key="itemSize" width="171" height="96"/>
@@ -2358,7 +2375,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="MediaCollectionViewCell" reuseIdentifier="MediaCollectionViewCell" id="xkG-x8-54A" customClass="MediaCollectionViewCell" customModule="Peat" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="44" width="171" height="96"/>
+                                <rect key="frame" x="0.0" y="0.0" width="171" height="96"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="171" height="96"/>
@@ -2473,7 +2490,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dXi-8J-D1g" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1745" y="-22"/>
+            <point key="canvasLocation" x="1785" y="-104"/>
         </scene>
         <!--Ability Search Popover-->
         <scene sceneID="SJS-Io-HFy">
@@ -2565,7 +2582,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R3N-Kc-D1f" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2453" y="326"/>
+            <point key="canvasLocation" x="2905" y="136"/>
         </scene>
         <!--Ability Search Popover-->
         <scene sceneID="A2U-CF-2cM">
@@ -2677,10 +2694,10 @@
         <image name="up-arrow" width="46" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Pbo-dD-nWd"/>
         <segue reference="Uc3-jM-PHz"/>
-        <segue reference="iMy-Bb-Ivx"/>
-        <segue reference="sPE-RS-xmR"/>
+        <segue reference="zDr-Ws-xWt"/>
         <segue reference="cDy-da-yv2"/>
+        <segue reference="sPE-RS-xmR"/>
+        <segue reference="VQb-N0-lHt"/>
     </inferredMetricsTieBreakers>
 </document>

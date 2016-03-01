@@ -536,4 +536,23 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     return self.treeView
   }
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  ///MARK: Navigation
+  func showGallery(viewing: User?) {
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    if let vc = storyboard.instantiateViewControllerWithIdentifier("GalleryCollectionViewController") as? GalleryCollectionViewController {
+      vc.setForStackedView()
+      self.navigationController?.pushViewController(vc, animated: true)
+    }
+  }
+
 }

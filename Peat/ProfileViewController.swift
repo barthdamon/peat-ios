@@ -18,6 +18,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
   
   var stacked = false
   
+  @IBOutlet weak var profileModeSelector: UISegmentedControl!
   @IBOutlet weak var usernameLabel: UILabel!
   @IBOutlet weak var avatarImageView: UIImageView!
   @IBOutlet weak var nameLabel: UILabel!
@@ -42,6 +43,8 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
   
     override func viewDidLoad() {
         super.viewDidLoad()
+      
+      self.profileModeSelector.addTarget(self, action: "profileModeChanged:", forControlEvents: .ValueChanged)
       
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "updatedAvatar", name: "userAvatarUpdated", object: nil)
       if !stacked {
@@ -143,7 +146,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
       if segue.identifier == "treeViewEmbed" {
-        if let vc = segue.destinationViewController as? TreeViewController {
+        if let topNav = segue.destinationViewController as? UINavigationController, vc = topNav.topViewController as? TreeViewController {
           prepareProfile()
           vc.profileDelegate = self
           self.treeController = vc
@@ -255,4 +258,12 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
     self.drilldownController?.dismissViewControllerAnimated(true, completion: nil)
   }
   
+  func profileModeChanged(sender: UISegmentedControl) {
+    let index = sender.selectedSegmentIndex
+    if index == 0 {
+      self.treeController?.navigationController?.popToRootViewControllerAnimated(true)
+    } else {
+      self.treeController?.showGallery(viewing)
+    }
+  }
 }
