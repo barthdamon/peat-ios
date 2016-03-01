@@ -106,9 +106,5 @@ class MediaDrilldownTableViewCell: UITableViewCell {
     }
   }
   
-  
-  @IBAction func backButtonPressed(sender: AnyObject) {
-    self.tableVC?.navigationController?.popToRootViewControllerAnimated(true)
-  }
 
 }

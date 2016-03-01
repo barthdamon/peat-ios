@@ -21,6 +21,9 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
   
     var API = APIService.sharedService
   
+  var userForProfile: User?
+  var isShowingForGallery = false
+  
     override func viewDidLoad() {
       super.viewDidLoad()
       self.tableView.allowsSelection = false
@@ -172,17 +175,40 @@ class NewsfeedTableViewController: UITableViewController, ViewControllerWithMenu
         }
       }
     }
+    
+    if segue.identifier == "showUserProfile" {
+      if let vc = segue.destinationViewController as? ProfileViewController {
+        vc.viewing = userForProfile
+        vc.setForStackedView()
+        vc.isShowingForGallery = isShowingForGallery
+        isShowingForGallery = false
+      }
+    }
   }
 
-  
+  //USED:
   func showTaggedUsers(users: Array<User>, media: MediaObject) {
     //show the users
+    
   }
   
   func showUploaderUser(user: User, media: MediaObject) {
     //show the users profile
   }
   
+  func showUserProfile(user: User) {
+    self.userForProfile = user
+    self.performSegueWithIdentifier("showUserProfile", sender: self)
+  }
+  
+  func showUploaderGallery(user: User) {
+    self.userForProfile = user
+    self.isShowingForGallery = true
+    self.performSegueWithIdentifier("showUserProfile", sender: self)
+  }
+  
+  
+  //NOT USED:
   func userAdded(user: User) {
     //somehow show the user is added on the appropriate cell.....
   }

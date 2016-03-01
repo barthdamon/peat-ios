@@ -21,6 +21,9 @@ class CommentsTableViewController: UITableViewController {
   var delegate: CommentDetailDelegate?
   var playerCell: MediaDrilldownTableViewCell?
   var headerView: MediaCellHeaderView?
+  
+  var userForProfile: User?
+  var isShowingForGallery: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,6 +81,17 @@ class CommentsTableViewController: UITableViewController {
   //    return 1
   //  }
   
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if segue.identifier == "showUserProfile" {
+      if let vc = segue.destinationViewController as? ProfileViewController {
+        vc.viewing = userForProfile
+        vc.setForStackedView()
+        vc.isShowingForGallery = isShowingForGallery
+        isShowingForGallery = false
+      }
+    }
+  }
+  
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
       var postIndex = 1
       if let comments = media?.comments {
@@ -87,7 +101,6 @@ class CommentsTableViewController: UITableViewController {
       case 0:
         if let cell = tableView.dequeueReusableCellWithIdentifier("mediaCell", forIndexPath: indexPath) as? MediaDrilldownTableViewCell, media = media {
           cell.viewing = viewing
-          cell.tableVC = self
           cell.configureWithMedia(media)
           self.playerCell = cell
           return cell
@@ -122,4 +135,17 @@ class CommentsTableViewController: UITableViewController {
     self.tableView.reloadData()
     //update the comment on the playerCell too
   }
+  
+  
+  func showUserProfile(user: User) {
+    self.userForProfile = user
+    self.performSegueWithIdentifier("showUserProfile", sender: self)
+  }
+  
+  func showUploaderGallery(user: User) {
+    self.userForProfile = user
+    self.isShowingForGallery = true
+    self.performSegueWithIdentifier("showUserProfile", sender: self)
+  }
+  
 }
