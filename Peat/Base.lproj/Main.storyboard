@@ -1056,7 +1056,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BMv-Fn-Ou9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3328" y="1661"/>
+            <point key="canvasLocation" x="3314" y="1721"/>
         </scene>
         <!--Media Upload View Controller-->
         <scene sceneID="lGU-PJ-0cU">
@@ -1602,7 +1602,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AaJ-Mu-7kI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2403" y="1949"/>
+            <point key="canvasLocation" x="2493" y="1945"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="7a2-Id-5lX">
@@ -1629,11 +1629,11 @@
                         <viewControllerLayoutGuide type="bottom" id="M88-kD-GVu"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ZNB-Fu-P7j">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="661"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v4h-pO-cxz">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="661"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </scrollView>
                         </subviews>
@@ -2682,8 +2682,8 @@
         <image name="up-arrow" width="46" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="UNv-I4-pO8"/>
-        <segue reference="8qt-6g-62q"/>
+        <segue reference="zDr-Ws-xWt"/>
+        <segue reference="cDy-da-yv2"/>
         <segue reference="sPE-RS-xmR"/>
         <segue reference="Uc3-jM-PHz"/>
     </inferredMetricsTieBreakers>

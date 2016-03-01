@@ -52,10 +52,7 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
     if let _ = self.viewing {
     } else {
       self.store = CurrentUser.info.store
-      let recognizer = UITapGestureRecognizer(target: self, action: "collectionViewDoubleTapped:")
-      recognizer.numberOfTapsRequired = 2
-      recognizer.numberOfTouchesRequired = 1
-      self.collectionView?.addGestureRecognizer(recognizer)
+      self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addNewMedia")
     }
     initializeGallery()
     // Do any additional setup after loading the view.
@@ -251,8 +248,7 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
     return false
   }
   
-  
-  func collectionViewDoubleTapped(sender: UIGestureRecognizer) {
+  func addNewMedia() {
     self.addMediaToGallery()
   }
   
