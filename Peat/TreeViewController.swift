@@ -537,15 +537,6 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   }
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
   ///MARK: Navigation
   func showGallery(viewing: User?) {
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -553,6 +544,9 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       vc.setForStackedView()
       vc.profileDelegate = profileDelegate
       profileDelegate?.galleryController = vc
+      if let store = self.profileDelegate?.store {
+        vc.store = store
+      }
       self.navigationController?.pushViewController(vc, animated: false)
     }
   }

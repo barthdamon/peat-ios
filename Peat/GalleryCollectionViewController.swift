@@ -27,7 +27,13 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
   var mode: GallerySelectionMode = .View
   
   var mediaObjects: Array<MediaObject>? {
-    return store.gallery.mediaObjects
+//    if let delegate = profileDelegate {
+//      return store.gallery.mediaObjects?.filter({ (object) -> Bool in
+//        object.activityName == delegate.currentActivity?.name
+//      })
+//    } else {
+      return store.gallery.mediaObjects
+//    }
   }
   var selectedMediaObject: MediaObject?
   var mediaUploadController: MediaUploadViewController?
