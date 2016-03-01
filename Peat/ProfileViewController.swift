@@ -261,7 +261,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
   func profileModeChanged(sender: UISegmentedControl) {
     let index = sender.selectedSegmentIndex
     if index == 0 {
-      self.treeController?.navigationController?.popToRootViewControllerAnimated(true)
+      self.treeController?.navigationController?.popToRootViewControllerAnimated(false)
     } else {
       self.treeController?.showGallery(viewing)
     }

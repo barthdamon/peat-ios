@@ -551,7 +551,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     if let vc = storyboard.instantiateViewControllerWithIdentifier("GalleryCollectionViewController") as? GalleryCollectionViewController {
       vc.setForStackedView()
-      self.navigationController?.pushViewController(vc, animated: true)
+      self.navigationController?.pushViewController(vc, animated: false)
     }
   }
 

@@ -397,20 +397,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="47O-cN-NNd">
-                                <rect key="frame" x="0.0" y="139" width="600" height="661"/>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="47O-cN-NNd">
+                                <rect key="frame" x="0.0" y="115" width="600" height="485"/>
                                 <connections>
                                     <segue destination="8Wm-v7-XxR" kind="embed" identifier="treeViewEmbed" id="ESj-QS-anu"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J1F-o6-7ir">
-                                <rect key="frame" x="0.0" y="44" width="600" height="96"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J1F-o6-7ir">
+                                <rect key="frame" x="0.0" y="20" width="600" height="96"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="keQ-L3-CPY">
-                                        <rect key="frame" x="0.0" y="0.0" width="480" height="96"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="420" height="96"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BTd-ef-NRq">
-                                                <rect key="frame" x="96" y="64" width="339" height="24"/>
+                                                <rect key="frame" x="96" y="64" width="279" height="24"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="21" id="5e8-wB-vlV"/>
                                                     <constraint firstAttribute="width" constant="128" id="REP-cf-LPW"/>
@@ -426,13 +426,13 @@
                                                 </variation>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="45k-P6-0DR">
-                                                <rect key="frame" x="96" y="8" width="376" height="33"/>
+                                                <rect key="frame" x="96" y="8" width="316" height="33"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First Last" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C6B-Zw-agW">
-                                                <rect key="frame" x="96" y="44" width="376" height="17"/>
+                                                <rect key="frame" x="96" y="44" width="316" height="17"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="21" id="6VA-Uf-xom"/>
                                                     <constraint firstAttribute="width" constant="207" id="zEp-8u-kyK"/>
@@ -448,7 +448,7 @@
                                                 </variation>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6uS-Wb-QW8">
-                                                <rect key="frame" x="437" y="64" width="43" height="25"/>
+                                                <rect key="frame" x="377" y="64" width="43" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="38" id="2Au-Nt-yDp"/>
                                                     <constraint firstAttribute="width" secondItem="6uS-Wb-QW8" secondAttribute="height" multiplier="19:11" id="8Y7-CZ-zBs"/>
@@ -588,8 +588,8 @@
                                             <constraint firstAttribute="height" constant="28" id="lDP-TU-9EO"/>
                                         </constraints>
                                         <segments>
-                                            <segment title="Abilities"/>
-                                            <segment title="Gallery"/>
+                                            <segment title="" image="tree"/>
+                                            <segment title="" image="camera"/>
                                         </segments>
                                     </segmentedControl>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nEw-ic-wLJ">
@@ -620,7 +620,7 @@
                                     <constraint firstItem="keQ-L3-CPY" firstAttribute="top" secondItem="J1F-o6-7ir" secondAttribute="top" id="dqN-pW-RAJ"/>
                                     <constraint firstItem="keQ-L3-CPY" firstAttribute="width" secondItem="J1F-o6-7ir" secondAttribute="height" multiplier="311:96" id="fCX-dr-NJN"/>
                                     <constraint firstAttribute="trailing" secondItem="xoU-wo-OkR" secondAttribute="trailing" constant="3" id="frk-68-gSe"/>
-                                    <constraint firstItem="keQ-L3-CPY" firstAttribute="width" secondItem="J1F-o6-7ir" secondAttribute="width" multiplier="0.8" id="hvh-d2-ecb"/>
+                                    <constraint firstItem="keQ-L3-CPY" firstAttribute="width" secondItem="J1F-o6-7ir" secondAttribute="width" multiplier="0.7" id="hvh-d2-ecb"/>
                                     <constraint firstItem="xoU-wo-OkR" firstAttribute="leading" secondItem="keQ-L3-CPY" secondAttribute="trailing" constant="8" id="irb-OR-yPl"/>
                                     <constraint firstItem="keQ-L3-CPY" firstAttribute="leading" secondItem="J1F-o6-7ir" secondAttribute="leading" id="n6a-TN-QsN"/>
                                     <constraint firstItem="a2R-97-0fD" firstAttribute="leading" secondItem="nEw-ic-wLJ" secondAttribute="trailing" constant="10" id="xaF-aA-D8n"/>
@@ -633,6 +633,8 @@
                                         <exclude reference="fCX-dr-NJN"/>
                                         <exclude reference="Iuk-sg-2Os"/>
                                         <exclude reference="MG9-NB-U18"/>
+                                        <exclude reference="dOi-5W-WKy"/>
+                                        <exclude reference="irb-OR-yPl"/>
                                     </mask>
                                 </variation>
                             </view>
