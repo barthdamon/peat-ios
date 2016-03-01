@@ -32,6 +32,8 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
   var selectedMediaObject: MediaObject?
   var mediaUploadController: MediaUploadViewController?
   
+  var profileDelegate: ProfileViewController?
+  
   var stacked = false
   
   override func viewDidLoad() {
@@ -157,7 +159,11 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
       self.selectedMediaObject = try mediaObjects?.lookup(UInt(indexPath.row))
       switch mode {
       case .View:
-        self.performSegueWithIdentifier("showMediaDrilldownDetail", sender: self)
+        if let delegate = self.profileDelegate {
+          delegate.showMediaFromGallery(self)
+        } else {
+          self.performSegueWithIdentifier("showMediaDrilldownDetail", sender: self)
+        }
       case .Upload:
         if let controller = mediaUploadController, object = selectedMediaObject {
           controller.mediaFromGallery(object)

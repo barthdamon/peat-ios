@@ -70,7 +70,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   func toggleActive(active: Bool) {
     self.treeView.userInteractionEnabled = active
-    self.scrollView.userInteractionEnabled = active
+    self.scrollView?.userInteractionEnabled = active
   }
   
   func getCurrentActivity() -> Activity? {
@@ -551,6 +551,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     if let vc = storyboard.instantiateViewControllerWithIdentifier("GalleryCollectionViewController") as? GalleryCollectionViewController {
       vc.setForStackedView()
+      vc.profileDelegate = profileDelegate
       self.navigationController?.pushViewController(vc, animated: false)
     }
   }

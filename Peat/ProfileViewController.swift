@@ -28,6 +28,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
   @IBOutlet weak var currentActivityLabel: UILabel!
   
   var treeController: TreeViewController?
+  var galleryController: GalleryCollectionViewController?
   var drilldownController: LeafDetailViewController?
   var currentActivity: Activity? {
     didSet {
@@ -173,6 +174,16 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
         }
       }
       
+      if segue.identifier == "showMediaFromGallery" {
+        if let vc = segue.destinationViewController as? CommentsTableViewController, gallery = self.galleryController, media = gallery.selectedMediaObject {
+          vc.media = media
+          vc.viewing = self.viewing
+          if let newHeader = gallery.createHeaderForMedia(media) {
+            vc.headerView = newHeader
+          }
+        }
+      }
+      
       if segue.identifier == "activitySelectionPopoverSegue" {
         if let vc = segue.destinationViewController as? ActivitySelectionTableViewController {
           vc.profileVC = self
@@ -265,5 +276,10 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
     } else {
       self.treeController?.showGallery(viewing)
     }
+  }
+  
+  func showMediaFromGallery(vc: GalleryCollectionViewController) {
+    self.galleryController = vc
+    self.performSegueWithIdentifier("showMediaFromGallery", sender: self)
   }
 }
