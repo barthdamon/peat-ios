@@ -48,7 +48,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
       
       self.profileModeSelector.addTarget(self, action: "profileModeChanged:", forControlEvents: .ValueChanged)
       
-      NSNotificationCenter.defaultCenter().addObserver(self, selector: "updatedAvatar", name: "userAvatarUpdated", object: nil)
+      NSNotificationCenter.defaultCenter().addObserver(self, selector: "updatedProfile", name: "prepareProfile", object: nil)
       if !stacked {
         initializeSidebar()
         configureMenuSwipes()
@@ -102,10 +102,8 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
       print("Setting Up User Profile")
       if let username = user.username {
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-          if let first = user.first, last = user.last where user.type == .Single {
-            self.nameLabel.text = "\(first) \(last)"
-          } else {
-            self.nameLabel.hidden = true
+          if let name = user.name {
+            self.nameLabel.text = name
           }
           self.usernameLabel.text = username
         })

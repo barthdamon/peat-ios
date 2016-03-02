@@ -15,22 +15,52 @@ protocol EditProfileCell {
 class EditProfileTableViewController: UITableViewController {
   
   var mediaObject: MediaObject?
-  var image: UIImage? {
-    didSet {
-      self.tableView.reloadData()
+  
+  var changedCells: Set<UITableViewCell> = []
+  
+  func newChangesMade(cell: UITableViewCell, changed: Bool) {
+    if changed {
+      changedCells.insert(cell)
+    } else {
+      changedCells.remove(cell)
+    }
+    if changedCells.count > 0 {
+      self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: "saveButtonPressed")
+    } else {
+      self.navigationItem.rightBarButtonItem = nil
     }
   }
+  
+  var editFields: Array<EditProfileField> = [.Name, .Username, .Email]
   
   var avatarEditCell: EditAvatarTableViewCell?
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    configureNavBar()
+  }
+  
+  func configureNavBar() {
+    self.navigationController?.navigationBar.barTintColor = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)
+    self.view.backgroundColor = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1)
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    self.navigationController?.navigationBarHidden = false
+  }
+  
+  override func viewWillDisappear(animated: Bool) {
+    self.navigationController?.navigationBarHidden = true
   }
   
   func reload() {
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
       self.tableView.reloadData()
     })
+  }
+  
+  func dismissSelf() {
+    self.navigationController?.popViewControllerAnimated(true)
   }
   
   // MARK: - Table view data source
@@ -42,22 +72,35 @@ class EditProfileTableViewController: UITableViewController {
   
   override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     // #warning Incomplete implementation, return the number of rows
-    return 1
+    return editFields.count + 1
   }
   
   override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-    return 131
+    return indexPath.row == 0 ? 93 : 53
   }
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = UITableViewCell()
-    if let cell = tableView.dequeueReusableCellWithIdentifier("editAvatarCell", forIndexPath: indexPath) as? EditAvatarTableViewCell {
-      cell.delegate = self
-      cell.configureForCurrentUser()
-      self.avatarEditCell = cell
-      return cell
+    switch indexPath.row {
+    case 0:
+      if let cell = tableView.dequeueReusableCellWithIdentifier("editAvatarCell", forIndexPath: indexPath) as? EditAvatarTableViewCell {
+        cell.delegate = self
+        cell.configureForCurrentUser()
+        self.avatarEditCell = cell
+        return cell
+      }
+    default:
+      if let cell = tableView.dequeueReusableCellWithIdentifier("editFieldCell", forIndexPath: indexPath) as? EditProfileFieldTableViewCell {
+        cell.delegate = self
+        do {
+          let field = try self.editFields.lookup(UInt(indexPath.row - 1))
+          cell.configureForField(field)
+        } catch {
+          print("Wrong number of edit profile fields")
+        }
+        return cell
+      }
     }
-    
     // Configure the cell...
     return cell
   }
@@ -111,6 +154,26 @@ class EditProfileTableViewController: UITableViewController {
     displayCameraControl()
   }
   
+  func saveButtonPressed() {
+    for cell in changedCells {
+      if let cell = cell as? EditProfileFieldTableViewCell {
+        cell.commitChanges()
+      }
+      if let cell = cell as? EditAvatarTableViewCell {
+        cell.commitChanges()
+      }
+    }
+    CurrentUser.info.model?.updateUser({ (success) -> () in
+      if success {
+        alertShow(self, alertText: "Success", alertMessage: "Profile Updated Successfully")
+        NSNotificationCenter.defaultCenter().postNotificationName("errorFetchingConfig", object: self, userInfo: nil)
+        self.reload()
+      } else {
+        alertShow(self, alertText: "Failure", alertMessage: "Profile Update Unsuccessful")
+      }
+    })
+  }
+  
 }
 
 
@@ -136,17 +199,16 @@ extension EditProfileTableViewController: UINavigationControllerDelegate, UIImag
     // dismiss the image picker controller window
     self.dismissViewControllerAnimated(true, completion: {
       //upload the image, then put that mediaId as the avatar image
+      var image: UIImage?
       if picker.allowsEditing {
-        self.image = info[UIImagePickerControllerEditedImage] as? UIImage
+        image = info[UIImagePickerControllerEditedImage] as? UIImage
         //          self.mediaObject?.thumbnail = self.image
       } else {
-        self.image = info[UIImagePickerControllerOriginalImage] as? UIImage
+        image = info[UIImagePickerControllerOriginalImage] as? UIImage
         //          self.mediaObject?.thumbnail = self.image
       }
-      if let image = self.image {
-        CurrentUser.info.addAvatarImage(image)
-        self.reload()
-        self.avatarEditCell?.toggleSaveAndCancel()
+      if let image = image {
+        self.avatarEditCell?.avatar = image
       }
       //      CurrentUser.info.addAvatarImage(image!, filePath: )
       //Need to put the image on the current user, but unsaved. Then reload table view.

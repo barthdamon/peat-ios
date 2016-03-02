@@ -66,8 +66,8 @@ class RootViewController: UIViewController {
     globalMainContainer = mainViewContainer
   }
   
-  func editProfileSelected() {
-    
+  func showEditProfile() {
+    self.performSegueWithIdentifier("showEditProfile", sender: self)
   }
   
 

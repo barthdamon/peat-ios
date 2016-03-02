@@ -31,9 +31,9 @@ class FriendRequestTableViewCell: UITableViewCell {
   
   func configureWithUser(user: User) {
     self.user = user
-    if let username = user.username, first = user.first, last = user.last {
+    if let username = user.username, name = user.name {
       self.usernameLabel.text = username
-      self.nameLabel.text = "\(first) \(last)"
+      self.nameLabel.text = name
     }
     user.generateAvatarImage { (image) -> () in
       self.avatarImageView.contentMode = .ScaleAspectFill

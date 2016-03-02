@@ -76,9 +76,9 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate, Vi
         if let friends = self.friends {
           do {
             let friend = try friends.lookup(UInt(indexPath.row))
-            if let username = friend.username, first = friend.first, last = friend.last {
+            if let username = friend.username, name = friend.name{
               cell.usernameLabel.text = username
-              cell.nameLabel.text = "\(first) \(last)"
+              cell.nameLabel.text = name
               cell.friend = friend
             }
           }
@@ -93,9 +93,9 @@ class FriendsTableViewController: UITableViewController, UITextFieldDelegate, Vi
         let cell = tableView.dequeueReusableCellWithIdentifier("searchResultCell", forIndexPath: indexPath) as! UserSearchResultTableViewCell
         if self.foundUsers?.count > 0 {
           if let user = self.foundUsers?[indexPath.row] {
-            if let username = user.username, first = user.first, last = user.last {
+            if let username = user.username, name = user.name {
               cell.usernameLabel.text = username
-              cell.nameLabel.text = "\(first) \(last)"
+              cell.nameLabel.text = name
               cell.user = user
               if CurrentUser.info.isFriend(user) {
                 cell.addButton.hidden = true

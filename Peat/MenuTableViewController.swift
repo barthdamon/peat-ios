@@ -166,7 +166,7 @@ class MenuTableViewController: UITableViewController {
       if settingsNavItems[indexPath.row] == "Log Out" {
         CurrentUser.info.logOut()
       } else {
-        self.performSegueWithIdentifier("showEditProfile", sender: self)
+        self.rootController?.showEditProfile()
       }
     }
   }

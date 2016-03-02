@@ -17,8 +17,7 @@ class User: NSObject {
   
   //Info
   var _id: String?
-  var first: String?
-  var last: String?
+  var name: String?
   var email: String?
   var username: String?
   
@@ -53,8 +52,7 @@ class User: NSObject {
     //Info
       if let info = json["userInfo"] as? jsonObject {
         user._id = info["_id"] as? String
-        user.first = info["first"] as? String
-        user.last = info["last"] as? String
+        user.name = info["name"] as? String
         user.email = info["email"] as? String
         user.username = info["username"] as? String
         if let type = info["type"] as? String, rawType = UserType(rawValue: type) {
@@ -63,7 +61,7 @@ class User: NSObject {
       
         //Profile
         if let profile = info["profile"] as? jsonObject {
-          user.avatarURLString = profile["avatarUrl"] as? String
+          user.avatarURLString = profile["avatarURL"] as? String
           user.summary = profile["summary"] as? String
           user.contact = profile["contact"] as? String
           if let activities = profile["activeActivityNames"] as? Array<String> {
@@ -97,6 +95,10 @@ class User: NSObject {
           self.avatarImage = image
           callback(image)
         })
+      } else {
+        if let defaultImage = UIImage(named: "friends") {
+          callback(defaultImage)
+        }
       }
     }
   }
@@ -137,8 +139,8 @@ class User: NSObject {
     } else {
       self.activeActivities = [activity]
     }
-    updateProfile() { (success) in
-      print("profile updated with new activity")
+    updateUser() { (success) in
+      print("user updated with new activity")
     }
   }
   
@@ -150,17 +152,11 @@ class User: NSObject {
   func userParams() -> jsonObject {
     return [
       "userInfo" : [
-        "first" : paramFor(first),
-        "last" : paramFor(last),
+        "name" : paramFor(name),
         "username" : paramFor(username),
         "email" : paramFor(email),
-        "type" : self.type.rawValue
-      ]
-    ]
-  }
-  
-  func profileParams() -> jsonObject {
-    return [
+        "type" : self.type.rawValue,
+      ],
       "profile" : [
         "summary" : paramFor(summary),
         "avatarURL" : paramFor(avatarURLString),
@@ -170,20 +166,21 @@ class User: NSObject {
     ]
   }
   
-  func updateProfile(callback: (Bool) -> ()) {
+  func updateUser(callback: (Bool) -> ()) {
     func readyForProfileUpdate() {
-      let params = self.profileParams()
+      let params = self.userParams()
       print("Profile Update params: \(params)")
-      API.put(params, authType: .Token, url: "profile/update") { (res, err) -> () in
+      API.put(params, authType: .Token, url: "user/update") { (res, err) -> () in
         if let e = err {
-          print("error updating user profile: \(e)")
+          print("error updating user: \(e)")
           callback(false)
         } else {
-          print("user profile update successful")
+          print("user update successful")
           callback(true)
         }
       }
     }
+    
     if let _ = newAvatarImage {
       postAvatarImage({ (success) -> () in
         //remember need the url of the new image
@@ -207,18 +204,8 @@ class User: NSObject {
     avatarObject.publish { (success) -> () in
       //make sure to set the url string
       self.avatarURLString = avatarObject.urlString
+      self.avatarImage = self.newAvatarImage
       callback(success)
-    }
-  }
-  
-  func updateUser() {
-    let params = self.userParams()
-    API.put(params, authType: .Token, url: "user/update") { (res, err) -> () in
-      if let e = err {
-        print("error updating user: \(e)")
-      } else {
-        print("user update successful")
-      }
     }
   }
   

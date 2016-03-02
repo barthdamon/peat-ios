@@ -17,9 +17,9 @@ class TagUserTableViewCell: UITableViewCell {
   var user: User?
   
   func configureWithUser(user: User) {
-    if let first = user.first, last = user.last, username = user.username {
+    if let name = user.name, username = user.username {
       self.usernameLabel.text = username
-      self.nameLabel.text = "\(first) \(last)"
+      self.nameLabel.text = name
     }
     
     user.generateAvatarImage { (image) -> () in

@@ -12,7 +12,7 @@ import Foundation
 func alertShow(vc: UIViewController, alertText :String, alertMessage :String) {
   let alert = UIAlertController(title: alertText, message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
   
-  alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+  alert.addAction(UIAlertAction(title: "Okay", style: .Default, handler: { (action) -> Void in
     alert.dismissViewControllerAnimated(true, completion: nil)
   }))
   //can add another action (maybe cancel, here)

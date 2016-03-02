@@ -9,20 +9,29 @@
 import UIKit
 
 class EditAvatarTableViewCell: UITableViewCell, EditProfileCell  {
-
+  
+  @IBOutlet weak var actionButton: UIButton!
   @IBOutlet weak var avatarImageView: UIImageView!
-  @IBOutlet weak var cancelButton: UIButton!
-  @IBOutlet weak var saveButton: UIButton!
   
   var delegate: EditProfileTableViewController?
+  var avatar: UIImage? {
+    didSet {
+      delegate?.newChangesMade(self, changed: true)
+      self.avatarImageView.image = avatar
+      toggleAction()
+    }
+  }
   
   func getReuseIdentifier() -> String {
     return "editAvatarCell"
   }
   
-  func toggleSaveAndCancel() {
-    cancelButton.hidden = !cancelButton.hidden
-    saveButton.hidden = !cancelButton.hidden
+  func toggleAction() {
+    if self.actionButton.titleLabel?.text == "Change" {
+      self.actionButton.setTitle("Cancel", forState: .Normal)
+    } else {
+      self.actionButton.setTitle("Change", forState: .Normal)
+    }
   }
   
   func configureForCurrentUser() {
@@ -33,23 +42,22 @@ class EditAvatarTableViewCell: UITableViewCell, EditProfileCell  {
     })
   }
 
-  
-  @IBAction func chooseButtonPressed(sender: AnyObject) {
-    delegate?.chooseNewAvatarSelected()
-  }
-  
-  @IBAction func saveButtonPressed(sender: AnyObject) {
-    CurrentUser.info.model?.updateProfile() { (success) in
-      dispatch_async(dispatch_get_main_queue(), { () -> Void in
-        self.toggleSaveAndCancel()
-        NSNotificationCenter.defaultCenter().postNotificationName("userAvatarUpdated", object: nil, userInfo: nil)
-      })
+  @IBAction func actionButtonPressed(sender: AnyObject) {
+    if actionButton.titleLabel?.text == "Change" {
+      delegate?.chooseNewAvatarSelected()
+    } else {
+      //remove all the updates to teh user
+      configureForCurrentUser()
+      delegate?.newChangesMade(self, changed: false)
+      toggleAction()
     }
   }
-
-  @IBAction func cancelButtonPressed(sender: AnyObject) {
-    //remove all the updates to teh user
-    CurrentUser.info.model?.newAvatarImage = nil
-    toggleSaveAndCancel()
+  
+  func commitChanges() {
+    if let avatar = avatar {
+      CurrentUser.info.addAvatarImage(avatar)
+      toggleAction()
+    }
   }
+  
 }
