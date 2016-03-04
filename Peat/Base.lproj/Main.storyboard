@@ -2089,18 +2089,13 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jzc-GP-L5I">
                                 <rect key="frame" x="78" y="297" width="444" height="283"/>
                                 <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UMl-n5-aWF">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UMl-n5-aWF">
                                         <rect key="frame" x="8" y="8" width="428" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="j0v-Y2-FaV">
-                                        <rect key="frame" x="8" y="46" width="428" height="30"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gbd-Vs-UyO">
-                                        <rect key="frame" x="381" y="198" width="55" height="13"/>
+                                        <rect key="frame" x="381" y="160" width="55" height="13"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="55" id="1T3-HC-oYp"/>
                                             <constraint firstAttribute="height" constant="13" id="70f-7r-Hum"/>
@@ -2114,7 +2109,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Already have an account?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lnR-k8-cNI">
-                                        <rect key="frame" x="254" y="198" width="124" height="12"/>
+                                        <rect key="frame" x="254" y="160" width="124" height="12"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="113" id="Hto-55-gCG"/>
                                             <constraint firstAttribute="width" constant="124" id="XeM-09-h55"/>
@@ -2130,17 +2125,17 @@
                                         </variation>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Desired Username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="div-9w-ic1">
-                                        <rect key="frame" x="8" y="84" width="428" height="30"/>
+                                        <rect key="frame" x="8" y="46" width="428" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jth-eI-B4v">
-                                        <rect key="frame" x="8" y="122" width="428" height="30"/>
+                                        <rect key="frame" x="8" y="84" width="428" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7Mo-Qc-mDr">
-                                        <rect key="frame" x="8" y="160" width="428" height="30"/>
+                                        <rect key="frame" x="8" y="122" width="428" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
@@ -2157,21 +2152,20 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.054901960780000002" green="0.27450980390000002" blue="0.48627450979999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstItem="jth-eI-B4v" firstAttribute="top" secondItem="div-9w-ic1" secondAttribute="bottom" constant="8" id="01x-fe-JIB"/>
                                     <constraint firstItem="jth-eI-B4v" firstAttribute="leading" secondItem="Jzc-GP-L5I" secondAttribute="leading" constant="8" id="3Eo-6U-WJE"/>
                                     <constraint firstAttribute="trailing" secondItem="UMl-n5-aWF" secondAttribute="trailing" constant="8" id="4D7-4b-qGZ"/>
-                                    <constraint firstItem="div-9w-ic1" firstAttribute="top" secondItem="j0v-Y2-FaV" secondAttribute="bottom" constant="8" id="7Co-bg-eCC"/>
+                                    <constraint firstItem="div-9w-ic1" firstAttribute="top" secondItem="UMl-n5-aWF" secondAttribute="bottom" constant="8" id="6cd-cy-r8Y"/>
                                     <constraint firstAttribute="width" constant="444" id="7YD-1p-JdG"/>
                                     <constraint firstAttribute="height" constant="283" id="8Oe-PR-XJS"/>
                                     <constraint firstItem="jth-eI-B4v" firstAttribute="top" secondItem="div-9w-ic1" secondAttribute="bottom" constant="8" id="ACh-VK-gHE"/>
                                     <constraint firstItem="Gbd-Vs-UyO" firstAttribute="top" secondItem="7Mo-Qc-mDr" secondAttribute="bottom" constant="8" id="AbO-wG-v5Y"/>
                                     <constraint firstItem="4Dh-mM-GDB" firstAttribute="centerX" secondItem="Jzc-GP-L5I" secondAttribute="centerX" id="CHT-th-eu3"/>
                                     <constraint firstAttribute="trailing" secondItem="Gbd-Vs-UyO" secondAttribute="trailing" constant="8" id="Fff-8b-omw"/>
-                                    <constraint firstItem="j0v-Y2-FaV" firstAttribute="top" secondItem="UMl-n5-aWF" secondAttribute="bottom" constant="8" id="IYo-PS-h6G"/>
                                     <constraint firstItem="7Mo-Qc-mDr" firstAttribute="top" secondItem="jth-eI-B4v" secondAttribute="bottom" constant="8" id="MCx-5p-Byo"/>
                                     <constraint firstAttribute="trailing" secondItem="div-9w-ic1" secondAttribute="trailing" constant="8" id="QZc-Fn-9cU"/>
                                     <constraint firstItem="UMl-n5-aWF" firstAttribute="leading" secondItem="Jzc-GP-L5I" secondAttribute="leading" constant="8" id="Te8-jL-5sU"/>
                                     <constraint firstAttribute="trailing" secondItem="7Mo-Qc-mDr" secondAttribute="trailing" constant="8" id="VmA-Kh-jac"/>
-                                    <constraint firstAttribute="trailing" secondItem="j0v-Y2-FaV" secondAttribute="trailing" constant="8" id="WRz-Wc-qQg"/>
                                     <constraint firstItem="Gbd-Vs-UyO" firstAttribute="leading" secondItem="lnR-k8-cNI" secondAttribute="trailing" constant="3" id="Wu3-H8-ZKB"/>
                                     <constraint firstItem="UMl-n5-aWF" firstAttribute="top" secondItem="Jzc-GP-L5I" secondAttribute="top" constant="8" id="d19-2Q-Tyd"/>
                                     <constraint firstAttribute="trailing" secondItem="jth-eI-B4v" secondAttribute="trailing" constant="8" id="dmo-QH-cDI"/>
@@ -2182,7 +2176,6 @@
                                     <constraint firstItem="7Mo-Qc-mDr" firstAttribute="leading" secondItem="Jzc-GP-L5I" secondAttribute="leading" constant="8" id="ps3-7M-ugR"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="283" id="q7C-Le-hps"/>
                                     <constraint firstItem="div-9w-ic1" firstAttribute="leading" secondItem="Jzc-GP-L5I" secondAttribute="leading" constant="8" id="w5P-UI-wAu"/>
-                                    <constraint firstItem="j0v-Y2-FaV" firstAttribute="leading" secondItem="Jzc-GP-L5I" secondAttribute="leading" constant="8" id="yDS-w1-qm0"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -2226,7 +2219,6 @@
                     <connections>
                         <outlet property="emailTextField" destination="jth-eI-B4v" id="Kfb-t2-dtB"/>
                         <outlet property="firstNameTextField" destination="UMl-n5-aWF" id="0su-iy-kSp"/>
-                        <outlet property="lastNameTextField" destination="j0v-Y2-FaV" id="ri6-pp-234"/>
                         <outlet property="logInOptionsView" destination="gDz-FC-Ji5" id="BhS-AD-JW7"/>
                         <outlet property="loginEmailUsernameTextField" destination="rFl-sp-TvW" id="f0S-3h-sE3"/>
                         <outlet property="loginPasswordTextField" destination="ysA-PV-K4T" id="gmA-Kh-jlW"/>

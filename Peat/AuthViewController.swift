@@ -17,7 +17,6 @@ class AuthViewController: UIViewController {
   @IBOutlet weak var passwordTextField: UITextField!
   @IBOutlet weak var emailTextField: UITextField!
   @IBOutlet weak var usernameTextField: UITextField!
-  @IBOutlet weak var lastNameTextField: UITextField!
   @IBOutlet weak var firstNameTextField: UITextField!
   
   @IBOutlet weak var loginEmailUsernameTextField: UITextField!
@@ -48,7 +47,6 @@ class AuthViewController: UIViewController {
     self.passwordTextField.resignFirstResponder()
     self.emailTextField.resignFirstResponder()
     self.usernameTextField.resignFirstResponder()
-    self.lastNameTextField.resignFirstResponder()
     self.firstNameTextField.resignFirstResponder()
   }
   
@@ -89,8 +87,8 @@ class AuthViewController: UIViewController {
   }
   
   func checkSignUpFields() -> jsonObject? {
-    if let first = self.firstNameTextField.text, last = self.lastNameTextField.text, username = self.usernameTextField.text, email = self.emailTextField.text, password = self.passwordTextField.text where first != "" && last != "" && username != "" && email != "" && password != "" {
-      return ["first" : first, "last" : last, "username" : username, "email" : email, "password" : password]
+    if let name = self.firstNameTextField.text, username = self.usernameTextField.text, email = self.emailTextField.text, password = self.passwordTextField.text where name != "" && username != "" && email != "" && password != "" {
+      return ["name" : name, "username" : username, "email" : email, "password" : password]
     } else {
       alertShow(self, alertText: "Error", alertMessage: "Missing Fields")
       return nil

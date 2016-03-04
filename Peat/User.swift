@@ -151,12 +151,10 @@ class User: NSObject {
   
   func userParams() -> jsonObject {
     return [
-      "userInfo" : [
-        "name" : paramFor(name),
-        "username" : paramFor(username),
-        "email" : paramFor(email),
-        "type" : self.type.rawValue,
-      ],
+      "name" : paramFor(name),
+      "username" : paramFor(username),
+      "email" : paramFor(email),
+      "type" : self.type.rawValue,
       "profile" : [
         "summary" : paramFor(summary),
         "avatarURL" : paramFor(avatarURLString),
@@ -170,12 +168,13 @@ class User: NSObject {
     func readyForProfileUpdate() {
       let params = self.userParams()
       print("Profile Update params: \(params)")
-      API.put(params, authType: .Token, url: "user/update") { (res, err) -> () in
+      API.put(["user" : params], authType: .Token, url: "user/update") { (res, err) -> () in
         if let e = err {
           print("error updating user: \(e)")
           callback(false)
         } else {
           print("user update successful")
+          NSNotificationCenter.defaultCenter().postNotificationName("profileUpdated", object: nil, userInfo: nil)
           callback(true)
         }
       }
