@@ -11,7 +11,6 @@ import UIKit
 class UserSearchResultTableViewCell: UITableViewCell {
   
   var user: User?
-  var delegate: TagUserDelegate?
 
   @IBOutlet weak var tagButton: UIButton!
   @IBOutlet weak var avatarImageView: UIImageView!

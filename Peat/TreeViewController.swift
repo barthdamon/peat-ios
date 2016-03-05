@@ -51,6 +51,9 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   override func viewDidLoad() {
     NSNotificationCenter.defaultCenter().addObserver(self, selector: "fetchTreeData", name: "leavesPopulated", object: nil)
+    
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "clearView", name: "userLoggedOut", object: nil)
+
       super.viewDidLoad()
 
     // Do any additional setup after loading the view.
@@ -75,6 +78,14 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   func getCurrentActivity() -> Activity? {
     return currentActivity
+  }
+  
+  func clearView() {
+    if let sublayers = self.treeView.layer.sublayers {
+      for layer in sublayers {
+        layer.removeFromSuperlayer()
+      }
+    }
   }
   
   func configureScrollView() {
@@ -455,11 +466,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     for view in self.treeView.subviews {
       view.removeFromSuperview()
     }
-    if let sublayers = self.treeView.layer.sublayers {
-      for layer in sublayers {
-        layer.removeFromSuperlayer()
-      }
-    }
+    clearView()
     
 //    if let connections = self.store?.treeStore.currentConnections {
 //      connections.forEach({ (connection) -> () in

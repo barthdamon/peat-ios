@@ -26,6 +26,9 @@ class PeatAVPlayer: NSObject {
   var url: NSURL?
   var thumbnail: UIImage?
   
+  
+  var pathForEditing: String?
+  
   convenience init(playerView: UIView, media: MediaObject) {
     self.init()
     self.playerView = playerView

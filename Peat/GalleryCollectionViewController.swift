@@ -16,7 +16,7 @@ enum GallerySelectionMode {
 }
 
 
-class GalleryCollectionViewController: UICollectionViewController, MediaUploadDelegate, MediaHeaderCellDelegate {
+class GalleryCollectionViewController: UICollectionViewController, MediaUploadDelegate {
   
   var viewing: User?
   var store = PeatContentStore()
@@ -41,6 +41,7 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
   var profileDelegate: ProfileViewController?
   
   var stacked = false
+  var commentsView: CommentsTableViewController?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -214,6 +215,7 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
       if let vc = segue.destinationViewController as? CommentsTableViewController, media = selectedMediaObject {
         vc.media = media
         vc.viewing = self.viewing
+        self.commentsView = vc
         if let newHeader = createHeaderForMedia(media) {
           vc.headerView = newHeader
         }
@@ -230,28 +232,13 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
   func createHeaderForMedia(currentObject: MediaObject) -> MediaCellHeaderView? {
     if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView, view = self.view {
       headerView.frame = CGRectMake(0,0,view.frame.width, 50)
-      headerView.configureForMedia(currentObject, primaryUser: nil, delegate: self)
+      if let delegate = self.commentsView {
+        headerView.configureForMedia(currentObject, primaryUser: nil, delegate: delegate)
+      }
       return headerView
     } else {
       return nil
     }
-  }
-  
-  func showTaggedUsers(users: Array<User>, media: MediaObject) {
-    //show the users
-  }
-  
-  func showUploaderUser(user: User, media: MediaObject) {
-    //show the users profile
-  }
-  
-  func userAdded(user: User) {
-    //somehow show the user is added on the appropriate cell.....
-  }
-  
-  func userIsTagged(user: User) -> Bool {
-    //somehow get the tagged users here
-    return false
   }
   
   func addNewMedia() {

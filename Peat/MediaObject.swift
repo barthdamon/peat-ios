@@ -189,13 +189,13 @@ class MediaObject: NSObject {
     ]
   }
   
-  func publish(callback: (Bool) -> ()) {
+  func publish(serverURL: String, callback: (Bool) -> ()) {
     if let mediaType = self.mediaType {
-      mediaType == .Image ? bundleImageFile(callback) : sendToAWS(callback)
+      mediaType == .Image ? bundleImageFile(serverURL, callback: callback) : sendToAWS(serverURL, callback: callback)
     }
   }
   
-  func bundleImageFile(callback: (Bool) -> ()) {
+  func bundleImageFile(serverURL: String, callback: (Bool) -> ()) {
     //write the image data somewhere you can upload from (documents directory)
     if let image = self.thumbnail {
       let fileManager = NSFileManager.defaultManager()
@@ -207,11 +207,11 @@ class MediaObject: NSObject {
       //get url of where image was just saved
       let urlPaths = NSURL(fileURLWithPath: paths)
       self.filePath = urlPaths.URLByAppendingPathComponent("SaveFile.png")
-      sendToAWS(callback)
+      sendToAWS(serverURL, callback: callback)
     }
   }
   
-  func sendToAWS(callback: (Bool) -> ()) {
+  func sendToAWS(serverURL: String, callback: (Bool) -> ()) {
     if let type = self.mediaType, filePath = self.filePath {
       if let id = self.mediaId {
         AWSContentHelper.sharedHelper.postMediaFromFactory(filePath, mediaID: id, mediaType: type) { (res, err) in
@@ -221,7 +221,7 @@ class MediaObject: NSObject {
           } else {
             if let mediaId = self.mediaId, url = NSURL(string: "https://s3.amazonaws.com/peat-assets/\(mediaId)") {
               self.url = url
-              self.sendToServer(callback)
+              self.sendToServer(serverURL, callback: callback)
             }
           }
         }
@@ -244,10 +244,14 @@ class MediaObject: NSObject {
     if let id = user._id {
       self.taggedUser_Ids!.append(id)
     }
+    
+    if !self.needsPublishing {
+      update()
+    }
   }
-  
-  func sendToServer(callback: (Bool) -> ()) {
-    API.post(self.params(), authType: HTTPRequestAuthType.Token, url: "gallery/media") { (res, err) -> () in
+
+  func sendToServer(serverURL: String, callback: (Bool) -> ()) {
+    API.post(self.params(), authType: HTTPRequestAuthType.Token, url: serverURL) { (res, err) -> () in
       if let e = err {
         print("Error:\(e)")
         callback(false)
@@ -257,6 +261,19 @@ class MediaObject: NSObject {
         self.store?.addMediaToStore(self, publishImmediately: true)
         callback(true)
         NSNotificationCenter.defaultCenter().postNotificationName("newMediaPostSuccessful", object: self, userInfo: nil)
+      }
+    }
+  }
+  
+  func update() {
+    API.put(["media" : self.params()], authType: .Token, url: "media/update") { (res, err) -> () in
+      if let e = err {
+        print("Error:\(e)")
+      } else {
+        print("Server media post successful")
+        self.needsPublishing = false
+        self.store?.addMediaToStore(self, publishImmediately: true)
+        NSNotificationCenter.defaultCenter().postNotificationName("MediaUpdateSuccessful", object: self, userInfo: nil)
       }
     }
   }

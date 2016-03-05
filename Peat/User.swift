@@ -200,7 +200,7 @@ class User: NSObject {
     //need the filepath damnet
     // so make an object, post it, save the url to the user. then when saving on the server first post the new media, then update the user profile with the new url, and then remove the media with the url of the old profile avatar url
     let avatarObject = MediaObject.initFromUploader(nil, type: .Image, thumbnail: newAvatarImage, filePath: nil, store: nil)
-    avatarObject.publish { (success) -> () in
+    avatarObject.publish("media") { (success) -> () in
       //make sure to set the url string
       self.avatarURLString = avatarObject.urlString
       self.avatarImage = self.newAvatarImage

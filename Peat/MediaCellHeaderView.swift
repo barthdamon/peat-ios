@@ -54,6 +54,9 @@ class MediaCellHeaderView: UIView {
           }
         }
       })
+      if uploaderUser?._id == CurrentUser.info.model?._id {
+        otherNames = "\(otherNames), +"
+      }
     self.usernameButton.setTitle(otherNames, forState: .Normal)
     }
     

@@ -13,7 +13,7 @@ import UIKit
   optional func createHeaderForMedia(currentObject: MediaObject) -> MediaCellHeaderView?
 }
 
-class CommentsTableViewController: UITableViewController {
+class CommentsTableViewController: UITableViewController, MediaTagUserDelegate, MediaHeaderCellDelegate {
   
   var media: MediaObject?
   var viewing: User?
@@ -22,8 +22,11 @@ class CommentsTableViewController: UITableViewController {
   var playerCell: MediaDrilldownTableViewCell?
   var headerView: MediaCellHeaderView?
   
+  //headerCellDelegate vars:
+  var taggedUsersForShow: Array<User>?
   var userForProfile: User?
   var isShowingForGallery: Bool = false
+  var mediaForTagged: MediaObject?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,6 +93,20 @@ class CommentsTableViewController: UITableViewController {
         isShowingForGallery = false
       }
     }
+    
+    if segue.identifier == "showTaggedSegue" {
+      if let vc = segue.destinationViewController as? TagUserTableViewController {
+        vc.mediaTagDelegate = self
+        vc.user = CurrentUser.info.model
+        vc.media = self.mediaForTagged
+        //        let popover = vc.popoverPresentationController
+        //        popover?.delegate = self
+        //        vc.popoverPresentationController?.delegate = self
+        //        //        vc.popoverPresentationController?.sourceView = self.view
+        //        //        vc.popoverPresentationController?.sourceRect = CGRectMake(100,100,0,0)
+        //        vc.preferredContentSize = CGSize(width: self.view.frame.width, height: 200)
+      }
+    }
   }
   
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -136,16 +153,32 @@ class CommentsTableViewController: UITableViewController {
     //update the comment on the playerCell too
   }
   
-  
   func showUserProfile(user: User) {
     self.userForProfile = user
     self.performSegueWithIdentifier("showUserProfile", sender: self)
   }
   
-  func showUploaderGallery(user: User) {
-    self.userForProfile = user
+  func showTaggedUsers(users: Array<User>, media: MediaObject) {
+    //show the users
+    self.taggedUsersForShow = users
+    self.mediaForTagged = media
+    self.performSegueWithIdentifier("showTaggedSegue", sender: self)
+  }
+  
+  func showUploaderUser(user: User, media: MediaObject) {
+    //show the users profile
     self.isShowingForGallery = true
-    self.performSegueWithIdentifier("showUserProfile", sender: self)
+    showUserProfile(user)
+  }
+  
+  func userAdded(user: User) {
+    //somehow show the user is added on the appropriate cell.....
+    //dont have to cause dont show on the collection cell?
+    self.media?.tagUserOnMedia(user)
+    if let media = self.media {
+      self.headerView?.configureForMedia(media, primaryUser: nil, delegate: self)
+    }
+    self.tableView.reloadData()
   }
   
 }

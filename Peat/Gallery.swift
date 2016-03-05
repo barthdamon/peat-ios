@@ -82,7 +82,7 @@ class Gallery: NSObject {
       if !self.mediaObjects!.contains(media) && publishImmediately {
         self.mediaObjects!.append(media)
         //post to server
-        media.publish { (success) -> () in
+        media.publish("gallery/media") { (success) -> () in
           if success {
             print("Media uploaded to gallery successfully")
             //show the

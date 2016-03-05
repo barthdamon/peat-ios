@@ -26,8 +26,13 @@ class TagUserTableViewCell: UITableViewCell {
       self.avatarImageView.contentMode = .ScaleAspectFill
       self.avatarImageView.image = image
     }
+    self.backgroundColor = UIColor.whiteColor()
     self.user = user
     //do the thumbnail dance, needs to be refactored probly
+  }
+  
+  func setTagged() {
+    self.backgroundColor = UIColor.lightGrayColor()
   }
 
 }

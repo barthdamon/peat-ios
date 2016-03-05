@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 protocol MediaUploadDelegate {
   func newMediaAdded()
@@ -15,10 +16,13 @@ protocol MediaUploadDelegate {
 
 class MediaUploadViewController: UIViewController, UIPopoverPresentationControllerDelegate, MediaTagUserDelegate {
   
+  @IBOutlet weak var editButton: UIButton!
   @IBOutlet weak var tagOthersButton: UIButton!
   @IBOutlet weak var purposeSelector: UISegmentedControl!
   @IBOutlet weak var mediaView: UIView!
   @IBOutlet weak var descriptionTextField: UITextField!
+  
+  var editorController: UIVideoEditorController?
   
   var userForProfile: User?
   var store: PeatContentStore? {
@@ -42,34 +46,50 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
       showNewMedia()
     }
   }
-  var mediaObject: MediaObject?
+  
+  var mediaObject: MediaObject? {
+    didSet {
+      if let mediaType = mediaType where mediaType == .Video {
+        editButton.hidden = false
+      }
+    }
+  }
+  
   var player: PeatAVPlayer?
   var videoPath: NSURL?
   var image: UIImage?
   var overlayView: MediaOverlayView?
   
   var uploadFromGallery = false
-
-    override func viewDidLoad() {
-      super.viewDidLoad()
-      self.purposeSelector.addTarget(self, action: "newPurposeSelected:", forControlEvents: .ValueChanged)
-      addListeners()
-      if uploadFromGallery {
-        displayGalleryOptions()
-      } else {
-        displayCameraControl()
-      }
-      // Do any additional setup after loading the view.
+  
+  
+  lazy var session: NSURLSession = {
+    let config = NSURLSessionConfiguration.ephemeralSessionConfiguration()
+    config.allowsCellularAccess = false
+    let session = NSURLSession(configuration: NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("VideoDownload"), delegate: self, delegateQueue: NSOperationQueue.currentQueue())
+    return session
+  }()
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    self.purposeSelector.addTarget(self, action: "newPurposeSelected:", forControlEvents: .ValueChanged)
+    addListeners()
+    if uploadFromGallery {
+      displayGalleryOptions()
+    } else {
+      displayCameraControl()
     }
+    // Do any additional setup after loading the view.
+  }
   
   override func viewWillDisappear(animated: Bool) {
     self.player?.stopPlaying()
   }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
   
   func addListeners() {
     let tapRecognizer = UITapGestureRecognizer(target: self, action: "resignResponder")
@@ -118,34 +138,34 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
     }
   }
   
-
   
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-      if segue.identifier == "tagUserSegue" {
-        if let vc = segue.destinationViewController as? TagUserTableViewController {
-          vc.mediaTagDelegate = self
-          vc.user = CurrentUser.info.model
-          vc.media = self.mediaObject
-          let popover = vc.popoverPresentationController
-          popover?.delegate = self
-          vc.popoverPresentationController?.delegate = self
-          //        vc.popoverPresentationController?.sourceView = self.view
-          //        vc.popoverPresentationController?.sourceRect = CGRectMake(100,100,0,0)
-          vc.preferredContentSize = CGSize(width: self.view.frame.width, height: 200)
-        }
-      }
-      
-      if segue.identifier == "profileFromUploader" {
-        if let vc = segue.destinationViewController as? ProfileViewController {
-          vc.viewing = self.userForProfile
-        }
+  
+  // MARK: - Navigation
+  
+  // In a storyboard-based application, you will often want to do a little preparation before navigation
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    // Get the new view controller using segue.destinationViewController.
+    // Pass the selected object to the new view controller.
+    if segue.identifier == "tagUserSegue" {
+      if let vc = segue.destinationViewController as? TagUserTableViewController {
+        vc.mediaTagDelegate = self
+        vc.user = CurrentUser.info.model
+        vc.media = self.mediaObject
+        let popover = vc.popoverPresentationController
+        popover?.delegate = self
+        vc.popoverPresentationController?.delegate = self
+        //        vc.popoverPresentationController?.sourceView = self.view
+        //        vc.popoverPresentationController?.sourceRect = CGRectMake(100,100,0,0)
+        vc.preferredContentSize = CGSize(width: self.view.frame.width, height: 200)
       }
     }
+    
+    if segue.identifier == "profileFromUploader" {
+      if let vc = segue.destinationViewController as? ProfileViewController {
+        vc.viewing = self.userForProfile
+      }
+    }
+  }
   
   func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
     return .None
@@ -161,7 +181,7 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
     //do something to show the user has been tagged
     //perhaps a list of the users tagged or something?
   }
-
+  
   func dismissSelf(animated: Bool) {
     self.navigationController?.popViewControllerAnimated(true)
   }
@@ -171,10 +191,11 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
     let galleryVC = storyboard.instantiateViewControllerWithIdentifier("GalleryCollectionViewController") as! GalleryCollectionViewController
     galleryVC.mode = .Upload
     galleryVC.mediaUploadController = self
+    galleryVC.stacked = true
     self.navigationController?.pushViewController(galleryVC, animated: true)
-//    self.performSegueWithIdentifier("showGallery", sender: self)
+    //    self.performSegueWithIdentifier("showGallery", sender: self)
   }
-
+  
   @IBAction func publishButtonPressed(sender: AnyObject) {
     if let _ = self.mediaObject {
       self.mediaObject?.mediaDescription = self.descriptionTextField.text
@@ -183,7 +204,7 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
       self.delegate?.newMediaAdded()
       dismissSelf(true)
     }
-//    self.mediaObject?.publish()
+    //    self.mediaObject?.publish()
   }
   
   @IBAction func tagOthersButtonPressed(sender: AnyObject) {
@@ -216,6 +237,11 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
     self.selectedPurpose = index == 0 ? .Attempt : .Tutorial
   }
   
+  @IBAction func editButtonPressed(sender: AnyObject) {
+    editorController = UIVideoEditorController()
+    editorController?.delegate = self
+    setVideoOnEditor()
+  }
 }
 
 //MARK: Media Upload Methods
@@ -266,4 +292,87 @@ extension MediaUploadViewController: UINavigationControllerDelegate, UIImagePick
       self.dismissSelf(false)
     })
   }
+}
+
+
+
+
+
+
+
+
+
+
+extension MediaUploadViewController: UIVideoEditorControllerDelegate, NSURLSessionDelegate {
+  
+  func videoEditorController(editor: UIVideoEditorController, didSaveEditedVideoToPath editedVideoPath: String) {
+    // put the video up on the tree
+    print("EDITED PATH: \(editedVideoPath)")
+    self.videoPath = NSURL(fileURLWithPath: editedVideoPath)
+    self.mediaType = .Video
+    self.editorController?.dismissViewControllerAnimated(true, completion: nil)
+  }
+  
+  func setVideoOnEditor() {
+    if let mediaObject = self.mediaObject {
+      if let filePath = mediaObject.filePath?.path {
+        populateEditorPath("\(filePath)")
+        //done return the filePath, ready to go
+      } else if let url = mediaObject.url {
+        //download the asset here
+        //show loading screen or something
+        downloadFromURL(url)
+      }
+    }
+  }
+  
+  func populateEditorPath(path: String) {
+    if UIVideoEditorController.canEditVideoAtPath(path) {
+      print("PATH: \(path)")
+      if let editor = self.editorController {
+        editor.videoPath = path
+        self.presentViewController(editor, animated: true, completion: nil)
+      }
+    } else {
+      //show cant edit
+    }
+  }
+  
+  func downloadFromURL(url: NSURL) {
+    //download the asset, then let the user edit it, then upload it again. hahahahahahaha. create a new asset... with the asset
+    let downloadRequest = NSMutableURLRequest(URL: url)
+    let downloadTask = session.downloadTaskWithRequest(downloadRequest)
+    if let id = mediaObject?._id {
+      downloadTask.taskDescription = id
+    }
+    downloadTask.resume()
+  }
+  
+  
+  
+  //MARK: Downloading Delegate Methods
+  func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
+    if let path = location.path {
+      populateEditorPath(path)
+    }
+  }
+  
+  func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
+    if let e = error {
+//      sendDownloadEndNotification("Download Failed: \(e)")
+    }
+  }
+  
+  func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+    let progress = CGFloat(totalBytesWritten) / CGFloat(totalBytesExpectedToWrite)
+    
+    dispatch_async(dispatch_get_main_queue()) {
+      print("Download Progress: \(progress)")
+//      for subscribed in self.subscribedCells {
+//        subscribed.updateWithProgress(progress)
+//      }
+      //show progress indicator
+    }
+  }
+  
 }

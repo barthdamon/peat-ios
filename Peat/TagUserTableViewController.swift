@@ -8,13 +8,8 @@
 
 import UIKit
 
-protocol TagUserDelegate {
-  func getStore() -> PeatContentStore
-}
-
 @objc protocol MediaTagUserDelegate {
   func userAdded(user: User)
-  func userIsTagged(user: User) -> Bool
   func showUserProfile(user: User)
 }
 
@@ -23,10 +18,27 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
   var textField: UITextField?
   var user: User?
   
-  var delegate: TagUserDelegate?
   var mediaTagDelegate: MediaTagUserDelegate?
   
   var foundUsers: Array<User>?
+  var taggedUsers: Array<User>?
+  
+  var users: Array<User> {
+    var all: Array<User> = []
+    if let foundUsers = foundUsers {
+      for found in foundUsers {
+        all.append(found)
+      }
+    }
+    if let taggedUsers = taggedUsers {
+      for tagged in taggedUsers {
+        all.append(tagged)
+      }
+    }
+    return all
+  }
+  var cells: Array<TagUserTableViewCell> = []
+  
   var media: MediaObject?
   
   var taggingEnabled = false
@@ -34,13 +46,11 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    if let uploader = media?.uploaderUser {
-      if uploader == CurrentUser.info.model {
-        self.taggingEnabled = true
-        configureTextField()
-      }
+    if media?.uploaderUser?._id == CurrentUser.info.model?._id {
+      self.taggingEnabled = true
+      configureTextField()
     }
-    self.foundUsers = media?.taggedUsers
+    self.taggedUsers = media?.taggedUsers
     self.navigationController?.navigationBarHidden = false
   }
   
@@ -57,6 +67,7 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
   }
   
   func showSearchResults() {
+    self.cells.removeAll()
     dispatch_async(dispatch_get_main_queue(), { () -> Void in
       self.tableView.reloadData()
     })
@@ -64,21 +75,20 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
   
   func textFieldDidChange(textField: UITextField) {
     if let text = textField.text {
-      if let user = user {
-        if text != "" {
-          PeatSocialMediator.sharedMediator.searchUsers(text){ (foundUsers) in
-            if let users = foundUsers {
-              self.foundUsers?.removeAll()
-              self.foundUsers = Array()
-              for user in users {
-                self.foundUsers!.append(User.userFromProfile(user))
-              }
-              self.showSearchResults()
+      if text != "" {
+        PeatSocialMediator.sharedMediator.searchUsers(text){ (newFoundUsers) in
+          if let users = newFoundUsers {
+            self.foundUsers?.removeAll()
+            self.foundUsers = Array()
+            for user in users {
+              self.foundUsers!.append(User.userFromProfile(user))
             }
+            self.showSearchResults()
           }
-        } else {
-          self.foundUsers = self.media?.taggedUsers
         }
+      } else {
+        self.foundUsers = nil
+        self.showSearchResults()
       }
     }
   }
@@ -92,7 +102,7 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
   
   override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     // #warning Incomplete implementation, return the number of rows
-    return self.foundUsers != nil ? self.foundUsers!.count : 0
+    return users.count
   }
   
   override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -101,15 +111,18 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier("tagUserCell", forIndexPath: indexPath) as! TagUserTableViewCell
-    if self.foundUsers?.count > 0 {
-      if let user = self.foundUsers?[indexPath.row] {
+    if users.count > 0 {
+      do {
+        let user = try users.lookup(UInt(indexPath.row))
         cell.configureWithUser(user)
-        if let delegate = mediaTagDelegate {
-          if delegate.userIsTagged(user) {
-            cell.backgroundColor = UIColor.lightGrayColor()
-          }
+        if let tagged = taggedUsers where tagged.contains(user) {
+          cell.setTagged()
         }
+        cells.append(cell)
         return cell
+      }
+      catch {
+        cell.usernameLabel.text = "No Users Found"
       }
     } else {
       cell.usernameLabel.text = "No Users Found"
@@ -118,25 +131,25 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
   }
   
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    if let users = self.foundUsers {
-      do {
-        let selectedUser = try users.lookup(UInt(indexPath.row))
-        if taggingEnabled {
-          if let delegate = mediaTagDelegate where !delegate.userIsTagged(selectedUser) {
-            delegate.userAdded(selectedUser)
-            print("User added")
-            self.dismissViewControllerAnimated(true, completion: nil)
-          }
-        } else {
-          userForProfile = selectedUser
-          self.performSegueWithIdentifier("showProfileForUser", sender: self)
-//            mediaTagDelegate?.showUserProfile(selectedUser)
-            //perform segue showing the profile of the person tagged....
+    do {
+      let selectedUser = try users.lookup(UInt(indexPath.row))
+      let selectedCell = try cells.lookup(UInt(indexPath.row))
+      if taggingEnabled {
+        if let delegate = mediaTagDelegate where !userIsTagged(selectedUser) {
+          delegate.userAdded(selectedUser)
+          selectedCell.setTagged()
+          print("User added")
+//          self.dismissViewControllerAnimated(true, completion: nil)
         }
+      } else {
+        userForProfile = selectedUser
+        self.performSegueWithIdentifier("showProfileForUser", sender: self)
+//            mediaTagDelegate?.showUserProfile(selectedUser)
+          //perform segue showing the profile of the person tagged....
       }
-      catch {
-        print("User not found")
-      }
+    }
+    catch {
+      print("User not found")
     }
   }
   
@@ -155,6 +168,18 @@ class TagUserTableViewController: UITableViewController, UITextFieldDelegate {
         vc.setForStackedView()
       }
     }
+  }
+  
+  func userIsTagged(user: User) -> Bool {
+    var isTagged = false
+    if let tagged = taggedUsers {
+      for taggedUser in tagged {
+        if taggedUser._id == user._id {
+          isTagged = true
+        }
+      }
+    }
+    return isTagged
   }
   
 }
