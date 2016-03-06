@@ -11,6 +11,7 @@ import UIKit
 enum MenuMode {
   case Notification
   case Settings
+  //add request mode for tag requests
 }
 
 class MenuTableViewController: UITableViewController {
@@ -20,46 +21,32 @@ class MenuTableViewController: UITableViewController {
   var mode: MenuMode = .Notification
   
   var settingsNavItems: Array<String> = ["Log Out", "Edit Profile"]
-//  var notificationItems: Array<String> = ["Example Notification"]
   
-  var requestUsers: Array<User>?
+  var notifications: Array<Notification> = []
 
   override func viewDidLoad() {
     super.viewDidLoad()
     configureNavBar()
     loadNotifications()
-//    loadRequests()
+  }
+  
+  func reload() {
+    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+      self.tableView.reloadData()
+    })
   }
   
   func loadNotifications() {
-    if self.requestUsers != nil {
-      //TODO: actually ask for an update here
-      self.mode = .Notification
-      self.tableView.reloadData()
-    } else {
-      API.get(nil, url: "mail/requests") { (res, err) -> () in
-        if let e = err {
-          print("Error fetching requests: \(e)")
-        } else {
-          if let json = res as? jsonObject {
-            if let requestUsers = json["requestUsers"] as? Array<jsonObject> {
-              self.requestUsers = Array()
-              for user in requestUsers {
-                self.requestUsers?.append(User.userFromProfile(user))
-              }
-              self.mode = .Notification
-              self.tableView.reloadData()
-            }
-          }
-        }
-      }
+    NotificationHelper.sharedHelper.getNotifications { (notifications) -> () in
+      self.notifications = notifications
+      print("recieved notifications")
+      self.reload()
     }
   }
   
   func loadSettings() {
     self.mode = .Settings
-    self.tableView.reloadData()
-//    self.activeItems = settingsNavItems
+    self.reload()
   }
   
   func configureNavBar() {
@@ -123,7 +110,7 @@ class MenuTableViewController: UITableViewController {
     // #warning Incomplete implementation, return the number of rows
     switch mode {
     case .Notification:
-      return self.requestUsers != nil ? self.requestUsers!.count : 0
+      return self.notifications.count
     case .Settings:
       return self.settingsNavItems.count
     }
@@ -137,11 +124,13 @@ class MenuTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
       switch mode {
       case .Notification:
-        if let cell = tableView.dequeueReusableCellWithIdentifier("friendRequestCell", forIndexPath: indexPath) as? FriendRequestTableViewCell {
-          if let users = requestUsers {
-            cell.configureWithUser(users[indexPath.row])
-            cell.delegate = self
-            return cell
+        if let cell = tableView.dequeueReusableCellWithIdentifier("notificationCell", forIndexPath: indexPath) as? NotificationTableViewCell {
+          do {
+            let notification = try notifications.lookup(UInt(indexPath.row))
+            cell.configureWithNotification(notification)
+          }
+          catch {
+            return defaultCell(tableView, message: "No Notifications Found")
           }
         }
       case .Settings:
@@ -150,17 +139,18 @@ class MenuTableViewController: UITableViewController {
         return cell
       }
       
-      return UITableViewCell()
+      return defaultCell(tableView, message: "No Items Found")
     }
 
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     switch mode {
     case .Notification:
-      NSNotificationCenter.defaultCenter().postNotificationName("navItemSelected", object: self, userInfo: nil)
-      self.rootController?.tabBarController?.selectedIndex = 1
-      if let users = self.requestUsers {
-        let user = users[indexPath.row]
-        NSNotificationCenter.defaultCenter().postNotificationName("userSelected", object: nil, userInfo: nil)
+      do {
+        let notification = try notifications.lookup(UInt(indexPath.row))
+        self.rootController?.segueForNotification(notification)
+      }
+      catch {
+        print("No action for selected item")
       }
     case .Settings:
       if settingsNavItems[indexPath.row] == "Log Out" {

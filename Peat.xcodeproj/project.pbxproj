@@ -87,6 +87,9 @@
 		02F2DA691C16875C00CA1328 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F2DA681C16875C00CA1328 /* UIImageExtension.swift */; };
 		02F60DEA1BB330F800F189F0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02F60DE91BB330F800F189F0 /* AVFoundation.framework */; };
 		02FD6C931BB38C69003A3DDD /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FD6C921BB38C69003A3DDD /* CameraViewController.swift */; };
+		02FE7F431C8C95D300728D3B /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FE7F421C8C95D300728D3B /* NotificationHelper.swift */; };
+		02FE7F451C8CB94700728D3B /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FE7F441C8CB94700728D3B /* NotificationTableViewCell.swift */; };
+		02FE7F471C8CBCC900728D3B /* DefaultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FE7F461C8CBCC900728D3B /* DefaultTableViewCell.swift */; };
 		DA8FE7BD7B07D58B9007610C /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB87F9D425CD4D0A7CBEB8A0 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
@@ -186,6 +189,9 @@
 		02F60DE81BB32CD100F189F0 /* Peat-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Peat-Bridging-Header.h"; sourceTree = "<group>"; };
 		02F60DE91BB330F800F189F0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		02FD6C921BB38C69003A3DDD /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		02FE7F421C8C95D300728D3B /* NotificationHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationHelper.swift; sourceTree = "<group>"; };
+		02FE7F441C8CB94700728D3B /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
+		02FE7F461C8CBCC900728D3B /* DefaultTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultTableViewCell.swift; sourceTree = "<group>"; };
 		275CE9AE943487EC5C73621C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		F24416312EBB65AABDA22E62 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		FB87F9D425CD4D0A7CBEB8A0 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -215,6 +221,7 @@
 			isa = PBXGroup;
 			children = (
 				027C34071C55239800D86F0F /* CurrentUser.swift */,
+				02FE7F421C8C95D300728D3B /* NotificationHelper.swift */,
 				025D0DB21BD5CACB00462783 /* PeatSocialMediator.swift */,
 				02A11CA41BB9EDAB0064AE95 /* PeatContentStore.swift */,
 				02D0A91B1BC35ACE0018596F /* PeatContentFactory.swift */,
@@ -249,11 +256,13 @@
 			isa = PBXGroup;
 			children = (
 				0262B2FB1C7FD9C5007E8EC6 /* EditAvatarTableViewCell.swift */,
+				02FE7F461C8CBCC900728D3B /* DefaultTableViewCell.swift */,
 				02AF90121C85C94E0041841E /* EditProfileFieldTableViewCell.swift */,
 				025D0DB61BD72F6C00462783 /* FriendTableViewCell.swift */,
 				0262B2F51C7FCB01007E8EC6 /* TagUserTableViewCell.swift */,
 				026CF6841C7B40040066888E /* MediaCollectionViewCell.swift */,
 				020815131C72B2AA00B1A2EC /* SearchTableViewCell.swift */,
+				02FE7F441C8CB94700728D3B /* NotificationTableViewCell.swift */,
 				02069E051C114E5C007E18EB /* MediaDescriptionTableViewCell.swift */,
 				026325BE1C69786D00A959FE /* MediaDrilldownTableViewCell.swift */,
 				02069E071C114E68007E18EB /* CommentsTableViewCell.swift */,
@@ -609,6 +618,7 @@
 				027E31281BA27875001FCF70 /* APIService.swift in Sources */,
 				020815371C738FEA00B1A2EC /* ActivitySelectionTableViewController.swift in Sources */,
 				0262B2FA1C7FD8EC007E8EC6 /* EditProfileTableViewController.swift in Sources */,
+				02FE7F471C8CBCC900728D3B /* DefaultTableViewCell.swift in Sources */,
 				026CF67D1C7A3B1B0066888E /* DateFormatter.swift in Sources */,
 				02FD6C931BB38C69003A3DDD /* CameraViewController.swift in Sources */,
 				02D11D411C5AFA8C0054E1AC /* FriendRequestTableViewCell.swift in Sources */,
@@ -647,6 +657,7 @@
 				027C340B1C55465200D86F0F /* GatekeeperViewController.swift in Sources */,
 				027C34081C55239800D86F0F /* CurrentUser.swift in Sources */,
 				027C75BF1C509AD1008D6DAE /* LeafDetailTableViewController.swift in Sources */,
+				02FE7F451C8CB94700728D3B /* NotificationTableViewCell.swift in Sources */,
 				02D0A9181BC349B30018596F /* VideoObject.swift in Sources */,
 				020815181C72D50600B1A2EC /* Ability.swift in Sources */,
 				021C900A1BEFF5DD00C79538 /* RootViewController.swift in Sources */,
@@ -669,6 +680,7 @@
 				0264A6651C6D75560056966A /* Membership.swift in Sources */,
 				02069E061C114E5C007E18EB /* MediaDescriptionTableViewCell.swift in Sources */,
 				0221BB521C6663C00027EB42 /* WitnessRequestViewController.swift in Sources */,
+				02FE7F431C8C95D300728D3B /* NotificationHelper.swift in Sources */,
 				02AF90131C85C94E0041841E /* EditProfileFieldTableViewCell.swift in Sources */,
 				022AB6971C5C45AA00F1168E /* LeafConnection.swift in Sources */,
 				027E31081BA2780C001FCF70 /* AppDelegate.swift in Sources */,

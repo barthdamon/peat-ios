@@ -323,11 +323,14 @@ extension MediaUploadViewController: UIVideoEditorControllerDelegate, NSURLSessi
         AWSContentHelper.sharedHelper.downloadVideoWithId(mediaId, callback: { (filePath) -> () in
           dispatch_async(dispatch_get_main_queue(), { () -> Void in
             print("EDITED PATH: \(filePath)")
-            self.populateEditorPath(filePath)
-//            self.videoPath = NSURL(fileURLWithPath: filePath)
-//            self.mediaType = .Video
-//            self.setMediaObject()
+            //create a new one. Got to keep the uploader the same though.
+            let uploader = self.mediaObject?.uploaderUser
+            self.videoPath = NSURL(fileURLWithPath: filePath)
+            self.mediaType = .Video
+            self.setMediaObject()
+            self.mediaObject?.uploaderUser = uploader
 //            self.editorController?.dismissViewControllerAnimated(true, completion: nil)
+            self.populateEditorPath(filePath)
           })
         })
       }

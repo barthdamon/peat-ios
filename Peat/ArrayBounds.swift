@@ -17,3 +17,12 @@ extension Array {
     return self[Int(index)]
   }
 }
+
+func defaultCell(tableView: UITableView, message: String) -> UITableViewCell {
+  if let cell = tableView.dequeueReusableCellWithIdentifier("defaultCell") as? DefaultTableViewCell {
+    cell.configureWithMessage(message)
+    return cell
+  } else {
+    return UITableViewCell()
+  }
+}

@@ -17,6 +17,9 @@ class RootViewController: UIViewController {
   var mainTabBarController: UITabBarController?
   var homeViewController: UIViewController?
   
+  var mediaForNotificationSegue: MediaObject?
+  var userForNotificationSegue: User?
+  
     override func viewDidLoad() {
         super.viewDidLoad()
       configureContainers()
@@ -68,6 +71,18 @@ class RootViewController: UIViewController {
   
   func showEditProfile() {
     self.performSegueWithIdentifier("showEditProfile", sender: self)
+  }
+  
+  func segueForNotification(notification: Notification) {
+    if let object = notification.mediaObject {
+      self.mediaForNotificationSegue = object
+      self.performSegueWithIdentifier("showNotificationMedia", sender: self)
+    } else if let type = notification.type  where type == .Witness {
+      self.tabBarController?.selectedIndex = 0
+      //show your own profile. Or take them to the leaf I suppose....
+    } else if let user = notification.userNotifying {
+      self.userForNotificationSegue = user
+    }
   }
   
 

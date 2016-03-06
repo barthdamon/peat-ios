@@ -45,7 +45,11 @@ class MediaObject: NSObject {
   var purpose: MediaPurpose?
   
   var taggedUsers: Array<User>?
-  var uploaderUser: User?
+  var uploaderUser: User? {
+    didSet {
+      uploaderUser_Id = uploaderUser?._id
+    }
+  }
   
   //created
   var thumbnail: UIImage?
