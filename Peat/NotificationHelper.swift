@@ -96,7 +96,7 @@ class Notification: NSObject {
     let newNotification = Notification()
     newNotification.userNotifying_Id = json["userToNotify_Id"] as? String
     if let userNotifyingJson = json["userNotifying"] as? jsonObject {
-      newNotification.userNotifying = User.userFromProfile(userNotifyingJson)
+      newNotification.userNotifying = User.userFromProfile(["userInfo": userNotifyingJson])
     }
     newNotification.mediaId = json["mediaId"] as? String
     if let mediaObjectJson = json["mediaObject"] as? jsonObject {
