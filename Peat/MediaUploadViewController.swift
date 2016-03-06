@@ -37,16 +37,7 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
   
   var delegate: MediaUploadDelegate?
   
-  var mediaType: MediaType? {
-    didSet {
-      self.mediaObject = MediaObject.initFromUploader(leaf, type: mediaType, thumbnail: image, filePath: videoPath, store: store)
-      if let user = CurrentUser.info.model {
-        self.userAdded(user)
-      }
-      showNewMedia()
-    }
-  }
-  
+  var mediaType: MediaType?
   var mediaObject: MediaObject? {
     didSet {
       if let mediaType = mediaType where mediaType == .Video {
@@ -86,9 +77,17 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
     self.player?.stopPlaying()
   }
   
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
+  func setMediaObject() {
+    self.mediaObject = MediaObject.initFromUploader(leaf, type: mediaType, thumbnail: image, filePath: videoPath, store: store)
+    displayMediaObject()
+  }
+  
+  func displayMediaObject() {
+    //THIS SHOULD be optional )ask if they are in it:
+    if let user = CurrentUser.info.model {
+      self.userAdded(user)
+    }
+    showNewMedia()
   }
   
   func addListeners() {
@@ -116,10 +115,12 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
   }
   
   func mediaFromGallery(media: MediaObject) {
+    self.mediaType = media.mediaType
     self.mediaObject = media
     if let leaf = self.leaf {
       media.setMediaToLeaf(leaf)
     }
+    //remove the tags and reset it here as a new media object?
     showNewMedia()
   }
   
@@ -284,6 +285,7 @@ extension MediaUploadViewController: UINavigationControllerDelegate, UIImagePick
         }
         self.mediaType = .Image
       }
+      self.setMediaObject()
     })
   }
   
@@ -298,11 +300,6 @@ extension MediaUploadViewController: UINavigationControllerDelegate, UIImagePick
 
 
 
-
-
-
-
-
 extension MediaUploadViewController: UIVideoEditorControllerDelegate, NSURLSessionDelegate {
   
   func videoEditorController(editor: UIVideoEditorController, didSaveEditedVideoToPath editedVideoPath: String) {
@@ -310,6 +307,7 @@ extension MediaUploadViewController: UIVideoEditorControllerDelegate, NSURLSessi
     print("EDITED PATH: \(editedVideoPath)")
     self.videoPath = NSURL(fileURLWithPath: editedVideoPath)
     self.mediaType = .Video
+    setMediaObject()
     self.editorController?.dismissViewControllerAnimated(true, completion: nil)
   }
   
@@ -318,10 +316,20 @@ extension MediaUploadViewController: UIVideoEditorControllerDelegate, NSURLSessi
       if let filePath = mediaObject.filePath?.path {
         populateEditorPath("\(filePath)")
         //done return the filePath, ready to go
-      } else if let url = mediaObject.url {
+      } else if let mediaId = mediaObject.mediaId {
         //download the asset here
         //show loading screen or something
-        downloadFromURL(url)
+//        downloadFromURL(url)
+        AWSContentHelper.sharedHelper.downloadVideoWithId(mediaId, callback: { (filePath) -> () in
+          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            print("EDITED PATH: \(filePath)")
+            self.populateEditorPath(filePath)
+//            self.videoPath = NSURL(fileURLWithPath: filePath)
+//            self.mediaType = .Video
+//            self.setMediaObject()
+//            self.editorController?.dismissViewControllerAnimated(true, completion: nil)
+          })
+        })
       }
     }
   }

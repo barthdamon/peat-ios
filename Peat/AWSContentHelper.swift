@@ -51,4 +51,34 @@ class AWSContentHelper: NSObject {
     }
   }
   
+  
+  
+  
+  func downloadVideoWithId(mediaId: String, callback: (String) ->()) {
+    
+    let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+    let filePath = "\(paths)/\(mediaId).mov"
+    let filePathToWrite = NSURL(fileURLWithPath: filePath)
+    
+    let downloadRequest = AWSS3TransferManagerDownloadRequest()
+    downloadRequest.bucket = "peat-assets"
+    downloadRequest.key  = "\(mediaId)" //fileName on s3
+    downloadRequest.downloadingFileURL = filePathToWrite
+    
+    let transferManager = AWSS3TransferManager.defaultS3TransferManager()
+    transferManager.download(downloadRequest).continueWithBlock {
+      (task: AWSTask!) -> AnyObject! in
+      if task.error != nil {
+        print("Error downloading")
+        return nil
+      } else {
+        print("AWS DOWNLOAD COMPLETE")
+        callback(filePath)
+        return nil
+      }
+    }
+  }
+  
+  
+  
 }
