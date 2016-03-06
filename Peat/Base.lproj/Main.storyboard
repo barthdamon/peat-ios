@@ -2063,10 +2063,8 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="actionDescriptionLabel" destination="1iY-2x-png" id="GNo-5G-meF"/>
-                                    <outlet property="avatarImageView" destination="64K-Fi-ePd" id="8wq-K6-JXR"/>
                                     <outlet property="notifyingUsernameLabel" destination="EdX-wx-yeu" id="KzT-yL-dtl"/>
                                     <outlet property="thumbnailImageView" destination="64K-Fi-ePd" id="HbR-F6-IUF"/>
-                                    <outlet property="usernameLabel" destination="1iY-2x-png" id="8BD-i5-ea1"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="defaultCell" id="wPI-51-MNd" customClass="DefaultTableViewCell" customModule="Peat" customModuleProvider="target">

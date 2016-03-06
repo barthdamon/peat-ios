@@ -37,6 +37,7 @@ class MenuTableViewController: UITableViewController {
   }
   
   func loadNotifications() {
+    self.mode = .Notification
     NotificationHelper.sharedHelper.getNotifications { (notifications) -> () in
       self.notifications = notifications
       print("recieved notifications")
@@ -110,7 +111,7 @@ class MenuTableViewController: UITableViewController {
     // #warning Incomplete implementation, return the number of rows
     switch mode {
     case .Notification:
-      return self.notifications.count
+      return self.notifications.count == 0 ? 1 : self.notifications.count
     case .Settings:
       return self.settingsNavItems.count
     }
@@ -124,14 +125,15 @@ class MenuTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
       switch mode {
       case .Notification:
-        if let cell = tableView.dequeueReusableCellWithIdentifier("notificationCell", forIndexPath: indexPath) as? NotificationTableViewCell {
-          do {
-            let notification = try notifications.lookup(UInt(indexPath.row))
+        do {
+          let notification = try notifications.lookup(UInt(indexPath.row))
+          if let cell = tableView.dequeueReusableCellWithIdentifier("notificationCell", forIndexPath: indexPath) as? NotificationTableViewCell {
             cell.configureWithNotification(notification)
+            return cell
           }
-          catch {
-            return defaultCell(tableView, message: "No Notifications Found")
-          }
+        }
+        catch {
+          return defaultCell(tableView, message: "No Notifications Found")
         }
       case .Settings:
         let cell = tableView.dequeueReusableCellWithIdentifier("menuCell", forIndexPath: indexPath)
