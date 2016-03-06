@@ -43,6 +43,7 @@ class CommentsTableViewController: UITableViewController, MediaTagUserDelegate, 
   
   override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     return headerView
+    //TODO: Set the headerview here and stop being a lazy piece of shit.......
   }
   
   override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

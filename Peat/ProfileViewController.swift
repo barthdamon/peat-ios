@@ -19,6 +19,8 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
   var stacked = false
   var isShowingForGallery = false
   
+  var stackedFromRoot = false
+  
   @IBOutlet weak var profileModeSelector: UISegmentedControl!
   @IBOutlet weak var usernameLabel: UILabel!
   @IBOutlet weak var avatarImageView: UIImageView!
@@ -54,10 +56,21 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
         configureMenuSwipes()
         configureNavBar()
       }
+      
+      if stackedFromRoot {
+        self.navigationController?.navigationBarHidden = false
+      }
+      
     }
   
   override func viewDidAppear(animated: Bool) {
     configureMenuSwipes()
+  }
+  
+  override func viewWillDisappear(animated: Bool) {
+    if stackedFromRoot {
+      self.navigationController?.navigationBarHidden = true
+    }
   }
   
   func dismissSelf() {

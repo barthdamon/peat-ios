@@ -28,6 +28,7 @@ class RootViewController: UIViewController {
       if let tabBar = self.mainTabBarController {
         tabBar.selectedIndex = 2
       }
+      self.navigationController?.navigationBar.barTintColor = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,6 +53,19 @@ class RootViewController: UIViewController {
         if let navCon = segue.destinationViewController as? UINavigationController,
           vc = navCon.topViewController as? MenuTableViewController {
             vc.rootController = self
+        }
+      }
+      if segue.identifier == "showNotificationProfile" {
+        if let vc = segue.destinationViewController as? ProfileViewController {
+          vc.viewing = userForNotificationSegue
+          vc.stacked = true
+          vc.stackedFromRoot = true
+        }
+      }
+      
+      if segue.identifier == "showNotificationMedia" {
+        if let vc = segue.destinationViewController as? CommentsTableViewController {
+          vc.media = mediaForNotificationSegue
         }
       }
     }
@@ -82,11 +96,13 @@ class RootViewController: UIViewController {
       //show your own profile. Or take them to the leaf I suppose....
     } else if let user = notification.userNotifying {
       self.userForNotificationSegue = user
+      self.performSegueWithIdentifier("showNotificationProfile", sender: self)
     }
   }
   
   func showUserProfile(user: User) {
-    
+    self.userForNotificationSegue = user
+    self.performSegueWithIdentifier("showNotificationProfile", sender: self)
   }
   
 
