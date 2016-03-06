@@ -128,7 +128,7 @@ class MenuTableViewController: UITableViewController {
         do {
           let notification = try notifications.lookup(UInt(indexPath.row))
           if let cell = tableView.dequeueReusableCellWithIdentifier("notificationCell", forIndexPath: indexPath) as? NotificationTableViewCell {
-            cell.configureWithNotification(notification)
+            cell.configureWithNotification(notification, delegate: self)
             return cell
           }
         }
@@ -161,6 +161,10 @@ class MenuTableViewController: UITableViewController {
         self.rootController?.showEditProfile()
       }
     }
+  }
+  
+  func userSelectedFromNotification(user: User) {
+    self.rootController?.showUserProfile(user)
   }
 
     /*

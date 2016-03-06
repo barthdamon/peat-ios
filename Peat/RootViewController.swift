@@ -85,6 +85,10 @@ class RootViewController: UIViewController {
     }
   }
   
+  func showUserProfile(user: User) {
+    
+  }
+  
 
     /*
     // MARK: - Navigation

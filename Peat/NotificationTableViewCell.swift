@@ -13,7 +13,12 @@ class NotificationTableViewCell: UITableViewCell {
   @IBOutlet weak var thumbnailImageView: UIImageView!
   @IBOutlet weak var actionDescriptionLabel: UILabel!
   @IBOutlet weak var notifyingUsernameLabel: UIButton!
-  func configureWithNotification(notification: Notification) {
+  
+  var notification: Notification?
+  var delegate: MenuTableViewController?
+  
+  func configureWithNotification(notification: Notification, delegate: MenuTableViewController) {
+    self.delegate = delegate
     notification.userNotifying?.generateAvatarImage({ (image) -> () in
       self.thumbnailImageView.image = image
     })
@@ -28,12 +33,14 @@ class NotificationTableViewCell: UITableViewCell {
       }
       self.actionDescriptionLabel.text = text
     }
-    if let name = notification.userNotifying?.name {
-      self.notifyingUsernameLabel.setTitle(name, forState: .Normal)
+    if let name = notification.userNotifying?.name, username = notification.userNotifying?.username {
+      self.notifyingUsernameLabel.setTitle(username, forState: .Normal)
     }
   }
 
   @IBAction func notifyingUsernameButtonPressed(sender: AnyObject) {
-    
+    if let user = notification?.userNotifying {
+      self.delegate?.userSelectedFromNotification(user)
+    }
   }
 }
