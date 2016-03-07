@@ -10,7 +10,15 @@ import UIKit
 
 class UserSearchResultTableViewCell: UITableViewCell {
   
-  var user: User?
+  var user: User? {
+    didSet {
+      if CurrentUser.info.model?._id == user?._id {
+        self.addButton.hidden = true
+        self.tagButton.hidden = true
+        self.backgroundColor = UIColor.lightGrayColor()
+      }
+    }
+  }
 
   @IBOutlet weak var tagButton: UIButton!
   @IBOutlet weak var avatarImageView: UIImageView!
