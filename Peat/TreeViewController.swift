@@ -101,15 +101,17 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
 //    doubleTapRecognizer.numberOfTapsRequired = 2
 //    doubleTapRecognizer.numberOfTouchesRequired = 1
 //    scrollView.addGestureRecognizer(doubleTapRecognizer)
-    scrollView.minimumZoomScale = 0.5
-    scrollView.maximumZoomScale = 6
-    scrollView.contentSize.height = 1000
-    scrollView.contentSize.width = 1000
+    let standardWidth = self.view.frame.width * 2
+    let standardHeight = self.view.frame.height * 2
+    scrollView.minimumZoomScale = 0.3
+    scrollView.maximumZoomScale = 1
+    scrollView.contentSize.height = standardHeight
+    scrollView.contentSize.width = standardWidth
     scrollView.delegate = self
     
     //note: 65 cause of the stupid navbar
-    self.treeView = UIView(frame: CGRectMake(0,-65,1000,2000))
-    treeView.backgroundColor = UIColor.lightGrayColor()
+    self.treeView = UIView(frame: CGRectMake(0,0,standardWidth,standardHeight))
+    treeView.backgroundColor = UIColor.darkGrayColor()
     self.scrollView.addSubview(self.treeView)
   }
   
@@ -121,9 +123,27 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     //do something to expand the view if the user is getting to the edge, then unexpand when the content is shrinking and none of the views are out there
   }
   
+  func scrollViewDidScroll(scrollView: UIScrollView) {
+    let standardShift: CGFloat = 50
+    if (scrollView.contentOffset.x > 1000) {
+//      scrollView.setContentOffset(CGPointMake(scrollView.contentOffset.x - standardShift, 0), animated: true)
+    } else {
+//      scrollView.setContentOffset(CGPointMake(scrollView.contentOffset.x + standardShift, 0), animated: true)
+    }
+    
+//    if (scrollView.contentOffset.y > 1000) {
+//      scrollView.setContentOffset(CGPointMake(scrollView.contentOffset.y - standardShift, 0), animated: true)
+//    } else {
+//      scrollView.setContentOffset(CGPointMake(scrollView.contentOffset.y + standardShift, 0), animated: true)
+//    }
+  }
+  
   func scrollViewDidEndZooming(scrollView: UIScrollView, withView view: UIView?, atScale scale: CGFloat) {
     let newScale = scrollView.zoomScale
     self.treeView.contentScaleFactor = newScale
+    let width = self.scrollView.frame.width
+    let height = self.scrollView.frame.height
+    self.treeView.frame = CGRectMake(0, 0, width, height)
   }
   
   //MARK: Movement
