@@ -33,16 +33,33 @@ class CommentsTableViewController: UITableViewController, MediaTagUserDelegate, 
       
       self.tableView.estimatedRowHeight = 80
       self.tableView.rowHeight = UITableViewAutomaticDimension
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+      
     }
   
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(true)
+    self.navigationController?.navigationBarHidden = false
+  }
+  
+  override func viewWillDisappear(animated: Bool) {
+    super.viewWillDisappear(true)
+    self.navigationController?.navigationBarHidden = true
+  }
+  
+  func createDefaultHeaderForMedia() -> MediaCellHeaderView? {
+    if let headerView = NSBundle.mainBundle().loadNibNamed("MediaCellHeader", owner: self, options: nil).first as? MediaCellHeaderView {
+      headerView.frame = CGRectMake(0,0,tableView.frame.width, 50)
+      if let media = media {
+        headerView.configureForMedia(media, primaryUser: nil, delegate: self)
+      }
+      return headerView
+    } else {
+      return nil
+    }
+  }
+  
   override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    return headerView
+    return headerView != nil ? headerView : createDefaultHeaderForMedia()
     //TODO: Set the headerview here and stop being a lazy piece of shit.......
   }
   

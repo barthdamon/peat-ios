@@ -67,7 +67,7 @@ class Leaf: NSObject, TreeObject {
   var groupingLabel: UILabel?
   
   //Locally Stored Variables
-  var witnesses: Array<Witness>?
+  var witnesses: Array<User>?
   var publishing: Bool = false
   
   var media: Array<MediaObject>? {
@@ -249,7 +249,9 @@ class Leaf: NSObject, TreeObject {
             if let jsonWitnesses = json["witnesses"] as? Array<jsonObject> {
               self.witnesses = Array()
               for witness in jsonWitnesses {
-                self.witnesses!.append(Witness.initFromJson(witness))
+                if let user = witness["witnessUser"] as? jsonObject {
+                  self.witnesses!.append(User.userFromProfile(user))
+                }
               }
             }
 

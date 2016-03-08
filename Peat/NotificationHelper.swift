@@ -59,7 +59,6 @@ class NotificationHelper: NSObject {
 }
 
 
-
 enum NotificationType: String {
   case Comment = "comment"
   case Like = "like"
@@ -79,6 +78,9 @@ class Notification: NSObject {
   
   var mediaId: String?
   var mediaObject: MediaObject?
+  
+  var leafId: String?
+  var leaf: Leaf?
   
   var datePosted: FormattedDate?
   var timestamp: Double? {
@@ -102,6 +104,13 @@ class Notification: NSObject {
     if let mediaObjectJson = json["mediaObject"] as? jsonObject {
       newNotification.mediaObject = MediaObject.initWithJson(mediaObjectJson, store: NotificationHelper.sharedHelper.store)
     }
+    
+    newNotification.leafId = json["leafId"] as? String
+    if let leafJson = json["leafInfo"] as? jsonObject {
+      newNotification.leaf = Leaf.initWithJson(leafJson, delegate: nil)
+      //dang leaf needs a delegate....
+    }
+    
     newNotification.timestamp = json["timestamp"] as? Double
     newNotification.seen = json["seen"] as? Bool
     if let typeString = json["type"] as? String {

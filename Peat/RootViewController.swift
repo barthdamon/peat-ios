@@ -88,15 +88,27 @@ class RootViewController: UIViewController {
   }
   
   func segueForNotification(notification: Notification) {
-    if let object = notification.mediaObject {
-      self.mediaForNotificationSegue = object
-      self.performSegueWithIdentifier("showNotificationMedia", sender: self)
-    } else if let type = notification.type  where type == .Witness {
-      self.tabBarController?.selectedIndex = 0
-      //show your own profile. Or take them to the leaf I suppose....
-    } else if let user = notification.userNotifying {
-      self.userForNotificationSegue = user
-      self.performSegueWithIdentifier("showNotificationProfile", sender: self)
+    if let type = notification.type {
+      switch type {
+      case .Witness:
+        self.mainTabBarController?.selectedIndex = 1
+        // they witnessed the current user... Could take the leaf and auto drilldown into it... probly should.
+      case .Tag:
+        self.mediaForNotificationSegue = notification.mediaObject
+        self.performSegueWithIdentifier("showNotificationMedia", sender: self)
+      case .Repost:
+        self.mediaForNotificationSegue = notification.mediaObject
+        self.performSegueWithIdentifier("showNotificationMedia", sender: self)
+      case .Like:
+        self.mediaForNotificationSegue = notification.mediaObject
+        self.performSegueWithIdentifier("showNotificationMedia", sender: self)
+      case .Follow:
+        self.userForNotificationSegue = notification.userNotifying
+        self.performSegueWithIdentifier("showNotificationProfile", sender: self)
+      case .Comment:
+        self.mediaForNotificationSegue = notification.mediaObject
+        self.performSegueWithIdentifier("showNotificationMedia", sender: self)
+      }
     }
   }
   

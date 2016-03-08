@@ -68,7 +68,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
         self.tableViewVC?.setMode()
         if let witnesses = leaf.witnesses where self.mode == .View {
           for witness in witnesses {
-            if witness.witness_Id == CurrentUser.info.model?._id {
+            if witness._id == CurrentUser.info.model?._id {
               self.uploadButton.enabled = false
             }
           }
