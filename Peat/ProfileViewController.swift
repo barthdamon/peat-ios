@@ -64,6 +64,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
     }
   
   override func viewDidAppear(animated: Bool) {
+    self.navigationController?.navigationBarHidden = false
     configureMenuSwipes()
   }
   
@@ -194,9 +195,6 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
         if let vc = segue.destinationViewController as? CommentsTableViewController, gallery = self.galleryController, media = gallery.selectedMediaObject {
           vc.media = media
           vc.viewing = self.viewing
-          if let newHeader = gallery.createHeaderForMedia(media) {
-            vc.headerView = newHeader
-          }
         }
       }
       

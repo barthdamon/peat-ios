@@ -83,6 +83,8 @@
 		02D11D411C5AFA8C0054E1AC /* FriendRequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D11D401C5AFA8C0054E1AC /* FriendRequestTableViewCell.swift */; };
 		02D72E8B1BD0926900EC115E /* FriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D72E8A1BD0926900EC115E /* FriendsTableViewController.swift */; };
 		02D72E8D1BD0929B00EC115E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D72E8C1BD0929B00EC115E /* User.swift */; };
+		02DEB9581C8FB9EC00E9728F /* DefaultCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DEB9571C8FB9EC00E9728F /* DefaultCollectionViewCell.swift */; };
+		02DEB95A1C8FC55000E9728F /* GalleryHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DEB9591C8FC55000E9728F /* GalleryHeaderCollectionReusableView.swift */; };
 		02EE26961BE181D6006DAE81 /* Leaf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EE26951BE181D6006DAE81 /* Leaf.swift */; };
 		02F2DA691C16875C00CA1328 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F2DA681C16875C00CA1328 /* UIImageExtension.swift */; };
 		02F60DEA1BB330F800F189F0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02F60DE91BB330F800F189F0 /* AVFoundation.framework */; };
@@ -184,6 +186,8 @@
 		02D11D401C5AFA8C0054E1AC /* FriendRequestTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendRequestTableViewCell.swift; sourceTree = "<group>"; };
 		02D72E8A1BD0926900EC115E /* FriendsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendsTableViewController.swift; sourceTree = "<group>"; };
 		02D72E8C1BD0929B00EC115E /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		02DEB9571C8FB9EC00E9728F /* DefaultCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultCollectionViewCell.swift; sourceTree = "<group>"; };
+		02DEB9591C8FC55000E9728F /* GalleryHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
 		02EE26951BE181D6006DAE81 /* Leaf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Leaf.swift; sourceTree = "<group>"; };
 		02F2DA681C16875C00CA1328 /* UIImageExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		02F60DE81BB32CD100F189F0 /* Peat-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Peat-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -270,6 +274,7 @@
 				027C75C01C509E51008D6DAE /* PostCommentTableViewCell.swift */,
 				023355C71BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift */,
 				02D11D401C5AFA8C0054E1AC /* FriendRequestTableViewCell.swift */,
+				02DEB9571C8FB9EC00E9728F /* DefaultCollectionViewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -304,6 +309,7 @@
 			isa = PBXGroup;
 			children = (
 				021C1BF41C4F33B000FDEFED /* LeafView.swift */,
+				02DEB9591C8FC55000E9728F /* GalleryHeaderCollectionReusableView.swift */,
 				024F828A1C754EBE00C107CB /* MediaCellHeaderView.swift */,
 				0221BB511C6663C00027EB42 /* WitnessRequestViewController.swift */,
 				023B03801C150853003497FB /* MediaOverlayView.swift */,
@@ -614,6 +620,7 @@
 			files = (
 				026CF6831C7AC3820066888E /* Gallery.swift in Sources */,
 				0221BB5A1C6804240027EB42 /* CommentsTableViewController.swift in Sources */,
+				02DEB9581C8FB9EC00E9728F /* DefaultCollectionViewCell.swift in Sources */,
 				027C33FE1C532E6100D86F0F /* StringHelpers.swift in Sources */,
 				027E31281BA27875001FCF70 /* APIService.swift in Sources */,
 				020815371C738FEA00B1A2EC /* ActivitySelectionTableViewController.swift in Sources */,
@@ -678,6 +685,7 @@
 				027C34021C53392300D86F0F /* MediaUploadViewController.swift in Sources */,
 				023B03811C150853003497FB /* MediaOverlayView.swift in Sources */,
 				0264A6651C6D75560056966A /* Membership.swift in Sources */,
+				02DEB95A1C8FC55000E9728F /* GalleryHeaderCollectionReusableView.swift in Sources */,
 				02069E061C114E5C007E18EB /* MediaDescriptionTableViewCell.swift in Sources */,
 				0221BB521C6663C00027EB42 /* WitnessRequestViewController.swift in Sources */,
 				02FE7F431C8C95D300728D3B /* NotificationHelper.swift in Sources */,

@@ -2506,13 +2506,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="QKI-ls-jii">
                             <size key="itemSize" width="171" height="96"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="headerReferenceSize" width="50" height="50"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="MediaCollectionViewCell" reuseIdentifier="MediaCollectionViewCell" id="xkG-x8-54A" customClass="MediaCollectionViewCell" customModule="Peat" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="44" width="171" height="96"/>
+                                <rect key="frame" x="0.0" y="94" width="171" height="96"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="171" height="96"/>
@@ -2613,7 +2613,56 @@
                                     <outlet property="uploaderUserButton" destination="Krm-d6-Deu" id="ICm-Yv-jCf"/>
                                 </connections>
                             </collectionViewCell>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DefaultMediaCell" id="4RV-Ug-fGK" customClass="DefaultCollectionViewCell" customModule="Peat" customModuleProvider="target">
+                                <rect key="frame" x="215" y="94" width="171" height="96"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="171" height="96"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Media For Section" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RHU-Ea-b7j">
+                                            <rect key="frame" x="8" y="37" width="155" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="RHU-Ea-b7j" firstAttribute="top" secondItem="4RV-Ug-fGK" secondAttribute="topMargin" constant="29" id="8Up-MG-io0"/>
+                                    <constraint firstAttribute="bottomMargin" secondItem="RHU-Ea-b7j" secondAttribute="bottom" constant="30" id="9AK-In-vLr"/>
+                                    <constraint firstItem="RHU-Ea-b7j" firstAttribute="trailing" secondItem="4RV-Ug-fGK" secondAttribute="trailingMargin" id="gjf-up-jbi"/>
+                                    <constraint firstItem="RHU-Ea-b7j" firstAttribute="leading" secondItem="4RV-Ug-fGK" secondAttribute="leadingMargin" id="zdu-WV-qOC"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="messageLabel" destination="RHU-Ea-b7j" id="Ep2-er-jak"/>
+                                </connections>
+                            </collectionViewCell>
                         </cells>
+                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="headerView" id="1i3-WF-bJU" customClass="GalleryHeaderCollectionReusableView" customModule="Peat" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="44" width="600" height="50"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Uploads" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f2i-gU-V7D">
+                                    <rect key="frame" x="8" y="14" width="584" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="f2i-gU-V7D" firstAttribute="top" secondItem="1i3-WF-bJU" secondAttribute="topMargin" constant="6" id="9Aa-Vq-Qox"/>
+                                <constraint firstAttribute="bottomMargin" secondItem="f2i-gU-V7D" secondAttribute="bottom" constant="7" id="Vs6-Lr-aYA"/>
+                                <constraint firstItem="f2i-gU-V7D" firstAttribute="trailing" secondItem="1i3-WF-bJU" secondAttribute="trailingMargin" id="pRe-qp-4d8"/>
+                                <constraint firstItem="f2i-gU-V7D" firstAttribute="leading" secondItem="1i3-WF-bJU" secondAttribute="leadingMargin" id="uZz-Yb-Mzv"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="sectionHeaderLabel" destination="f2i-gU-V7D" id="PNN-1K-6yk"/>
+                            </connections>
+                        </collectionReusableView>
                         <connections>
                             <outlet property="dataSource" destination="R6i-Xh-cGl" id="ol2-Jf-Tdi"/>
                             <outlet property="delegate" destination="R6i-Xh-cGl" id="3xK-rL-iN6"/>
@@ -2830,9 +2879,9 @@
         <image name="up-arrow" width="46" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="AOe-sZ-ctn"/>
         <segue reference="mqg-4e-8v4"/>
-        <segue reference="sPE-RS-xmR"/>
+        <segue reference="vu0-Ii-QHt"/>
         <segue reference="Uc3-jM-PHz"/>
+        <segue reference="GWI-Dl-6Eo"/>
     </inferredMetricsTieBreakers>
 </document>

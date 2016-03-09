@@ -35,11 +35,16 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
       return store.gallery.mediaObjects
 //    }
   }
+  var uploads: Array<MediaObject>? {
+    return mediaObjects?.filter({$0.uploaderUser_Id == CurrentUser.info.model?._id})
+  }
+  var tagged: Array<MediaObject>? {
+    return mediaObjects?.filter({$0.uploaderUser_Id != CurrentUser.info.model?._id})
+  }
+  
   var selectedMediaObject: MediaObject?
   var mediaUploadController: MediaUploadViewController?
-  
   var profileDelegate: ProfileViewController?
-  
   var stacked = false
   var commentsView: CommentsTableViewController?
   
@@ -131,28 +136,47 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
   
   override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
     // #warning Incomplete implementation, return the number of sections
-    return 1
+    return 2
+  }
+  
+  override func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
+    let defaultView = UICollectionReusableView()
+    if (kind == UICollectionElementKindSectionHeader) {
+      if let view = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: "headerView", forIndexPath: indexPath) as? GalleryHeaderCollectionReusableView {
+        let title = indexPath.section == 0 ? "Uploads" : "Tagged"
+        view.configureWithTitle(title)
+        return view
+      }
+    }
+    return defaultView
   }
   
   
   override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     // #warning Incomplete implementation, return the number of items
-    return mediaObjects != nil ? mediaObjects!.count : 0
+    if section == 0 {
+      return uploads != nil && tagged?.count != 0 ? uploads!.count : 1
+    } else {
+      return tagged != nil && tagged?.count != 0 ? tagged!.count : 1
+    }
   }
   
   override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! MediaCollectionViewCell
-    if let mediaObjects = mediaObjects {
-      do {
-        let media = try mediaObjects.lookup(UInt(indexPath.row))
+    var message = "No Media Found"
+    do {
+      let objects = indexPath.section == 0 ? self.uploads : self.tagged
+      let media = try objects?.lookup(UInt(indexPath.row))
+      if let cell = collectionView.dequeueReusableCellWithReuseIdentifier("MediaCollectionViewCell", forIndexPath: indexPath) as? MediaCollectionViewCell, media = media {
         cell.configureWithMedia(media)
         return cell
       }
-      catch {
-        print("Error finding media")
-      }
     }
-    // Configure the cell
+    catch {
+      message = indexPath.section == 0 ? "No Uploads Found" : "Not Tagged Items"
+    }
+    let cell = collectionView.dequeueReusableCellWithReuseIdentifier("DefaultMediaCell", forIndexPath: indexPath) as! DefaultCollectionViewCell
+    print(message)
+    cell.configureWithMessage(message)
     return cell
   }
   
@@ -160,7 +184,8 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
   
   override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
     do {
-      self.selectedMediaObject = try mediaObjects?.lookup(UInt(indexPath.row))
+      let objects = indexPath.row == 0 ? self.uploads : self.tagged
+      self.selectedMediaObject = try objects?.lookup(UInt(indexPath.row))
       switch mode {
       case .View:
         if let delegate = self.profileDelegate {

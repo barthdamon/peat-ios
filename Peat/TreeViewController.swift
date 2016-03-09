@@ -46,6 +46,8 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   var treeView: UIView = UIView()
   
+  var currentOffset: CGFloat = 0
+  
   //Drawing
   var previousConnectionDrawing: CAShapeLayer?
   
@@ -124,6 +126,8 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   }
   
   func scrollViewDidScroll(scrollView: UIScrollView) {
+    
+//    currentOffset = scrollView.positionINView
     let standardShift: CGFloat = 50
     if (scrollView.contentOffset.x > 1000) {
 //      scrollView.setContentOffset(CGPointMake(scrollView.contentOffset.x - standardShift, 0), animated: true)
@@ -141,8 +145,8 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   func scrollViewDidEndZooming(scrollView: UIScrollView, withView view: UIView?, atScale scale: CGFloat) {
     let newScale = scrollView.zoomScale
     self.treeView.contentScaleFactor = newScale
-    let width = self.scrollView.frame.width
-    let height = self.scrollView.frame.height
+    let width = self.scrollView.frame.width + currentOffset
+    let height = self.scrollView.frame.height + currentOffset
     self.treeView.frame = CGRectMake(0, 0, width, height)
   }
   
