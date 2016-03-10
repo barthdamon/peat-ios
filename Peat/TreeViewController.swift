@@ -40,13 +40,30 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   var currentActivity: Activity? {
     return store?.treeStore.currentActivity
   }
+  
+  var minimumSizeX: CGFloat = 0 { didSet { contentSizeX = minimumSizeX } }
+  var contentSizeX: CGFloat = 0 {
+    didSet {
+      self.scrollView.contentSize.width = contentSizeX
+      self.treeView.frame.size.width = contentSizeX
+    }
+  }
+  
+  var minimumSizeY: CGFloat = 0 { didSet { contentSizeY = minimumSizeY } }
+  var contentSizeY: CGFloat = 0 {
+    didSet {
+      self.scrollView.contentSize.height = contentSizeY
+      self.treeView.frame.size.height = contentSizeY
+    }
+  }
 
   @IBOutlet weak var scrollView: UIScrollView!
   @IBOutlet weak var saveButton: UIButton!
   
   var treeView: UIView = UIView()
   
-  var currentOffset: CGFloat = 0
+  var currentXOffset: CGFloat = 0
+  var currentYOffset: CGFloat = 0
   
   //Drawing
   var previousConnectionDrawing: CAShapeLayer?
@@ -103,16 +120,18 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
 //    doubleTapRecognizer.numberOfTapsRequired = 2
 //    doubleTapRecognizer.numberOfTouchesRequired = 1
 //    scrollView.addGestureRecognizer(doubleTapRecognizer)
-    let standardWidth = self.view.frame.width * 2
-    let standardHeight = self.view.frame.height * 2
+    minimumSizeX = self.view.frame.width * 2
+    minimumSizeY = self.view.frame.height * 2
+    
+    
     scrollView.minimumZoomScale = 0.3
     scrollView.maximumZoomScale = 1
-    scrollView.contentSize.height = standardHeight
-    scrollView.contentSize.width = standardWidth
+//    scrollView.contentSize.height = standardHeight
+//    scrollView.contentSize.width = standardWidth
     scrollView.delegate = self
     
-    //note: 65 cause of the stupid navbar
-    self.treeView = UIView(frame: CGRectMake(0,0,standardWidth,standardHeight))
+//    //note: 65 cause of the stupid navbar
+    self.treeView = UIView(frame: CGRectMake(0,0,contentSizeX,contentSizeY))
     treeView.backgroundColor = UIColor.darkGrayColor()
     self.scrollView.addSubview(self.treeView)
   }
@@ -127,13 +146,58 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   func scrollViewDidScroll(scrollView: UIScrollView) {
     
+//    let yOffset = scrollView.contentOffset.y
+//    let xOffset = scrollView.contentOffset.x
+//    
+//    // figure out if it is near the edge of the view
+//    // then expand if it is
+//    
+//    let width = view.frame.width
+//    let height = view.frame.height
+//    
+//    //minimumSizeY
+//    //minimumSizeX
+//    
+//    let xFrontier = xOffset + width / 2
+//    let yFrontier = yOffset + height / 2
+//    
+//    
+//    
+//    if xFrontier < contentSizeX - 10 && contentSizeX < minimumSizeX * 3 {
+//      contentSizeX += 10
+//    }
+//    
+//    if yFrontier > contentSizeY - 10 && contentSizeX < minimumSizeY * 3 {
+//      contentSizeY += 10
+//    }
+
+    
 //    currentOffset = scrollView.positionINView
-    let standardShift: CGFloat = 50
-    if (scrollView.contentOffset.x > 1000) {
-//      scrollView.setContentOffset(CGPointMake(scrollView.contentOffset.x - standardShift, 0), animated: true)
-    } else {
-//      scrollView.setContentOffset(CGPointMake(scrollView.contentOffset.x + standardShift, 0), animated: true)
-    }
+
+//    let standardShift: CGFloat = 50
+    
+    // If the offset point is near the end of the contentSize of the scroll view, increase the contentSize!
+    
+//    if (xOffset > contentSizeX) {
+//      contentSizeX += xOffset
+////      scrollView.setContentOffset(CGPointMake(scrollView.contentOffse.x - standardShift, 0), animated: true)
+//    } else {
+//      if contentSizeX - xOffset < minimumSizeX {
+//        contentSizeX = minimumSizeX
+//      } else {
+//        contentSizeX -= xOffset
+//      }
+//    }
+//    
+//    if (yOffset > contentSizeY) {
+//      contentSizeY += yOffset
+//    } else {
+//      if contentSizeY - yOffset < minimumSizeY {
+//        contentSizeY = minimumSizeY
+//      } else {
+//        contentSizeY -= yOffset
+//      }
+//    }
     
 //    if (scrollView.contentOffset.y > 1000) {
 //      scrollView.setContentOffset(CGPointMake(scrollView.contentOffset.y - standardShift, 0), animated: true)
@@ -145,8 +209,13 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   func scrollViewDidEndZooming(scrollView: UIScrollView, withView view: UIView?, atScale scale: CGFloat) {
     let newScale = scrollView.zoomScale
     self.treeView.contentScaleFactor = newScale
-    let width = self.scrollView.frame.width + currentOffset
-    let height = self.scrollView.frame.height + currentOffset
+    var width = self.scrollView.contentSize.width
+    var height = self.scrollView.contentSize.height
+    
+//    //dont get too small
+    if width < minimumSizeX { width = minimumSizeX }
+    if height < minimumSizeY { height = minimumSizeY }
+    
     self.treeView.frame = CGRectMake(0, 0, width, height)
   }
   
