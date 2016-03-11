@@ -14,14 +14,18 @@ enum CompletionStatus: String {
 }
 
 enum LeafConnectionType: String {
+  
   // fromId progressively led to the toId
+  // signified by a forwards pointing arrow
   case Pre = "pre"
+  
   // toId progressively led to the fromId
+  // signified by a backwards arrow
   case Post = "post"
-  // on the same plane, considered the same difficulty
+  
+  // on the same plane, considered the same difficulty or a variation
+  // signified by no marking on the middle of the connection
   case Even = "even"
-  // a variation of the from ability
-  case Var = "var"
 }
 
 enum ChangeStatus {

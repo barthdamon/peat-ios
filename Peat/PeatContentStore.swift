@@ -374,11 +374,11 @@ class PeatContentStore: NSObject {
     return nil
   }
   
-  func newConnection(connectionLayer: CAShapeLayer, from: TreeObject?, to: TreeObject?, delegate: TreeDelegate) {
+  func newConnection(connectionLayer: CAShapeLayer, arrow: UIImageView?, from: TreeObject?, to: TreeObject?, delegate: TreeDelegate) {
 //    if let existingConnection = findConnection(from, to: to) {
 //      existingConnection.connectionLayer = connectionLayer
 //    } else {
-    let newConnection = LeafConnection.newConnection(connectionLayer, from: from, to: to, delegate: delegate)
+    let newConnection = LeafConnection.newConnection(connectionLayer, arrow: arrow, from: from, to: to, delegate: delegate)
       self.addConnection(newConnection)
 //    }
   }

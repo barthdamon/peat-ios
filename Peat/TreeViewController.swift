@@ -145,65 +145,6 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   }
   
   func scrollViewDidScroll(scrollView: UIScrollView) {
-    
-//    let yOffset = scrollView.contentOffset.y
-//    let xOffset = scrollView.contentOffset.x
-//    
-//    // figure out if it is near the edge of the view
-//    // then expand if it is
-//    
-//    let width = view.frame.width
-//    let height = view.frame.height
-//    
-//    //minimumSizeY
-//    //minimumSizeX
-//    
-//    let xFrontier = xOffset + width / 2
-//    let yFrontier = yOffset + height / 2
-//    
-//    
-//    
-//    if xFrontier < contentSizeX - 10 && contentSizeX < minimumSizeX * 3 {
-//      contentSizeX += 10
-//    }
-//    
-//    if yFrontier > contentSizeY - 10 && contentSizeX < minimumSizeY * 3 {
-//      contentSizeY += 10
-//    }
-
-    
-//    currentOffset = scrollView.positionINView
-
-//    let standardShift: CGFloat = 50
-    
-    // If the offset point is near the end of the contentSize of the scroll view, increase the contentSize!
-    
-//    if (xOffset > contentSizeX) {
-//      contentSizeX += xOffset
-////      scrollView.setContentOffset(CGPointMake(scrollView.contentOffse.x - standardShift, 0), animated: true)
-//    } else {
-//      if contentSizeX - xOffset < minimumSizeX {
-//        contentSizeX = minimumSizeX
-//      } else {
-//        contentSizeX -= xOffset
-//      }
-//    }
-//    
-//    if (yOffset > contentSizeY) {
-//      contentSizeY += yOffset
-//    } else {
-//      if contentSizeY - yOffset < minimumSizeY {
-//        contentSizeY = minimumSizeY
-//      } else {
-//        contentSizeY -= yOffset
-//      }
-//    }
-    
-//    if (scrollView.contentOffset.y > 1000) {
-//      scrollView.setContentOffset(CGPointMake(scrollView.contentOffset.y - standardShift, 0), animated: true)
-//    } else {
-//      scrollView.setContentOffset(CGPointMake(scrollView.contentOffset.y + standardShift, 0), animated: true)
-//    }
   }
   
   func scrollViewDidEndZooming(scrollView: UIScrollView, withView view: UIView?, atScale scale: CGFloat) {
@@ -369,10 +310,16 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
         }
         if !connected {
           anchor.connection.connectionLayer?.removeFromSuperlayer()
+          if let arrow = anchor.connection.arrow {
+            arrow.removeFromSuperview()
+          }
 //          PeatContentStore.sharedStore.removeConnection(anchor.connection)
         }
       } else {
         anchor.connection.connectionLayer?.removeFromSuperlayer()
+        if let arrow = anchor.connection.arrow {
+          arrow.removeFromSuperview()
+        }
         drawConnection(anchor.object, sender: sender, existingConnection: anchor.connection)
       }
     }
@@ -385,18 +332,49 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       let path = UIBezierPath()
       path.moveToPoint(view.center)
       path.addLineToPoint(finger)
+      let vector = CGPointMake(finger.x - view.center.x, finger.y - view.center.y)
+      let halfwayPointX = finger.x - ((finger.x - view.center.x) / 2)
+      let halfwayPointY = finger.y - ((finger.y - view.center.y) / 2)
+      let start = CGPointMake(halfwayPointX, halfwayPointY)
+      
+      let arrow = UIImageView(frame: CGRectMake(0,0, Leaf.standardHeight / 1.5, Leaf.standardHeight / 1.5))
+      arrow.center.x = start.x
+      arrow.center.y = start.y
+      arrow.image = UIImage(named: "up-arrow")
+      
+      let n = normalize(vector)
+      let nA = CGPointMake(0,1)
+      let product = dotProduct(n, b: nA)
+      var theta = acos(product)
+      // need to rotate from the other way depending on inflection point
+      if finger.x > view.center.x {
+        theta *= -1
+      }
+      
+      //code to rotate the arrow
+      let opposite: Int = 180
+      theta += opposite.degreesToRadians
+      
+      //honeymoons over, now time to organize this and make it all work...
+      
+      let rotation = CGAffineTransformMakeRotation(theta)
+      arrow.transform = rotation
+      arrow.layer.zPosition = -199
+      
       let shapeLayer = CAShapeLayer()
       shapeLayer.path = path.CGPath
-      //TODO: check completionStatus when line set?
       shapeLayer.strokeColor = UIColor.grayColor().CGColor
       shapeLayer.zPosition = -200
+      shapeLayer.lineWidth = 10
 
       if let existing = existingConnection {
         existing.connectionLayer = shapeLayer
+        existing.arrow = arrow
       } else {
-        sharedStore().newConnection(shapeLayer, from: fromObject, to: nil, delegate: self)
+        sharedStore().newConnection(shapeLayer, arrow: arrow, from: fromObject, to: nil, delegate: self)
       }
       parentView.layer.addSublayer(shapeLayer)
+      parentView.addSubview(arrow)
     }
   }
   
@@ -409,7 +387,18 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       shapeLayer.path = path.CGPath
       //TODO: check completionStatus when line set?
       shapeLayer.strokeColor = UIColor.grayColor().CGColor
+      shapeLayer.lineWidth = 50
       shapeLayer.zPosition = -200
+      
+      let gradientLayer = CAGradientLayer()
+      gradientLayer.startPoint = fromView.center
+      gradientLayer.endPoint = toView.center
+      let colors: Array<UIColor> = [UIColor.greenColor(), UIColor.yellowColor()]
+      gradientLayer.colors = colors
+//      gradientLayer.frame = CGRectMake(<#T##x: CGFloat##CGFloat#>, <#T##y: CGFloat##CGFloat#>, <#T##width: CGFloat##CGFloat#>, <#T##height: CGFloat##CGFloat#>)
+      shapeLayer.addSublayer(gradientLayer)
+      
+      
       parentView.layer.addSublayer(shapeLayer)
       connection.connectionLayer = shapeLayer
     }
@@ -652,3 +641,39 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   }
 
 }
+
+
+
+
+
+
+// old arrow trig
+
+
+//      arrowPath.moveToPoint(start)
+//      let angle: Int = 60
+//      let angleR = angle.degreesToRadians
+//
+//      let cs = cos(angleR)
+//      let sn = sin(angleR)
+//
+//      print("ANGLE: \(angleR), cos: \(cs), sin: \(sn)")
+//
+//      let x = n.x * cs - n.y * sn
+//      let y = n.x * sn - n.y * cs
+
+//      let testPoint = CGPointMake(start.x - (20 * n.x), start.y - (20 * n.y))
+//
+//      arrowPath.addLineToPoint(testPoint)
+
+//      arrowPath.addLineToPoint(arrowA)
+//      arrowPath.addLineToPoint(arrowB)
+//      arrowPath.addLineToPoint(start)
+
+//      let toArrowLayer = CAShapeLayer()
+//      toArrowLayer.path = arrowPath.CGPath
+//      toArrowLayer.strokeColor = UIColor.purpleColor().CGColor
+//      toArrowLayer.zPosition = -199
+//      toArrowLayer.lineWidth = 10
+//      parentView.layer.addSublayer(toArrowLayer)
+
