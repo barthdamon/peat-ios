@@ -30,12 +30,21 @@ class LeafConnection: NSObject {
   
   var treeDelegate: TreeDelegate?
   var connectionLayer: CAShapeLayer?
-  var arrow: UIImageView?
+  var arrow: UIImageView? {
+    didSet {
+      let connectionTap = UITapGestureRecognizer(target: self, action: "rotateType")
+      connectionTap.numberOfTouchesRequired = 1
+      connectionTap.numberOfTapsRequired = 1
+      arrow!.userInteractionEnabled = true
+      arrow!.addGestureRecognizer(connectionTap)
+    }
+  }
   
   static func newConnection(layer: CAShapeLayer, arrow: UIImageView?, from: TreeObject?, to: TreeObject?, delegate: TreeDelegate) -> LeafConnection {
     let newConnection = LeafConnection()
     newConnection.user_Id = CurrentUser.info.model?._id
     newConnection.arrow = arrow
+    newConnection.type = .Pre
     newConnection.fromObject = from
     newConnection.toObject = to
     newConnection.connectionLayer = layer
@@ -74,6 +83,38 @@ class LeafConnection: NSObject {
       "toId": paramFor(toId),
       "fromId": paramFor(fromId)
     ]
+  }
+  
+  func rotateType() {
+    if let type = self.type {
+      switch type {
+      case .Pre:
+        self.type = .Post
+        self.rotateArrow()
+      case .Post:
+        self.type = .Even
+        if let arrow = self.arrow {
+          arrow.removeFromSuperview()
+        }
+        //remove arrow
+      case .Even:
+        self.type = .Pre
+        //draw arrow again
+      }
+    }
+  }
+  
+  func rotateArrow() {
+    //code to rotate the arrow
+//    let opposite: Int = 180
+//    let rotation = CGAffineTransformMakeRotation(opposite.degreesToRadians)
+    if let arrow = arrow {
+      let currentRotation = CGFloat(atan2f(Float(arrow.transform.b), Float(arrow.transform.a)))
+      let rTransform = 180.degreesToRadians
+      let rotation = CGAffineTransformMakeRotation(currentRotation + rTransform)
+      arrow.transform = rotation
+    }
+
   }
   
   func resetForMovement() {

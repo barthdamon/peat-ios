@@ -115,6 +115,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       doubleTapRecognizer.numberOfTouchesRequired = 1
       doubleTapRecognizer.numberOfTapsRequired = 2
       scrollView.addGestureRecognizer(doubleTapRecognizer)
+      
     }
 //    var doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "scrollViewDoubleTapped:")
 //    doubleTapRecognizer.numberOfTapsRequired = 2
@@ -227,6 +228,22 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   }
   
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   //MARK: CONNECTIONS
   //find all connections for moving object to update them when they need to be
   func findExistingConnectionsForMoving(object: TreeObject) -> Array<(object: TreeObject, connection: LeafConnection)>? {
@@ -337,10 +354,13 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       let halfwayPointY = finger.y - ((finger.y - view.center.y) / 2)
       let start = CGPointMake(halfwayPointX, halfwayPointY)
       
+      //createConnectionHere. have the arrow set on the connection as the target. and then let it do its thing
+      
       let arrow = UIImageView(frame: CGRectMake(0,0, Leaf.standardHeight / 1.5, Leaf.standardHeight / 1.5))
       arrow.center.x = start.x
       arrow.center.y = start.y
       arrow.image = UIImage(named: "up-arrow")
+      
       
       let n = normalize(vector)
       let nA = CGPointMake(0,1)
@@ -350,13 +370,9 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       if finger.x > view.center.x {
         theta *= -1
       }
-      
-      //code to rotate the arrow
+      //honeymoons over, now time to organize this and make it all work...
       let opposite: Int = 180
       theta += opposite.degreesToRadians
-      
-      //honeymoons over, now time to organize this and make it all work...
-      
       let rotation = CGAffineTransformMakeRotation(theta)
       arrow.transform = rotation
       arrow.layer.zPosition = -199
@@ -385,7 +401,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       path.addLineToPoint(toView.center)
       let shapeLayer = CAShapeLayer()
       shapeLayer.path = path.CGPath
-      //TODO: check completionStatus when line set?
+      //TODO: STREAMLINE CONNECTION CREATION, just pass different coordinates
       shapeLayer.strokeColor = UIColor.grayColor().CGColor
       shapeLayer.lineWidth = 50
       shapeLayer.zPosition = -200
@@ -395,7 +411,6 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       gradientLayer.endPoint = toView.center
       let colors: Array<UIColor> = [UIColor.greenColor(), UIColor.yellowColor()]
       gradientLayer.colors = colors
-//      gradientLayer.frame = CGRectMake(<#T##x: CGFloat##CGFloat#>, <#T##y: CGFloat##CGFloat#>, <#T##width: CGFloat##CGFloat#>, <#T##height: CGFloat##CGFloat#>)
       shapeLayer.addSublayer(gradientLayer)
       
       
@@ -403,6 +418,21 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       connection.connectionLayer = shapeLayer
     }
   }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   //MARK: Groupings
@@ -542,6 +572,23 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       }
     }
   }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  //MARK: General
 
   func fetchTreeData() {
     //right now it redraws every time... no harm in that
