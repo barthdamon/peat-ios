@@ -342,81 +342,82 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     }
   }
   
+  // Drawing from tree
   func drawConnection(fromObject: TreeObject, sender: UIGestureRecognizer, existingConnection: LeafConnection?) {
     if let view = fromObject.viewForTree(), parentView = fromObject.parentView(){
+      
       //see if there is an eistingConnection first
       let finger = sender.locationInView(parentView)
-      let path = UIBezierPath()
-      path.moveToPoint(view.center)
-      path.addLineToPoint(finger)
-      let vector = CGPointMake(finger.x - view.center.x, finger.y - view.center.y)
-      let halfwayPointX = finger.x - ((finger.x - view.center.x) / 2)
-      let halfwayPointY = finger.y - ((finger.y - view.center.y) / 2)
-      let start = CGPointMake(halfwayPointX, halfwayPointY)
-      
-      //createConnectionHere. have the arrow set on the connection as the target. and then let it do its thing
-      
-      let arrow = UIImageView(frame: CGRectMake(0,0, Leaf.standardHeight / 1.5, Leaf.standardHeight / 1.5))
-      arrow.center.x = start.x
-      arrow.center.y = start.y
-      arrow.image = UIImage(named: "up-arrow")
-      
-      
-      let n = normalize(vector)
-      let nA = CGPointMake(0,1)
-      let product = dotProduct(n, b: nA)
-      var theta = acos(product)
-      // need to rotate from the other way depending on inflection point
-      if finger.x > view.center.x {
-        theta *= -1
-      }
-      //honeymoons over, now time to organize this and make it all work...
-      let opposite: Int = 180
-      theta += opposite.degreesToRadians
-      let rotation = CGAffineTransformMakeRotation(theta)
-      arrow.transform = rotation
-      arrow.layer.zPosition = -199
-      
-      let shapeLayer = CAShapeLayer()
-      shapeLayer.path = path.CGPath
-      shapeLayer.strokeColor = UIColor.grayColor().CGColor
-      shapeLayer.zPosition = -200
-      shapeLayer.lineWidth = 10
+      let connectionUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(view.center, toPoint: finger, type: .Pre)
 
       if let existing = existingConnection {
-        existing.connectionLayer = shapeLayer
-        existing.arrow = arrow
+        existing.connectionLayer = connectionUI.layer
+        existing.arrow = connectionUI.arrow
       } else {
-        sharedStore().newConnection(shapeLayer, arrow: arrow, from: fromObject, to: nil, delegate: self)
+        sharedStore().newConnection(connectionUI.layer, arrow: connectionUI.arrow, from: fromObject, to: nil, delegate: self)
       }
-      parentView.layer.addSublayer(shapeLayer)
-      parentView.addSubview(arrow)
+      parentView.layer.addSublayer(connectionUI.layer)
+      parentView.addSubview(connectionUI.arrow)
     }
   }
   
-  func drawFreshConnection(connection: LeafConnection) {
+  // Drawing from json
+  func drawJsonConnection(connection: LeafConnection) {
     if let fromObject = connection.fromObject, toObject = connection.toObject, fromView = fromObject.viewForTree(), toView = toObject.viewForTree(), parentView = fromObject.parentView() where connection.changeStatus != .Removed {
-      let path = UIBezierPath()
-      path.moveToPoint(fromView.center)
-      path.addLineToPoint(toView.center)
-      let shapeLayer = CAShapeLayer()
-      shapeLayer.path = path.CGPath
-      //TODO: STREAMLINE CONNECTION CREATION, just pass different coordinates
-      shapeLayer.strokeColor = UIColor.grayColor().CGColor
-      shapeLayer.lineWidth = 50
-      shapeLayer.zPosition = -200
-      
-      let gradientLayer = CAGradientLayer()
-      gradientLayer.startPoint = fromView.center
-      gradientLayer.endPoint = toView.center
-      let colors: Array<UIColor> = [UIColor.greenColor(), UIColor.yellowColor()]
-      gradientLayer.colors = colors
-      shapeLayer.addSublayer(gradientLayer)
-      
-      
-      parentView.layer.addSublayer(shapeLayer)
-      connection.connectionLayer = shapeLayer
+      if let type = connection.type {
+        let connectUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(fromView.center, toPoint: toView.center, type: type)
+        connection.connectionLayer = connectUI.layer
+        connection.arrow = connectUI.arrow
+        parentView.layer.addSublayer(connectUI.layer)
+        parentView.addSubview(connectUI.arrow)
+      }
     }
+  }
+  
+  func constructConnection( fromPoint: CGPoint, toPoint: CGPoint, type: LeafConnectionType ) -> (layer: CAShapeLayer, arrow: UIImageView) {
+    let path = UIBezierPath()
+    path.moveToPoint(fromPoint)
+    path.addLineToPoint(toPoint)
+    let vector = CGPointMake(toPoint.x - view.center.x, toPoint.y - view.center.y)
+    let halfwayPointX = toPoint.x - ((toPoint.x - fromPoint.x) / 2)
+    let halfwayPointY = toPoint.y - ((toPoint.y - fromPoint.y) / 2)
+    let start = CGPointMake(halfwayPointX, halfwayPointY)
+    let arrow = UIImageView(frame: CGRectMake(0,0, Leaf.standardHeight / 1.5, Leaf.standardHeight / 1.5))
+    arrow.center.x = start.x
+    arrow.center.y = start.y
+    
+    let n = normalize(vector)
+    let nA = CGPointMake(0,1)
+    let product = dotProduct(n, b: nA)
+    var theta = acos(product)
+    // need to rotate from the other way depending on inflection point
+    if toPoint.x > fromPoint.x {
+      theta *= -1
+    }
+
+    switch type {
+    case .Pre:
+      arrow.image = UIImage(named: "up-arrow")
+      let opposite: Int = 180
+      theta += opposite.degreesToRadians
+    case .Post:
+      arrow.image = UIImage(named: "up-arrow")
+    case .Even:
+      //TODO: have an equals image of some kind that straddles the line
+      arrow.image = nil
+    }
+    
+    let rotation = CGAffineTransformMakeRotation(theta)
+    arrow.transform = rotation
+    arrow.layer.zPosition = -199
+    
+    let shapeLayer = CAShapeLayer()
+    shapeLayer.path = path.CGPath
+    shapeLayer.strokeColor = UIColor.grayColor().CGColor
+    shapeLayer.zPosition = -200
+    shapeLayer.lineWidth = 10
+    
+    return (layer: shapeLayer, arrow: arrow)
   }
   
   
@@ -548,7 +549,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       
       for connection in self.sharedStore().connections {
         self.sharedStore().attachObjectsToConnection(connection)
-        self.drawFreshConnection(connection)
+        self.drawJsonConnection(connection)
       }
       
     })
@@ -659,7 +660,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
         connection.changed(.Removed)
       }
       connection.connectionLayer?.removeFromSuperlayer()
-      drawFreshConnection(connection)
+      drawJsonConnection(connection)
     }
   }
   
