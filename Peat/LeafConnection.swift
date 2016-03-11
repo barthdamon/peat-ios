@@ -93,13 +93,11 @@ class LeafConnection: NSObject {
         self.rotateArrow()
       case .Post:
         self.type = .Even
-        if let arrow = self.arrow {
-          arrow.removeFromSuperview()
-        }
-        //remove arrow
+        self.arrow?.image = nil
       case .Even:
         self.type = .Pre
-        //draw arrow again
+        self.rotateArrow()
+        self.arrow?.image = UIImage(named: "up-arrow")
       }
     }
   }
