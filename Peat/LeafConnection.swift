@@ -45,6 +45,7 @@ class LeafConnection: NSObject {
     newConnection.user_Id = CurrentUser.info.model?._id
     newConnection.arrow = arrow
     newConnection.type = .Pre
+    newConnection.changeStatus = .BrandNew
     newConnection.fromObject = from
     newConnection.toObject = to
     newConnection.connectionLayer = layer
@@ -99,6 +100,8 @@ class LeafConnection: NSObject {
         self.rotateArrow()
         self.arrow?.image = UIImage(named: "up-arrow")
       }
+      changed(.Updated)
+      NSNotificationCenter.defaultCenter().postNotificationName("connectionChangesMade", object: nil, userInfo: nil)
     }
   }
   

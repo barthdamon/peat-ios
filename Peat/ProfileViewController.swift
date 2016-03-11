@@ -51,6 +51,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
       self.profileModeSelector.addTarget(self, action: "profileModeChanged:", forControlEvents: .ValueChanged)
       
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "prepareProfile", name: "profileUpdated", object: nil)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "changesMade", name: "connectionChangesMade", object: nil)
       if !stacked {
         initializeSidebar()
         configureMenuSwipes()
