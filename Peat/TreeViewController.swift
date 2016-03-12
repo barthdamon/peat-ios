@@ -24,6 +24,7 @@ protocol TreeDelegate {
   func addNewLeafToGrouping(grouping: LeafGrouping, sender: UITapGestureRecognizer)
   func sharedStore() -> PeatContentStore
   func checkForNewCompletions()
+  func changesMade()
 }
 
 class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
@@ -31,7 +32,6 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   // Dynamic Data
 //  var leaves: [Leaf] = Array()
   var selectedLeaf: Leaf?
-  var changesMade: Bool = false
   var viewing: User?
   var store: PeatContentStore?
   
@@ -80,6 +80,10 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     
     configureScrollView()
     fetchTreeData()
+  }
+  
+  func changesMade() {
+    self.profileDelegate?.changesMade()
   }
   
   func sharedStore() -> PeatContentStore {
@@ -170,6 +174,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
         parentView.bringSubviewToFront(view)
         finger = sender.locationInView(parentView)
         if finger.x < parentView.frame.width - Leaf.standardWidth / 2 && finger.x > 0 + Leaf.standardWidth / 2 && finger.y < parentView.frame.height - Leaf.standardHeight / 2 && finger.y > 0 + Leaf.standardHeight / 2  {
+          
           leaf.view?.center = finger
           leaf.changed(.Updated)
           self.profileDelegate?.changesMade()

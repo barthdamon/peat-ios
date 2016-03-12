@@ -54,6 +54,7 @@ class LeafDetailViewController: UIViewController, UIPopoverPresentationControlle
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.leafTitleLabel.adjustsFontSizeToFitWidth = true
     self.feedSelectionPicker.addTarget(self, action: "feedSelectionChanged:", forControlEvents: .ValueChanged)
     if let _ = self.viewing {
       mode = .View

@@ -97,11 +97,11 @@ class LeafGrouping: NSObject, TreeObject {
       "colorString": paramFor(colorString),
       "layout" : [
         "coordinates" : [
-          "x" : self.paramCenter?.x != nil ? String(self.paramCenter!.x) : "",
-          "y" : self.paramCenter?.y != nil ? String(self.paramCenter!.y) : ""
+          "x" : self.paramCenter?.x != nil ? self.paramCenter!.x : 0,
+          "y" : self.paramCenter?.y != nil ? self.paramCenter!.y : 0
         ],
-        "width": paramFor(width),
-        "height": paramFor(height)
+        "width": width != nil ? width! : LeafGrouping.standardWidth,
+        "height": height != nil ? height! : LeafGrouping.standardHeight
       ]
     ]
   }
@@ -187,12 +187,13 @@ class LeafGrouping: NSObject, TreeObject {
       expandEnabled = true
 //      self.view?.layer.borderWidth = 5
 //      self.view?.layer.borderColor = UIColor.blackColor().CGColor
+      self.treeDelegate?.changesMade()
       if let view = self.view, frame = referenceFrame, dragView = dragView {
         if finger.x > LeafGrouping.standardWidth && finger.y > LeafGrouping.standardHeight {
           view.frame = CGRectMake(frame.x, frame.y, finger.x, finger.y)
           dragView.frame = CGRectMake(view.frame.width - 30, view.frame.height - 30, 15, 15)
-          self.width = view.frame.width
-          self.height = view.frame.height
+          self.width = finger.x
+          self.height = finger.y
         }
       }
     }

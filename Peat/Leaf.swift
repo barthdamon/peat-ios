@@ -45,8 +45,12 @@ class Leaf: NSObject, TreeObject {
   }
   var grouping: LeafGrouping?
   var groupingId: String?
-  var paramGroupingId: String? {
-    return grouping?.groupingId
+  var paramGroupingId: String {
+    if let id = grouping?.groupingId {
+      return id
+    } else {
+      return ""
+    }
   }
   
   var ability: Ability?
@@ -102,9 +106,8 @@ class Leaf: NSObject, TreeObject {
     leaf.timestamp = json["timestamp"] as? Int
     leaf.leafDescription = json["description"] as? String
     leaf.tip = json["tip"] as? String
-    
+    leaf.groupingId = json["groupingId"] as? String
     if let layout = json["layout"] as? jsonObject {
-      leaf.groupingId = layout["groupingId"] as? String
       if let coordinates = layout["coordinates"] as? jsonObject, x = coordinates["x"] as? CGFloat, y = coordinates["y"] as? CGFloat {
         leaf.center = CGPoint(x: x, y: y)
       }
@@ -165,12 +168,12 @@ class Leaf: NSObject, TreeObject {
       "leafId" : paramFor(leafId),
       "user_Id" : paramFor(user_Id),
       "ability_Id" : self.ability?._id != nil ? self.ability!._id! : "",
+      "groupingId" : paramGroupingId,
       "layout" : [
         "coordinates" : [
           "x" : self.paramCenter?.x != nil ? String(self.paramCenter!.x) : "",
           "y" : self.paramCenter?.y != nil ? String(self.paramCenter!.y) : ""
-        ],
-        "groupingId" : paramFor(paramGroupingId),
+        ]
       ],
       "completionStatus" : self.completionStatus != nil ? self.completionStatus!.rawValue : "",
       "abilityName" : self.ability?.name != nil ? self.ability!.name! : "",

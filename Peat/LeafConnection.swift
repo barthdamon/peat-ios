@@ -116,6 +116,8 @@ class LeafConnection: NSObject {
       arrow.transform = rotation
       setCompletionColor()
     }
+    self.treeDelegate?.changesMade()
+    //tell changes made
 
   }
   

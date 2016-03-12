@@ -47,7 +47,8 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
   
     override func viewDidLoad() {
         super.viewDidLoad()
-      
+      self.usernameLabel.adjustsFontSizeToFitWidth = true
+      self.nameLabel.adjustsFontSizeToFitWidth = true
       self.profileModeSelector.addTarget(self, action: "profileModeChanged:", forControlEvents: .ValueChanged)
       
       NSNotificationCenter.defaultCenter().addObserver(self, selector: "prepareProfile", name: "profileUpdated", object: nil)
