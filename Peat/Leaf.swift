@@ -273,6 +273,12 @@ class Leaf: NSObject, TreeObject {
   
   func leafMoveInitiated(sender: UILongPressGestureRecognizer) {
     let state = sender.state
+    treeDelegate?.sharedStore().treeStore.currentLeaves?.forEach({ (leaf) -> () in
+      if leaf.leafId != self.leafId {
+        leaf.movingEnabled = false
+        leaf.deselectLeaf()
+      }
+    })
     if state == UIGestureRecognizerState.Changed {
       leafBeingPanned(sender)
     } else if state == UIGestureRecognizerState.Ended {

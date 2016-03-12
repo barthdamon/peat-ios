@@ -304,6 +304,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
             if let leafView = storedLeaf.view {
               if CGRectContainsPoint(leafView.frame, finger) {
                 anchor.connection.toId = storedLeaf.leafId
+                anchor.connection.toObject = storedLeaf
                 connected = true
                 //only save when connection to other leaf occurs
                 anchor.connection.changed(.BrandNew)
@@ -317,6 +318,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
             if let groupingView = storedGrouping.view {
               if CGRectContainsPoint(groupingView.frame, finger) {
                 anchor.connection.toId = storedGrouping.groupingId
+                anchor.connection.toObject = storedGrouping
                 connected = true
                 //only save when connection to other leaf occurs
                 anchor.connection.changed(.BrandNew)
@@ -376,6 +378,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   func constructConnection( fromPoint: CGPoint, toPoint: CGPoint, existingConnection: LeafConnection? ) -> (layer: CAShapeLayer, arrow: UIImageView) {
     let type = existingConnection?.type != nil ? existingConnection!.type! : .Pre
+    
     let path = UIBezierPath()
     path.moveToPoint(fromPoint)
     path.addLineToPoint(toPoint)
@@ -403,13 +406,13 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       switch type {
       case .Pre:
         arrow.image = UIImage(named: "up-arrow")
-        if fromSelected {
+        if !fromSelected || connection.toObject == nil {
           let opposite: Int = 180
           theta += opposite.degreesToRadians
         }
       case .Post:
         arrow.image = UIImage(named: "up-arrow")
-        if !fromSelected {
+        if fromSelected {
           let opposite: Int = 180
           theta += opposite.degreesToRadians
         }
@@ -491,26 +494,31 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   func moveLeafToGrouping(timer: NSTimer) {
     if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, grouping = info["grouping"] as? LeafGrouping, leafView = leaf.view, groupingView = grouping.view {
-      //add leaf to
-      groupingView.addSubview(leafView)
-      leafView.center.x = Leaf.standardWidth
-      leafView.center.y = Leaf.standardHeight * 2
-      leaf.grouping = grouping
+      if CGRectContainsPoint(groupingView.frame, leafView.center) {
+        //add leaf to
+        groupingView.addSubview(leafView)
+        leafView.center.x = Leaf.standardWidth
+        leafView.center.y = Leaf.standardHeight * 2
+        leaf.grouping = grouping
+      }
     }
   }
   
   func newGrouping(timer: NSTimer) {
-    if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, lowerLeaf = info["lowerLeaf"] as? Leaf, center = lowerLeaf.center {
-      let newGrouping = LeafGrouping.newGrouping(center, delegate: self)
-      newGrouping.drawGrouping()
-      addLeavesToGrouping(newGrouping, leaves: [lowerLeaf, leaf])
-      leaf.grouping = newGrouping
-      lowerLeaf.grouping = newGrouping
-      leaf.deselectLeaf()
-      self.profileDelegate?.changesMade()
-      leaf.changed(.Updated)
-      lowerLeaf.changed(.Updated)
-      newGrouping.changed(.BrandNew)
+    if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, view = leaf.view, lowerLeaf = info["lowerLeaf"] as? Leaf, center = lowerLeaf.center {
+      if CGRectContainsPoint(view.frame, center) {
+      // check if they interesect first
+        let newGrouping = LeafGrouping.newGrouping(center, delegate: self)
+        newGrouping.drawGrouping()
+        addLeavesToGrouping(newGrouping, leaves: [lowerLeaf, leaf])
+        leaf.grouping = newGrouping
+        lowerLeaf.grouping = newGrouping
+        leaf.deselectLeaf()
+        self.profileDelegate?.changesMade()
+        leaf.changed(.Updated)
+        lowerLeaf.changed(.Updated)
+        newGrouping.changed(.BrandNew)
+      }
     }
   }
   
