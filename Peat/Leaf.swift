@@ -8,6 +8,7 @@
 
 protocol TreeObject {
   func viewForTree() -> UIView?
+  func isSelected() -> Bool
   func objectId() -> String?
   func parentView() -> UIView?
   func changed(status: ChangeStatus)
@@ -406,6 +407,19 @@ class Leaf: NSObject, TreeObject {
   func objectId() -> String? {
     return self.leafId
   }
+  
+  func isSelected() -> Bool {
+    return self.movingEnabled
+  }
+  
+//  func containsPoint(point: CGPoint) -> Bool {
+//    if let view = self.view {
+//      if CGRectContainsPoint(view.bounds, point) {
+//        return true
+//      }
+//    }
+//    return false
+//  }
   
   
 }

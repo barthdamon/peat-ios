@@ -346,39 +346,40 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   func drawConnection(fromObject: TreeObject, sender: UIGestureRecognizer, existingConnection: LeafConnection?) {
     if let view = fromObject.viewForTree(), parentView = fromObject.parentView(){
       
-      //see if there is an eistingConnection first
       let finger = sender.locationInView(parentView)
-      let connectionUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(view.center, toPoint: finger, type: .Pre)
 
       if let existing = existingConnection {
+        let connectionUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(view.center, toPoint: finger, existingConnection: existing)
         existing.connectionLayer = connectionUI.layer
         existing.arrow = connectionUI.arrow
+        parentView.layer.addSublayer(connectionUI.layer)
+        parentView.addSubview(connectionUI.arrow)
       } else {
+        let connectionUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(view.center, toPoint: finger, existingConnection: nil)
         sharedStore().newConnection(connectionUI.layer, arrow: connectionUI.arrow, from: fromObject, to: nil, delegate: self)
+        parentView.layer.addSublayer(connectionUI.layer)
+        parentView.addSubview(connectionUI.arrow)
       }
-      parentView.layer.addSublayer(connectionUI.layer)
-      parentView.addSubview(connectionUI.arrow)
     }
   }
   
   // Drawing from json
   func drawJsonConnection(connection: LeafConnection) {
     if let fromObject = connection.fromObject, toObject = connection.toObject, fromView = fromObject.viewForTree(), toView = toObject.viewForTree(), parentView = fromObject.parentView() where connection.changeStatus != .Removed {
-      if let type = connection.type {
-        let connectUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(fromView.center, toPoint: toView.center, type: type)
-        connection.connectionLayer = connectUI.layer
-        connection.arrow = connectUI.arrow
-        parentView.layer.addSublayer(connectUI.layer)
-        parentView.addSubview(connectUI.arrow)
-      }
+      let connectUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(fromView.center, toPoint: toView.center, existingConnection: connection)
+      connection.connectionLayer = connectUI.layer
+      connection.arrow = connectUI.arrow
+      parentView.layer.addSublayer(connectUI.layer)
+      parentView.addSubview(connectUI.arrow)
     }
   }
   
-  func constructConnection( fromPoint: CGPoint, toPoint: CGPoint, type: LeafConnectionType ) -> (layer: CAShapeLayer, arrow: UIImageView) {
+  func constructConnection( fromPoint: CGPoint, toPoint: CGPoint, existingConnection: LeafConnection? ) -> (layer: CAShapeLayer, arrow: UIImageView) {
+    let type = existingConnection?.type != nil ? existingConnection!.type! : .Pre
     let path = UIBezierPath()
     path.moveToPoint(fromPoint)
     path.addLineToPoint(toPoint)
-    let vector = CGPointMake(toPoint.x - view.center.x, toPoint.y - view.center.y)
+    let vector = CGPointMake(toPoint.x - fromPoint.x, toPoint.y - fromPoint.y)
     let halfwayPointX = toPoint.x - ((toPoint.x - fromPoint.x) / 2)
     let halfwayPointY = toPoint.y - ((toPoint.y - fromPoint.y) / 2)
     let start = CGPointMake(halfwayPointX, halfwayPointY)
@@ -394,17 +395,40 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     if toPoint.x > fromPoint.x {
       theta *= -1
     }
-
-    switch type {
-    case .Pre:
-      arrow.image = UIImage(named: "up-arrow")
-      let opposite: Int = 180
-      theta += opposite.degreesToRadians
-    case .Post:
-      arrow.image = UIImage(named: "up-arrow")
-    case .Even:
-      //TODO: have an equals image of some kind that straddles the line
-      arrow.image = nil
+    
+    //need to point it towards what it needs to be pointing towards basically.... so an exisitng connectiino has the to and from points right?
+    //always points to the from point. BUT if the from point is the fromObject you want to reverse it
+    if let connection = existingConnection, fromObject = connection.fromObject {
+      let fromSelected = fromObject.isSelected()
+      switch type {
+      case .Pre:
+        arrow.image = UIImage(named: "up-arrow")
+        if fromSelected {
+          let opposite: Int = 180
+          theta += opposite.degreesToRadians
+        }
+      case .Post:
+        arrow.image = UIImage(named: "up-arrow")
+        if !fromSelected {
+          let opposite: Int = 180
+          theta += opposite.degreesToRadians
+        }
+      case .Even:
+        //TODO: have an equals image of some kind that straddles the line
+        arrow.image = nil
+      }
+    } else {
+      switch type {
+      case .Pre:
+        arrow.image = UIImage(named: "up-arrow")
+        let opposite: Int = 180
+        theta += opposite.degreesToRadians
+      case .Post:
+        arrow.image = UIImage(named: "up-arrow")
+      case .Even:
+        //TODO: have an equals image of some kind that straddles the line
+        arrow.image = nil
+      }
     }
     
     let rotation = CGAffineTransformMakeRotation(theta)

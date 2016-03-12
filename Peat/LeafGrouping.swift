@@ -234,6 +234,19 @@ class LeafGrouping: NSObject, TreeObject {
     return treeDelegate?.viewForTree()
   }
   
+  func isSelected() -> Bool {
+    return self.movingEnabled
+  }
+  
+//  func containsPoint(point: CGPoint) -> Bool {
+//    if let view = self.view {
+//      if CGRectContainsPoint(view.bounds, point) {
+//        return true
+//      }
+//    }
+//    return false
+//  }
+  
   
   
 }
