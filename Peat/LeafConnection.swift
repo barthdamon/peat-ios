@@ -118,6 +118,16 @@ class LeafConnection: NSObject {
 
   }
   
+  func setCompletionColor() {
+    var color = UIColor.grayColor().CGColor
+    if let toObject = self.toObject {
+      if toObject.isCompleted() {
+        color = UIColor.greenColor().CGColor
+      }
+    }
+    self.connectionLayer?.strokeColor = color
+  }
+  
   func resetForMovement() {
     self.connectionLayer?.removeFromSuperlayer()
     self.connectionLayer = nil

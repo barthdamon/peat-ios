@@ -12,6 +12,7 @@ protocol TreeObject {
   func objectId() -> String?
   func parentView() -> UIView?
   func changed(status: ChangeStatus)
+  func isCompleted() -> Bool
 }
 
 import Foundation
@@ -85,6 +86,7 @@ class Leaf: NSObject, TreeObject {
 // MARK: INITIALIZATION
   static func initWithJson(json: jsonObject, delegate: TreeDelegate?) -> Leaf {
     let leaf = Leaf()
+    print("LEAF JSON:\(json)")
     leaf.treeDelegate = delegate
     leaf._id = json["_id"] as? String
     leaf.user_Id = json["user_Id"] as? String
@@ -104,6 +106,25 @@ class Leaf: NSObject, TreeObject {
         leaf.center = CGPoint(x: x, y: y)
       }
     }
+    
+    if let contents = json["contents"] as? jsonObject {
+      if let jsonWitnesses = contents["witnesses"] as? Array<jsonObject> {
+        leaf.witnesses = Array()
+        for witness in jsonWitnesses {
+          if let user = witness["witnessUser"] as? jsonObject {
+            leaf.witnesses!.append(User.userFromProfile(user))
+          }
+        }
+      }
+      
+      if let info = contents["mediaInfo"] as? jsonObject, mediaJson = info["media"] as? Array<jsonObject> {
+        for json in mediaJson {
+          leaf.treeDelegate?.sharedStore().addMediaToStore(MediaObject.initWithJson(json, store: leaf.treeDelegate?.sharedStore()), publishImmediately: false)
+        }
+        leaf.getCompletionStatus()
+      }
+    }
+    
     return leaf
   }
   
@@ -199,6 +220,8 @@ class Leaf: NSObject, TreeObject {
             self.ability?._id = json["ability_Id"] as? String
           }
           callback(true)
+          self.getCompletionStatus()
+          self.treeDelegate?.checkForNewCompletions()
         }
       })
     } else {
@@ -425,6 +448,10 @@ class Leaf: NSObject, TreeObject {
   
   func isSelected() -> Bool {
     return self.movingEnabled
+  }
+  
+  func isCompleted() -> Bool {
+    return self.completionStatus == .Uploaded
   }
   
 //  func containsPoint(point: CGPoint) -> Bool {

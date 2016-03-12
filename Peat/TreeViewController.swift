@@ -23,6 +23,7 @@ protocol TreeDelegate {
   func groupingBeingMoved(leaf: LeafGrouping, sender: UIGestureRecognizer)
   func addNewLeafToGrouping(grouping: LeafGrouping, sender: UITapGestureRecognizer)
   func sharedStore() -> PeatContentStore
+  func checkForNewCompletions()
 }
 
 class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
@@ -446,12 +447,32 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     
     let shapeLayer = CAShapeLayer()
     shapeLayer.path = path.CGPath
-    shapeLayer.strokeColor = UIColor.grayColor().CGColor
+    //TODO: send more data down with leaves to tree so we know if they are completed and how many completions there are
+    //basically separate request for comments (this is a refactor)
+    var color = UIColor.grayColor().CGColor
+    if let toObject = existingConnection?.toObject {
+      if toObject.isCompleted() {
+        color = UIColor.greenColor().CGColor
+      }
+    }
+    shapeLayer.strokeColor = color
     shapeLayer.zPosition = -200
     shapeLayer.lineWidth = 10
     
     return (layer: shapeLayer, arrow: arrow)
   }
+  
+  
+  func checkForNewCompletions() {
+    if let connections = self.store?.treeStore.currentConnections {
+      connections.forEach({ (connection) -> () in
+        connection.setCompletionColor()
+      })
+    }
+  }
+  
+  
+  
   
   
   
@@ -507,6 +528,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
         leafView.center.x = Leaf.standardWidth
         leafView.center.y = Leaf.standardHeight * 2
         leaf.grouping = grouping
+        checkForNewCompletions()
       }
     }
   }

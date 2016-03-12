@@ -395,8 +395,12 @@ class PeatContentStore: NSObject {
   func attachObjectsToConnection(connection: LeafConnection) {
     if let fromId = connection.fromId, toId = connection.toId {
       for leaf in leaves {
-        if leaf.leafId == toId { connection.toObject = leaf }
-        if leaf.leafId == fromId { connection.fromObject = leaf }
+        if leaf.leafId == toId {
+          connection.toObject = leaf
+        }
+        if leaf.leafId == fromId {
+          connection.fromObject = leaf
+        }
       }
       for grouping in groupings {
         if grouping.groupingId == toId { connection.toObject = grouping }

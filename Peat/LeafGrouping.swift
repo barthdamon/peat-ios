@@ -246,6 +246,22 @@ class LeafGrouping: NSObject, TreeObject {
     return self.movingEnabled
   }
   
+  func isCompleted() -> Bool {
+    var status: CompletionStatus = .Goal
+    if let view = self.view {
+      for view in view.subviews {
+        if let leaves = treeDelegate?.sharedStore().treeStore.currentLeaves {
+          for leaf in leaves {
+            if leaf.view == view && leaf.completionStatus == .Uploaded {
+              status = .Uploaded
+            }
+          }
+        }
+      }
+    }
+    return status == .Uploaded
+  }
+  
 //  func containsPoint(point: CGPoint) -> Bool {
 //    if let view = self.view {
 //      if CGRectContainsPoint(view.bounds, point) {
