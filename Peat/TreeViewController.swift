@@ -332,10 +332,16 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
           if let arrow = anchor.connection.arrow {
             arrow.removeFromSuperview()
           }
+          if let arrow = anchor.connection.arrow {
+            arrow.removeFromSuperview()
+          }
 //          PeatContentStore.sharedStore.removeConnection(anchor.connection)
         }
       } else {
         anchor.connection.connectionLayer?.removeFromSuperlayer()
+        if let arrow = anchor.connection.arrow {
+          arrow.removeFromSuperview()
+        }
         if let arrow = anchor.connection.arrow {
           arrow.removeFromSuperview()
         }
@@ -496,6 +502,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, grouping = info["grouping"] as? LeafGrouping, leafView = leaf.view, groupingView = grouping.view {
       if CGRectContainsPoint(groupingView.frame, leafView.center) {
         //add leaf to
+        leaf.prepareForGrouping()
         groupingView.addSubview(leafView)
         leafView.center.x = Leaf.standardWidth
         leafView.center.y = Leaf.standardHeight * 2
@@ -507,13 +514,14 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   func newGrouping(timer: NSTimer) {
     if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, view = leaf.view, lowerLeaf = info["lowerLeaf"] as? Leaf, center = lowerLeaf.center {
       if CGRectContainsPoint(view.frame, center) {
+        leaf.prepareForGrouping()
       // check if they interesect first
         let newGrouping = LeafGrouping.newGrouping(center, delegate: self)
         newGrouping.drawGrouping()
-        addLeavesToGrouping(newGrouping, leaves: [lowerLeaf, leaf])
+        addLeavesToGrouping(newGrouping, lowerLeaf: lowerLeaf, selectedLeaf: leaf)
         leaf.grouping = newGrouping
         lowerLeaf.grouping = newGrouping
-        leaf.deselectLeaf()
+//        leaf.deselectLeaf()
         self.profileDelegate?.changesMade()
         leaf.changed(.Updated)
         lowerLeaf.changed(.Updated)
@@ -531,14 +539,17 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     }
   }
   
-  func addLeavesToGrouping(grouping: LeafGrouping, leaves: Array<Leaf>) {
+  func addLeavesToGrouping(grouping: LeafGrouping, lowerLeaf: Leaf, selectedLeaf: Leaf) {
     if let groupingView = grouping.view {
-      for leaf in leaves {
-        if let view = leaf.view {
-          groupingView.addSubview(view)
-          view.center.x = groupingView.center.x - groupingView.frame.minX
-          view.center.y = groupingView.center.y - groupingView.frame.minY
-        }
+      if let lowerView = lowerLeaf.view {
+        groupingView.addSubview(lowerView)
+        lowerView.center.x = groupingView.center.x - groupingView.frame.minX / 2
+        lowerView.center.y = groupingView.center.y - groupingView.frame.minY
+      }
+      if let selectedView = selectedLeaf.view {
+        groupingView.addSubview(selectedView)
+        selectedView.center.x = groupingView.center.x - groupingView.frame.minX * 1.5
+        selectedView.center.y = groupingView.center.y - groupingView.frame.minY
       }
     }
   }
@@ -692,6 +703,9 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
         connection.changed(.Removed)
       }
       connection.connectionLayer?.removeFromSuperlayer()
+      if let arrow = connection.arrow {
+        arrow.removeFromSuperview()
+      }
       drawJsonConnection(connection)
     }
   }

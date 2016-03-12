@@ -279,6 +279,9 @@ class Leaf: NSObject, TreeObject {
         leaf.deselectLeaf()
       }
     })
+    treeDelegate?.sharedStore().treeStore.currentGroupings?.forEach({ (grouping) -> () in
+      grouping.deselectGrouping()
+    })
     if state == UIGestureRecognizerState.Changed {
       leafBeingPanned(sender)
     } else if state == UIGestureRecognizerState.Ended {
@@ -345,6 +348,12 @@ class Leaf: NSObject, TreeObject {
         }
       }
     }
+  }
+  
+  func prepareForGrouping() {
+    //remove all connections (totally delete them)
+    //remove any connection with its id
+    treeDelegate?.sharedStore().removeConnectionsForObject(self)
   }
   
   func generateBounds() {

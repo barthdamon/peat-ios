@@ -188,6 +188,14 @@ class LeafGrouping: NSObject, TreeObject {
   }
   
   func groupingMoveInitiated(sender: UILongPressGestureRecognizer) {
+    treeDelegate?.sharedStore().treeStore.currentLeaves?.forEach({ (leaf) -> () in
+      leaf.deselectLeaf()
+    })
+    treeDelegate?.sharedStore().treeStore.currentGroupings?.forEach({ (grouping) -> () in
+      if grouping.groupingId != self.groupingId {
+        grouping.deselectGrouping()
+      }
+    })
     let state = sender.state
     if state == UIGestureRecognizerState.Changed {
       groupingBeingPanned(sender)

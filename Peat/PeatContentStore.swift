@@ -422,6 +422,9 @@ class PeatContentStore: NSObject {
       connections.forEach({ (connection) -> () in
         if connection.fromId == object.objectId() || connection.toId == object.objectId() {
           connection.connectionLayer?.removeFromSuperlayer()
+          if let arrow = connection.arrow {
+            arrow.removeFromSuperview()
+          }
           treeStore.currentConnections?.remove(connection)
         }
       })
