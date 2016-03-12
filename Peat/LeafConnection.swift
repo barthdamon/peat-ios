@@ -114,15 +114,41 @@ class LeafConnection: NSObject {
       let rTransform = 180.degreesToRadians
       let rotation = CGAffineTransformMakeRotation(currentRotation + rTransform)
       arrow.transform = rotation
+      setCompletionColor()
     }
 
   }
   
   func setCompletionColor() {
     var color = UIColor.grayColor().CGColor
+    let completedColor = UIColor.greenColor().CGColor
+    var toCompleted = false
+    var fromCompleted = false
     if let toObject = self.toObject {
       if toObject.isCompleted() {
-        color = UIColor.greenColor().CGColor
+        toCompleted = true
+      }
+    }
+    if let fromObject = self.fromObject {
+      if fromObject.isCompleted() {
+        fromCompleted = true
+      }
+    }
+    
+    if let type = self.type {
+      switch type {
+      case .Pre:
+        if toCompleted {
+          color = completedColor
+        }
+      case .Post:
+        if fromCompleted {
+          color = completedColor
+        }
+      case .Even:
+        if fromCompleted && toCompleted {
+          color = completedColor
+        }
       }
     }
     self.connectionLayer?.strokeColor = color

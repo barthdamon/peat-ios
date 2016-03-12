@@ -337,8 +337,8 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
             arrow.removeFromSuperview()
           }
 //          PeatContentStore.sharedStore.removeConnection(anchor.connection)
-          checkForNewCompletions()
         }
+        checkForNewCompletions()
       } else {
         anchor.connection.connectionLayer?.removeFromSuperlayer()
         if let arrow = anchor.connection.arrow {
