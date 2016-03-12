@@ -68,6 +68,9 @@ class Leaf: NSObject, TreeObject {
   var abilityTitleLabel: UILabel?
   var groupingLabel: UILabel?
   
+  var titleLabel: UILabel?
+  var uploadsLabel: UILabel?
+  
   //Locally Stored Variables
   var witnesses: Array<User>?
   var publishing: Bool = false
@@ -93,9 +96,9 @@ class Leaf: NSObject, TreeObject {
     leaf.leafId = json["leafId"] as? String
     leaf.ability = Ability.abilityFromLeaf(json)
     leaf.activityName = json["activityName"] as? String
-    if let status = json["completionStatus"] as? String {
-      leaf.completionStatus = CompletionStatus(rawValue: status)
-    }
+//    if let status = json["completionStatus"] as? String {
+//      leaf.completionStatus = CompletionStatus(rawValue: status)
+//    }
     leaf.timestamp = json["timestamp"] as? Int
     leaf.leafDescription = json["description"] as? String
     leaf.tip = json["tip"] as? String
@@ -117,8 +120,8 @@ class Leaf: NSObject, TreeObject {
         }
       }
       
-      if let info = contents["mediaInfo"] as? jsonObject, mediaJson = info["media"] as? Array<jsonObject> {
-        for json in mediaJson {
+      if let info = contents["mediaInfo"] as? Array<jsonObject> {
+        for json in info {
           leaf.treeDelegate?.sharedStore().addMediaToStore(MediaObject.initWithJson(json, store: leaf.treeDelegate?.sharedStore()), publishImmediately: false)
         }
         leaf.getCompletionStatus()
@@ -393,6 +396,23 @@ class Leaf: NSObject, TreeObject {
       if let view = self.view {
         view.backgroundColor = UIColor.whiteColor()
         view.layer.cornerRadius = 10
+        let half = Leaf.standardHeight / 2
+        if let name = self.ability?.name {
+          titleLabel = UILabel(frame: CGRectMake(0,0,Leaf.standardWidth, half))
+          titleLabel!.text = name
+          titleLabel!.numberOfLines = 1
+          titleLabel!.adjustsFontSizeToFitWidth = true
+          view.addSubview(titleLabel!)
+        }
+
+        uploadsLabel = UILabel(frame: CGRectMake(0,half, Leaf.standardWidth, half))
+        let count = media != nil ? media!.count : 0
+        uploadsLabel!.text = "\(count) uploads"
+        uploadsLabel!.numberOfLines = 1
+        uploadsLabel!.textColor = UIColor.lightGrayColor()
+        uploadsLabel!.adjustsFontSizeToFitWidth = true
+        view.addSubview(uploadsLabel!)
+        
 //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
         addGestureRecognizers()
 //        drawGrouping()
