@@ -24,14 +24,19 @@ class LeafGrouping: NSObject, TreeObject {
   var paramCenter: CGPoint? {
     return self.view != nil ? self.view!.center : center
   }
-  var height: Int?
-  var width: Int?
+  static let standardHeight: CGFloat = Leaf.standardHeight * 3
+  static let standardWidth: CGFloat = Leaf.standardWidth * 3
+  var height: CGFloat?
+  var width: CGFloat?
   
   var deleteButton: UIButton?
   var referenceFrame: CoordinatePair?
   
   var treeDelegate: TreeDelegate?
   var movingEnabled: Bool = false
+  
+  var dragView: UIImageView?
+  var expandEnabled: Bool = false
   
   var rgbColor: UIColor? {
     didSet {
@@ -50,6 +55,8 @@ class LeafGrouping: NSObject, TreeObject {
     if let activity = delegate.getCurrentActivity(), name = activity.name {
       newGrouping.activityName = name
     }
+    newGrouping.width = LeafGrouping.standardWidth
+    newGrouping.height = LeafGrouping.standardHeight
     
     return newGrouping
   }
@@ -66,8 +73,8 @@ class LeafGrouping: NSObject, TreeObject {
       if let coordinates = layout["coordinates"] as? jsonObject, x = coordinates["x"] as? CGFloat, y = coordinates["y"] as? CGFloat {
         grouping.center = CGPoint(x: x, y: y)
       }
-      grouping.width = layout["width"] as? Int
-      grouping.height = layout["height"] as? Int
+      grouping.width = layout["width"] as? CGFloat
+      grouping.height = layout["height"] as? CGFloat
     }
     grouping.colorString = json["colorString"] as? String
     if let colorString = grouping.colorString {
@@ -136,12 +143,13 @@ class LeafGrouping: NSObject, TreeObject {
     if let center = center {
       referenceFrame = (x: center.x - Leaf.standardWidth, y: center.y - Leaf.standardHeight)
     }
-    if let frame = referenceFrame {
-      let frame = CGRectMake(frame.x, frame.y, Leaf.standardWidth * 3, Leaf.standardHeight * 3)
+    if let frame = referenceFrame, width = width, height = height {
+      let frame = CGRectMake(frame.x, frame.y, width, height)
       view = UIView(frame: frame)
+      view?.clipsToBounds = true
       if let view = self.view {
 //        view.backgroundColor = UIColor.fromHex(colorString)
-
+        configureDragView()
         if let color = self.rgbColor {
           view.backgroundColor = color
         } else {
@@ -156,6 +164,43 @@ class LeafGrouping: NSObject, TreeObject {
         treeDelegate?.addGroupingToScrollView(self)
       }
     }
+  }
+  
+  func configureDragView() {
+    if let view = self.view, width = width, height = height {
+      dragView = UIImageView(frame: CGRectMake(width - 30, height - 30, 15, 15))
+      dragView!.backgroundColor = UIColor.blackColor()
+      
+      let dragRecognizer = UIPanGestureRecognizer(target: self, action: "dragButtonPressed:")
+      dragView!.addGestureRecognizer(dragRecognizer)
+      dragView!.userInteractionEnabled = true
+      view.addSubview(dragView!)
+    }
+  }
+  
+  func dragButtonPressed(sender: UIGestureRecognizer) {
+    print("Expand enabled")
+    let finger = sender.locationInView(self.view)
+    if sender.state == UIGestureRecognizerState.Ended {
+      expandEnabled = false
+    } else {
+      expandEnabled = true
+//      self.view?.layer.borderWidth = 5
+//      self.view?.layer.borderColor = UIColor.blackColor().CGColor
+      if let view = self.view, frame = referenceFrame, dragView = dragView {
+        if finger.x > LeafGrouping.standardWidth && finger.y > LeafGrouping.standardHeight {
+          view.frame = CGRectMake(frame.x, frame.y, finger.x, finger.y)
+          dragView.frame = CGRectMake(view.frame.width - 30, view.frame.height - 30, 15, 15)
+          self.width = view.frame.width
+          self.height = view.frame.height
+        }
+      }
+    }
+  }
+  
+  func dragButtonReleased() {
+    print("expand enabled")
+    expandEnabled = false
   }
   
   func addGestureRecognizers() {

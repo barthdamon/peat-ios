@@ -2480,11 +2480,11 @@
             </objects>
             <point key="canvasLocation" x="-77" y="1165"/>
         </scene>
-        <!--Gallery-->
+        <!--My Gallery-->
         <scene sceneID="H9P-Qa-BCq">
             <objects>
                 <navigationController id="sJd-Pl-bcv" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Gallery" image="camera" id="PSq-iB-Eeh"/>
+                    <tabBarItem key="tabBarItem" title="My Gallery" image="camera" id="PSq-iB-Eeh"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="k61-qK-Sh0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

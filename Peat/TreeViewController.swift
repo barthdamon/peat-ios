@@ -169,10 +169,12 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       if let parentView = leaf.parentView() {
         parentView.bringSubviewToFront(view)
         finger = sender.locationInView(parentView)
+        if finger.x < parentView.frame.width - Leaf.standardWidth / 2 && finger.x > 0 + Leaf.standardWidth / 2 && finger.y < parentView.frame.height - Leaf.standardHeight / 2 && finger.y > 0 + Leaf.standardHeight / 2  {
+          leaf.view?.center = finger
+          leaf.changed(.Updated)
+          self.profileDelegate?.changesMade()
+        }
       }
-      leaf.view?.center = finger
-      leaf.changed(.Updated)
-      self.profileDelegate?.changesMade()
       
         //Check for grouping hover, with a timer, if it
         //allow the leaf to move with the gesture until the gesture is finished, then place the leaf and remove the shadow
@@ -566,13 +568,13 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     if let groupingView = grouping.view {
       if let lowerView = lowerLeaf.view {
         groupingView.addSubview(lowerView)
-        lowerView.center.x = groupingView.center.x - groupingView.frame.minX / 2
-        lowerView.center.y = groupingView.center.y - groupingView.frame.minY
+        lowerView.frame = CGRectMake(10,10, Leaf.standardWidth, Leaf.standardHeight)
+        lowerLeaf.grouping = grouping
       }
       if let selectedView = selectedLeaf.view {
         groupingView.addSubview(selectedView)
-        selectedView.center.x = groupingView.center.x - groupingView.frame.minX * 1.5
-        selectedView.center.y = groupingView.center.y - groupingView.frame.minY
+        selectedView.frame = CGRectMake(10,Leaf.standardHeight + 20, Leaf.standardWidth, Leaf.standardHeight)
+        selectedLeaf.grouping = grouping
       }
     }
   }
@@ -596,6 +598,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   func addLeafToGrouping(leaf: Leaf, grouping: LeafGrouping) {
     if let leafView = leaf.view, groupingView = grouping.view {
       groupingView.addSubview(leafView)
+      leaf.grouping = grouping
     }
   }
   
