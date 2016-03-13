@@ -257,7 +257,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
         }
       })
     } else {
-      alertShow(self, alertText: "Unable To Save Tree", alertMessage: "Please add ability names to any new abilities")
+      alertShow(self, alertText: "Unable To Save Tree", alertMessage: "Please add ability names to any new abilities and deselect all leaves")
     }
   }
   
@@ -265,7 +265,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
     var brandNewFound = false
     if let leaves = store.treeStore.currentLeaves {
       for leaf in leaves {
-        if leaf.changeStatus == .BrandNew {
+        if leaf.changeStatus == .BrandNew || leaf.movingEnabled {
           brandNewFound = true
         }
       }
@@ -281,6 +281,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
   @IBAction func cancelButtonPressed(sender: AnyObject) {
     store.treeStore.resetStore()
     treeController?.fetchTreeData()
+    treeController?.resetCurrentlyNew()
     self.changesPresent = false
     self.cancelButton.hidden = true
     self.saveButton.hidden = true
