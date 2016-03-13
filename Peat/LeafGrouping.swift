@@ -181,7 +181,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
       dragView!.userInteractionEnabled = true
       view.addSubview(dragView!)
       
-      titleField = UITextField(frame: CGRectMake(width - 160, height - 30, 150, 25))
+      titleField = UITextField(frame: CGRectMake(width - 200, height - 30, 150, 25))
       if let title = self.name {
         titleField!.text = title
       } else {
@@ -252,8 +252,9 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
       longPressRecognizer.minimumPressDuration = 1
       view.addGestureRecognizer(longPressRecognizer)
       
-      let movingPanRecognizer = UIPanGestureRecognizer(target: self, action: "groupingBeingPanned:")
-      view.addGestureRecognizer(movingPanRecognizer)
+      //need to add and remove this dynamically based on the long press so that scrolling can be reenambled when not drawing connectons
+//      let movingPanRecognizer = UIPanGestureRecognizer(target: self, action: "groupingBeingPanned:")
+//      view.addGestureRecognizer(movingPanRecognizer)
       
       let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "newLeafInitiatedOnGrouping:")
       doubleTapRecognizer.numberOfTouchesRequired = 1
@@ -302,14 +303,21 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
     self.treeDelegate?.removeObjectFromView(self)
     treeDelegate?.sharedStore().removeConnectionsForObject(self)
   }
+  
+  //need a new way to place a leaf ( like drag from a blob on the upper left or something
+  // then you need to make the move gesture a double click, and the connection draw a long press.
+  // that way you can keep scrolling as moving around the tree
 
   
   func groupingBeingPanned(sender: UIGestureRecognizer) {
     if movingEnabled {
       self.treeDelegate?.groupingBeingMoved(self, sender: sender)
     } else {
-      self.treeDelegate?.connectionsBeingDrawn(nil, fromGrouping: self, sender: sender)
+//      self.treeDelegate?.
     }
+//    else {
+//      self.treeDelegate?.connectionsBeingDrawn(nil, fromGrouping: self, sender: sender)
+//    }
   }
   
   func viewForTree() -> UIView? {

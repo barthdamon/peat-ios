@@ -36,6 +36,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   var store: PeatContentStore?
   
   var hoverTimer: NSTimer?
+  var initiationButton: UIImageView?
   
   var profileDelegate: ProfileViewController?
   var currentActivity: Activity? {
@@ -121,6 +122,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       doubleTapRecognizer.numberOfTapsRequired = 2
       scrollView.addGestureRecognizer(doubleTapRecognizer)
       
+      configureLeafInitiationView()
     }
 //    var doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "scrollViewDoubleTapped:")
 //    doubleTapRecognizer.numberOfTapsRequired = 2
@@ -141,6 +143,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     treeView.backgroundColor = UIColor.darkGrayColor()
     self.scrollView.addSubview(self.treeView)
   }
+  
   
   func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
     return self.treeView
@@ -797,9 +800,45 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       self.navigationController?.pushViewController(vc, animated: false)
     }
   }
+  
+  
+  
+  //MARK: InitiationView
+  func configureLeafInitiationView() {
+    initiationButton = UIImageView(frame: CGRectMake(10,10,20,20))
+    initiationButton!.gestureRecognizers?.removeAll()
+    initiationButton!.backgroundColor = UIColor.whiteColor()
+    initiationButton!.layer.cornerRadius = 13
+    initiationButton!.layer.cornerRadius = initiationButton!.frame.size.height/2
+    initiationButton!.clipsToBounds = true
+    initiationButton!.layer.masksToBounds = false
+    initiationButton!.userInteractionEnabled = true
+    initiationButton!.layer.shadowColor = UIColor.blackColor().CGColor
+    initiationButton!.layer.shadowOpacity = 0.8
+    initiationButton!.layer.shadowRadius = 3.0
+    initiationButton!.layer.shadowOffset = CGSizeMake(4, 4)
+//
+    let panRecognizer = UIPanGestureRecognizer(target: self, action: "initiationButtonPanned:")
+    initiationButton!.addGestureRecognizer(panRecognizer)
+    
+//    initiationView!.layer.zPosition = 300
+//    self.view.gestureRecognizers?.removeAll()
+    self.view.addSubview(initiationButton!)
+  }
+  
+  func initiationButtonPanned(sender: UIGestureRecognizer) {
+    //set location in view to be on the scroll view
+    print("iniitationview panned")
+    let finger = sender.locationInView(self.treeView)
+    newLeafBeingAdded(finger)
+  }
+  
+  func newLeafBeingAdded(finger: CGPoint) {
+    
+  }
+  
 
 }
-
 
 
 
