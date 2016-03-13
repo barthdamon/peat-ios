@@ -29,6 +29,7 @@ class Leaf: NSObject, TreeObject {
   static let standardHeight: CGFloat = 50
   
   // Reference Variables
+  var isCurrentlyNew: Bool = false
   var referenceFrame: CoordinatePair?
   class var xOffset: CGFloat {
     return standardWidth / 2
@@ -339,6 +340,8 @@ class Leaf: NSObject, TreeObject {
   
   func deselectLeaf() {
     if let view = self.view {
+      self.isCurrentlyNew = false
+      self.treeDelegate?.resetCurrentlyNew()
       self.movingEnabled = false
       view.backgroundColor = UIColor.whiteColor()
       view.layer.shadowColor = UIColor.clearColor().CGColor

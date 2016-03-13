@@ -25,6 +25,7 @@ protocol TreeDelegate {
   func sharedStore() -> PeatContentStore
   func checkForNewCompletions()
   func changesMade()
+  func resetCurrentlyNew()
 }
 
 class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
@@ -34,6 +35,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   var selectedLeaf: Leaf?
   var viewing: User?
   var store: PeatContentStore?
+  var newLeaf: Leaf?
   
   var hoverTimer: NSTimer?
   var initiationButton: UIImageView?
@@ -87,6 +89,11 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     self.profileDelegate?.changesMade()
   }
   
+  func resetCurrentlyNew() {
+    self.initiationButton?.userInteractionEnabled = true
+    self.newLeaf = nil
+  }
+  
   func sharedStore() -> PeatContentStore {
     if let store = store {
       return store
@@ -117,10 +124,11 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     if let _ = viewing {
       //Do whatever for when you are viewing anothers profile
     } else {
+      //TODO: make this actually highlight the views
       let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "newLeafInitiated:")
       doubleTapRecognizer.numberOfTouchesRequired = 1
       doubleTapRecognizer.numberOfTapsRequired = 2
-      scrollView.addGestureRecognizer(doubleTapRecognizer)
+//      scrollView.addGestureRecognizer(doubleTapRecognizer)
       
       configureLeafInitiationView()
     }
@@ -730,14 +738,22 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     self.profileDelegate?.drillIntoLeaf(leaf)
   }
   
-  func newLeafInitiated(sender: UILongPressGestureRecognizer) {
-    print("Sender: \(sender)")
+  func newLeafInitiated(sender: UIGestureRecognizer) {
     let center: CGPoint = sender.locationInView(self.treeView)
-    print("SENDER: \(center)")
-    let newLeaf = Leaf.initFromTree(center, delegate: self)
-    newLeaf.generateBounds()
-    newLeaf.changed(.BrandNew)
-    self.profileDelegate?.changesMade()
+    if let newLeaf = newLeaf {
+      newLeaf.view?.center = center
+      //move the newLeafs position
+    } else {
+      print("New leaf initiated: \(center)")
+      newLeaf = Leaf.initFromTree(center, delegate: self)
+      newLeaf!.generateBounds()
+      newLeaf!.changed(.BrandNew)
+      newLeaf!.isCurrentlyNew = true
+      newLeaf!.movingEnabled = true
+      newLeaf!.drawLeafSelected()
+      self.initiationButton?.userInteractionEnabled = false
+      self.profileDelegate?.changesMade()
+    }
   }
   
   func removeObjectFromView(object: TreeObject) {
@@ -818,23 +834,12 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     initiationButton!.layer.shadowRadius = 3.0
     initiationButton!.layer.shadowOffset = CGSizeMake(4, 4)
 //
-    let panRecognizer = UIPanGestureRecognizer(target: self, action: "initiationButtonPanned:")
+    let panRecognizer = UIPanGestureRecognizer(target: self, action: "newLeafInitiated:")
     initiationButton!.addGestureRecognizer(panRecognizer)
     
 //    initiationView!.layer.zPosition = 300
 //    self.view.gestureRecognizers?.removeAll()
     self.view.addSubview(initiationButton!)
-  }
-  
-  func initiationButtonPanned(sender: UIGestureRecognizer) {
-    //set location in view to be on the scroll view
-    print("iniitationview panned")
-    let finger = sender.locationInView(self.treeView)
-    newLeafBeingAdded(finger)
-  }
-  
-  func newLeafBeingAdded(finger: CGPoint) {
-    
   }
   
 
