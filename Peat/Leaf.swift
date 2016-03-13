@@ -501,6 +501,9 @@ class Leaf: NSObject, TreeObject {
         if !set {
           titleLabel!.numberOfLines = 1
           titleLabel!.adjustsFontSizeToFitWidth = true
+          if let delegate = self.treeDelegate {
+            titleLabel!.hidden = delegate.isHidingText()
+          }
           view.addSubview(titleLabel!)
         }
       }
@@ -517,6 +520,9 @@ class Leaf: NSObject, TreeObject {
         uploadsLabel!.numberOfLines = 1
         uploadsLabel!.textColor = UIColor.lightGrayColor()
         uploadsLabel!.adjustsFontSizeToFitWidth = true
+        if let delegate = self.treeDelegate {
+          uploadsLabel!.hidden = delegate.isHidingText()
+        }
         view.addSubview(uploadsLabel!)
       }
     }

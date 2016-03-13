@@ -119,6 +119,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   
   func deselectGrouping() {
     if let view = self.view {
+      togglePanActivation(false)
 //      view.backgroundColor = UIColor.whiteColor()
       view.layer.shadowColor = UIColor.clearColor().CGColor
       view.layer.shadowOpacity = 0
@@ -146,8 +147,8 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   }
   
   func drawGrouping() {
-    if let center = center {
-      referenceFrame = (x: center.x - Leaf.standardWidth, y: center.y - Leaf.standardHeight)
+    if let center = center, width = width, height = height {
+      referenceFrame = (x: center.x - width / 2, y: center.y - height / 2)
     }
     if let frame = referenceFrame, width = width, height = height {
       let frame = CGRectMake(frame.x, frame.y, width, height)
@@ -167,7 +168,6 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
         view.layer.cornerRadius = 10
         //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
         addGestureRecognizers()
-        togglePanActivation(true)
         treeDelegate?.addGroupingToScrollView(self)
       }
     }
@@ -184,7 +184,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
       view.addSubview(dragView!)
       
       titleField = UITextField(frame: CGRectMake(width - 200, height - 30, 150, 25))
-      if let title = self.name {
+      if let title = self.name where title != "" {
         titleField!.text = title
       } else {
         titleField!.text = "Grouping Title"
@@ -193,6 +193,9 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
       titleField!.backgroundColor = UIColor.clearColor()
       titleField!.textAlignment = .Right
       titleField!.delegate = self
+      if let delegate = self.treeDelegate {
+        titleField!.hidden = delegate.isHidingText()
+      }
       view.addSubview(titleField!)
     }
   }
@@ -226,10 +229,14 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
 //      self.view?.layer.borderColor = UIColor.blackColor().CGColor
       changed(.Updated)
       self.treeDelegate?.changesMade()
-      if let view = self.view, frame = referenceFrame, dragView = dragView {
-        if finger.x > LeafGrouping.standardWidth && finger.y > LeafGrouping.standardHeight {
-          view.frame = CGRectMake(frame.x, frame.y, finger.x, finger.y)
+      if let view = self.view, dragView = dragView {
+        let x = view.frame.minX
+        let y = view.frame.minY
+        let area = finger.x * finger.y
+        if area > LeafGrouping.standardWidth * LeafGrouping.standardHeight {
+          view.frame = CGRectMake(x, y, finger.x, finger.y)
           dragView.frame = CGRectMake(view.frame.width - 30, view.frame.height - 30, 15, 15)
+          titleField?.frame = CGRectMake(view.frame.width - 200, view.frame.height - 30, 150, 25)
           self.width = finger.x
           self.height = finger.y
         }

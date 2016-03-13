@@ -25,6 +25,7 @@ protocol TreeDelegate {
   func sharedStore() -> PeatContentStore
   func checkForNewCompletions()
   func changesMade()
+  func isHidingText() -> Bool
 }
 
 class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
@@ -35,6 +36,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   var viewing: User?
   var store: PeatContentStore?
   var newLeaf: Leaf?
+  var hidingText: Bool = false
   
   var hoverTimer: NSTimer?
   var initiationButton: UIImageView?
@@ -104,6 +106,10 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   func getCurrentActivity() -> Activity? {
     return currentActivity
+  }
+  
+  func isHidingText() -> Bool {
+    return hidingText
   }
   
   func clearView() {
@@ -185,6 +191,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   func toggleTextForZoom(hide: Bool) {
     ///go through all texts, if they arent hidden hide them
+    self.hidingText = hide
     if let leaves = store?.treeStore.currentLeaves {
       for leaf in leaves {
         leaf.titleLabel?.hidden = hide
