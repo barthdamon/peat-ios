@@ -54,17 +54,9 @@ class Leaf: NSObject, TreeObject {
   }
   
   //Admin
-  var movingEnabled: Bool = false {
-    didSet {
-      togglePanActivation( movingEnabled )
-    }
-  }
+  var movingEnabled: Bool = false
   var isCurrentlyNew: Bool = false
-  var connectionsEnabled: Bool = false {
-    didSet {
-      togglePanActivation( movingEnabled )
-    }
-  }
+  var connectionsEnabled: Bool = false
   var movingPanRecognizer: UIPanGestureRecognizer?
   
   // Leaf
@@ -297,14 +289,19 @@ class Leaf: NSObject, TreeObject {
   
   func leafConnectionsInitialized(sender: UIGestureRecognizer) {
     let state = sender.state
+    print("Connection recognizer hit")
     if state == .Changed || state == .Ended {
+      print("Connections being drawn")
       leafBeingPanned(sender)
       if state == .Ended {
+        print("Connections drawn ending")
         connectionsEnabled = false
+        togglePanActivation(false)
       }
     } else {
       print("Leaf connections initialized")
       self.connectionsEnabled = true
+      togglePanActivation(true)
     }
   }
   
@@ -373,8 +370,6 @@ class Leaf: NSObject, TreeObject {
     print("Leaf being panned")
     let state = sender.state
     if state == UIGestureRecognizerState.Ended {
-      print("Connections drawn ending")
-      self.connectionsEnabled = false
       self.treeDelegate?.connectionsBeingDrawn(self, fromGrouping: nil, sender: sender)
     } else {
       if movingEnabled {
@@ -390,6 +385,7 @@ class Leaf: NSObject, TreeObject {
       self.isCurrentlyNew = false
       self.treeDelegate?.resetCurrentlyNew()
       self.movingEnabled = false
+      togglePanActivation(false)
       view.backgroundColor = UIColor.whiteColor()
       view.layer.shadowColor = UIColor.clearColor().CGColor
       view.layer.shadowOpacity = 0
@@ -410,6 +406,7 @@ class Leaf: NSObject, TreeObject {
       view.layer.shadowOpacity = 0.8
       view.layer.shadowRadius = 3.0
       view.layer.shadowOffset = CGSizeMake(7, 7)
+      togglePanActivation(true)
       
       //add a delete button and save it as a var on leaf
       self.deleteButton = UIButton(frame: CGRectMake(0,0,15,15))
@@ -462,6 +459,7 @@ class Leaf: NSObject, TreeObject {
         
 //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
         addGestureRecognizers()
+        togglePanActivation(true)
 //        drawGrouping()
         if let grouping = self.grouping {
           treeDelegate?.addLeafToGrouping(self, grouping: grouping)
