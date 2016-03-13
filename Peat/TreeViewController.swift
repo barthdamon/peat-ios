@@ -150,6 +150,10 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     //do something to expand the view if the user is getting to the edge, then unexpand when the content is shrinking and none of the views are out there
   }
   
+  func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    return true
+  }
+  
   func scrollViewDidScroll(scrollView: UIScrollView) {
   }
   
@@ -164,9 +168,38 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     if height < minimumSizeY { height = minimumSizeY }
     
     self.treeView.frame = CGRectMake(0, 0, width, height)
+    
+    if newScale < 0.45 {
+      toggleTextForZoom(true)
+    } else {
+      toggleTextForZoom(false)
+    }
   }
   
   //MARK: Movement
+  
+  func toggleTextForZoom(hide: Bool) {
+    ///go through all texts, if they arent hidden hide them
+    if let leaves = store?.treeStore.currentLeaves {
+      for leaf in leaves {
+        leaf.titleLabel?.hidden = hide
+        leaf.uploadsLabel?.hidden = hide
+      }
+    }
+    
+    if let groupings = store?.treeStore.currentGroupings {
+      for grouping in groupings {
+        grouping.titleField?.hidden = hide
+      }
+    }
+
+  }
+  
+  //might not need the fancy animations for groupings
+  
+  
+  
+  
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer) {
     if let view = leaf.view {
       var finger: CGPoint = CGPoint()

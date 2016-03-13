@@ -219,14 +219,17 @@ class Leaf: NSObject, TreeObject {
           print("Error creating leaf: \(e)")
           callback(false)
         } else {
-          print("Leaf created: \(res)")
-          self.changeStatus = .Unchanged
-          if let json = res as? jsonObject {
-            self.ability?._id = json["ability_Id"] as? String
-          }
-          callback(true)
-          self.getCompletionStatus()
-          self.treeDelegate?.checkForNewCompletions()
+          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            print("Leaf created: \(res)")
+            self.changeStatus = .Unchanged
+            if let json = res as? jsonObject {
+              self.ability?._id = json["ability_Id"] as? String
+            }
+            self.getCompletionStatus()
+            self.setLabels()
+            self.treeDelegate?.checkForNewCompletions()
+            callback(true)
+          })
         }
       })
     } else {
@@ -235,9 +238,14 @@ class Leaf: NSObject, TreeObject {
           print("Error updating leaf \(e)")
           callback(false)
         } else {
-          print("Leaf updated: \(res)")
-          self.changeStatus = .Unchanged
-          callback(true)
+          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            print("Leaf updated: \(res)")
+            self.changeStatus = .Unchanged
+            self.getCompletionStatus()
+            self.setLabels()
+            self.treeDelegate?.checkForNewCompletions()
+            callback(true)
+          })
         }
       })
     }
@@ -398,22 +406,7 @@ class Leaf: NSObject, TreeObject {
       if let view = self.view {
         view.backgroundColor = UIColor.whiteColor()
         view.layer.cornerRadius = 10
-        let half = Leaf.standardHeight / 2
-        if let name = self.ability?.name {
-          titleLabel = UILabel(frame: CGRectMake(0,0,Leaf.standardWidth, half))
-          titleLabel!.text = name
-          titleLabel!.numberOfLines = 1
-          titleLabel!.adjustsFontSizeToFitWidth = true
-          view.addSubview(titleLabel!)
-        }
-
-        uploadsLabel = UILabel(frame: CGRectMake(0,half, Leaf.standardWidth, half))
-        let count = media != nil ? media!.count : 0
-        uploadsLabel!.text = "\(count) uploads"
-        uploadsLabel!.numberOfLines = 1
-        uploadsLabel!.textColor = UIColor.lightGrayColor()
-        uploadsLabel!.adjustsFontSizeToFitWidth = true
-        view.addSubview(uploadsLabel!)
+        setLabels()
         
 //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
         addGestureRecognizers()
@@ -445,6 +438,41 @@ class Leaf: NSObject, TreeObject {
       return treeView
     } else {
       return nil
+    }
+  }
+  
+  func setLabels() {
+    if let view = self.view {
+      let half = Leaf.standardHeight / 2
+      if let name = self.ability?.name {
+        var set = false
+        if let _ = titleLabel {
+          set = true
+        } else {
+          titleLabel = UILabel(frame: CGRectMake(0,0,Leaf.standardWidth, half))
+        }
+        titleLabel!.text = name
+        if !set {
+          titleLabel!.numberOfLines = 1
+          titleLabel!.adjustsFontSizeToFitWidth = true
+          view.addSubview(titleLabel!)
+        }
+      }
+      
+      var uploadsSet = false
+      if let _ = uploadsLabel {
+        uploadsSet = true
+      } else {
+        uploadsLabel = UILabel(frame: CGRectMake(0,half, Leaf.standardWidth, half))
+      }
+      let count = media != nil ? media!.count : 0
+      uploadsLabel!.text = "\(count) uploads"
+      if !uploadsSet {
+        uploadsLabel!.numberOfLines = 1
+        uploadsLabel!.textColor = UIColor.lightGrayColor()
+        uploadsLabel!.adjustsFontSizeToFitWidth = true
+        view.addSubview(uploadsLabel!)
+      }
     }
   }
   

@@ -21,6 +21,8 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
   
   var stackedFromRoot = false
   
+  var isToldTreeLoad = false
+  
   @IBOutlet weak var profileModeSelector: UISegmentedControl!
   @IBOutlet weak var usernameLabel: UILabel!
   @IBOutlet weak var avatarImageView: UIImageView!
@@ -108,6 +110,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
     }
     self.setupUserProfile(user)
     self.treeController?.fetchTreeData()
+    self.isToldTreeLoad = true
   }
   
   func reinitializeTreeController() {
@@ -168,7 +171,9 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
           self.treeController = vc
           vc.viewing = self.viewing
           vc.store = store
-//          vc.fetchTreeData()
+          if isToldTreeLoad {
+            vc.fetchTreeData()
+          }
           if isShowingForGallery {
             self.profileModeSelector.selectedSegmentIndex = 1
             vc.showGallery(viewing)

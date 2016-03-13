@@ -9,7 +9,7 @@
 import Foundation
 
 
-class LeafGrouping: NSObject, TreeObject {
+class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecognizerDelegate {
   
   var changeStatus: ChangeStatus = .Unchanged
   var name: String?
@@ -37,6 +37,7 @@ class LeafGrouping: NSObject, TreeObject {
   
   var dragView: UIImageView?
   var expandEnabled: Bool = false
+  var titleField: UITextField?
   
   var rgbColor: UIColor? {
     didSet {
@@ -86,6 +87,10 @@ class LeafGrouping: NSObject, TreeObject {
   func changed(status: ChangeStatus) {
     //Note: might break on server when updating a leaf that got removed before being created on server
     guard changeStatus == .BrandNew && status == .Updated else { changeStatus = status; return}
+  }
+  
+  func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    return true
   }
   
   func params() -> Dictionary<String, AnyObject> {
@@ -175,8 +180,38 @@ class LeafGrouping: NSObject, TreeObject {
       dragView!.addGestureRecognizer(dragRecognizer)
       dragView!.userInteractionEnabled = true
       view.addSubview(dragView!)
+      
+      titleField = UITextField(frame: CGRectMake(width - 160, height - 30, 150, 25))
+      if let title = self.name {
+        titleField!.text = title
+      } else {
+        titleField!.text = "Grouping Title"
+      }
+      titleField!.adjustsFontSizeToFitWidth = true
+      titleField!.backgroundColor = UIColor.clearColor()
+      titleField!.textAlignment = .Right
+      titleField!.delegate = self
+      view.addSubview(titleField!)
     }
   }
+  
+  func textFieldShouldClear(textField: UITextField) -> Bool {
+    if let title = self.name {
+      titleField?.text = title
+    } else {
+      titleField?.text = "Grouping Title"
+    }
+    return true
+  }
+  
+  func textFieldShouldReturn(textField: UITextField) -> Bool {
+    self.titleField?.resignFirstResponder()
+    self.name = textField.text
+    self.treeDelegate?.changesMade()
+    self.changeStatus = .Updated
+    return true
+  }
+
   
   func dragButtonPressed(sender: UIGestureRecognizer) {
     print("Expand enabled")
