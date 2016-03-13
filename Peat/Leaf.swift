@@ -288,8 +288,10 @@ class Leaf: NSObject, TreeObject {
     if active {
       movingPanRecognizer = UIPanGestureRecognizer(target: self, action: "leafBeingPanned:")
       self.view?.addGestureRecognizer(movingPanRecognizer!)
-    } else if let pan = movingPanRecognizer {
-      self.view?.removeGestureRecognizer(pan)
+    } else if let _ = movingPanRecognizer {
+//      self.view?.removeGestureRecognizer(movingPanRecognizer!)
+      self.view?.gestureRecognizers?.removeAll()
+      addGestureRecognizers()
     }
   }
   
@@ -297,6 +299,9 @@ class Leaf: NSObject, TreeObject {
     let state = sender.state
     if state == .Changed || state == .Ended {
       leafBeingPanned(sender)
+      if state == .Ended {
+        connectionsEnabled = false
+      }
     } else {
       print("Leaf connections initialized")
       self.connectionsEnabled = true
