@@ -355,9 +355,9 @@ class PeatContentStore: NSObject {
     self.treeStore.currentConnections!.insert(connection)
   }
   
-  func removeCollection(connection: LeafConnection) {
+  func removeConnection(connection: LeafConnection) {
     if let _ = self.treeStore.currentConnections {
-//      self.treeStore.currentConnections!.remove(connection)
+      self.treeStore.currentConnections!.remove(connection)
     }
   }
   
@@ -436,5 +436,3 @@ class PeatContentStore: NSObject {
   }
   
 }
-
-

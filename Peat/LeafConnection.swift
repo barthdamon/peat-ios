@@ -32,11 +32,16 @@ class LeafConnection: NSObject {
   var connectionLayer: CAShapeLayer?
   var arrow: UIImageView? {
     didSet {
+      arrow!.userInteractionEnabled = true
+      
       let connectionTap = UITapGestureRecognizer(target: self, action: "rotateType")
       connectionTap.numberOfTouchesRequired = 1
       connectionTap.numberOfTapsRequired = 1
-      arrow!.userInteractionEnabled = true
       arrow!.addGestureRecognizer(connectionTap)
+      
+      let connectionPress = UILongPressGestureRecognizer(target: self, action: "deleteConnection")
+      connectionPress.minimumPressDuration = 1
+      arrow!.addGestureRecognizer(connectionPress)
     }
   }
   
@@ -103,6 +108,13 @@ class LeafConnection: NSObject {
       changed(.Updated)
       NSNotificationCenter.defaultCenter().postNotificationName("connectionChangesMade", object: nil, userInfo: nil)
     }
+  }
+  
+  func deleteConnection() {
+    self.connectionLayer?.removeFromSuperlayer()
+    self.arrow?.removeFromSuperview()
+    self.treeDelegate?.sharedStore().removeConnection(self)
+    changed(.Removed)
   }
   
   func rotateArrow() {
