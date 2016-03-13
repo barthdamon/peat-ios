@@ -55,7 +55,6 @@ class Leaf: NSObject, TreeObject {
   
   //Admin
   var movingEnabled: Bool = false
-  var isCurrentlyNew: Bool = false
   var connectionsEnabled: Bool = false
   var movingPanRecognizer: UIPanGestureRecognizer?
   
@@ -383,8 +382,6 @@ class Leaf: NSObject, TreeObject {
   
   func deselectLeaf() {
     if let view = self.view {
-      self.isCurrentlyNew = false
-      self.treeDelegate?.resetCurrentlyNew()
       self.movingEnabled = false
       togglePanActivation(false)
       view.backgroundColor = UIColor.whiteColor()
@@ -419,8 +416,6 @@ class Leaf: NSObject, TreeObject {
   
   func deleteButtonPressed() {
     self.changeStatus = .Removed
-    self.isCurrentlyNew = false
-    self.treeDelegate?.resetCurrentlyNew()
     self.treeDelegate?.removeObjectFromView(self)
     //remove any connection with its id
     treeDelegate?.sharedStore().removeConnectionsForObject(self)

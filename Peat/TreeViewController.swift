@@ -25,7 +25,6 @@ protocol TreeDelegate {
   func sharedStore() -> PeatContentStore
   func checkForNewCompletions()
   func changesMade()
-  func resetCurrentlyNew()
 }
 
 class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
@@ -87,11 +86,6 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   func changesMade() {
     self.profileDelegate?.changesMade()
-  }
-  
-  func resetCurrentlyNew() {
-    self.initiationButton?.userInteractionEnabled = true
-    self.newLeaf = nil
   }
   
   func sharedStore() -> PeatContentStore {
@@ -740,19 +734,22 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   func newLeafInitiated(sender: UIGestureRecognizer) {
     let center: CGPoint = sender.locationInView(self.treeView)
-    if let newLeaf = newLeaf {
-      newLeaf.view?.center = center
-      //move the newLeafs position
+    if sender.state == .Ended {
+      //the last leaf they were placing is done
+      self.newLeaf = nil
     } else {
-      print("New leaf initiated: \(center)")
-      newLeaf = Leaf.initFromTree(center, delegate: self)
-      newLeaf!.generateBounds()
-      newLeaf!.changed(.BrandNew)
-      newLeaf!.isCurrentlyNew = true
-      newLeaf!.movingEnabled = true
-      newLeaf!.drawLeafSelected()
-      self.initiationButton?.userInteractionEnabled = false
-      self.profileDelegate?.changesMade()
+      if let newLeaf = newLeaf {
+        newLeaf.view?.center = center
+        //move the newLeafs position
+      } else {
+        print("New leaf initiated: \(center)")
+        newLeaf = Leaf.initFromTree(center, delegate: self)
+        newLeaf!.generateBounds()
+        newLeaf!.changed(.BrandNew)
+        newLeaf!.movingEnabled = true
+        newLeaf!.drawLeafSelected()
+        self.profileDelegate?.changesMade()
+      }
     }
   }
   

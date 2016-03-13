@@ -281,7 +281,6 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
   @IBAction func cancelButtonPressed(sender: AnyObject) {
     store.treeStore.resetStore()
     treeController?.fetchTreeData()
-    treeController?.resetCurrentlyNew()
     self.changesPresent = false
     self.cancelButton.hidden = true
     self.saveButton.hidden = true
