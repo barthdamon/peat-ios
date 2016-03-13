@@ -586,7 +586,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   }
   
   func newGrouping(timer: NSTimer) {
-    if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, view = leaf.view, lowerLeaf = info["lowerLeaf"] as? Leaf, center = lowerLeaf.center {
+    if let info = timer.userInfo as? Dictionary<String, AnyObject>, leaf = info["leaf"] as? Leaf, view = leaf.view, lowerLeaf = info["lowerLeaf"] as? Leaf, center = lowerLeaf.view?.center {
       if CGRectContainsPoint(view.frame, center) {
         leaf.prepareForGrouping()
       // check if they interesect first

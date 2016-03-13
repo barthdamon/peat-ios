@@ -288,20 +288,21 @@ class Leaf: NSObject, TreeObject {
   }
   
   func leafConnectionsInitialized(sender: UIGestureRecognizer) {
-    let state = sender.state
-    print("Connection recognizer hit")
-    if state == .Changed || state == .Ended {
-      print("Connections being drawn")
-      leafBeingPanned(sender)
-      if state == .Ended {
-        print("Connections drawn ending")
-        connectionsEnabled = false
-        togglePanActivation(false)
+    if !movingEnabled {
+      let state = sender.state
+      if state == .Changed || state == .Ended {
+        print("Connections being drawn")
+        leafBeingPanned(sender)
+        if state == .Ended {
+          print("Connections drawn ending")
+          connectionsEnabled = false
+          togglePanActivation(false)
+        }
+      } else {
+        print("Leaf connections initialized")
+        self.connectionsEnabled = true
+        togglePanActivation(true)
       }
-    } else {
-      print("Leaf connections initialized")
-      self.connectionsEnabled = true
-      togglePanActivation(true)
     }
   }
   

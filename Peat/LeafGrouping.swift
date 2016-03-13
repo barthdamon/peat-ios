@@ -34,6 +34,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   
   var treeDelegate: TreeDelegate?
   var movingEnabled: Bool = false
+  var connectionsEnabled: Bool = false
   
   var dragView: UIImageView?
   var expandEnabled: Bool = false
@@ -135,7 +136,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
       view.layer.shadowOpacity = 0.8
       view.layer.shadowRadius = 3.0
       view.layer.shadowOffset = CGSizeMake(7, 7)
-      
+      togglePanActivation(true)
       //add a delete button and save it as a var on leaf
       self.deleteButton = UIButton(frame: CGRectMake(0,0,15,15))
       deleteButton?.setBackgroundImage(UIImage(named: "cancel"), forState: .Normal)
@@ -166,6 +167,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
         view.layer.cornerRadius = 10
         //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
         addGestureRecognizers()
+        togglePanActivation(true)
         treeDelegate?.addGroupingToScrollView(self)
       }
     }
@@ -243,22 +245,38 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   func addGestureRecognizers() {
     if let view = self.view {
       
+      
+      let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "groupingMoveInitiated:")
+      doubleTapRecognizer.numberOfTapsRequired = 2
+      doubleTapRecognizer.numberOfTouchesRequired = 1
+      view.addGestureRecognizer(doubleTapRecognizer)
+      
+//      let tapRecognizer = UITapGestureRecognizer(target: self, action: "leafDrilldownInitiated")
+//      tapRecognizer.numberOfTapsRequired = 1
+//      tapRecognizer.numberOfTouchesRequired = 1
+//      tapRecognizer.requireGestureRecognizerToFail(doubleTapRecognizer)
+//      view.addGestureRecognizer(tapRecognizer)
+//      let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "groupingMoveInitiated:")
+//      longPressRecognizer.minimumPressDuration = 1
+//      view.addGestureRecognizer(longPressRecognizer)
+      
+      let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "groupingConnectionsInitialized:")
+      longPressRecognizer.minimumPressDuration = 1
+      view.addGestureRecognizer(longPressRecognizer)
+      
+      
       let tapRecognizer = UITapGestureRecognizer(target: self, action: "groupingBeingPlaced")
       tapRecognizer.numberOfTapsRequired = 1
       tapRecognizer.numberOfTouchesRequired = 1
       view.addGestureRecognizer(tapRecognizer)
       
-      let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "groupingMoveInitiated:")
-      longPressRecognizer.minimumPressDuration = 1
-      view.addGestureRecognizer(longPressRecognizer)
+
       
       //need to add and remove this dynamically based on the long press so that scrolling can be reenambled when not drawing connectons
-//      let movingPanRecognizer = UIPanGestureRecognizer(target: self, action: "groupingBeingPanned:")
-//      view.addGestureRecognizer(movingPanRecognizer)
       
-      let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "newLeafInitiatedOnGrouping:")
-      doubleTapRecognizer.numberOfTouchesRequired = 1
-      doubleTapRecognizer.numberOfTapsRequired = 2
+//      let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "newLeafInitiatedOnGrouping:")
+//      doubleTapRecognizer.numberOfTouchesRequired = 1
+//      doubleTapRecognizer.numberOfTapsRequired = 2
       
       view.addGestureRecognizer(doubleTapRecognizer)
       
@@ -266,11 +284,38 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
     }
   }
   
+  func groupingConnectionsInitialized(sender: UIGestureRecognizer) {
+    let state = sender.state
+    if state == .Changed || state == .Ended {
+      print("Connections being drawn")
+      groupingBeingPanned(sender)
+      if state == .Ended {
+        print("Connections drawn ending")
+        connectionsEnabled = false
+        togglePanActivation(false)
+      }
+    } else {
+      print("Leaf connections initialized")
+      self.connectionsEnabled = true
+      togglePanActivation(true)
+    }
+  }
+  
+  func togglePanActivation( active: Bool) {
+    if active {
+      let movingPanRecognizer = UIPanGestureRecognizer(target: self, action: "groupingBeingPanned:")
+      self.view?.addGestureRecognizer(movingPanRecognizer)
+    } else {
+      self.view?.gestureRecognizers?.removeAll()
+      addGestureRecognizers()
+    }
+  }
+  
   func newLeafInitiatedOnGrouping(sender: UITapGestureRecognizer) {
     self.treeDelegate?.addNewLeafToGrouping(self, sender: sender)
   }
   
-  func groupingMoveInitiated(sender: UILongPressGestureRecognizer) {
+  func groupingMoveInitiated(sender: UIGestureRecognizer) {
     treeDelegate?.sharedStore().treeStore.currentLeaves?.forEach({ (leaf) -> () in
       leaf.deselectLeaf()
     })
@@ -279,16 +324,20 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
         grouping.deselectGrouping()
       }
     })
-    let state = sender.state
-    if state == UIGestureRecognizerState.Changed {
-      groupingBeingPanned(sender)
-    } else if state == UIGestureRecognizerState.Ended {
-      //      movingEnabled = false
-      //      deselectLeaf()
-    } else {
-      self.drawGroupingSelected()
-      self.movingEnabled = true
-    }
+    self.drawGroupingSelected()
+    self.movingEnabled = true
+//    let state = sender.state
+//    if state == UIGestureRecognizerState.Changed {
+//      groupingBeingPanned(sender)
+//    } else if state == UIGestureRecognizerState.Ended {
+//      togglePanActivation(false)
+//      //      movingEnabled = false
+//      //      deselectLeaf()
+//    } else {
+//      self.drawGroupingSelected()
+//      self.movingEnabled = true
+//      togglePanActivation(true)
+//    }
   }
   
   func groupingBeingPlaced() {
@@ -300,6 +349,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   
   func deleteButtonPressed() {
     self.changeStatus = .Removed
+    togglePanActivation(false)
     self.treeDelegate?.removeObjectFromView(self)
     treeDelegate?.sharedStore().removeConnectionsForObject(self)
   }
@@ -313,11 +363,8 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
     if movingEnabled {
       self.treeDelegate?.groupingBeingMoved(self, sender: sender)
     } else {
-//      self.treeDelegate?.
+      self.treeDelegate?.connectionsBeingDrawn(nil, fromGrouping: self, sender: sender)
     }
-//    else {
-//      self.treeDelegate?.connectionsBeingDrawn(nil, fromGrouping: self, sender: sender)
-//    }
   }
   
   func viewForTree() -> UIView? {
