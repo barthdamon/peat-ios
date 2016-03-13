@@ -634,7 +634,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   func addLeafToScrollView(leaf: Leaf) {
     if let view = leaf.view {
       self.treeView.addSubview(view)
-      checkForOverlaps(leaf)
+//      checkForOverlaps(leaf)
     }
   }
   
