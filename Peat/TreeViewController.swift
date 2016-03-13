@@ -79,7 +79,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     // Do any additional setup after loading the view.
     
     configureScrollView()
-    fetchTreeData()
+//    fetchTreeData()
   }
   
   func changesMade() {

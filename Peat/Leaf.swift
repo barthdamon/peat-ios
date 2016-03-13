@@ -93,7 +93,6 @@ class Leaf: NSObject, TreeObject {
 // MARK: INITIALIZATION
   static func initWithJson(json: jsonObject, delegate: TreeDelegate?) -> Leaf {
     let leaf = Leaf()
-    print("LEAF JSON:\(json)")
     leaf.treeDelegate = delegate
     leaf._id = json["_id"] as? String
     leaf.user_Id = json["user_Id"] as? String

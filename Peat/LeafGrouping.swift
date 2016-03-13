@@ -68,13 +68,13 @@ class LeafGrouping: NSObject, TreeObject {
     grouping.name = json["name"] as? String
     grouping.groupingId = json["groupingId"] as? String
     grouping.activityName = json["activityName"] as? String
+    grouping.width = json["width"] as? CGFloat
+    grouping.height = json["height"] as? CGFloat
     
     if let layout = json["layout"] as? jsonObject {
       if let coordinates = layout["coordinates"] as? jsonObject, x = coordinates["x"] as? CGFloat, y = coordinates["y"] as? CGFloat {
         grouping.center = CGPoint(x: x, y: y)
       }
-      grouping.width = layout["width"] as? CGFloat
-      grouping.height = layout["height"] as? CGFloat
     }
     grouping.colorString = json["colorString"] as? String
     if let colorString = grouping.colorString {
@@ -100,9 +100,9 @@ class LeafGrouping: NSObject, TreeObject {
           "x" : self.paramCenter?.x != nil ? self.paramCenter!.x : 0,
           "y" : self.paramCenter?.y != nil ? self.paramCenter!.y : 0
         ],
-        "width": width != nil ? width! : LeafGrouping.standardWidth,
-        "height": height != nil ? height! : LeafGrouping.standardHeight
-      ]
+      ],
+      "width": width != nil ? width! : LeafGrouping.standardWidth,
+      "height": height != nil ? height! : LeafGrouping.standardHeight
     ]
   }
   
@@ -187,6 +187,7 @@ class LeafGrouping: NSObject, TreeObject {
       expandEnabled = true
 //      self.view?.layer.borderWidth = 5
 //      self.view?.layer.borderColor = UIColor.blackColor().CGColor
+      changed(.Updated)
       self.treeDelegate?.changesMade()
       if let view = self.view, frame = referenceFrame, dragView = dragView {
         if finger.x > LeafGrouping.standardWidth && finger.y > LeafGrouping.standardHeight {

@@ -168,7 +168,7 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
           self.treeController = vc
           vc.viewing = self.viewing
           vc.store = store
-          vc.fetchTreeData()
+//          vc.fetchTreeData()
           if isShowingForGallery {
             self.profileModeSelector.selectedSegmentIndex = 1
             vc.showGallery(viewing)
