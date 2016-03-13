@@ -29,7 +29,6 @@ class Leaf: NSObject, TreeObject {
   static let standardHeight: CGFloat = 50
   
   // Reference Variables
-  var isCurrentlyNew: Bool = false
   var referenceFrame: CoordinatePair?
   class var xOffset: CGFloat {
     return standardWidth / 2
@@ -54,9 +53,22 @@ class Leaf: NSObject, TreeObject {
     }
   }
   
-  var ability: Ability?
+  //Admin
+  var movingEnabled: Bool = false {
+    didSet {
+      togglePanActivation( movingEnabled )
+    }
+  }
+  var isCurrentlyNew: Bool = false
+  var connectionsEnabled: Bool = false {
+    didSet {
+      togglePanActivation( movingEnabled )
+    }
+  }
+  var movingPanRecognizer: UIPanGestureRecognizer?
   
   // Leaf
+  var ability: Ability?
   var treeDelegate: TreeDelegate?
   var view: UIView?
   var deleteButton: UIButton?
@@ -67,9 +79,7 @@ class Leaf: NSObject, TreeObject {
   var completionStatus: CompletionStatus?
   var timestamp: Int?
   var leafDescription: String?
-  var movingEnabled: Bool = false
   var tip: String?
-  
   var abilityTitleLabel: UILabel?
   var groupingLabel: UILabel?
   
@@ -255,19 +265,41 @@ class Leaf: NSObject, TreeObject {
   func addGestureRecognizers() {
     if let view = self.view {
       
+      let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "leafMoveInitiated:")
+      doubleTapRecognizer.numberOfTapsRequired = 2
+      doubleTapRecognizer.numberOfTouchesRequired = 1
+      view.addGestureRecognizer(doubleTapRecognizer)
+      
       let tapRecognizer = UITapGestureRecognizer(target: self, action: "leafDrilldownInitiated")
       tapRecognizer.numberOfTapsRequired = 1
       tapRecognizer.numberOfTouchesRequired = 1
+      tapRecognizer.requireGestureRecognizerToFail(doubleTapRecognizer)
       view.addGestureRecognizer(tapRecognizer)
       
-      let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "leafMoveInitiated:")
+      let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "leafConnectionsInitialized:")
       longPressRecognizer.minimumPressDuration = 1
       view.addGestureRecognizer(longPressRecognizer)
       
-      let movingPanRecognizer = UIPanGestureRecognizer(target: self, action: "leafBeingPanned:")
-      view.addGestureRecognizer(movingPanRecognizer)
-      
       //maybe when they tap a plus button and drag that adds a connection????
+    }
+  }
+  
+  func togglePanActivation( active: Bool ) {
+    if active {
+      movingPanRecognizer = UIPanGestureRecognizer(target: self, action: "leafBeingPanned:")
+      self.view?.addGestureRecognizer(movingPanRecognizer!)
+    } else if let pan = movingPanRecognizer {
+      self.view?.removeGestureRecognizer(pan)
+    }
+  }
+  
+  func leafConnectionsInitialized(sender: UIGestureRecognizer) {
+    let state = sender.state
+    if state == .Changed || state == .Ended {
+      leafBeingPanned(sender)
+    } else {
+      print("Leaf connections initialized")
+      self.connectionsEnabled = true
     }
   }
   
@@ -308,8 +340,7 @@ class Leaf: NSObject, TreeObject {
     }
   }
   
-  func leafMoveInitiated(sender: UILongPressGestureRecognizer) {
-    let state = sender.state
+  func leafMoveInitiated(sender: UIGestureRecognizer) {
     treeDelegate?.sharedStore().treeStore.currentLeaves?.forEach({ (leaf) -> () in
       if leaf.leafId != self.leafId {
         leaf.movingEnabled = false
@@ -319,22 +350,33 @@ class Leaf: NSObject, TreeObject {
     treeDelegate?.sharedStore().treeStore.currentGroupings?.forEach({ (grouping) -> () in
       grouping.deselectGrouping()
     })
-    if state == UIGestureRecognizerState.Changed {
-      leafBeingPanned(sender)
-    } else if state == UIGestureRecognizerState.Ended {
-//      movingEnabled = false
-//      deselectLeaf()
-    } else {
-      self.drawLeafSelected()
-      self.movingEnabled = true
-    }
+    self.movingEnabled = true
+    self.drawLeafSelected()
+//    if state == UIGestureRecognizerState.Changed {
+//      leafBeingPanned(sender)
+//    } else if state == UIGestureRecognizerState.Ended {
+////      movingEnabled = false
+////      deselectLeaf()
+//    } else {
+//      self.drawLeafSelected()
+//      self.movingEnabled = true
+//    }
+//      treeDelegate?.drillIntoLeaf(self)
   }
   
   func leafBeingPanned(sender: UIGestureRecognizer) {
-    if movingEnabled {
-      self.treeDelegate?.leafBeingMoved(self, sender: sender)
-    } else {
+    print("Leaf being panned")
+    let state = sender.state
+    if state == UIGestureRecognizerState.Ended {
+      print("Connections drawn ending")
+      self.connectionsEnabled = false
       self.treeDelegate?.connectionsBeingDrawn(self, fromGrouping: nil, sender: sender)
+    } else {
+      if movingEnabled {
+        self.treeDelegate?.leafBeingMoved(self, sender: sender)
+      } else if connectionsEnabled {
+        self.treeDelegate?.connectionsBeingDrawn(self, fromGrouping: nil, sender: sender)
+      }
     }
   }
   
@@ -374,6 +416,8 @@ class Leaf: NSObject, TreeObject {
   
   func deleteButtonPressed() {
     self.changeStatus = .Removed
+    self.isCurrentlyNew = false
+    self.treeDelegate?.resetCurrentlyNew()
     self.treeDelegate?.removeObjectFromView(self)
     //remove any connection with its id
     treeDelegate?.sharedStore().removeConnectionsForObject(self)
