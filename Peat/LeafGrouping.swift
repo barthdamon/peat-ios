@@ -158,19 +158,28 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
       if let view = self.view {
 //        view.backgroundColor = UIColor.fromHex(colorString)
         configureDragView()
-        if let color = self.rgbColor {
-          view.backgroundColor = color
-        } else {
-          let randomColor = UIColor.randomColor()
-          view.backgroundColor = randomColor
-          self.rgbColor = randomColor
-        }
-        view.backgroundColor = self.rgbColor != nil ? self.rgbColor : UIColor.randomColor()
+        setBackgroundView()
+//        view.backgroundColor = self.rgbColor != nil ? self.rgbColor : UIColor.randomColor()
         view.layer.cornerRadius = 10
         //        view.backgroundColor = self.completionStatus ? UIColor.yellowColor() : UIColor.darkGrayColor()
         addGestureRecognizers()
         treeDelegate?.addGroupingToScrollView(self)
       }
+    }
+  }
+  
+  func setBackgroundView() {
+    if let view = self.view {
+      var color: UIColor?
+      if let savedColor = self.rgbColor {
+        color = savedColor
+      } else {
+        let randomColor = UIColor.randomColor()
+        color = randomColor
+        self.rgbColor = randomColor
+      }
+      view.backgroundColor = color
+//      view.layer.addSublayer(RadialGradientLayer(center: view.center, radius: width / 2 , colors: [color!.CGColor, UIColor.clearColor().CGColor]))
     }
   }
   
