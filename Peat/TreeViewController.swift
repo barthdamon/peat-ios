@@ -37,6 +37,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   var store: PeatContentStore?
   var newLeaf: Leaf?
   var hidingText: Bool = false
+  var animating: Bool = false
   
   var hoverTimer: NSTimer?
   var initiationButton: UIImageView?
@@ -209,11 +210,13 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   //might not need the fancy animations for groupings
   
+  func animateLeafGroupingExchange() {
   
+  }
   
   
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer) {
-    if let view = leaf.view {
+    if let view = leaf.view where !animating {
       var finger: CGPoint = CGPoint()
       if let parentView = leaf.parentView() {
         parentView.bringSubviewToFront(view)
@@ -223,6 +226,33 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
           leaf.view?.center = finger
           leaf.changed(.Updated)
           self.profileDelegate?.changesMade()
+        } else if finger.x < -Leaf.standardWidth || finger.y < -Leaf.standardHeight {
+          animating = true
+          // else if it is far enough out ( that way it has some space to travel and there is a delay
+          // it is trying to escape.....
+          if let groupingView = leaf.grouping?.view {
+//            leaf.view?.removeFromSuperview()
+            leaf.grouping = nil
+            leaf.groupingId = nil
+//            leaf.view?.layer.zPosition = 500
+            leaf.changed(.Updated)
+            self.profileDelegate?.changesMade()
+            UIView.animateWithDuration(0.3, animations: { () -> Void in
+              leaf.view?.transform = CGAffineTransformMakeScale(Leaf.standardExpand + 0.2, Leaf.standardExpand + 0.2)
+              }, completion: { (complete) -> Void in
+                UIView.animateWithDuration(1, animations: { () -> Void in
+                  let location = sender.locationInView(groupingView)
+                  groupingView.clipsToBounds = false
+                  leaf.view?.center = location
+                  leaf.view?.transform = CGAffineTransformMakeScale(Leaf.standardExpand, Leaf.standardExpand)
+                  }, completion: { (complete) -> Void in
+                    let location = sender.locationInView(self.treeView)
+                    leaf.view?.center = location
+                    self.treeView.addSubview(leaf.view!)
+                    self.animating = false
+                  })
+            })
+          }
         }
       }
       
@@ -577,11 +607,19 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       if CGRectContainsPoint(groupingView.frame, leafView.center) {
         //add leaf to
         leaf.prepareForGrouping()
-        groupingView.addSubview(leafView)
-        leafView.center.x = Leaf.standardWidth
-        leafView.center.y = Leaf.standardHeight * 2
-        leaf.grouping = grouping
-        checkForNewCompletions()
+        UIView.animateWithDuration(0.3, animations: { () -> Void in
+          leafView.transform = CGAffineTransformMakeScale(Leaf.standardExpand + 0.2, Leaf.standardExpand + 0.2)
+          }, completion: { (complete) -> Void in
+            UIView.animateWithDuration(1, animations: { () -> Void in
+              leafView.transform = CGAffineTransformIdentity
+              }, completion: { (complete) -> Void in
+                leafView.center.x -= groupingView.frame.origin.x
+                leafView.center.y -= groupingView.frame.origin.y
+                groupingView.addSubview(leafView)
+                leaf.grouping = grouping
+                self.checkForNewCompletions()
+            })
+        })
       }
     }
   }

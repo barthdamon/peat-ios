@@ -153,7 +153,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
     if let frame = referenceFrame, width = width, height = height {
       let frame = CGRectMake(frame.x, frame.y, width, height)
       view = UIView(frame: frame)
-      view?.clipsToBounds = true
+//      view?.clipsToBounds = true
       if let view = self.view {
 //        view.backgroundColor = UIColor.fromHex(colorString)
         configureDragView()

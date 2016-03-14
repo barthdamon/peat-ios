@@ -27,6 +27,7 @@ class Leaf: NSObject, TreeObject {
   // Leaf Standards
   static let standardWidth: CGFloat = 100
   static let standardHeight: CGFloat = 50
+  static let standardExpand: CGFloat = 1.2
   
   // Reference Variables
   var referenceFrame: CoordinatePair?
@@ -57,6 +58,7 @@ class Leaf: NSObject, TreeObject {
   var movingEnabled: Bool = false
   var connectionsEnabled: Bool = false
   var movingPanRecognizer: UIPanGestureRecognizer?
+  var connectionButton: UIImageView?
   
   // Leaf
   var ability: Ability?
@@ -256,18 +258,18 @@ class Leaf: NSObject, TreeObject {
   func addGestureRecognizers() {
     if let view = self.view {
       
-      let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "leafMoveInitiated:")
-      doubleTapRecognizer.numberOfTapsRequired = 2
-      doubleTapRecognizer.numberOfTouchesRequired = 1
-      view.addGestureRecognizer(doubleTapRecognizer)
+//      let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "leafMoveInitiated:")
+//      doubleTapRecognizer.numberOfTapsRequired = 2
+//      doubleTapRecognizer.numberOfTouchesRequired = 1
+//      view.addGestureRecognizer(doubleTapRecognizer)
       
       let tapRecognizer = UITapGestureRecognizer(target: self, action: "leafDrilldownInitiated")
       tapRecognizer.numberOfTapsRequired = 1
       tapRecognizer.numberOfTouchesRequired = 1
-      tapRecognizer.requireGestureRecognizerToFail(doubleTapRecognizer)
+//      tapRecognizer.requireGestureRecognizerToFail(doubleTapRecognizer)
       view.addGestureRecognizer(tapRecognizer)
       
-      let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "leafConnectionsInitialized:")
+      let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "leafMoveInitiated:")
       longPressRecognizer.minimumPressDuration = 1
       view.addGestureRecognizer(longPressRecognizer)
       
@@ -352,11 +354,14 @@ class Leaf: NSObject, TreeObject {
     treeDelegate?.sharedStore().treeStore.currentGroupings?.forEach({ (grouping) -> () in
       grouping.deselectGrouping()
     })
-    self.movingEnabled = true
-    self.drawLeafSelected()
-//    if state == UIGestureRecognizerState.Changed {
-//      leafBeingPanned(sender)
-//    } else if state == UIGestureRecognizerState.Ended {
+
+    if sender.state == UIGestureRecognizerState.Changed {
+      leafBeingPanned(sender)
+    } else if sender.state == UIGestureRecognizerState.Began {
+      self.movingEnabled = true
+      self.drawLeafSelected()
+    }
+    
 ////      movingEnabled = false
 ////      deselectLeaf()
 //    } else {
@@ -364,6 +369,25 @@ class Leaf: NSObject, TreeObject {
 //      self.movingEnabled = true
 //    }
 //      treeDelegate?.drillIntoLeaf(self)
+  }
+  
+  func connectionsBeingPanned(sender: UIGestureRecognizer) {
+    if !movingEnabled {
+      let state = sender.state
+      if state == .Changed || state == .Ended {
+        print("Connections being drawn")
+        leafBeingPanned(sender)
+        if state == .Ended {
+          print("Connections drawn ending")
+          connectionsEnabled = false
+          togglePanActivation(false)
+        }
+      } else {
+        print("Leaf connections initialized")
+        self.connectionsEnabled = true
+        togglePanActivation(true)
+      }
+    }
   }
   
   func leafBeingPanned(sender: UIGestureRecognizer) {
@@ -382,34 +406,42 @@ class Leaf: NSObject, TreeObject {
   
   func deselectLeaf() {
     if let view = self.view {
+      //remove the delete button
+      self.deleteButton?.removeFromSuperview()
       self.movingEnabled = false
+      self.connectionButton?.hidden = false
       togglePanActivation(false)
       view.backgroundColor = UIColor.whiteColor()
       view.layer.shadowColor = UIColor.clearColor().CGColor
-      view.layer.shadowOpacity = 0
-      view.layer.shadowRadius = 0
-      view.layer.shadowOffset = CGSizeMake(0, 0)
-      view.layer.shadowRadius = 0
-      //remove the delete button
-      self.deleteButton?.removeFromSuperview()
+      UIView.animateWithDuration(0.3, animations: { () -> Void in
+        view.transform = CGAffineTransformIdentity
+        }, completion: { (complete) -> Void in
+          view.layer.shadowOpacity = 0
+          view.layer.shadowRadius = 0
+          view.layer.shadowOffset = CGSizeMake(0, 0)
+          view.layer.shadowRadius = 0
+      })
+
     }
   }
   
   func drawLeafSelected() {
     if let view = self.view {
-//      view.layer.borderColor = UIColor.darkGrayColor().CGColor
-//      view.layer.borderWidth = 2
-      view.backgroundColor = UIColor.yellowColor()
-      view.layer.shadowColor = UIColor.darkGrayColor().CGColor
-      view.layer.shadowOpacity = 0.8
-      view.layer.shadowRadius = 3.0
-      view.layer.shadowOffset = CGSizeMake(7, 7)
-      togglePanActivation(true)
+      self.connectionButton?.hidden = true
+      UIView.animateWithDuration(0.3, animations: { () -> Void in
+        view.transform = CGAffineTransformMakeScale(Leaf.standardExpand, Leaf.standardExpand)
+        view.layer.shadowColor = UIColor.blackColor().CGColor
+        view.layer.shadowOpacity = 0.6
+        view.layer.shadowRadius = 3.0
+        view.layer.shadowOffset = CGSizeMake(7, 7)
+        }, completion: { (complete) -> Void in
+      })
+      self.togglePanActivation(true)
       
       //add a delete button and save it as a var on leaf
       self.deleteButton = UIButton(frame: CGRectMake(0,0,15,15))
-      deleteButton?.setBackgroundImage(UIImage(named: "cancel"), forState: .Normal)
-      deleteButton?.addTarget(self, action: "deleteButtonPressed", forControlEvents: .TouchUpInside)
+      self.deleteButton?.setBackgroundImage(UIImage(named: "cancel"), forState: .Normal)
+      self.deleteButton?.addTarget(self, action: "deleteButtonPressed", forControlEvents: .TouchUpInside)
       self.view?.addSubview(self.deleteButton!)
     }
   }
@@ -490,6 +522,14 @@ class Leaf: NSObject, TreeObject {
   func setLabels() {
     if let view = self.view {
       let half = Leaf.standardHeight / 2
+      
+      self.connectionButton = UIImageView(frame: CGRectMake(Leaf.standardWidth - 25, 5, 15,15))
+      self.connectionButton?.backgroundColor = UIColor.blackColor()
+      self.connectionButton?.userInteractionEnabled = true
+      let panRecognizer = UIPanGestureRecognizer(target: self, action: "connectionsBeingPanned:")
+      connectionButton?.addGestureRecognizer(panRecognizer)
+      view.addSubview(connectionButton!)
+      
       if let name = self.ability?.name {
         var set = false
         if let _ = titleLabel {
