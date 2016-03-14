@@ -210,8 +210,40 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   //might not need the fancy animations for groupings
   
-  func animateLeafGroupingExchange() {
-  
+  func animateLeafGroupingExchange(finger: CGPoint, leaf: Leaf, parentView: UIView, sender: UIGestureRecognizer) {
+    if finger.x < parentView.frame.width - Leaf.standardWidth / 2 && finger.x > 0 + Leaf.standardWidth / 2 && finger.y < parentView.frame.height - Leaf.standardHeight / 2 && finger.y > 0 + Leaf.standardHeight / 2  {
+      
+      leaf.view?.center = finger
+      leaf.changed(.Updated)
+      self.profileDelegate?.changesMade()
+    } else if finger.x < -Leaf.standardWidth || finger.y < -Leaf.standardHeight || finger.x > LeafGrouping.standardWidth + Leaf.standardWidth || finger.y > LeafGrouping.standardHeight + Leaf.standardHeight {
+      animating = true
+      // else if it is far enough out ( that way it has some space to travel and there is a delay
+      // it is trying to escape.....
+      if let groupingView = leaf.grouping?.view {
+        //            leaf.view?.removeFromSuperview()
+        leaf.grouping = nil
+        leaf.groupingId = nil
+        //            leaf.view?.layer.zPosition = 500
+        leaf.changed(.Updated)
+        self.profileDelegate?.changesMade()
+        UIView.animateWithDuration(0.3, animations: { () -> Void in
+          leaf.view?.transform = CGAffineTransformMakeScale(Leaf.standardExpand + 0.2, Leaf.standardExpand + 0.2)
+          }, completion: { (complete) -> Void in
+            UIView.animateWithDuration(1, animations: { () -> Void in
+              let location = sender.locationInView(groupingView)
+              groupingView.clipsToBounds = false
+              leaf.view?.center = location
+              leaf.view?.transform = CGAffineTransformMakeScale(Leaf.standardExpand, Leaf.standardExpand)
+              }, completion: { (complete) -> Void in
+                let location = sender.locationInView(self.treeView)
+                leaf.view?.center = location
+                self.treeView.addSubview(leaf.view!)
+                self.animating = false
+            })
+        })
+      }
+    }
   }
   
   
@@ -221,38 +253,12 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       if let parentView = leaf.parentView() {
         parentView.bringSubviewToFront(view)
         finger = sender.locationInView(parentView)
-        if finger.x < parentView.frame.width - Leaf.standardWidth / 2 && finger.x > 0 + Leaf.standardWidth / 2 && finger.y < parentView.frame.height - Leaf.standardHeight / 2 && finger.y > 0 + Leaf.standardHeight / 2  {
-          
+        if leaf.grouping != nil {
+          animateLeafGroupingExchange(finger, leaf: leaf, parentView: parentView, sender: sender)
+        } else {
           leaf.view?.center = finger
           leaf.changed(.Updated)
           self.profileDelegate?.changesMade()
-        } else if finger.x < -Leaf.standardWidth || finger.y < -Leaf.standardHeight {
-          animating = true
-          // else if it is far enough out ( that way it has some space to travel and there is a delay
-          // it is trying to escape.....
-          if let groupingView = leaf.grouping?.view {
-//            leaf.view?.removeFromSuperview()
-            leaf.grouping = nil
-            leaf.groupingId = nil
-//            leaf.view?.layer.zPosition = 500
-            leaf.changed(.Updated)
-            self.profileDelegate?.changesMade()
-            UIView.animateWithDuration(0.3, animations: { () -> Void in
-              leaf.view?.transform = CGAffineTransformMakeScale(Leaf.standardExpand + 0.2, Leaf.standardExpand + 0.2)
-              }, completion: { (complete) -> Void in
-                UIView.animateWithDuration(1, animations: { () -> Void in
-                  let location = sender.locationInView(groupingView)
-                  groupingView.clipsToBounds = false
-                  leaf.view?.center = location
-                  leaf.view?.transform = CGAffineTransformMakeScale(Leaf.standardExpand, Leaf.standardExpand)
-                  }, completion: { (complete) -> Void in
-                    let location = sender.locationInView(self.treeView)
-                    leaf.view?.center = location
-                    self.treeView.addSubview(leaf.view!)
-                    self.animating = false
-                  })
-            })
-          }
         }
       }
       

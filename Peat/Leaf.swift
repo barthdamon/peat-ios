@@ -391,15 +391,17 @@ class Leaf: NSObject, TreeObject {
   }
   
   func leafBeingPanned(sender: UIGestureRecognizer) {
-    print("Leaf being panned")
-    let state = sender.state
-    if state == UIGestureRecognizerState.Ended {
-      self.treeDelegate?.connectionsBeingDrawn(self, fromGrouping: nil, sender: sender)
-    } else {
-      if movingEnabled {
-        self.treeDelegate?.leafBeingMoved(self, sender: sender)
-      } else if connectionsEnabled {
+    if movingEnabled || connectionsEnabled {
+      print("Leaf being panned")
+      let state = sender.state
+      if state == UIGestureRecognizerState.Ended {
         self.treeDelegate?.connectionsBeingDrawn(self, fromGrouping: nil, sender: sender)
+      } else {
+        if movingEnabled {
+          self.treeDelegate?.leafBeingMoved(self, sender: sender)
+        } else if connectionsEnabled {
+          self.treeDelegate?.connectionsBeingDrawn(self, fromGrouping: nil, sender: sender)
+        }
       }
     }
   }
