@@ -39,6 +39,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   var dragView: UIImageView?
   var expandEnabled: Bool = false
   var titleField: UITextField?
+  var connectionButton: UIImageView?
   
   var rgbColor: UIColor? {
     didSet {
@@ -175,6 +176,14 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   
   func configureDragView() {
     if let view = self.view, width = width, height = height {
+      
+      connectionButton = UIImageView(frame: CGRectMake(width - 30, 30, 15, 15))
+      connectionButton?.backgroundColor = UIColor.blackColor()
+      connectionButton?.userInteractionEnabled = true
+      let connectionRecognizer = UIPanGestureRecognizer(target: self, action: "groupingConnectionsInitialized:")
+      connectionButton!.addGestureRecognizer(connectionRecognizer)
+      view.addSubview(connectionButton!)
+      
       dragView = UIImageView(frame: CGRectMake(width - 30, height - 30, 15, 15))
       dragView!.backgroundColor = UIColor.blackColor()
       
@@ -237,6 +246,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
           view.frame = CGRectMake(x, y, finger.x, finger.y)
           dragView.frame = CGRectMake(view.frame.width - 30, view.frame.height - 30, 15, 15)
           titleField?.frame = CGRectMake(view.frame.width - 200, view.frame.height - 30, 150, 25)
+          connectionButton?.frame = CGRectMake(view.frame.width - 30, 30, 15, 15)
           self.width = finger.x
           self.height = finger.y
         }
@@ -253,10 +263,10 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
     if let view = self.view {
       
       
-      let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "groupingMoveInitiated:")
-      doubleTapRecognizer.numberOfTapsRequired = 2
-      doubleTapRecognizer.numberOfTouchesRequired = 1
-      view.addGestureRecognizer(doubleTapRecognizer)
+//      let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "groupingMoveInitiated:")
+//      doubleTapRecognizer.numberOfTapsRequired = 2
+//      doubleTapRecognizer.numberOfTouchesRequired = 1
+//      view.addGestureRecognizer(doubleTapRecognizer)
       
 //      let tapRecognizer = UITapGestureRecognizer(target: self, action: "leafDrilldownInitiated")
 //      tapRecognizer.numberOfTapsRequired = 1
@@ -267,7 +277,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
 //      longPressRecognizer.minimumPressDuration = 1
 //      view.addGestureRecognizer(longPressRecognizer)
       
-      let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "groupingConnectionsInitialized:")
+      let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "groupingMoveInitiated:")
       longPressRecognizer.minimumPressDuration = 1
       view.addGestureRecognizer(longPressRecognizer)
       
@@ -285,7 +295,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
 //      doubleTapRecognizer.numberOfTouchesRequired = 1
 //      doubleTapRecognizer.numberOfTapsRequired = 2
       
-      view.addGestureRecognizer(doubleTapRecognizer)
+//      view.addGestureRecognizer(doubleTapRecognizer)
       
       //maybe when they tap a plus button and drag that adds a connection????
     }
@@ -331,20 +341,20 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
         grouping.deselectGrouping()
       }
     })
-    self.drawGroupingSelected()
-    self.movingEnabled = true
-//    let state = sender.state
-//    if state == UIGestureRecognizerState.Changed {
-//      groupingBeingPanned(sender)
-//    } else if state == UIGestureRecognizerState.Ended {
-//      togglePanActivation(false)
-//      //      movingEnabled = false
-//      //      deselectLeaf()
-//    } else {
-//      self.drawGroupingSelected()
-//      self.movingEnabled = true
-//      togglePanActivation(true)
-//    }
+//    self.drawGroupingSelected()
+//    self.movingEnabled = true
+    let state = sender.state
+    if state == UIGestureRecognizerState.Changed {
+      groupingBeingPanned(sender)
+    } else if state == UIGestureRecognizerState.Ended {
+      togglePanActivation(false)
+      //      movingEnabled = false
+      //      deselectLeaf()
+    } else {
+      self.drawGroupingSelected()
+      self.movingEnabled = true
+      togglePanActivation(true)
+    }
   }
   
   func groupingBeingPlaced() {
