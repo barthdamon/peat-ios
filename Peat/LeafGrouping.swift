@@ -122,11 +122,14 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
     if let view = self.view {
       togglePanActivation(false)
 //      view.backgroundColor = UIColor.whiteColor()
-      view.layer.shadowColor = UIColor.clearColor().CGColor
-      view.layer.shadowOpacity = 0
-      view.layer.shadowRadius = 0
-      view.layer.shadowOffset = CGSizeMake(0, 0)
-      view.layer.shadowRadius = 0
+      UIView.animateWithDuration(0.3, animations: { () -> Void in
+        view.transform = CGAffineTransformIdentity
+        view.layer.shadowOpacity = 0
+        view.layer.shadowRadius = 0
+        view.layer.shadowOffset = CGSizeMake(0, 0)
+        view.layer.shadowRadius = 0
+        }, completion: { (complete) -> Void in
+      })
       //remove the delete button
       self.deleteButton?.removeFromSuperview()
     }
@@ -134,11 +137,15 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   
   func drawGroupingSelected() {
     if let view = self.view {
-      view.layer.shadowColor = UIColor.darkGrayColor().CGColor
-      view.layer.shadowOpacity = 0.8
-      view.layer.shadowRadius = 3.0
-      view.layer.shadowOffset = CGSizeMake(7, 7)
       togglePanActivation(true)
+      UIView.animateWithDuration(0.3, animations: { () -> Void in
+        view.transform = CGAffineTransformMakeScale(Leaf.standardExpand, Leaf.standardExpand)
+        view.layer.shadowColor = UIColor.blackColor().CGColor
+        view.layer.shadowOpacity = 0.8
+        view.layer.shadowRadius = 3.0
+        view.layer.shadowOffset = CGSizeMake(7, 7)
+        }, completion: { (complete) -> Void in
+      })
       //add a delete button and save it as a var on leaf
       self.deleteButton = UIButton(frame: CGRectMake(0,0,15,15))
       deleteButton?.setBackgroundImage(UIImage(named: "cancel"), forState: .Normal)

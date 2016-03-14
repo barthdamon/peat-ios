@@ -417,11 +417,11 @@ class Leaf: NSObject, TreeObject {
       view.layer.shadowColor = UIColor.clearColor().CGColor
       UIView.animateWithDuration(0.3, animations: { () -> Void in
         view.transform = CGAffineTransformIdentity
+        view.layer.shadowOpacity = 0
+        view.layer.shadowRadius = 0
+        view.layer.shadowOffset = CGSizeMake(0, 0)
+        view.layer.shadowRadius = 0
         }, completion: { (complete) -> Void in
-          view.layer.shadowOpacity = 0
-          view.layer.shadowRadius = 0
-          view.layer.shadowOffset = CGSizeMake(0, 0)
-          view.layer.shadowRadius = 0
       })
 
     }
