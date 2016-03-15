@@ -20,6 +20,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   var user_Id: String?
   var groupingId: String?
   
+  var moveStartPoint: CGPoint?
   var center: CGPoint?
   var paramCenter: CGPoint? {
     return self.view != nil ? self.view!.center : center
@@ -361,27 +362,30 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   }
   
   func groupingMoveInitiated(sender: UIGestureRecognizer) {
-    treeDelegate?.sharedStore().treeStore.currentLeaves?.forEach({ (leaf) -> () in
-      leaf.deselectLeaf()
-    })
-    treeDelegate?.sharedStore().treeStore.currentGroupings?.forEach({ (grouping) -> () in
-      if grouping.groupingId != self.groupingId {
-        grouping.deselectGrouping()
+    if !connectionsEnabled {
+      treeDelegate?.sharedStore().treeStore.currentLeaves?.forEach({ (leaf) -> () in
+        leaf.deselectLeaf()
+      })
+      treeDelegate?.sharedStore().treeStore.currentGroupings?.forEach({ (grouping) -> () in
+        if grouping.groupingId != self.groupingId {
+          grouping.deselectGrouping()
+        }
+      })
+      //    self.drawGroupingSelected()
+      //    self.movingEnabled = true
+      let state = sender.state
+      if state == UIGestureRecognizerState.Changed {
+        groupingBeingPanned(sender)
+      } else if state == UIGestureRecognizerState.Ended {
+        togglePanActivation(false)
+        //      movingEnabled = false
+        //      deselectLeaf()
+      } else {
+        moveStartPoint = sender.locationInView(treeDelegate?.viewForTree())
+        self.drawGroupingSelected()
+        self.movingEnabled = true
+        togglePanActivation(true)
       }
-    })
-//    self.drawGroupingSelected()
-//    self.movingEnabled = true
-    let state = sender.state
-    if state == UIGestureRecognizerState.Changed {
-      groupingBeingPanned(sender)
-    } else if state == UIGestureRecognizerState.Ended {
-      togglePanActivation(false)
-      //      movingEnabled = false
-      //      deselectLeaf()
-    } else {
-      self.drawGroupingSelected()
-      self.movingEnabled = true
-      togglePanActivation(true)
     }
   }
   
@@ -409,6 +413,9 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   
   func groupingBeingPanned(sender: UIGestureRecognizer) {
     if movingEnabled {
+      if sender.state == .Began {
+        moveStartPoint = sender.locationInView(treeDelegate?.viewForTree())
+      }
       self.treeDelegate?.groupingBeingMoved(self, sender: sender)
     } else if connectionsEnabled {
       self.treeDelegate?.connectionsBeingDrawn(nil, fromGrouping: self, sender: sender)

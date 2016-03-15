@@ -239,6 +239,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
                 let location = sender.locationInView(self.treeView)
                 leaf.view?.center = location
                 self.treeView.addSubview(leaf.view!)
+                leaf.moveStartPoint = location
                 self.animating = false
             })
         })
@@ -250,13 +251,18 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer) {
     if let view = leaf.view where !animating {
       var finger: CGPoint = CGPoint()
-      if let parentView = leaf.parentView() {
+      if let parentView = leaf.parentView(), startPoint = leaf.moveStartPoint {
         parentView.bringSubviewToFront(view)
         finger = sender.locationInView(parentView)
+        let xDiff = finger.x - startPoint.x
+        let yDiff = finger.y - startPoint.y
+        leaf.moveStartPoint = finger
+        
         if leaf.grouping != nil {
           animateLeafGroupingExchange(finger, leaf: leaf, parentView: parentView, sender: sender)
         } else {
-          leaf.view?.center = finger
+          leaf.view?.center.x += xDiff
+          leaf.view?.center.y += yDiff
           leaf.changed(.Updated)
           self.profileDelegate?.changesMade()
         }
@@ -632,10 +638,20 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   //MARK: Groupings
   
   func groupingBeingMoved(grouping: LeafGrouping, sender: UIGestureRecognizer) {
-    if let view = grouping.view {
+    if let view = grouping.view, startPoint = grouping.moveStartPoint {
+//      let centerX = LeafGrouping.standardWidth / 2
+//      let centerY = LeafGrouping.standardHeight / 2
+      let finger = sender.locationInView(self.treeView)
+      let xDiff = finger.x - startPoint.x
+      let yDiff = finger.y - startPoint.y
+      grouping.moveStartPoint = finger
+      
       self.treeView.bringSubviewToFront(view)
-      let center = sender.locationInView(self.treeView)
-      grouping.view?.center = center
+      
+//      let newCenter = CGPoint(x: finger.x + xDiff, y: finger.y + yDiff)
+      
+      grouping.view?.center.x += xDiff
+      grouping.view?.center.y += yDiff
       //deal with connections
       grouping.changed(.Updated)
       self.profileDelegate?.changesMade()

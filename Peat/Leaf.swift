@@ -42,6 +42,7 @@ class Leaf: NSObject, TreeObject {
     return standardHeight / 2
   }
   // Unique Drawing Variables
+  var moveStartPoint: CGPoint?
   var center: CGPoint?
   var groupingCenter: CGPoint?
   
@@ -346,23 +347,25 @@ class Leaf: NSObject, TreeObject {
   }
   
   func leafMoveInitiated(sender: UIGestureRecognizer) {
-    treeDelegate?.sharedStore().treeStore.currentLeaves?.forEach({ (leaf) -> () in
-      if leaf.leafId != self.leafId {
-        leaf.movingEnabled = false
-        leaf.deselectLeaf()
+    if !connectionsEnabled {
+      treeDelegate?.sharedStore().treeStore.currentLeaves?.forEach({ (leaf) -> () in
+        if leaf.leafId != self.leafId {
+          leaf.movingEnabled = false
+          leaf.deselectLeaf()
+        }
+      })
+      treeDelegate?.sharedStore().treeStore.currentGroupings?.forEach({ (grouping) -> () in
+        grouping.deselectGrouping()
+      })
+      
+      if sender.state == UIGestureRecognizerState.Changed {
+        leafBeingPanned(sender)
+      } else if sender.state == UIGestureRecognizerState.Began {
+        moveStartPoint = sender.locationInView(parentView())
+        self.movingEnabled = true
+        self.drawLeafSelected()
       }
-    })
-    treeDelegate?.sharedStore().treeStore.currentGroupings?.forEach({ (grouping) -> () in
-      grouping.deselectGrouping()
-    })
-
-    if sender.state == UIGestureRecognizerState.Changed {
-      leafBeingPanned(sender)
-    } else if sender.state == UIGestureRecognizerState.Began {
-      self.movingEnabled = true
-      self.drawLeafSelected()
     }
-    
 ////      movingEnabled = false
 ////      deselectLeaf()
 //    } else {
@@ -377,6 +380,9 @@ class Leaf: NSObject, TreeObject {
     print("Leaf being panned")
     if movingEnabled {
       print("Leaf being moved")
+      if state == .Began {
+        moveStartPoint = sender.locationInView(parentView())
+      }
       self.treeDelegate?.leafBeingMoved(self, sender: sender)
     } else if connectionsEnabled {
 //      if state == .Changed || state == .Ended {
