@@ -13,6 +13,8 @@ protocol TreeObject {
   func parentView() -> UIView?
   func changed(status: ChangeStatus)
   func isCompleted() -> Bool
+  func getStandardHeight() -> CGFloat
+  func getStandardWidth() -> CGFloat
 }
 
 import Foundation
@@ -28,6 +30,8 @@ class Leaf: NSObject, TreeObject {
   static let standardWidth: CGFloat = 100
   static let standardHeight: CGFloat = 50
   static let standardExpand: CGFloat = 1.2
+  func getStandardHeight() -> CGFloat { return Leaf.standardHeight }
+  func getStandardWidth() -> CGFloat { return Leaf.standardWidth }
   
   // Reference Variables
   var referenceFrame: CoordinatePair?
@@ -56,7 +60,16 @@ class Leaf: NSObject, TreeObject {
   
   //Admin
   var movingEnabled: Bool = false
-  var connectionsEnabled: Bool = false
+  var connectionsEnabled: Bool = false {
+    didSet {
+      if connectionsEnabled {
+        dashedLayer = self.view?.addDashedBorder()
+      } else {
+        dashedLayer?.removeFromSuperlayer()
+      }
+    }
+  }
+  var dashedLayer: CAShapeLayer?
   var movingPanRecognizer: UIPanGestureRecognizer?
   var connectionButton: UIImageView?
   
@@ -258,22 +271,21 @@ class Leaf: NSObject, TreeObject {
   func addGestureRecognizers() {
     if let view = self.view {
       
-//      let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "leafMoveInitiated:")
-//      doubleTapRecognizer.numberOfTapsRequired = 2
-//      doubleTapRecognizer.numberOfTouchesRequired = 1
-//      view.addGestureRecognizer(doubleTapRecognizer)
+      let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "leafConnectionsInitialized:")
+      doubleTapRecognizer.numberOfTapsRequired = 2
+      doubleTapRecognizer.numberOfTouchesRequired = 1
+      view.addGestureRecognizer(doubleTapRecognizer)
       
       let tapRecognizer = UITapGestureRecognizer(target: self, action: "leafDrilldownInitiated")
       tapRecognizer.numberOfTapsRequired = 1
       tapRecognizer.numberOfTouchesRequired = 1
-//      tapRecognizer.requireGestureRecognizerToFail(doubleTapRecognizer)
+      tapRecognizer.requireGestureRecognizerToFail(doubleTapRecognizer)
       view.addGestureRecognizer(tapRecognizer)
       
       let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "leafMoveInitiated:")
       longPressRecognizer.minimumPressDuration = 1
       view.addGestureRecognizer(longPressRecognizer)
       
-      //maybe when they tap a plus button and drag that adds a connection????
     }
   }
   
@@ -290,20 +302,9 @@ class Leaf: NSObject, TreeObject {
   
   func leafConnectionsInitialized(sender: UIGestureRecognizer) {
     if !movingEnabled {
-      let state = sender.state
-      if state == .Changed || state == .Ended {
-        print("Connections being drawn")
-        leafBeingPanned(sender)
-        if state == .Ended {
-          print("Connections drawn ending")
-          connectionsEnabled = false
-          togglePanActivation(false)
-        }
-      } else {
-        print("Leaf connections initialized")
-        self.connectionsEnabled = true
-        togglePanActivation(true)
-      }
+      print("Leaf connections initialized")
+      self.connectionsEnabled = true
+      togglePanActivation(true)
     }
   }
   
@@ -371,38 +372,17 @@ class Leaf: NSObject, TreeObject {
 //      treeDelegate?.drillIntoLeaf(self)
   }
   
-  func connectionsBeingPanned(sender: UIGestureRecognizer) {
-    if !movingEnabled {
-      let state = sender.state
-      if state == .Changed || state == .Ended {
-        print("Connections being drawn")
-        leafBeingPanned(sender)
-        if state == .Ended {
-          print("Connections drawn ending")
-          connectionsEnabled = false
-          togglePanActivation(false)
-        }
-      } else {
-        print("Leaf connections initialized")
-        self.connectionsEnabled = true
-        togglePanActivation(true)
-      }
-    }
-  }
-  
   func leafBeingPanned(sender: UIGestureRecognizer) {
-    if movingEnabled || connectionsEnabled {
-      print("Leaf being panned")
-      let state = sender.state
-      if state == UIGestureRecognizerState.Ended {
-        self.treeDelegate?.connectionsBeingDrawn(self, fromGrouping: nil, sender: sender)
-      } else {
-        if movingEnabled {
-          self.treeDelegate?.leafBeingMoved(self, sender: sender)
-        } else if connectionsEnabled {
-          self.treeDelegate?.connectionsBeingDrawn(self, fromGrouping: nil, sender: sender)
-        }
-      }
+    let state = sender.state
+    print("Leaf being panned")
+    if movingEnabled {
+      print("Leaf being moved")
+      self.treeDelegate?.leafBeingMoved(self, sender: sender)
+    } else if connectionsEnabled {
+//      if state == .Changed || state == .Ended {
+      print("Connections being drawn")
+//      leafBeingPanned(sender)
+      self.treeDelegate?.connectionsBeingDrawn(self, fromGrouping: nil, sender: sender)
     }
   }
   
@@ -506,6 +486,10 @@ class Leaf: NSObject, TreeObject {
       movingEnabled = false
       deselectLeaf()
 //      treeDelegate?.checkForOverlaps(self)
+    } else if connectionsEnabled {
+      print("Connections drawn ending")
+      connectionsEnabled = false
+      togglePanActivation(false)
     } else {
       treeDelegate?.drillIntoLeaf(self)
     }
@@ -524,13 +508,6 @@ class Leaf: NSObject, TreeObject {
   func setLabels() {
     if let view = self.view {
       let half = Leaf.standardHeight / 2
-      
-      self.connectionButton = UIImageView(frame: CGRectMake(Leaf.standardWidth - 25, 5, 15,15))
-      self.connectionButton?.backgroundColor = UIColor.blackColor()
-      self.connectionButton?.userInteractionEnabled = true
-      let panRecognizer = UIPanGestureRecognizer(target: self, action: "connectionsBeingPanned:")
-      connectionButton?.addGestureRecognizer(panRecognizer)
-      view.addSubview(connectionButton!)
       
       if let name = self.ability?.name {
         var set = false

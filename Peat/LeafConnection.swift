@@ -14,6 +14,11 @@ class LeafConnection: NSObject {
   var user_Id: String?
   var fromId: String?
   var toId: String?
+  
+  //the points within the from and to objects
+  var fromObjectPoint: CGPoint?
+  var toObjectPoint: CGPoint?
+  
   var type: LeafConnectionType?
   var activityName: String?
   
@@ -87,7 +92,15 @@ class LeafConnection: NSObject {
       "type": self.type != nil ? self.type!.rawValue : "",
       "activityName" : paramFor(activityName),
       "toId": paramFor(toId),
-      "fromId": paramFor(fromId)
+      "fromId": paramFor(fromId),
+      "toObjectPoint": [
+        "x": toObjectPoint?.x != nil ? toObjectPoint!.x : 0,
+        "y" : toObjectPoint?.y != nil ? toObjectPoint!.y : 0
+      ],
+      "fromObjectPoint": [
+        "x": fromObjectPoint?.x != nil ? fromObjectPoint!.x : 0,
+        "y": fromObjectPoint?.y != nil ? fromObjectPoint!.y : 0
+      ]
     ]
   }
   

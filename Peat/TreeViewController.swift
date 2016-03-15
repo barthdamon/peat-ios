@@ -440,20 +440,70 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     }
   }
   
+  func findAdjustedCenter(view: UIView, point: CGPoint) -> CGPoint {
+    // this is only for when the to/from points are nil. otherwise we keep those points. (the points have to be relative to the view I guess...
+    let w: CGFloat = view.frame.width / 2
+    let h: CGFloat = view.frame.height / 2
+    let center = view.center
+    let connectionWidth: CGFloat = 10.0
+    
+    let vector: CGPoint = CGPoint(x: point.x - center.x, y: point.y - center.y)
+    let slope = vector.y / vector.x
+    
+    //if it is less than
+    let greaterThanY = point.y > view.center.y + h
+    let greaterThanX = point.x > view.center.x + w
+    let lessThanX = point.x < view.center.x - w
+    let lessThanY = point.y < view.center.y - h
+    var withinY = false
+    if !greaterThanY && !lessThanY { withinY = true }
+    var withinX = false
+    if !greaterThanX && !lessThanX { withinX = true }
+    var x: CGFloat = 0.0
+    var y: CGFloat = 0.0
+  
+    if (withinX && greaterThanY) || (lessThanX && greaterThanY) || (greaterThanX && greaterThanY) {
+      //on the bottom
+      x = h / slope
+      y = h - connectionWidth
+    } else if (withinX && lessThanY) || (lessThanX && lessThanY) || (greaterThanX && lessThanY) {
+      //on the top
+      x = -(h / slope)
+      y = -(h - connectionWidth)
+    } else if withinY && lessThanX {
+      //on the left
+      x = -(w - connectionWidth)
+      y = -(w * slope)
+    } else if withinY && greaterThanX {
+      //on the right
+      x = w - connectionWidth
+      y = w * slope
+    }
+    
+    if x > w { x = w }
+    if x < -w { x = -w }
+    
+    return CGPoint(x: view.center.x + x, y: view.center.y + y)
+    //need to save these points. and then move them relative to where the center of the view is moving.
+    //maybe just save the x and y offsets from the center
+    // then every time just add that to where the center is
+    //hopefully groupings will scale well. yeah they should.
+  }
+  
   // Drawing from tree
   func drawConnection(fromObject: TreeObject, sender: UIGestureRecognizer, existingConnection: LeafConnection?) {
     if let view = fromObject.viewForTree(), parentView = fromObject.parentView(){
-      
       let finger = sender.locationInView(parentView)
+      let center = findAdjustedCenter(view, point: finger)
 
       if let existing = existingConnection {
-        let connectionUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(view.center, toPoint: finger, existingConnection: existing)
+        let connectionUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(center, toPoint: finger, existingConnection: existing)
         existing.connectionLayer = connectionUI.layer
         existing.arrow = connectionUI.arrow
         parentView.layer.addSublayer(connectionUI.layer)
         parentView.addSubview(connectionUI.arrow)
       } else {
-        let connectionUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(view.center, toPoint: finger, existingConnection: nil)
+        let connectionUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(center, toPoint: finger, existingConnection: nil)
         sharedStore().newConnection(connectionUI.layer, arrow: connectionUI.arrow, from: fromObject, to: nil, delegate: self)
         parentView.layer.addSublayer(connectionUI.layer)
         parentView.addSubview(connectionUI.arrow)

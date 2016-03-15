@@ -26,6 +26,8 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   }
   static let standardHeight: CGFloat = Leaf.standardHeight * 3
   static let standardWidth: CGFloat = Leaf.standardWidth * 3
+  func getStandardHeight() -> CGFloat { return LeafGrouping.standardHeight }
+  func getStandardWidth() -> CGFloat { return LeafGrouping.standardWidth }
   var height: CGFloat?
   var width: CGFloat?
   
@@ -34,12 +36,21 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   
   var treeDelegate: TreeDelegate?
   var movingEnabled: Bool = false
-  var connectionsEnabled: Bool = false
+  var connectionsEnabled: Bool = false {
+    didSet {
+      if connectionsEnabled {
+        dashedLayer = self.view?.addDashedBorder()
+      } else {
+        dashedLayer?.removeFromSuperlayer()
+      }
+    }
+  }
+  var dashedLayer: CAShapeLayer?
   
   var dragView: UIImageView?
   var expandEnabled: Bool = false
   var titleField: UITextField?
-  var connectionButton: UIImageView?
+//  var connectionButton: UIImageView?
   
   var rgbColor: UIColor? {
     didSet {
@@ -193,12 +204,12 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   func configureDragView() {
     if let view = self.view, width = width, height = height {
       
-      connectionButton = UIImageView(frame: CGRectMake(width - 30, 30, 15, 15))
-      connectionButton?.backgroundColor = UIColor.blackColor()
-      connectionButton?.userInteractionEnabled = true
-      let connectionRecognizer = UIPanGestureRecognizer(target: self, action: "groupingConnectionsInitialized:")
-      connectionButton!.addGestureRecognizer(connectionRecognizer)
-      view.addSubview(connectionButton!)
+//      connectionButton = UIImageView(frame: CGRectMake(width - 30, 30, 15, 15))
+//      connectionButton?.backgroundColor = UIColor.blackColor()
+//      connectionButton?.userInteractionEnabled = true
+//      let connectionRecognizer = UIPanGestureRecognizer(target: self, action: "groupingConnectionsInitialized:")
+//      connectionButton!.addGestureRecognizer(connectionRecognizer)
+//      view.addSubview(connectionButton!)
       
       dragView = UIImageView(frame: CGRectMake(width - 30, height - 30, 15, 15))
       dragView!.backgroundColor = UIColor.blackColor()
@@ -262,7 +273,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
           view.frame = CGRectMake(x, y, finger.x, finger.y)
           dragView.frame = CGRectMake(view.frame.width - 30, view.frame.height - 30, 15, 15)
           titleField?.frame = CGRectMake(view.frame.width - 200, view.frame.height - 30, 150, 25)
-          connectionButton?.frame = CGRectMake(view.frame.width - 30, 30, 15, 15)
+//          connectionButton?.frame = CGRectMake(view.frame.width - 30, 30, 15, 15)
           self.width = finger.x
           self.height = finger.y
         }
@@ -279,10 +290,10 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
     if let view = self.view {
       
       
-//      let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "groupingMoveInitiated:")
-//      doubleTapRecognizer.numberOfTapsRequired = 2
-//      doubleTapRecognizer.numberOfTouchesRequired = 1
-//      view.addGestureRecognizer(doubleTapRecognizer)
+      let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "groupingConnectionsInitialized:")
+      doubleTapRecognizer.numberOfTapsRequired = 2
+      doubleTapRecognizer.numberOfTouchesRequired = 1
+      view.addGestureRecognizer(doubleTapRecognizer)
       
 //      let tapRecognizer = UITapGestureRecognizer(target: self, action: "leafDrilldownInitiated")
 //      tapRecognizer.numberOfTapsRequired = 1
@@ -318,16 +329,17 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   }
   
   func groupingConnectionsInitialized(sender: UIGestureRecognizer) {
-    let state = sender.state
-    if state == .Changed || state == .Ended {
-      print("Connections being drawn")
-      groupingBeingPanned(sender)
-      if state == .Ended {
-        print("Connections drawn ending")
-        connectionsEnabled = false
-        togglePanActivation(false)
-      }
-    } else {
+    if !movingEnabled {
+//    let state = sender.state
+//    if state == .Changed || state == .Ended {
+//      print("Connections being drawn")
+//      groupingBeingPanned(sender)
+//      if state == .Ended {
+//        print("Connections drawn ending")
+//        connectionsEnabled = false
+//        togglePanActivation(false)
+//      }
+//    } else {
       print("Leaf connections initialized")
       self.connectionsEnabled = true
       togglePanActivation(true)
@@ -377,6 +389,9 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
     if movingEnabled {
       movingEnabled = false
       deselectGrouping()
+    } else if connectionsEnabled {
+      connectionsEnabled = false
+      togglePanActivation(false)
     }
   }
   
@@ -395,7 +410,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   func groupingBeingPanned(sender: UIGestureRecognizer) {
     if movingEnabled {
       self.treeDelegate?.groupingBeingMoved(self, sender: sender)
-    } else {
+    } else if connectionsEnabled {
       self.treeDelegate?.connectionsBeingDrawn(nil, fromGrouping: self, sender: sender)
     }
   }
