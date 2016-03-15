@@ -686,6 +686,8 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
                 leafView.center.y -= groupingView.frame.origin.y
                 groupingView.addSubview(leafView)
                 leaf.grouping = grouping
+                leaf.moveStartPoint = leafView.center
+                leaf.animating = false
                 self.checkForNewCompletions()
             })
         })

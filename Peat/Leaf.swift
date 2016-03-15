@@ -45,6 +45,7 @@ class Leaf: NSObject, TreeObject {
   var moveStartPoint: CGPoint?
   var center: CGPoint?
   var groupingCenter: CGPoint?
+  var animating = false
   
   var paramCenter: CGPoint? {
     return self.view != nil ? self.view!.center : center
@@ -378,7 +379,7 @@ class Leaf: NSObject, TreeObject {
   func leafBeingPanned(sender: UIGestureRecognizer) {
     let state = sender.state
     print("Leaf being panned")
-    if movingEnabled {
+    if movingEnabled && !animating {
       print("Leaf being moved")
       if state == .Began {
         moveStartPoint = sender.locationInView(parentView())
@@ -455,6 +456,7 @@ class Leaf: NSObject, TreeObject {
     //remove all connections (totally delete them)
     //remove any connection with its id
     treeDelegate?.sharedStore().removeConnectionsForObject(self)
+    self.animating = true
   }
   
   func generateBounds() {
