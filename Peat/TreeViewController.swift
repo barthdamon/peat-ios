@@ -211,12 +211,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   //might not need the fancy animations for groupings
   
   func animateLeafGroupingExchange(finger: CGPoint, leaf: Leaf, parentView: UIView, sender: UIGestureRecognizer) {
-    if finger.x < parentView.frame.width - Leaf.standardWidth / 2 && finger.x > 0 + Leaf.standardWidth / 2 && finger.y < parentView.frame.height - Leaf.standardHeight / 2 && finger.y > 0 + Leaf.standardHeight / 2  {
-      
-      leaf.view?.center = finger
-      leaf.changed(.Updated)
-      self.profileDelegate?.changesMade()
-    } else if finger.x < -Leaf.standardWidth || finger.y < -Leaf.standardHeight || finger.x > LeafGrouping.standardWidth + Leaf.standardWidth || finger.y > LeafGrouping.standardHeight + Leaf.standardHeight {
+    if finger.x < -Leaf.standardWidth || finger.y < -Leaf.standardHeight || finger.x > LeafGrouping.standardWidth + Leaf.standardWidth || finger.y > LeafGrouping.standardHeight + Leaf.standardHeight {
       animating = true
       // else if it is far enough out ( that way it has some space to travel and there is a delay
       // it is trying to escape.....
@@ -252,13 +247,15 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     if let view = leaf.view where !animating {
       var finger: CGPoint = CGPoint()
       if let parentView = leaf.parentView(), startPoint = leaf.moveStartPoint {
+        print("Move start Point: \(startPoint)")
         parentView.bringSubviewToFront(view)
         finger = sender.locationInView(parentView)
+        print("new point: \(finger)")
         let xDiff = finger.x - startPoint.x
         let yDiff = finger.y - startPoint.y
         leaf.moveStartPoint = finger
         
-        if leaf.grouping != nil {
+        if (leaf.grouping != nil) && !(finger.x < parentView.frame.width - Leaf.standardWidth / 2 && finger.x > 0 + Leaf.standardWidth / 2 && finger.y < parentView.frame.height - Leaf.standardHeight / 2 && finger.y > 0 + Leaf.standardHeight / 2) {
           animateLeafGroupingExchange(finger, leaf: leaf, parentView: parentView, sender: sender)
         } else {
           leaf.view?.center.x += xDiff
