@@ -41,6 +41,11 @@ class Leaf: NSObject, TreeObject {
   class var yOffset: CGFloat {
     return standardHeight / 2
   }
+  
+  //connection offsets
+//  func setConnectionOffsets(offsets: CoordinatePair) { connectionOffsets = offsets }
+//  var connectionOffsets: CoordinatePair?
+  
   // Unique Drawing Variables
   var moveStartPoint: CGPoint?
   var center: CGPoint?
@@ -303,7 +308,7 @@ class Leaf: NSObject, TreeObject {
   }
   
   func leafConnectionsInitialized(sender: UIGestureRecognizer) {
-    if !movingEnabled {
+    if !movingEnabled && !connectionsEnabled {
       print("Leaf connections initialized")
       self.connectionsEnabled = true
       togglePanActivation(true)
@@ -352,10 +357,13 @@ class Leaf: NSObject, TreeObject {
       treeDelegate?.sharedStore().treeStore.currentLeaves?.forEach({ (leaf) -> () in
         if leaf.leafId != self.leafId {
           leaf.movingEnabled = false
+          leaf.connectionsEnabled = false
           leaf.deselectLeaf()
         }
       })
       treeDelegate?.sharedStore().treeStore.currentGroupings?.forEach({ (grouping) -> () in
+        grouping.movingEnabled = false
+        grouping.connectionsEnabled = false
         grouping.deselectGrouping()
       })
       
@@ -389,7 +397,7 @@ class Leaf: NSObject, TreeObject {
 //      if state == .Changed || state == .Ended {
       print("Connections being drawn")
 //      leafBeingPanned(sender)
-      self.treeDelegate?.connectionsBeingDrawn(self, fromGrouping: nil, sender: sender)
+      self.treeDelegate?.connectionsBeingDrawn(self, sender: sender)
     }
   }
   
@@ -400,7 +408,7 @@ class Leaf: NSObject, TreeObject {
       self.movingEnabled = false
       self.connectionButton?.hidden = false
       togglePanActivation(false)
-      view.backgroundColor = UIColor.whiteColor()
+      view.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
       view.layer.shadowColor = UIColor.clearColor().CGColor
       UIView.animateWithDuration(0.3, animations: { () -> Void in
         view.transform = CGAffineTransformIdentity
@@ -471,7 +479,7 @@ class Leaf: NSObject, TreeObject {
       let frame = CGRectMake(frame.x, frame.y, Leaf.standardWidth, Leaf.standardHeight)
       view = UIView(frame: frame)
       if let view = self.view {
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
         view.layer.cornerRadius = 10
         setLabels()
         
@@ -542,7 +550,7 @@ class Leaf: NSObject, TreeObject {
         uploadsLabel = UILabel(frame: CGRectMake(0,half, Leaf.standardWidth, half))
       }
       let count = media != nil ? media!.count : 0
-      uploadsLabel!.text = "\(count) uploads"
+      uploadsLabel!.text = "\(count) attempts"
       if !uploadsSet {
         uploadsLabel!.numberOfLines = 1
         uploadsLabel!.textColor = UIColor.lightGrayColor()

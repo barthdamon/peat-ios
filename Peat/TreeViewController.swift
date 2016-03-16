@@ -18,7 +18,7 @@ protocol TreeDelegate {
   func leafBeingMoved(leaf: Leaf, sender: UIGestureRecognizer)
   func checkForOverlaps(intruder: Leaf)
   func removeObjectFromView(object: TreeObject)
-  func connectionsBeingDrawn(fromLeaf: Leaf?, fromGrouping: LeafGrouping?, sender: UIGestureRecognizer)
+  func connectionsBeingDrawn(fromObject: TreeObject, sender: UIGestureRecognizer)
   func addGroupingToScrollView(grouping: LeafGrouping)
   func groupingBeingMoved(leaf: LeafGrouping, sender: UIGestureRecognizer)
   func addNewLeafToGrouping(grouping: LeafGrouping, sender: UITapGestureRecognizer)
@@ -368,21 +368,12 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     return anchor
   }
   
-  func connectionsBeingDrawn(fromLeaf: Leaf?, fromGrouping: LeafGrouping?, sender: UIGestureRecognizer) {
-    if let fromLeaf = fromLeaf {
-      if let anchor = findExistingConnectionsForObject(fromLeaf) {
-        //should only be one in this case if it gets found....
-        updateConnection(anchor, sender: sender)
-      } else {
-        drawConnection(fromLeaf, sender: sender, existingConnection: nil)
-      }
-    } else if let fromGrouping = fromGrouping {
-      if let anchor = findExistingConnectionsForObject(fromGrouping) {
-        //should only be one in this case if it gets found....
-        updateConnection(anchor, sender: sender)
-      } else {
-        drawConnection(fromGrouping, sender: sender, existingConnection: nil)
-      }
+  func connectionsBeingDrawn(fromObject: TreeObject, sender: UIGestureRecognizer) {
+    if let anchor = findExistingConnectionsForObject(fromObject) {
+      //should only be one in this case if it gets found....
+      updateConnection(anchor, sender: sender)
+    } else {
+      drawConnection(fromObject, sender: sender, existingConnection: nil)
     }
   }
   
@@ -428,36 +419,109 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
             arrow.removeFromSuperview()
           }
 //          PeatContentStore.sharedStore.removeConnection(anchor.connection)
+        } else {
+          // set the point relative to the other views center
+          if let _ = anchor.connection.toObject {
+            // update the existing connection toObject
+            updateExistingConnectionEndpoints(anchor.connection)
+            checkForNewCompletions()
+          } else {
+            updateNewConnectionToEdge(anchor.connection)
+          }
         }
-        checkForNewCompletions()
       } else {
+        anchor.connection.arrow?.removeFromSuperview()
         anchor.connection.connectionLayer?.removeFromSuperlayer()
-        if let arrow = anchor.connection.arrow {
-          arrow.removeFromSuperview()
+        if let _ = anchor.connection.toObject {
+          updateExistingConnectionEndpoints(anchor.connection)
+        } else {
+          drawConnection(anchor.object, sender: sender, existingConnection: anchor.connection)
         }
-        if let arrow = anchor.connection.arrow {
-          arrow.removeFromSuperview()
-        }
-        drawConnection(anchor.object, sender: sender, existingConnection: anchor.connection)
       }
     }
   }
+
+  //For when objects are being moved around
+  func updateExistingConnectionEndpoints(connection: LeafConnection) {
+    if let toObject = connection.toObject, fromObject = connection.fromObject, toView = toObject.viewForTree(), fromView = fromObject.viewForTree(), parentView = fromObject.parentView() {
+      
+      //      if toObject.isSelected() {
+      //its going to the finger not the views center.........
+      let e = Leaf.standardExpand
+      var toScaleOffset = CGPoint(x: 0, y: 0)
+      if toObject.isSelected() {
+        let wE = toView.frame.width * e
+        let hE = toView.frame.height * e
+        toScaleOffset = CGPoint(x: wE - toView.frame.width, y: hE - toView.frame.height)
+      }
+      let toOffset = findAdjustedCenter(toView, scalingOffset: toScaleOffset, point: fromView.center)
+      let toPlacement = CGPoint(x: toView.center.x + toOffset.x, y: toView.center.y + toOffset.y)
+      
+      
+      let fromScaleOffset = CGPoint(x: 0, y: 0)
+      if fromObject.isSelected() {
+        let wE = fromView.frame.width * e
+        let hE = fromView.frame.height * e
+        toScaleOffset = CGPoint(x: wE - fromView.frame.width, y: hE - fromView.frame.height)
+      }
+      let fromOffset = findAdjustedCenter(fromView, scalingOffset: fromScaleOffset, point: toView.center)
+      let fromPlacement =  CGPoint(x: fromView.center.x + fromOffset.x, y: fromView.center.y + fromOffset.y)
+      
+      connection.connectionLayer?.removeFromSuperlayer()
+      connection.arrow?.removeFromSuperview()
+      
+      let connectionUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(fromPlacement, toPoint: toPlacement, existingConnection: connection)
+      connection.connectionLayer = connectionUI.layer
+      connection.arrow = connectionUI.arrow
+      connection.toObjectPoint = toOffset
+      parentView.layer.addSublayer(connectionUI.layer)
+      parentView.addSubview(connectionUI.arrow)
+      
+    }
+  }
   
-  func findAdjustedCenter(view: UIView, point: CGPoint) -> CGPoint {
+  func updateNewConnectionToEdge(connection: LeafConnection) {
+    // set new connection toObject
+    if let fromView = connection.fromObject?.viewForTree(), toView = connection.toObject?.viewForTree(), fromOffset = connection.fromObjectPoint, parentView = connection.fromObject?.parentView() {
+      // its gotta have a fromOffset here
+      // so you need the vector to the from offset of the other view, then you need to run it through the toObject view to find where the connection should go
+      let fromPoint = CGPoint(x: fromView.center.x + fromOffset.x, y: fromView.center.y + fromOffset.y)
+      let toOffset = findAdjustedCenter(toView, scalingOffset: nil, point: fromPoint)
+      let center = CGPoint(x: toView.center.x + toOffset.x, y: toView.center.y + toOffset.y)
+      
+      connection.connectionLayer?.removeFromSuperlayer()
+      connection.arrow?.removeFromSuperview()
+      
+      let connectionUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(fromPoint, toPoint: center, existingConnection: connection)
+      connection.connectionLayer = connectionUI.layer
+      connection.arrow = connectionUI.arrow
+      connection.toObjectPoint = toOffset
+      parentView.layer.addSublayer(connectionUI.layer)
+      parentView.addSubview(connectionUI.arrow)
+    }
+  }
+  
+  func findAdjustedCenter(view: UIView, scalingOffset: CGPoint?, point: CGPoint) -> CGPoint {
     // this is only for when the to/from points are nil. otherwise we keep those points. (the points have to be relative to the view I guess...
+    // UPGRADE (so its not choppy) take a unit circle, rotate it 45 degrees, and then check the value of the angle the vector makes with the rotated center. except its not a square...... hmmm.... this might be the best we can do, not as fancy without the angles but w.e the slope is more useful
+    var center = view.center
+    if let scalingOffset = scalingOffset {
+      center.x -= scalingOffset.x
+      center.y -= scalingOffset.y
+    }
     let w: CGFloat = view.frame.width / 2
     let h: CGFloat = view.frame.height / 2
-    let center = view.center
-    let connectionWidth: CGFloat = 10.0
+    //the fuking translations kill it now..... Maybe when deslecting leaves we need to tweak the connection endpoints?
+    let connectionWidth: CGFloat = LeafConnection.standardLayerWidth / 2
     
     let vector: CGPoint = CGPoint(x: point.x - center.x, y: point.y - center.y)
     let slope = vector.y / vector.x
     
     //if it is less than
-    let greaterThanY = point.y > view.center.y + h
-    let greaterThanX = point.x > view.center.x + w
-    let lessThanX = point.x < view.center.x - w
-    let lessThanY = point.y < view.center.y - h
+    let greaterThanY = point.y > center.y + h
+    let greaterThanX = point.x > center.x + w
+    let lessThanX = point.x < center.x - w
+    let lessThanY = point.y < center.y - h
     var withinY = false
     if !greaterThanY && !lessThanY { withinY = true }
     var withinX = false
@@ -483,10 +547,13 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       y = w * slope
     }
     
-    if x > w { x = w }
-    if x < -w { x = -w }
+    if x > w { x = w - connectionWidth }
+    if x < -w { x = -w + connectionWidth }
     
-    return CGPoint(x: view.center.x + x, y: view.center.y + y)
+//    fromObject.setConnectionOffsets((x: x, y: y))
+    
+    return CGPoint(x: x, y: y)
+    
     //need to save these points. and then move them relative to where the center of the view is moving.
     //maybe just save the x and y offsets from the center
     // then every time just add that to where the center is
@@ -497,17 +564,21 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   func drawConnection(fromObject: TreeObject, sender: UIGestureRecognizer, existingConnection: LeafConnection?) {
     if let view = fromObject.viewForTree(), parentView = fromObject.parentView(){
       let finger = sender.locationInView(parentView)
-      let center = findAdjustedCenter(view, point: finger)
+      let offsetPoint = findAdjustedCenter(view, scalingOffset: nil, point: finger)
+      let center = CGPoint(x: view.center.x + offsetPoint.x, y: view.center.y + offsetPoint.y)
 
       if let existing = existingConnection {
         let connectionUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(center, toPoint: finger, existingConnection: existing)
         existing.connectionLayer = connectionUI.layer
         existing.arrow = connectionUI.arrow
+        existing.fromObjectPoint = offsetPoint
         parentView.layer.addSublayer(connectionUI.layer)
         parentView.addSubview(connectionUI.arrow)
       } else {
         let connectionUI: (layer: CAShapeLayer, arrow: UIImageView) = constructConnection(center, toPoint: finger, existingConnection: nil)
-        sharedStore().newConnection(connectionUI.layer, arrow: connectionUI.arrow, from: fromObject, to: nil, delegate: self)
+        let newConnection = LeafConnection.newConnection(connectionUI.layer, arrow: connectionUI.arrow, from: fromObject, to: nil, delegate: self)
+        newConnection.fromObjectPoint = offsetPoint
+        sharedStore().addConnection(newConnection)
         parentView.layer.addSublayer(connectionUI.layer)
         parentView.addSubview(connectionUI.arrow)
       }
@@ -599,7 +670,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     }
     shapeLayer.strokeColor = color
     shapeLayer.zPosition = -200
-    shapeLayer.lineWidth = 10
+    shapeLayer.lineWidth = LeafConnection.standardLayerWidth
     
     return (layer: shapeLayer, arrow: arrow)
   }
@@ -957,38 +1028,3 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
 
 }
-
-
-
-
-
-// old arrow trig
-
-
-//      arrowPath.moveToPoint(start)
-//      let angle: Int = 60
-//      let angleR = angle.degreesToRadians
-//
-//      let cs = cos(angleR)
-//      let sn = sin(angleR)
-//
-//      print("ANGLE: \(angleR), cos: \(cs), sin: \(sn)")
-//
-//      let x = n.x * cs - n.y * sn
-//      let y = n.x * sn - n.y * cs
-
-//      let testPoint = CGPointMake(start.x - (20 * n.x), start.y - (20 * n.y))
-//
-//      arrowPath.addLineToPoint(testPoint)
-
-//      arrowPath.addLineToPoint(arrowA)
-//      arrowPath.addLineToPoint(arrowB)
-//      arrowPath.addLineToPoint(start)
-
-//      let toArrowLayer = CAShapeLayer()
-//      toArrowLayer.path = arrowPath.CGPath
-//      toArrowLayer.strokeColor = UIColor.purpleColor().CGColor
-//      toArrowLayer.zPosition = -199
-//      toArrowLayer.lineWidth = 10
-//      parentView.layer.addSublayer(toArrowLayer)
-

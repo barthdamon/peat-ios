@@ -21,6 +21,12 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   var groupingId: String?
   
   var moveStartPoint: CGPoint?
+  
+  //connection offsets
+//  func setConnectionOffsets(offsets: CoordinatePair) { connectionOffsets = offsets }
+//  var connectionOffsets: CoordinatePair?
+  
+  
   var center: CGPoint?
   var paramCenter: CGPoint? {
     return self.view != nil ? self.view!.center : center
@@ -275,8 +281,16 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
           dragView.frame = CGRectMake(view.frame.width - 30, view.frame.height - 30, 15, 15)
           titleField?.frame = CGRectMake(view.frame.width - 200, view.frame.height - 30, 150, 25)
 //          connectionButton?.frame = CGRectMake(view.frame.width - 30, 30, 15, 15)
-          self.width = finger.x
-          self.height = finger.y
+          if let width = self.width, height = self.height {
+            let xDiff: CGFloat = width - finger.x
+            let yDiff: CGFloat = height - finger.y
+            self.width = finger.x
+            self.height = finger.y
+            //no each connection needs connection offsets. then you have to manipulate those for everything it is connection to from here
+            //get connections for object and do it that way
+//            self.connectionOffsets?.x += xDiff
+//            self.connectionOffsets?.y += yDiff
+          }
         }
       }
     }
@@ -364,10 +378,14 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
   func groupingMoveInitiated(sender: UIGestureRecognizer) {
     if !connectionsEnabled {
       treeDelegate?.sharedStore().treeStore.currentLeaves?.forEach({ (leaf) -> () in
+        leaf.movingEnabled = false
+        leaf.connectionsEnabled = false
         leaf.deselectLeaf()
       })
       treeDelegate?.sharedStore().treeStore.currentGroupings?.forEach({ (grouping) -> () in
         if grouping.groupingId != self.groupingId {
+          grouping.movingEnabled = false
+          grouping.connectionsEnabled = false
           grouping.deselectGrouping()
         }
       })
@@ -418,7 +436,7 @@ class LeafGrouping: NSObject, TreeObject, UITextFieldDelegate, UIGestureRecogniz
       }
       self.treeDelegate?.groupingBeingMoved(self, sender: sender)
     } else if connectionsEnabled {
-      self.treeDelegate?.connectionsBeingDrawn(nil, fromGrouping: self, sender: sender)
+      self.treeDelegate?.connectionsBeingDrawn(self, sender: sender)
     }
   }
   

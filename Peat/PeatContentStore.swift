@@ -374,15 +374,6 @@ class PeatContentStore: NSObject {
     return nil
   }
   
-  func newConnection(connectionLayer: CAShapeLayer, arrow: UIImageView?, from: TreeObject?, to: TreeObject?, delegate: TreeDelegate) {
-//    if let existingConnection = findConnection(from, to: to) {
-//      existingConnection.connectionLayer = connectionLayer
-//    } else {
-    let newConnection = LeafConnection.newConnection(connectionLayer, arrow: arrow, from: from, to: to, delegate: delegate)
-      self.addConnection(newConnection)
-//    }
-  }
-  
   func addGroupingToStore(grouping: LeafGrouping) {
     if let _ = self.treeStore.currentGroupings {
       self.treeStore.currentGroupings!.insert(grouping)

@@ -9,13 +9,17 @@
 import Foundation
 class LeafConnection: NSObject {
   
+  static var standardLayerWidth: CGFloat = 10.0
+  
   var connectionId: String?
   var changeStatus: ChangeStatus = .Unchanged
   var user_Id: String?
   var fromId: String?
   var toId: String?
   
-  //the points within the from and to objects
+  //these points need to be set relative to the objects centers I beleve so that if we move the objects centers they still work.
+  //also need to work if we expand the objects
+  // the offset points
   var fromObjectPoint: CGPoint?
   var toObjectPoint: CGPoint?
   
