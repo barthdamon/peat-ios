@@ -39,7 +39,17 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
     return mediaObjects?.filter({$0.uploaderUser_Id == CurrentUser.info.model?._id})
   }
   var tagged: Array<MediaObject>? {
-    return mediaObjects?.filter({$0.uploaderUser_Id != CurrentUser.info.model?._id})
+    var objects: Array<MediaObject> = []
+    if let id = CurrentUser.info.model?._id {
+      mediaObjects?.forEach({ (object) -> () in
+        if let taggedIds = object.taggedUser_Ids {
+          if taggedIds.contains(id) {
+            objects.append(object)
+          }
+        }
+      })
+    }
+    return objects
   }
   
   var selectedMediaObject: MediaObject?

@@ -468,6 +468,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
             }
           }
         }
+        sharedStore().deselectObjects(nil)
         if !connected {
           anchor.connection.connectionLayer?.removeFromSuperlayer()
           if let arrow = anchor.connection.arrow {
@@ -556,7 +557,6 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       connection.toObjectPoint = toOffset
       parentView.layer.addSublayer(connectionUI.layer)
       parentView.addSubview(connectionUI.arrow)
-      sharedStore().deselectObjects(nil)
     }
   }
   
