@@ -426,4 +426,30 @@ class PeatContentStore: NSObject {
     }
   }
   
+  func getMinimumCoordinates() -> CGPoint {
+    var farthest = CGPoint(x: 0, y: 0)
+    if let leaves = treeStore.currentLeaves {
+      leaves.forEach({ (leaf) -> () in
+        if let x = leaf.center?.x, y = leaf.center?.y {
+          let xMax = x + Leaf.standardWidth
+          let yMax = y + Leaf.standardHeight
+          if xMax > farthest.x { farthest.x = xMax }
+          if yMax > farthest.y { farthest.y = yMax }
+        }
+      })
+    }
+    if let groupings = treeStore.currentGroupings {
+      groupings.forEach({ (grouping) -> () in
+        if let x = grouping.center?.x, w = grouping.width, y = grouping.center?.y, h = grouping.height {
+          let xMax = x + w
+          let yMax = y + h
+          if xMax > farthest.x { farthest.x = xMax }
+          if yMax > farthest.y { farthest.y = yMax }
+        }
+      })
+    }
+    return CGPoint(x: farthest.x + Leaf.standardWidth, y: farthest.y + Leaf.standardHeight)
+    //add a little extra for good measure
+  }
+  
 }

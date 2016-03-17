@@ -303,4 +303,5 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
     self.galleryController = vc
     self.performSegueWithIdentifier("showMediaFromGallery", sender: self)
   }
+  
 }

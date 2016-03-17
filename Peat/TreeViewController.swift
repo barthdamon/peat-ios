@@ -41,6 +41,8 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   var hoverTimer: NSTimer?
   var initiationButton: UIImageView?
+  var widthIncreaseButton: UIImageView?
+  var heightIncreaseButton: UIImageView?
   
   var profileDelegate: ProfileViewController?
   var currentActivity: Activity? {
@@ -62,6 +64,11 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       self.treeView.frame.size.height = contentSizeY
     }
   }
+  
+  // Scroll/Tree view content sizes
+  var viewWidthSegment: CGFloat = 0.0
+  var viewHeightSegment: CGFloat = 0.0
+  
 
   @IBOutlet weak var scrollView: UIScrollView!
   @IBOutlet weak var saveButton: UIButton!
@@ -83,7 +90,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
 
     // Do any additional setup after loading the view.
     
-    configureScrollView()
+//    configureScrollView()
 //    fetchTreeData()
   }
   
@@ -132,14 +139,17 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
 //      scrollView.addGestureRecognizer(doubleTapRecognizer)
       
       configureLeafInitiationView()
+      drawSizeIncreasers()
     }
 //    var doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "scrollViewDoubleTapped:")
 //    doubleTapRecognizer.numberOfTapsRequired = 2
 //    doubleTapRecognizer.numberOfTouchesRequired = 1
 //    scrollView.addGestureRecognizer(doubleTapRecognizer)
-    minimumSizeX = self.view.frame.width * 2
-    minimumSizeY = self.view.frame.height * 2
+
+    viewHeightSegment = self.view.frame.height
+    viewWidthSegment = self.view.frame.width
     
+    setMinimumSize()
     
     scrollView.minimumZoomScale = 0.3
     scrollView.maximumZoomScale = 1
@@ -151,6 +161,29 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     self.treeView = UIView(frame: CGRectMake(0,0,contentSizeX,contentSizeY))
     treeView.backgroundColor = UIColor.darkGrayColor()
     self.scrollView.addSubview(self.treeView)
+    //scrollView done, display the leaves!
+    self.displayLeaves()
+  }
+  
+  func setMinimumSize() {
+    if let store = store {
+      let farthestCoordinates = store.getMinimumCoordinates()
+      minimumSizeX = farthestCoordinates.x
+      minimumSizeY = farthestCoordinates.y
+    }
+  }
+  
+  func increaseScrollView(forHeight forHeight: Bool) {
+    if forHeight {
+      contentSizeY += viewHeightSegment
+      // offset the content view down a bit
+    } else {
+      contentSizeX += viewWidthSegment
+      // offset the content view to the side a bit
+    }
+    toggleWidthIncreaseOption(true)
+    toggleHeightIncreaseOption(true)
+    //arrow disappears, should only be visible when at the edge of the view
   }
   
   
@@ -167,13 +200,31 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   }
   
   func scrollViewDidScroll(scrollView: UIScrollView) {
+    let offset = scrollView.contentOffset
+    
+    // need to adjust this by the contentScale
+    if offset.x > (contentSizeX - view.frame.width) - Leaf.standardWidth {
+      // width wants to increase
+      toggleWidthIncreaseOption(false)
+    } else {
+      toggleWidthIncreaseOption(true)
+    }
+    
+    if offset.y > (contentSizeY - view.frame.height) - Leaf.standardWidth {
+      // height wants to increase
+      toggleHeightIncreaseOption(false)
+    } else {
+      toggleHeightIncreaseOption(true)
+    }
   }
   
   func scrollViewDidEndZooming(scrollView: UIScrollView, withView view: UIView?, atScale scale: CGFloat) {
     let newScale = scrollView.zoomScale
     self.treeView.contentScaleFactor = newScale
-    var width = self.scrollView.contentSize.width
-    var height = self.scrollView.contentSize.height
+    
+    
+    var width = self.scrollView.contentSize.width * newScale
+    var height = self.scrollView.contentSize.height * newScale
     
 //    //dont get too small
     if width < minimumSizeX { width = minimumSizeX }
@@ -906,7 +957,9 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     if let activity = self.currentActivity {
       sharedStore().getTreeData(self, viewing: viewing, activity: activity){ (success) -> () in
         if success {
-          self.displayLeaves()
+          dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.configureScrollView()
+          })
         } else {
           //show error
         }
@@ -1001,7 +1054,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     }
   }
   
-  
+  //MARK: OVERLAY VIEWS
   
   //MARK: InitiationView
   func configureLeafInitiationView() {
@@ -1024,6 +1077,72 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
 //    initiationView!.layer.zPosition = 300
 //    self.view.gestureRecognizers?.removeAll()
     self.view.addSubview(initiationButton!)
+  }
+  
+  func drawSizeIncreasers() {
+    
+    let arrow = UIImage(named: "up-arrow")
+    let inset: CGFloat = 35.0
+    let sizeX: CGFloat = 40.0
+    let sizeY: CGFloat = 20.0
+    
+    // width
+    let wx: CGFloat = self.view.frame.width - inset
+    //TODO: fix this
+    let wy: CGFloat = 200
+    widthIncreaseButton = UIImageView(frame: CGRectMake(wx, wy, sizeX, sizeY))
+    widthIncreaseButton!.image = arrow
+    widthIncreaseButton!.userInteractionEnabled = true
+    widthIncreaseButton!.tintColor = UIColor.blackColor()
+    let angleW = 90
+    let wR = angleW.degreesToRadians
+    let wT = CGAffineTransformMakeRotation(wR)
+    widthIncreaseButton!.transform = wT
+    widthIncreaseButton!.backgroundColor = UIColor.clearColor()
+    let tapRecognizer = UITapGestureRecognizer(target: self, action: "widthIncreaseTapped")
+    tapRecognizer.numberOfTapsRequired = 1
+    tapRecognizer.numberOfTouchesRequired = 1
+    widthIncreaseButton!.hidden = true
+    widthIncreaseButton!.addGestureRecognizer(tapRecognizer)
+    self.view.addSubview(widthIncreaseButton!)
+    
+    // height
+    let hx: CGFloat = self.view.frame.width / 2 - 10
+    //TODO: fix this
+    let hy: CGFloat = 435
+    heightIncreaseButton = UIImageView(frame: CGRectMake(hx, hy, sizeX, sizeY))
+    heightIncreaseButton!.image = arrow
+    heightIncreaseButton!.userInteractionEnabled = true
+    let angleH = 180
+    let hR = angleH.degreesToRadians
+    let hT = CGAffineTransformMakeRotation(hR)
+    heightIncreaseButton!.transform = hT
+    heightIncreaseButton!.tintColor = UIColor.blackColor()
+    let tapRecognizerH = UITapGestureRecognizer(target: self, action: "heightIncreaseTapped")
+    tapRecognizerH.numberOfTapsRequired = 1
+    tapRecognizerH.numberOfTouchesRequired = 1
+    heightIncreaseButton!.hidden = true
+    heightIncreaseButton!.addGestureRecognizer(tapRecognizerH)
+    self.view.addSubview(heightIncreaseButton!)
+    
+  }
+  
+  func heightIncreaseTapped() {
+    print("Height increase tapped")
+    increaseScrollView(forHeight: true)
+  }
+  
+  func widthIncreaseTapped() {
+    print("Width increase tapped")
+    increaseScrollView(forHeight: false)
+  }
+  
+  func toggleWidthIncreaseOption(show: Bool) {
+    widthIncreaseButton?.hidden = show
+  }
+  
+  func toggleHeightIncreaseOption(show: Bool) {
+    heightIncreaseButton?.hidden = show
   }
   
 

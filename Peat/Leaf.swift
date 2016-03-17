@@ -408,7 +408,7 @@ class Leaf: NSObject, TreeObject {
       self.movingEnabled = false
       self.connectionButton?.hidden = false
       togglePanActivation(false)
-      view.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
+      view.backgroundColor = UIColor.whiteColor()
       view.layer.shadowColor = UIColor.clearColor().CGColor
       UIView.animateWithDuration(0.3, animations: { () -> Void in
         view.transform = CGAffineTransformIdentity
@@ -479,7 +479,7 @@ class Leaf: NSObject, TreeObject {
       let frame = CGRectMake(frame.x, frame.y, Leaf.standardWidth, Leaf.standardHeight)
       view = UIView(frame: frame)
       if let view = self.view {
-        view.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
+        view.backgroundColor = UIColor.whiteColor()
         view.layer.cornerRadius = 10
         setLabels()
         
