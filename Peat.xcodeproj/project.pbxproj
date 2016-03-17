@@ -28,6 +28,7 @@
 		022AB6971C5C45AA00F1168E /* LeafConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022AB6961C5C45AA00F1168E /* LeafConnection.swift */; };
 		023355C81BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023355C71BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift */; };
 		0234BEFB1C59CBB40008BA89 /* Friendship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0234BEFA1C59CBB40008BA89 /* Friendship.swift */; };
+		0238128F1C9B40CD0013C09A /* SwiftColorPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0238128E1C9B40CD0013C09A /* SwiftColorPickerViewController.swift */; };
 		0239E5811BDBEF5C00D85C3C /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0239E5801BDBEF5C00D85C3C /* ProfileViewController.swift */; };
 		0239E5BD1BDDA41B00D85C3C /* TreeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0239E5BC1BDDA41B00D85C3C /* TreeViewController.swift */; };
 		023B03811C150853003497FB /* MediaOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023B03801C150853003497FB /* MediaOverlayView.swift */; };
@@ -128,6 +129,7 @@
 		022AB6961C5C45AA00F1168E /* LeafConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeafConnection.swift; sourceTree = "<group>"; };
 		023355C71BD9E88B00E4D35F /* UserSearchResultTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSearchResultTableViewCell.swift; sourceTree = "<group>"; };
 		0234BEFA1C59CBB40008BA89 /* Friendship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Friendship.swift; sourceTree = "<group>"; };
+		0238128E1C9B40CD0013C09A /* SwiftColorPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftColorPickerViewController.swift; sourceTree = "<group>"; };
 		0239E5801BDBEF5C00D85C3C /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		0239E5BC1BDDA41B00D85C3C /* TreeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TreeViewController.swift; sourceTree = "<group>"; };
 		023B03801C150853003497FB /* MediaOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaOverlayView.swift; sourceTree = "<group>"; };
@@ -310,6 +312,7 @@
 		027C34091C5523A700D86F0F /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				0238128E1C9B40CD0013C09A /* SwiftColorPickerViewController.swift */,
 				021C1BF41C4F33B000FDEFED /* LeafView.swift */,
 				02DEB9591C8FC55000E9728F /* GalleryHeaderCollectionReusableView.swift */,
 				024F828A1C754EBE00C107CB /* MediaCellHeaderView.swift */,
@@ -672,6 +675,7 @@
 				020815181C72D50600B1A2EC /* Ability.swift in Sources */,
 				021C900A1BEFF5DD00C79538 /* RootViewController.swift in Sources */,
 				02917C141BEC27A90060999A /* LeafDetailViewController.swift in Sources */,
+				0238128F1C9B40CD0013C09A /* SwiftColorPickerViewController.swift in Sources */,
 				02DA07291C91216F003546C8 /* TreeMath.swift in Sources */,
 				026CF6811C7A9C650066888E /* GalleryCollectionViewController.swift in Sources */,
 				027C34001C53332900D86F0F /* AlertViews.swift in Sources */,

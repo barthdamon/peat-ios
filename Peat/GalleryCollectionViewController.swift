@@ -259,6 +259,7 @@ class GalleryCollectionViewController: UICollectionViewController, MediaUploadDe
     
     if segue.identifier == "showMediaUpload" {
       if let vc = segue.destinationViewController as? MediaUploadViewController {
+        vc.isFromGallery = true
         vc.delegate = self
       }
     }

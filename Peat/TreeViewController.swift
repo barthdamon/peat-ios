@@ -28,10 +28,13 @@ protocol TreeDelegate {
   func isHidingText() -> Bool
 }
 
-class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
+class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate, SwiftColorPickerDelegate, SwiftColorPickerDataSource {
   
   // Dynamic Data
 //  var leaves: [Leaf] = Array()
+  var colorPickerVC: SwiftColorPickerViewController?
+  var groupingPickingColor: LeafGrouping?
+  
   var selectedLeaf: Leaf?
   var viewing: User?
   var store: PeatContentStore?
@@ -117,6 +120,9 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
         layer.removeFromSuperlayer()
       }
     }
+    self.contentSizeX = 0
+    
+    self.applyContentSizes()
   }
   
   func configureScrollView() {
@@ -1062,6 +1068,21 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     }
   }
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   //MARK: OVERLAY VIEWS
   
   //MARK: InitiationView
@@ -1087,6 +1108,8 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     self.view.addSubview(initiationButton!)
   }
   
+  
+  //MARK: Size Increasers
   func drawSizeIncreasers() {
     
     let arrow = UIImage(named: "up-arrow")
@@ -1153,5 +1176,68 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     heightIncreaseButton?.hidden = show
   }
   
+  
+  //MARK: Color Picker VC
+  
+  var colorMatrix = [ [UIColor]() ]
+  private func fillColorMatrix(numX: Int, _ numY: Int) {
+    
+    colorMatrix.removeAll()
+    if numX > 0 && numY > 0 {
+      
+      for _ in 0..<numX {
+        var colInX = [UIColor]()
+        for _ in 0..<numY {
+          colInX += [UIColor.randomColor()]
+        }
+        colorMatrix += [colInX]
+      }
+    }
+  }
+  
+  func showColorPickerForGrouping(grouping: LeafGrouping) {
+    self.groupingPickingColor = grouping
+    let colorPickerVC = SwiftColorPickerViewController()
+    colorPickerVC.delegate = self
+    colorPickerVC.dataSource = self
+    colorPickerVC.modalPresentationStyle = .Popover
+    let popVC = colorPickerVC.popoverPresentationController!;
+    if let initiationButton = initiationButton {
+      popVC.sourceRect = initiationButton.frame
+    }
+    popVC.sourceView = self.view
+    popVC.permittedArrowDirections = .Any;
+    popVC.delegate = self;
+    
+    self.presentViewController(colorPickerVC, animated: true, completion: {
+      print("Reade<");
+    })
+  }
+  
+  func colorSelectionChanged(selectedColor color: UIColor) {
+    // set color on grouping
+  }
 
+  func colorForPalletIndex(x: Int, y: Int, numXStripes: Int, numYStripes: Int) -> UIColor {
+    if colorMatrix.count > x  {
+      let colorArray = colorMatrix[x]
+      if colorArray.count > y {
+        return colorArray[y]
+      } else {
+        fillColorMatrix(numXStripes,numYStripes)
+        return colorForPalletIndex(x, y:y, numXStripes: numXStripes, numYStripes: numYStripes)
+      }
+    } else {
+      fillColorMatrix(numXStripes,numYStripes)
+      return colorForPalletIndex(x, y:y, numXStripes: numXStripes, numYStripes: numYStripes)
+    }
+  }
+
+}
+
+
+extension TreeViewController:  UIPopoverPresentationControllerDelegate {
+  func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+    return .None
+  }
 }

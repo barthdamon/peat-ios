@@ -14,14 +14,14 @@ extension NSNumber {
   }
 }
 
-extension UIColor {
-  static func randomColor() -> UIColor {
-    let r = NSNumber.randomCGFloat()
-    let g = NSNumber.randomCGFloat()
-    let b = NSNumber.randomCGFloat()
-    
-    // If you wanted a random alpha, just create another
-    // random number for that too.
-    return UIColor(red: r, green: g, blue: b, alpha: 1.0)
-  }
-}
+//extension UIColor {
+//  static func randomColor() -> UIColor {
+//    let r = NSNumber.randomCGFloat()
+//    let g = NSNumber.randomCGFloat()
+//    let b = NSNumber.randomCGFloat()
+//    
+//    // If you wanted a random alpha, just create another
+//    // random number for that too.
+//    return UIColor(red: r, green: g, blue: b, alpha: 1.0)
+//  }
+//}

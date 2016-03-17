@@ -52,6 +52,7 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
   var overlayView: MediaOverlayView?
   
   var uploadFromGallery = false
+  var isFromGallery = false
   
   
   lazy var session: NSURLSession = {
@@ -201,7 +202,7 @@ class MediaUploadViewController: UIViewController, UIPopoverPresentationControll
     if let _ = self.mediaObject {
       self.mediaObject?.mediaDescription = self.descriptionTextField.text
       self.mediaObject?.purpose = self.selectedPurpose
-      store?.addMediaToStore(self.mediaObject!, publishImmediately: false)
+      store?.addMediaToStore(self.mediaObject!, publishImmediately: isFromGallery)
       self.delegate?.newMediaAdded()
       dismissSelf(true)
     }
