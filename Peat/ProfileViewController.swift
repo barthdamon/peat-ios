@@ -93,6 +93,14 @@ class ProfileViewController: UIViewController, ViewControllerWithMenu, UIPopover
 //    self.view.addSubview(navBar)
   }
   
+  func activitySelected(activity: Activity) {
+    self.currentActivity = activity
+    if view == nil {
+      CurrentUser.info.model?.addActiveActivity(activity)
+    }
+    self.reinitializeTreeController()
+  }
+  
   func updatedAvatar() {
     self.avatarImageView.image = CurrentUser.info.model?.avatarImage
   }

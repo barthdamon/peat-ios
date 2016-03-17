@@ -452,4 +452,34 @@ class PeatContentStore: NSObject {
     //add a little extra for good measure
   }
   
+  func deselectObjects(object: TreeObject?) {
+    if let object = object {
+      self.treeStore.currentLeaves?.forEach({ (leaf) -> () in
+        if leaf.leafId != object.objectId() {
+          leaf.movingEnabled = false
+          leaf.connectionsEnabled = false
+          leaf.deselectLeaf()
+        }
+      })
+      self.treeStore.currentGroupings?.forEach({ (grouping) -> () in
+        if grouping.groupingId != object.objectId() {
+          grouping.movingEnabled = false
+          grouping.connectionsEnabled = false
+          grouping.deselectGrouping()
+        }
+      })
+    } else {
+      self.treeStore.currentLeaves?.forEach({ (leaf) -> () in
+        leaf.movingEnabled = false
+        leaf.connectionsEnabled = false
+        leaf.deselectLeaf()
+      })
+      self.treeStore.currentGroupings?.forEach({ (grouping) -> () in
+        grouping.movingEnabled = false
+        grouping.connectionsEnabled = false
+        grouping.deselectGrouping()
+      })
+    }
+  }
+  
 }

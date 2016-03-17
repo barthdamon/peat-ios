@@ -92,9 +92,8 @@ class ActivitySelectionTableViewController: UITableViewController, UITextFieldDe
     }
   
   func setProfileActivity(activity: Activity) {
-    profileVC?.currentActivity = activity
+    profileVC?.activitySelected(activity)
     //reload the profileVC treeViewControllers data
-    profileVC?.reinitializeTreeController()
   }
   
     // MARK: - Table view data source

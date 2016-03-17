@@ -50,20 +50,10 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   }
   
   var minimumSizeX: CGFloat = 0 { didSet { contentSizeX = minimumSizeX } }
-  var contentSizeX: CGFloat = 0 {
-    didSet {
-      self.scrollView.contentSize.width = contentSizeX
-      self.treeView.frame.size.width = contentSizeX
-    }
-  }
+  var contentSizeX: CGFloat = 0
   
   var minimumSizeY: CGFloat = 0 { didSet { contentSizeY = minimumSizeY } }
-  var contentSizeY: CGFloat = 0 {
-    didSet {
-      self.scrollView.contentSize.height = contentSizeY
-      self.treeView.frame.size.height = contentSizeY
-    }
-  }
+  var contentSizeY: CGFloat = 0
   
   // Scroll/Tree view content sizes
   var viewWidthSegment: CGFloat = 0.0
@@ -77,6 +67,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   
   var currentXOffset: CGFloat = 0
   var currentYOffset: CGFloat = 0
+  var currentScale: CGFloat = 1
   
   //Drawing
   var previousConnectionDrawing: CAShapeLayer?
@@ -165,11 +156,19 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
     self.displayLeaves()
   }
   
+  func applyContentSizes() {
+    self.scrollView.contentSize.width = contentSizeX
+    self.treeView.frame.size.width = contentSizeX
+    self.scrollView.contentSize.height = contentSizeY
+    self.treeView.frame.size.height = contentSizeY
+  }
+  
   func setMinimumSize() {
     if let store = store {
       let farthestCoordinates = store.getMinimumCoordinates()
-      minimumSizeX = farthestCoordinates.x
-      minimumSizeY = farthestCoordinates.y
+      minimumSizeX = farthestCoordinates.x > view.frame.width ? farthestCoordinates.x : view.frame.width
+      minimumSizeY = farthestCoordinates.y > view.frame.height ? farthestCoordinates.y : view.frame.height
+      applyContentSizes()
     }
   }
   
@@ -181,6 +180,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       contentSizeX += viewWidthSegment
       // offset the content view to the side a bit
     }
+    applyContentSizes()
     toggleWidthIncreaseOption(true)
     toggleHeightIncreaseOption(true)
     //arrow disappears, should only be visible when at the edge of the view
@@ -200,7 +200,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   }
   
   func scrollViewDidScroll(scrollView: UIScrollView) {
-    let offset = scrollView.contentOffset
+    let offset = CGPoint(x: scrollView.contentOffset.x * currentScale, y: scrollView.contentOffset.y * currentScale)
     
     // need to adjust this by the contentScale
     if offset.x > (contentSizeX - view.frame.width) - Leaf.standardWidth {
@@ -219,20 +219,27 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
   }
   
   func scrollViewDidEndZooming(scrollView: UIScrollView, withView view: UIView?, atScale scale: CGFloat) {
-    let newScale = scrollView.zoomScale
-    self.treeView.contentScaleFactor = newScale
+    currentScale = scrollView.zoomScale
+    self.treeView.contentScaleFactor = currentScale
     
     
-    var width = self.scrollView.contentSize.width * newScale
-    var height = self.scrollView.contentSize.height * newScale
+    var width = self.scrollView.contentSize.width * currentScale
+    var height = self.scrollView.contentSize.height * currentScale
     
 //    //dont get too small
+    //    if contentSizeX < width && contentSizeY < height {
+    //      contentSizeX = width
+    //      contentSizeY = height
+    //      self.treeView.frame = CGRectMake(0, 0, width, height)
+    //    }
     if width < minimumSizeX { width = minimumSizeX }
     if height < minimumSizeY { height = minimumSizeY }
     
+    contentSizeX = width
+    contentSizeY = height
     self.treeView.frame = CGRectMake(0, 0, width, height)
     
-    if newScale < 0.45 {
+    if currentScale < 0.45 {
       toggleTextForZoom(true)
     } else {
       toggleTextForZoom(false)
@@ -549,6 +556,7 @@ class TreeViewController: UIViewController, TreeDelegate, UIScrollViewDelegate {
       connection.toObjectPoint = toOffset
       parentView.layer.addSublayer(connectionUI.layer)
       parentView.addSubview(connectionUI.arrow)
+      sharedStore().deselectObjects(nil)
     }
   }
   

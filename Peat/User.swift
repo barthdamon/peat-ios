@@ -28,6 +28,8 @@ class User: NSObject {
   var activeActivities: Array<Activity>?
   var activeActivityNames: Array<String>? {
     if let activities = activeActivities {
+      let names = activities.map({paramFor($0.name)})
+      print("NAMES: \(names)")
       return activities.map({paramFor($0.name)})
     }
     return nil
@@ -205,6 +207,16 @@ class User: NSObject {
       self.avatarURLString = avatarObject.urlString
       self.avatarImage = self.newAvatarImage
       callback(success)
+    }
+  }
+  
+  func addActiveActivity(activity: Activity) {
+    if let _ = activeActivities {
+    } else {
+      activeActivities = Array()
+    }
+    if !activeActivities!.contains(activity) {
+      activeActivities!.append(activity)
     }
   }
   

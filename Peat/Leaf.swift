@@ -354,18 +354,7 @@ class Leaf: NSObject, TreeObject {
   
   func leafMoveInitiated(sender: UIGestureRecognizer) {
     if !connectionsEnabled {
-      treeDelegate?.sharedStore().treeStore.currentLeaves?.forEach({ (leaf) -> () in
-        if leaf.leafId != self.leafId {
-          leaf.movingEnabled = false
-          leaf.connectionsEnabled = false
-          leaf.deselectLeaf()
-        }
-      })
-      treeDelegate?.sharedStore().treeStore.currentGroupings?.forEach({ (grouping) -> () in
-        grouping.movingEnabled = false
-        grouping.connectionsEnabled = false
-        grouping.deselectGrouping()
-      })
+      treeDelegate?.sharedStore().deselectObjects(self)
       
       if sender.state == UIGestureRecognizerState.Changed {
         leafBeingPanned(sender)
